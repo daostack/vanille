@@ -1,0 +1,83 @@
+/** COMMON **/
+
+@media print {
+  .hidden-print, .hidden-print * {
+      display: none !important;
+  }
+  .visible-print, .visible-print * {
+    display: inherit !important;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.nofocus:focus {
+  outline: none;
+}
+
+.hidden {
+  display:none;
+}
+
+/** APPLICTION **/
+
+html {
+  font-family: -apple-system, Windows, system-ui, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+/* animate page transitions */
+section.au-enter-active {
+  animation: fadeInRight 1s;
+}
+
+div.au-stagger {
+  /* 50ms will be applied between each successive enter operation */
+  animation-delay: 50ms;
+}
+
+/* animation definitions */
+@-webkit-keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0)
+  }
+  100% {
+    opacity: 1;
+    transform: none
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0)
+  }
+  100% {
+    opacity: 1;
+    transform: none
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
