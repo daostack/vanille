@@ -1,14 +1,17 @@
 # DAOStack Alchemy
 
-## What is It?
+## What is Alchemy?
 
-The DAOStack Alchemy is the repository for the Aurelia implemention of the DAOStack Alchemy browser application.  It uses a standards-compliant and highly modular browser-side framework called [Aurelia](http://aurelia.io), hence "Aurelia" in the name of the repository.
+The DAOStack Alchemy is a browser application that enables anyone with an account on the Ethereum blockchain, and \[STK?\] tokens to spend, to easily create DAOs on Ethereum that run on predefined, configurable smart contracts.
 
-The application TypeScript/ECMAScript 2016+ for browser-side code.  There is no server-side component at this time.
+## Implementation
+The application uses the standards-compliant and highly modular browser-side framework [Aurelia](http://aurelia.io) (hence "Aurelia" in the name of the repository).
+
+Browser-side the application uses TypeScript/ECMAScript 2016+.  At this time there are no web server-side components.
 
 ## The DAOStack
 
-Alchemy depends on a library of reusable DAO contracts called "DAOStack".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/daostack).
+Alchemy depends on a library of reusable and configurable Ethereum smart contracts called "DAOStack".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/daostack).
 
 ## See It Live
 You will soon be able to  browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net).  This deployment of the DAOStack application assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
