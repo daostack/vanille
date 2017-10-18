@@ -1,23 +1,22 @@
-# DAOStack Alchemy
-## Creating DAOs for an Emergent Future
+# DAOStack Alchemy - Creating DAOs for an Emergent Future
 
-### What is Alchemy?
+## What is Alchemy?
 
 The DAOStack Alchemy is a browser application that enables anyone with an account on the Ethereum blockchain, and \[STK?\] tokens to spend, to easily create DAOs on Ethereum that run on predefined, configurable smart contracts.
 
-### Implementation
+## Implementation
 The application uses the standards-compliant and highly modular browser-side framework [Aurelia](http://aurelia.io) (hence "Aurelia" in the name of the repository).
 
 Browser-side the application uses TypeScript/ECMAScript 2016+.  At this time there are no web server-side components.
 
-### The DAOStack
+## The DAOStack
 
 Alchemy depends on a library of reusable and configurable Ethereum smart contracts called "DAOStack".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/daostack).
 
-### See It Live
+## See It Live
 You will soon be able to  browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net).  This deployment of the DAOStack application assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
 
-### Building The Code
+## Building The Code
 
 To build the code, follow these steps.
 
@@ -37,7 +36,7 @@ To build the code, follow these steps.
     npm start serve
   ```
 
-### Defining Which Chain to Run Against
+## Defining Which Chain to Run Against
 
 The ETH_ENV environment variable, as defined in the developer's OS environment, specifies which blockchain network should be used by the application.
 
