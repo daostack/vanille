@@ -18,7 +18,24 @@ describe('the App module', () => {
 
   beforeEach(() => {
     mockedRouter = new RouterStub();
-    sut = new App();
+
+    let fakeWeb3Service = {
+      isConnected: true,
+      isCorrectChain: true,
+      noAccount: false
+      // web3: {},
+      // accounts: [],
+      // defaultAccount: "",
+      // currentProvider: {},
+      // eth: {},
+      // version: () => {}
+    };
+
+    let fakeArcService = {
+      haveDAOStack: true
+    };
+
+    sut = new App(fakeWeb3Service as any, fakeArcService as any);
     sut.configureRouter(mockedRouter, mockedRouter);
   });
 

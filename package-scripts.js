@@ -71,11 +71,11 @@ module.exports = {
         production: {
           inlineCss: series(
             'nps webpack.build.before',
-            'webpack --progress -p --env.production'
+            "webpack --progress -p --env.production --env.ETH_ENV='kovan'"
           ),
           default: series(
             'nps webpack.build.before',
-            'webpack --progress -p --env.production --env.extractCss'
+            "webpack --progress -p --env.production --env.extractCss --env.ETH_ENV='kovan'"
           ),
           serve: series.nps(
             'webpack.build.production',

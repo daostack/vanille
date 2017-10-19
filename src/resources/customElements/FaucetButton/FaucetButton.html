@@ -1,0 +1,12 @@
+<template>
+
+    <div style="display:inline-block">
+        <button if.bind="!fillFaucet" type="button" class='btn btn-primary' click.delegate="getEth()">Send me some ETH, please</button>
+
+        <button if.bind="fillFaucet" type='button' class='btn btn-primary' click.delegate="sendToFaucet()">Send back some of my ETH, thank you</button>
+    </div>
+
+    <div if.bind="getEthSuccessMessage" style="display:inline-block; margin-left: 6px; color: green">${getEthSuccessMessage}</div>
+    <div if.bind="getEthErrorMessage" style="display:inline-block; margin-left: 6px; color: red"> ${getEthErrorMessage}</div>
+
+</template>

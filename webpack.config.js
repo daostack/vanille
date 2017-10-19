@@ -36,134 +36,162 @@ const scssRules = [...cssRules,
 /**
  * @return {webpack.Configuration}
  */
-module.exports = ({production, server, extractCss, coverage} = {}) => ({
-  resolve: {
-    extensions: ['.ts', '.js'],
-    modules: [srcDir, 'node_modules'],
-    alias: {
-      // prepend '~' to import path to use this alias
-      "materialize-sass": path.resolve(nodeModulesDir,"materialize-sass/sass/components")
-    }
-    },
+module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
 
-  devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
-  entry: {
-    app: ['aurelia-bootstrapper'],
-    vendor: ['bluebird', 'jquery', 'materialize-css', 'aurelia-templating', 'aurelia-binding', 'aurelia-router', 'aurelia-templating-binding', 'aurelia-polyfills'],
-  },
-  output: {
-    path: outDir,
-    publicPath: baseUrl,
-    filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-    sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
-    chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js',
-  },
-  devServer: {
-    contentBase: outDir,
-    // serve index.html for all 404 (required for push-state)
-    historyApiFallback: true,
-  },
-  module: {
-    rules: [
-      // {
-      //   test: /\.scss$/,
-      //   use: [ { loader: "sass-loader" } ] 
-      // },
-      // CSS required in JS/TS files should use the style-loader that auto-injects it into the website
-      // only when the issuer is a .js/.ts file, so the loaders are not applied inside html templates
-      {
-        test: /\.scss$/i,
-        issuer: [{ not: [{ test: /\.html$/i }] }],
-        use: extractCss ? ExtractTextPlugin.extract({
-          fallback: 'style-loader',
+  let ENV = production ? 'production' : 'development';
+  
+  // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
+  ETH_ENV = ETH_ENV || process.env.ETH_ENV || 'testrpc';
+    
+  console.log(`ENV: ${ENV}`);
+  console.log(`ETH_ENV: ${ETH_ENV}`);
+    
+  return {
+
+    resolve: {
+      extensions: ['.ts', '.js'],
+      modules: [srcDir, 'node_modules'],
+      alias: {
+        // prepend '~' to import path in order to use this alias
+        "materialize-sass": path.resolve(nodeModulesDir,"materialize-sass/sass/components")
+      }
+      },
+
+    devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
+    entry: {
+      app: ['aurelia-bootstrapper'],
+      vendor: [
+        'bluebird', 
+        'jquery', 
+        'materialize-css', 
+        'aurelia-templating', 
+        'aurelia-binding', 
+        'aurelia-router', 
+        'aurelia-templating-binding', 
+        'aurelia-polyfills',
+        'emergent-arc',
+        'ethereumjs-tx',
+        'truffle-contract'
+      ],
+    },
+    output: {
+      path: outDir,
+      publicPath: baseUrl,
+      filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
+      sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
+      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js',
+    },
+    devServer: {
+      contentBase: outDir,
+      // serve index.html for all 404 (required for push-state)
+      historyApiFallback: true,
+    },
+    module: {
+      rules: [
+        // {
+        //   test: /\.scss$/,
+        //   use: [ { loader: "sass-loader" } ] 
+        // },
+        // CSS required in JS/TS files should use the style-loader that auto-injects it into the website
+        // only when the issuer is a .js/.ts file, so the loaders are not applied inside html templates
+        {
+          test: /\.scss$/i,
+          issuer: [{ not: [{ test: /\.html$/i }] }],
+          use: extractCss ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: scssRules,
+          }) : ['style-loader', ...scssRules],
+        },
+        {
+          test: /\.scss$/i,
+          issuer: [{ test: /\.html$/i }],
+          // CSS required in templates cannot be extracted safely
+          // because Aurelia would try to require it again in runtime
           use: scssRules,
-        }) : ['style-loader', ...scssRules],
-      },
-      {
-        test: /\.scss$/i,
-        issuer: [{ test: /\.html$/i }],
-        // CSS required in templates cannot be extracted safely
-        // because Aurelia would try to require it again in runtime
-        use: scssRules,
-      },
-      {
-        test: /\.css$/i,
-        issuer: [{ not: [{ test: /\.html$/i }] }],
-        use: extractCss ? ExtractTextPlugin.extract({
-          fallback: 'style-loader',
+        },
+        {
+          test: /\.css$/i,
+          issuer: [{ not: [{ test: /\.html$/i }] }],
+          use: extractCss ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: cssRules,
+          }) : ['style-loader', ...cssRules],
+        },
+        {
+          test: /\.css$/i,
+          issuer: [{ test: /\.html$/i }],
+          // CSS required in templates cannot be extracted safely
+          // because Aurelia would try to require it again in runtime
           use: cssRules,
-        }) : ['style-loader', ...cssRules],
-      },
-      {
-        test: /\.css$/i,
-        issuer: [{ test: /\.html$/i }],
-        // CSS required in templates cannot be extracted safely
-        // because Aurelia would try to require it again in runtime
-        use: cssRules,
-      },
-      { test: /\.html$/i, loader: 'html-loader' },
-      { test: /\.ts$/i, loader: 'awesome-typescript-loader', exclude: nodeModulesDir },
-      { test: /\.json$/i, loader: 'json-loader' },
-      // use Bluebird as the global Promise implementation:
-      { test: /[\/\\]node_modules[\/\\]bluebird[\/\\].+\.js$/, loader: 'expose-loader?Promise' },
-      // exposes jQuery globally as $ and as jQuery:
-      { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' },
-      // embed small images and fonts as Data Urls and larger ones as files:
-      { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
-      { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },
-      { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' } },
-      // load these fonts normally, as files:
-      { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
-      ...when(coverage, {
-        test: /\.[jt]s$/i, loader: 'istanbul-instrumenter-loader',
-        include: srcDir, exclude: [/\.{spec,test}\.[jt]s$/i],
-        enforce: 'post', options: { esModules: true },
-      })
-    ]
-  },
-  plugins: [
+        },
+        { test: /\.html$/i, loader: 'html-loader' },
+        { test: /\.ts$/i, loader: 'awesome-typescript-loader', exclude: nodeModulesDir },
+        { test: /\.json$/i, loader: 'json-loader' },
+        // use Bluebird as the global Promise implementation:
+        { test: /[\/\\]node_modules[\/\\]bluebird[\/\\].+\.js$/, loader: 'expose-loader?Promise' },
+        // exposes jQuery globally as $ and as jQuery:
+        { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' },
+        // embed small images and fonts as Data Urls and larger ones as files:
+        { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
+        { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },
+        { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' } },
+        // load these fonts normally, as files:
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
+        ...when(coverage, {
+          test: /\.[jt]s$/i, loader: 'istanbul-instrumenter-loader',
+          include: srcDir, exclude: [/\.{spec,test}\.[jt]s$/i],
+          enforce: 'post', options: { esModules: true },
+        })
+      ]
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+        NODE_ENV: JSON.stringify(ENV),
+        ETH_ENV: JSON.stringify(ETH_ENV),
+        },
+    }),
     new AureliaPlugin(),
     new ProvidePlugin({
-      'Promise': 'bluebird',
-      '$': 'jquery',
-      'jQuery': 'jquery',
-      'window.jQuery': 'jquery',
-    }),
-    new TsConfigPathsPlugin(),
-    new CheckerPlugin(),
-    new HtmlWebpackPlugin({
-      template: 'index.ejs',
-      minify: production ? {
-        removeComments: true,
-        collapseWhitespace: true
-      } : undefined,
-      metadata: {
-        // available in index.ejs //
-        title, server, baseUrl
-      },
-    }),
-    new CopyWebpackPlugin([
-      { from: 'static/favicon.ico', to: 'favicon.ico' },    
-      { from: 'node_modules/materialize-css/dist/css/materialize.min.css'},
-      { from: 'node_modules/materialize-css/dist/fonts/roboto', to: 'fonts/roboto'}
-    ]),
-    ...when(extractCss, new ExtractTextPlugin({
-      filename: production ? '[contenthash].css' : '[id].css',
-      allChunks: true,
-    })),
-    ...when(!production, [
-      new webpack.SourceMapDevToolPlugin({
-        filename: '[file].map', // Remove this line if you prefer inline source maps
-        moduleFilenameTemplate: path.relative(outDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
-    }),
-    ]),
-    ...when(production, [
-      new CommonsChunkPlugin({
-        name: 'common'
-        })
-        // providing  sourceMap: true prevents UglifyJsPlugin from crashing
-        , new webpack.optimize.UglifyJsPlugin({ sourceMap: true })
-      ])
-      // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
-  ],
-})
+        'Promise': 'bluebird',
+        '$': 'jquery',
+        'jQuery': 'jquery',
+        'window.jQuery': 'jquery',
+      }),
+      new TsConfigPathsPlugin(),
+      new CheckerPlugin(),
+      new HtmlWebpackPlugin({
+        template: 'index.ejs',
+        minify: production ? {
+          removeComments: true,
+          collapseWhitespace: true
+        } : undefined,
+        metadata: {
+          // available in index.ejs //
+          title, server, baseUrl
+        },
+      }),
+      new CopyWebpackPlugin([
+        { from: 'static/favicon.ico', to: 'favicon.ico' },    
+        { from: 'node_modules/materialize-css/dist/css/materialize.min.css'},
+        { from: 'node_modules/materialize-css/dist/fonts/roboto', to: 'fonts/roboto'}
+      ]),
+      ...when(extractCss, new ExtractTextPlugin({
+        filename: production ? '[contenthash].css' : '[id].css',
+        allChunks: true,
+      })),
+      ...when(!production, [
+        new webpack.SourceMapDevToolPlugin({
+          filename: '[file].map', // Remove this line if you prefer inline source maps
+          moduleFilenameTemplate: path.relative(outDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
+      }),
+      ]),
+      ...when(production, [
+        new CommonsChunkPlugin({
+          name: 'common'
+          })
+        ])
+        // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
+    ],
+  }
+}
