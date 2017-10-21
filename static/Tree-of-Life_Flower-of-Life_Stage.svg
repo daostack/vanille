@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="400" height="400" viewBox="0 0 400 400">
+<style type="text/css">
+	.st0{fill:#1B1464;fill-opacity:0.5;stroke:#000;}
+	.st1{fill:none;stroke:#000;stroke-linejoin:round;}
+	.st2{fill:none;stroke:#1B1464;stroke-width:3;}
+	.st3{fill:none;stroke:#000;stroke-width:2;}
+</style>
+<symbol  id="disc" viewBox="-17.9 -17.9 35.8 35.8">
+	<path class="st0" d="M-17.4,0c0,9.6,7.8,17.4,17.4,17.4S17.4,9.6,17.4,0S9.6-17.4,0-17.4S-17.4-9.6-17.4,0z"/>
+</symbol>
+<symbol  id="leaf" viewBox="-8.7 -31.9 17.4 63.9">
+	<path class="st1" d="M8.2,0C8.2-17.4,0-31.4,0-31.4S-8.2-17.4-8.2,0S0,31.4,0,31.4S8.2,17.4,8.2,0z"/>
+</symbol>
+<g id="segments">
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 146.0357 325.3095)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4997 356.7542)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 254.9636 325.3095)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 254.9636 262.42)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 254.9636 199.5304)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 309.4276 230.9752)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 363.8915 262.42)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 309.4273 168.055)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 309.4273 105.1655)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 309.4276 293.8647)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 363.8915 199.5304)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 363.8915 136.6409)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 254.9633 136.6102)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 254.9633 73.7207)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4994 293.8341)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4994 230.9445)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4994 168.055)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4994 105.1655)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 200.4994 42.2759)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 146.0357 262.4479)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 146.0357 199.5666)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 146.0357 136.5294)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 146.0357 73.6399)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 64.34 278.1115)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 118.8039 309.5563)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 278.1422)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.7318 246.6667)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 282.196 215.2526)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 336.482 183.7772)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.732 309.5869)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 282.196 278.1422)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 336.6599 246.6974)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 282.196 341.0317)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 336.6599 309.5869)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 341.0317)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.732 372.4764)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 64.34 215.2219)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 64.34 152.2516)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 64.34 89.3621)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 118.804 57.9173)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 118.804 246.6667)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 215.2805)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.732 183.7772)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 282.1957 152.3324)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 336.6596 120.8877)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 91.5716 293.8341)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 37.1077 262.3893)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 37.1077 199.4998)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 37.1077 136.5294)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 91.5716 230.9445)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 91.5716 168.0549)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(1 0 0 -1 91.5716 105.0846)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 118.8036 278.1121)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2674 309.5569)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2676 246.6674)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 278.1428)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 282.1953 246.6673)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 336.6595 215.2532)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 336.6595 278.1428)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 215.2811)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 282.1953 183.7778)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 336.612 152.3331)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 282.1956 309.5875)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 341.0323)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 64.3396 309.5569)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 118.8035 341.0016)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2677 372.4771)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 118.8036 215.2225)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2674 183.7778)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 152.3999)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 118.8036 152.2522)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 118.8036 89.3627)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2677 120.9551)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 173.2253 57.9179)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 26.4732)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 227.7316 89.3627)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 282.1953 57.9987)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 282.1953 120.8883)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 336.6592 89.4435)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 64.3396 246.6673)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 64.3396 183.7777)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 -0.866 -0.866 -0.5 64.3396 120.9691)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 118.804 183.7771)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 152.3992)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.7318 120.8877)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 282.1957 89.4429)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 118.804 120.8068)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 89.3621)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 227.7318 57.9981)"/>
+			<use xlink:href="#leaf"  width="17.4" height="63.9" x="-8.7" y="-31.9" transform="matrix(0.5 0.866 0.866 -0.5 173.2681 26.4726)"/>
+</g>
+<g id="circles">
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 200.4998 325.2791)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 200 262.3896)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 254.9637 231.0117)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 146.0361 230.5117)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 200.5 200)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 146.0361 167.9745)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 254.9637 168.1222)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 254.9639 105.085)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 146.0361 105.1964)"/>
+	
+		<use xlink:href="#disc"  width="35.8" height="35.8" x="-17.9" y="-17.9" transform="matrix(1 0 0 -1 200.5 73.721)"/>
+	<line class="st2" x1="146" y1="185.4" x2="146" y2="213.1"/>
+	<line class="st2" x1="146" y1="122.5" x2="146" y2="150.7"/>
+	<line class="st2" x1="154.2" y1="246.7" x2="192.3" y2="309.6"/>
+	<line class="st2" x1="200" y1="279.8" x2="200" y2="307.9"/>
+	<line class="st2" x1="200" y1="245" x2="200" y2="217.4"/>
+	<line class="st2" x1="200" y1="182.6" x2="200" y2="91.1"/>
+	<line class="st2" x1="186" y1="83.3" x2="161.7" y2="98"/>
+	<line class="st2" x1="215.7" y1="83.3" x2="239.3" y2="98"/>
+	<line class="st2" x1="163.4" y1="168.1" x2="237.6" y2="168.1"/>
+	<line class="st2" x1="239.3" y1="177.7" x2="215.7" y2="191"/>
+	<line class="st2" x1="161.7" y1="177.7" x2="186" y2="191"/>
+	<line class="st2" x1="186" y1="209.3" x2="161.7" y2="223.9"/>
+	<line class="st2" x1="215.7" y1="209.3" x2="239.3" y2="223.9"/>
+	<line class="st2" x1="255" y1="122.6" x2="255" y2="150.6"/>
+	<line class="st2" x1="255" y1="185.5" x2="255" y2="213.6"/>
+	<line class="st2" x1="246.8" y1="246.7" x2="208.7" y2="309.6"/>
+	<path class="st3" d="M200,395.6C92.1,395.6,4.4,307.9,4.4,200S92.1,4.4,200,4.4S395.6,92.1,395.6,200S307.9,395.6,200,395.6z"/>
+	<circle class="st3" cx="200" cy="200" r="189.6"/>
+</g>
+</svg>

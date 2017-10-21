@@ -88,10 +88,6 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
     },
     module: {
       rules: [
-        // {
-        //   test: /\.scss$/,
-        //   use: [ { loader: "sass-loader" } ] 
-        // },
         // CSS required in JS/TS files should use the style-loader that auto-injects it into the website
         // only when the issuer is a .js/.ts file, so the loaders are not applied inside html templates
         {

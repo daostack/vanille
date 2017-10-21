@@ -1,0 +1,21 @@
+<template>
+    <h1>The DAO Ecosystem</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Promoted with Stacks</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr repeat.for="org of organizationArray">
+                <td><a route-href="route: organization; params.bind: { address: org.address }">${org.name}</a></td>
+                <td><etherscanlink address=${org.address}>${org.address}</etherscanlink></td>
+                <td>${org.promotedAmount}</td>
+                <td><a href="organization/${org.address}/promote">Promote</a></td>
+            </tr>
+        </tbody>
+    </table>
+</template>

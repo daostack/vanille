@@ -86,7 +86,7 @@ module.exports = {
       server: {
         default: `webpack-dev-server -d --inline --env.server`,
         extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss`,
-        hmr: `webpack-dev-server -d --inline --hot --env.server`
+        hmr: `webpack-dev-server -d --inline --hot --env.server --port 8090`
       },
     },
     serve: 'http-server dist --cors',

@@ -70,7 +70,7 @@ export class App {
         }
         else {
             config.map([
-              { route: ['', 'home'],         name: 'home',        moduleId: PLATFORM.moduleName('./home'),        nav: true, title: 'Home' },
+              { route: ['', 'home'],         name: 'home',        moduleId: PLATFORM.moduleName('./home'),        nav: true, title: 'Home' }
             //   {
             //     route: ['about' ],
             //     name: 'about',
@@ -99,13 +99,15 @@ export class App {
             //     moduleId: PLATFORM.moduleName('../presale/presale'),
             //     nav: false,
             //     title: 'Presale'
-            // }, {
-            //     route: ['organizations' ],
-            //     name: 'organizations',
-            //     moduleId: PLATFORM.moduleName('../organizations/list/list'),
-            //     nav: true,
-            //     title: 'Organizations'
-            // }, {
+            // }
+            , {
+                route: ['organizations' ],
+                name: 'organizations',
+                moduleId: PLATFORM.moduleName('./organizations/list'),
+                nav: true,
+                title: 'Organizations'
+            }
+            // , {
             //     // 'address' will be present in the object passed to the 'activate' method of the viewmodel
             //     route: ['organization/:address' ],
             //     name: 'organization',
@@ -113,15 +115,15 @@ export class App {
             //     nav: false,
             //     title: 'Organization'
             // }
-            // , {
-            //     route: ['deploygenesis' ],
-            //     name: 'deploygenesis',
-            //     moduleId: PLATFORM.moduleName('../deploygen/deploygen'),
-            //     nav: true,
-            //     title: 'Launch a DAO'
-            // }
+            , {
+                route: ['deployDAO' ],
+                name: 'deployDAO',
+                moduleId: PLATFORM.moduleName('./organizations/deploy'),
+                nav: true,
+                title: 'Birth a New DAO'
+            }
         ]);
-        }
+    }
 
     this.router = router;
   }

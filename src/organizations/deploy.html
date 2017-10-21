@@ -1,0 +1,101 @@
+<template>    
+    <h2>Birth a New DAO</h2>
+
+    <div style="padding-left:20px;">
+    <div if.bind="ethBalance === null || tknBalance === null">
+      <h5>Loading...</h5>
+    </div>
+    <div if.bind="ethBalance < 0.2">
+      <br />
+      <h5>Looks like you don't have enough ETH to pay for all the transaction fees to launch your organization.</h5>
+      <br />
+      <a route-href='route: faucet' class='btn btn-primary' >Get some ETH from our faucet</a>
+    </div>
+    <div if.bind="tknBalance < 5">
+      <br />
+      <h5>The price to launch an organization on DAOstack is 5 STK. Head over to the DAOstack ICO and contribute some ETH in return for some Stacks.</h5>
+      <br />
+      <a class='btn btn-primary' href='organization/${controllerAddrss}/ico'>Go get some Stacks!</a>
+    </div>
+
+      <div>
+        <h4 style="margin-top: 30px">New Organization Details</h4>
+        <form class="form" style="margin-left:20px;">
+          <label for.bind='orgName'>Organization Name</label>
+          <input type='text' class='form-control' id.bind='orgName' value.bind='orgName' name.bind='orgName' style="width:400px" />
+          <label for.bind='tokenName'>Token Name</label>
+          <input type='text' class='form-control' id.bind='tokenName' value.bind='tokenName' name.bind='tokenName' style="width:400px" />
+          <label for='tokenSymbol'>Token Symbol</label>
+          <input id.bind='tokenSymbol' type='text' class='form-control' value.bind='tokenSymbol | toUpper' name.bind='tokenSymbol' style="width:100px" />
+        </form>
+      </div>
+      <h4 style="margin-top: 30px">New Organization Founders</h4>
+
+      <div repeat.for='founder of founders'>
+        <form class="form" style="margin-left:20px;">
+          <label for='founder_'$index'_address'>Member ${ $index + 1 } </label>
+          <input class='form-control'
+            style="width:400px"
+            placeholder='enter wallet address'
+            type='text'
+            name='founder_'$index'_address'
+            id='founder_'$index'_address'
+            key='founder_'$index'_address'
+            value.bind='founder.address'
+          />
+          <label for='founder_'$index'_tokens'>Tokens</label>
+          <input class='form-control'
+            style="width:80px" 
+            type='number'
+            name='founder_'$index'_tokens'
+            id='founder_'$index'_tokens'
+            key='founder_'$index'_tokens'
+            value.bind='founder.tokens'
+          />
+          <label for='founder_'$index'_reputation'>Reputation</label>
+          <input class='form-control'
+            style="width:80px" 
+            type='number'
+            name='founder_'$index'_reputation'
+            id='founder_'$index'_reputation'
+            key='founder_'$index'_reputation'
+            value.bind='founder.reputation'
+          />
+          <span if.bind='$index > 0'>
+            <i class='fa fa-times' click.delegate='removefounder($index)'></i>
+          
+        </form>
+      </div>
+
+      <button  style="margin-top: 30px" type='button' class='btn btn-primary' click.delegate="addfounderInput()">
+        <i class='fa fa-plus'></i> Add another founder
+      </button>
+      <div style="margin-top: 30px" >
+        <div if.bind='!deployOrgStatus'>
+          <p><strong>* Forging a new organization requires the signing of three separate transactions at the moment. So please be patient and make sure to sign all three transactions. </strong></p>
+          <button type='button' class='btn btn-primary' click.delegate='deploy()'>
+            <i class='fa fa-rocket'></i> Deploy Organization
+          </button>
+        </div>
+        <div if.bind="deployOrgStatus === 'deploying'">
+          <div class="progress">
+              <div if.bind="addOrgResultMessage === 'adding_org'" class="progress-bar progress-bar-striped active" style='width:100%'>
+                Deploying ${orgName}
+              </div>
+              <!-- <div if.bind="addOrgResultMessage === 'org_added'" class="progress-bar progress-bar-success" style='width:100%'>
+                Successfully Deployed ${orgName}
+              </div>
+              <div if.bind="addOrgResultMessage === 'org_error'" class="progress-bar progress-bar-error" style='width:100%'>
+                An Error Occurred Deplying ${orgName}
+              </div> -->
+          </div>
+        </div>
+        <div if.bind="deployOrgStatus === 'deployed'">
+          <h4>Congratulations! ${orgName} has been successfully deployed! Check it out in the <a route-href='route: organizations' >Organization Index</a>.</h4>
+        </div>
+        <div if.bind="deployOrgStatus === 'error'">
+          <h4>Sorry! An error occurred adding ${orgName}: ${addOrgResultMessage}.</h4>
+        </div>
+  </div>
+  </div>
+</template>

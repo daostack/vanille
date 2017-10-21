@@ -21,6 +21,10 @@
   display:none;
 }
 
+.hot {
+  cursor: pointer;
+}
+
 /** APPLICTION **/
 
 html {
