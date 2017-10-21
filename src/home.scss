@@ -1,14 +1,14 @@
 @import '~materialize-sass/color';
 
-.big-button-image {
+.home .big-button-image {
   height: 10rem;
 }
 
-.card {
-  padding-top:1.5rem
+.home .card {
+  padding-top:1.5rem;
 }
 
-.card-title {
+.home .card-title {
   @extend .blue-text;
   font-weight: 600 !important;
 }

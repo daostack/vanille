@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
-import { ArcService, Organization, Founder } from "../services/ArcService";
+import { ArcService } from "../services/ArcService";
+import { OrganizationService, Organization, Founder } from "../services/OrganizationService";
 
 @autoinject
 export class DeployGen  {
@@ -19,9 +20,9 @@ export class DeployGen  {
   private deployOrgStatus:string = null;
 
   constructor(
-    private web3: Web3Service,
-    // private contractService: TruffleContractService,
-    private arcService: ArcService    
+    private web3: Web3Service
+    , private arcService: ArcService
+    , private organizationService: OrganizationService
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array({ address: this.userAddress, tokens: 1000, reputation: 1000 });
@@ -48,7 +49,7 @@ export class DeployGen  {
     this.deployOrgStatus = 'deploying';
     this.addOrgResultMessage= 'adding_org';
     try {
-      const organization = await this.arcService.createOrganization({
+      const organization = await this.organizationService.createOrganization({
         orgName: this.orgName,
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,

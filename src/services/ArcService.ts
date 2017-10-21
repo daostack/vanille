@@ -12,7 +12,6 @@ import * as Web3 from "web3";
 // @autoinject()
 export class ArcService {
     
-    private cache = new Map<string,Organization>();
     private static universalContracts: ArcSettings;
 
     public get defaultAccount(): string { return getDefaultAccount(); }
@@ -44,22 +43,12 @@ export class ArcService {
         return await contract.at(at);
     }
 
+    // TODO: Probably should move this into a separate service
     public async getDAOStackMintableToken() {
         const schemeRegistrar = await this.getContract("SchemeRegistrar");
         const mintableTokenAddress = await schemeRegistrar.nativeToken();
         const mintableTokenContract = await this.getContract("MintableToken", mintableTokenAddress);
         return mintableTokenContract;
-    }
-
-    public async getDAOStackAddress() {
-        const schemeRegistrar = await this.getContract("SchemeRegistrar");
-        return await schemeRegistrar.beneficiary();
-    }
-
-    public async getDAOStackOrganization() {
-        const avatarAddress = await this.getDAOStackAddress();
-        const org = await this.organizationAt(avatarAddress);
-        return org;
     }
 
     // private getArcContractInfo(name: string): ArcContractInfo {
@@ -69,21 +58,6 @@ export class ArcService {
     // private getTruffleContract(name: string): TruffleContract {
     //     return this.getArcContractInfo(name).contract;
     // }
-
-    public async createOrganization(config: OrganizationCreateConfig): Promise<Organization> {
-        const org = await Organization.new(config);
-        this.cache.set(org.avatar.address,org);
-        return org;
-    }
-
-    public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<Organization> {
-        let org: Organization;
-        if (!fromCache || !(org = this.cache.get(avatarAddress)) ) {
-            org = await Organization.at(avatarAddress);
-            this.cache.set(avatarAddress,org);
-        }
-        return org;
-    }
 
     /**
      * @param tx The transaction
@@ -120,21 +94,8 @@ export interface ArcContractInfo {
     address: string;
 }
 
-export interface OrganizationCreateConfig {
-    orgName: string;
-    tokenName: string;
-    tokenSymbol: string;
-    founders: Array<Founder>;
-}
-
 export { Organization } from 'emergent-arc'; 
 
-export interface Founder {
-    address: string;
-    tokens: number;
-    reputation: number;
-}
-  
 // export {GenesisScheme};
 // export {GlobalConstraintRegistrar};
 // export {SchemeRegistrar};

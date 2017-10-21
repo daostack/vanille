@@ -6,7 +6,7 @@ import { Router } from 'aurelia-router';
 export class ClickToRoute {
 
   @bindable({ primaryProperty: true }) route: string;
-  @bindable params?: string;
+  @bindable params?: Object;
 
   constructor(private element: Element, private router: Router) {
   }

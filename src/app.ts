@@ -111,7 +111,7 @@ export class App {
             //     // 'address' will be present in the object passed to the 'activate' method of the viewmodel
             //     route: ['organization/:address' ],
             //     name: 'organization',
-            //     moduleId: PLATFORM.moduleName('../organizations/organization/organization'),
+            //     moduleId: PLATFORM.moduleName('./organizations/organization/organization'),
             //     nav: false,
             //     title: 'Organization'
             // }
@@ -122,7 +122,15 @@ export class App {
                 nav: true,
                 title: 'Birth a New DAO'
             }
-        ]);
+            , {
+              // 'address' will be present in the object passed to the 'activate' method of the viewmodel
+              route: ['daoDashboard/:address' ],
+              name: 'daoDashboard',
+              moduleId: PLATFORM.moduleName('./organizations/dashboard'),
+              nav: false,
+              title: 'DAO Dashboard'
+          }
+      ]);
     }
 
     this.router = router;

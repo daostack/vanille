@@ -1,0 +1,11 @@
+@import '~materialize-sass/color';
+
+.orgs i.dashboard {
+  margin-right: 1rem;
+  font-size: 8rem;
+  @extend .blue-text;
+}
+
+.orgs .card-title {
+  font-weight: 600 !important;
+}
