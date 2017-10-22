@@ -69,6 +69,7 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         'aurelia-router', 
         'aurelia-templating-binding', 
         'aurelia-polyfills',
+        'aurelia-event-aggregator',
         'emergent-arc',
         'ethereumjs-tx',
         'truffle-contract'

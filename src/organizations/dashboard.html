@@ -1,5 +1,16 @@
 <template>
     <h2>${orgName}</h2>
-    <p>Address: ${address}</p>
-    <p>Promoted: ${org.promotedAmount}</p>
+    <dl>
+      <dt>Avatar</dt>
+      <dd><etherscanlink address=${address}>${address}</etherscanlink></dd>
+      <dt>Controller</dt>
+      <dd><etherscanlink address=${org.controller.address}>${org.controller.address}</etherscanlink></dd>
+      <dt>Token</dt>
+      <dd><etherscanlink address=${org.token.address}>${org.token.address}</etherscanlink></dd>
+      <dt>Token Symbol</dt>
+      <dd>${tokenSymbol}</dd>
+      <dt>Your Token Balance</dt>
+      <dd> ${ userTokenbalance }</dd>
+    </dl>
+    <h3>Schemes</h3>
 </template>

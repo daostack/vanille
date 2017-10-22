@@ -1,24 +1,5 @@
 <template>
     <h2>The Ecosystem of DAOs</h2>
-    <!-- <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Promoted with Stacks</th>
-                <th>Dashboard</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr repeat.for="org of organizationArray">
-                <td><a route-href="route: organization; params.bind: { address: org.address }">${org.name}</a></td>
-                <td><etherscanlink address=${org.address}>${org.address}</etherscanlink></td>
-                <td>${org.promotedAmount}</td>
-                <td><a href="daoDashboard/${org.address}">Dashboard</a></td>
-            </tr>
-        </tbody>
-    </table> -->
-
     <div class="row orgs" ref="list">
         <div class="col s12" repeat.for="org of organizationArray">
           <div class="card hoverable hot" 

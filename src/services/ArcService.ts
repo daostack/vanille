@@ -95,6 +95,7 @@ export interface ArcContractInfo {
 }
 
 export { Organization } from 'emergent-arc'; 
+export { TruffleContract } from 'truffle-contract';
 
 // export {GenesisScheme};
 // export {GlobalConstraintRegistrar};
