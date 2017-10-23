@@ -1,7 +1,7 @@
-@import '~materialize-sass/color';
+@import "~static/bootstrap";
+@import "~mdbootstrap-sass/data/colors";
 
 .orgs i.dashboard {
-  margin-right: 1rem;
   font-size: 8rem;
   @extend .blue-text;
 }
@@ -9,3 +9,4 @@
 .orgs .card-title {
   font-weight: 600 !important;
 }
+

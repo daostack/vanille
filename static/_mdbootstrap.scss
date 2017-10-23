@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+/**
+  What this does is modify bootstrap variables and styles.  It does not include bootstrap itself.
+  The required bootstrap scss files are included with MD Bootstrap.
+
+  This also does not include MDB itself.
+  
+ **/
+
+ @import ".\bootstrap";
+
+  // MDB Framework //
+ @import "~mdbootstrap-sass/data/prefixer";
+ @import "~mdbootstrap-sass/data/mixins";
+ @import "~mdbootstrap-sass/data/colors";
+ @import "~mdbootstrap-sass/data/variables";
+ $roboto-font-path: '../node_modules/mdbootstrap/font/roboto/';
+ $image-path: '../node_modules/mdbootstrap/img/';
+
+//  @import "~mdbootstrap-sass/global";
+//  @import "~mdbootstrap-sass/animations";
+//  @import "~mdbootstrap-sass/helpers";
+//  @import "~mdbootstrap-sass/typography";
+//  @import "~mdbootstrap-sass/buttons";
+//  @import "~mdbootstrap-sass/cards-basic";
+//  // @import "~mdbootstrap-sass/dropdowns";
+//  // @import "~mdbootstrap-sass/navbar";
+//  // @import "~mdbootstrap-sass/pagination";
+//  // @import "~mdbootstrap-sass/badge";
+//  // @import "~mdbootstrap-sass/breadcrumb";
+//  // @import "~mdbootstrap-sass/modals";
+//  // @import "~mdbootstrap-sass/progress";
+//  // @import "~mdbootstrap-sass/carousel-basic";
+//  @import "~mdbootstrap-sass/collapse";
+//  // @import "~mdbootstrap-sass/jumbotron";
+//  // @import "~mdbootstrap-sass/masks";
+//  // @import "~mdbootstrap-sass/waves";
+//  // @import "~mdbootstrap-sass/forms-basic";
+//  @import "~mdbootstrap-sass/msc";
+//  @import "~mdbootstrap-sass/footer";
+//  // @import "~mdbootstrap-sass/list-group";
+//  // @import "~mdbootstrap-sass/tables";
+ 

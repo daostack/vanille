@@ -1,35 +1,35 @@
 <template>
   <!-- <require from="./resources/customAttributes/blur-image"></require> -->
   
-  <section class="au-animate home">
+  <div class="home">
     <div style="margin-bottom: 2rem">
-      <h2>DAOs for an Emergent Future</h2>
-      <h5 style="font-weight:300">Welcome to DAOstack, the world's first open ecosystem of Decentralized Autonomous Organizations!</h5>
-      <p>DAOstack is an open source framework for a DAO management platform and network of organizations, collaborators and investors that collaborate on the blockchain.</p>
-      <p>Let's get started!</p>
+      <h1>DAOs for an Emergent Future</h1>
+      <h4>Welcome to DAOstack, the world's first open ecosystem of Decentralized Autonomous Organizations!</h4>
+      <p class="text-muted">DAOstack is an open source framework for a DAO management platform and network of organizations, collaborators and investors that collaborate on the blockchain.</p>
+      <h5>Let's get started!</h5>
     </div>
 
     <div class="row">
-      <div class="col s12 m6">
-        <div class="card hoverable hot" click-to-route="organizations" >
+      <div class="col col-sm-12 col-md-6">
+        <div class="card hoverable hot text-center" click-to-route="organizations" >
           <div class="card-image">
             <img class="big-button-image" src="../static/Tree-of-Life_Flower-of-Life_Stage.svg"/>
           </div>
-          <div class="card-content">
-            <div class="card-title center">Browse the DAO Ecosystem</div>
+          <div class="card-body text-center">
+            <div class="card-title">Browse the DAO Ecosystem</div>
           </div>
         </div>
       </div>
-      <div class="col s12 m6">
-        <div class="card hoverable" click-to-route="deployDAO">
+      <div class="col col-sm-12 col-md-6">
+          <div class="card hoverable hot text-center" click-to-route="deployDAO">
           <div class="card-image">
-            <img class="big-button-image" src="../static/mandala-02-black.svg"/>
+            <img class="big-button-image text-center" src="../static/mandala-02-black.svg"/>
           </div>
-          <div class="card-content">
+          <div class="card-body">
             <div class="card-title center">Birth a New DAO</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>

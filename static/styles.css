@@ -27,12 +27,14 @@
 
 /** APPLICTION **/
 
-html {
-  font-family: -apple-system, Windows, system-ui, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+.container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-body {
-  overflow-y: scroll;
+
+h1 {
+  font-weight: 400;
 }
 
 /* animate page transitions */

@@ -53,7 +53,9 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       modules: [srcDir, 'node_modules'],
       alias: {
         // prepend '~' to import path in order to use this alias
-        "materialize-sass": path.resolve(nodeModulesDir,"materialize-sass/sass/components")
+        "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
+        "mdbootstrap-sass": path.resolve(nodeModulesDir,"mdbootstrap/sass/mdb/free/"),
+        "static": path.resolve(__dirname,"static"),
       }
       },
 
@@ -62,8 +64,6 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       app: ['aurelia-bootstrapper'],
       vendor: [
         'bluebird', 
-        'jquery', 
-        'materialize-css', 
         'aurelia-templating', 
         'aurelia-binding', 
         'aurelia-router', 
@@ -72,8 +72,13 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         'aurelia-event-aggregator',
         'emergent-arc',
         'ethereumjs-tx',
-        'truffle-contract'
-      ],
+        'truffle-contract',
+        'bootstrap', 
+        'jquery', 
+        'node-waves', 
+        'popper.js', 
+        'mdbootstrap'
+        ],
     },
     output: {
       path: outDir,
@@ -154,6 +159,8 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         '$': 'jquery',
         'jQuery': 'jquery',
         'window.jQuery': 'jquery',
+        'Popper': 'popper.js',
+        'Waves': 'node-waves'
       }),
       new TsConfigPathsPlugin(),
       new CheckerPlugin(),
@@ -169,9 +176,14 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         },
       }),
       new CopyWebpackPlugin([
-        { from: 'static/favicon.ico', to: 'favicon.ico' },    
-        { from: 'node_modules/materialize-css/dist/css/materialize.min.css'},
-        { from: 'node_modules/materialize-css/dist/fonts/roboto', to: 'fonts/roboto'}
+        { from: 'static/favicon.ico' },    
+        { from: 'node_modules/mdbootstrap/font/roboto', to: 'font/roboto'},
+        { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
+        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
+        { from: 'node_modules/mdbootstrap/css/bootstrap.min.css', to: 'bootstrap.min.css'},
+        { from: 'node_modules/mdbootstrap/css/mdb.min.css', to: 'mdb.min.css'},
+        // for the spash page
+        { from: 'static/styles.css', to: 'styles.css' },    
       ]),
       ...when(extractCss, new ExtractTextPlugin({
         filename: production ? '[contenthash].css' : '[id].css',

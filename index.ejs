@@ -5,62 +5,24 @@
     <title><%- htmlWebpackPlugin.options.metadata.title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="<%- htmlWebpackPlugin.options.metadata.baseUrl %>">
-    <!-- imported CSS are concatenated and added automatically -->
+    <link href="font-awesome.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="materialize.min.css" rel="stylesheet"/>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="mdb.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
     
   </head>
   <body aurelia-app="main">
     <div class="container">
-      <!-- <h2><%- htmlWebpackPlugin.options.metadata.title %></h2> -->
-
       <div class="section"  style="text-align: center">
-          <h3>Welcome to <%- htmlWebpackPlugin.options.metadata.title %></h3>
-          <p style="margin-bottom:6rem">Hang on while we fetch some JavaScript...</p>
-          <div>
-          <div class="preloader-wrapper big active">
-          <div class="spinner-layer spinner-blue">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-            </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-          <div class="spinner-layer spinner-red">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-            </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-    
-          <div class="spinner-layer spinner-yellow">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-            </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-    
-          <div class="spinner-layer spinner-green">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-            </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
+          <h1 style="margin-bottom: 2rem;">Welcome to <%- htmlWebpackPlugin.options.metadata.title %></h1>
+          <h4 style="margin-bottom:2rem">Breath deeply while we fetch some JavaScript and connect to the blockchain...</h4>
+          <i class="fa fa-spinner fa-spin fa-4x light-blue-text"></i>
+          <!-- <div class="progress" style="height: 1.5rem;">
+              <div style="height: 100%" class="teal darken-2 progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
+          </div> -->
       </div>
     </div>
-  </div>
   
     <% if (htmlWebpackPlugin.options.metadata.server) { %>
     <!-- Webpack Dev Server reload -->

@@ -84,11 +84,11 @@ module.exports = {
         }
       },
       server: {
-        default: `webpack-dev-server -d --inline --env.server`,
-        extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss`,
+        default: `webpack-dev-server -d --inline --env.server  --port 8090`,
+        extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss  --port 8090`,
         hmr: `webpack-dev-server -d --inline --hot --env.server --port 8090`
       },
     },
-    serve: 'http-server dist --cors',
+    serve: 'http-server dist --cors -o -p 8090',
   },
 }

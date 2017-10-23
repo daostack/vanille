@@ -1,14 +1,16 @@
 ﻿/// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
-import '../static/styles.css';
-import 'font-awesome/css/font-awesome.css';
 import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
-import 'jquery';
-import 'materialize-css';
 import { ArcService } from "./services/ArcService";
 import { Web3Service } from "./services/Web3Service";
 import  { configure as configureEmergentArc } from 'emergent-arc';
+
+import "jquery";
+import "popper.js";
+import "node-waves";
+import "bootstrap";
+import "mdbootstrap";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
