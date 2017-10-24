@@ -57,7 +57,7 @@ module.exports = {
         development: {
           default: series(
             'nps webpack.build.before',
-            'webpack --progress -d'
+            "webpack --progress -d"
           ),
           extractCss: series(
             'nps webpack.build.before',
@@ -71,11 +71,13 @@ module.exports = {
         production: {
           inlineCss: series(
             'nps webpack.build.before',
-            "webpack --progress -p --env.production --env.ETH_ENV='kovan'"
+            /* removed -p because UglifyJs barfs on the ES6 code in emergent-arc */
+            "webpack --progress --env.production --env.ETH_ENV=kovan"
           ),
           default: series(
             'nps webpack.build.before',
-            "webpack --progress -p --env.production --env.extractCss --env.ETH_ENV='kovan'"
+            /* removed -p because UglifyJs barfs on the ES6 code in emergent-arc */
+            "webpack --progress --env.production --env.extractCss --env.ETH_ENV=kovan"
           ),
           serve: series.nps(
             'webpack.build.production',
@@ -84,8 +86,8 @@ module.exports = {
         }
       },
       server: {
-        default: `webpack-dev-server -d --inline --env.server  --port 8090`,
-        extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss  --port 8090`,
+        default: `webpack-dev-server -d --inline --env.server --port 8090`,
+        extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss --port 8090`,
         hmr: `webpack-dev-server -d --inline --hot --env.server --port 8090`
       },
     },

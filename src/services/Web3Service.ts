@@ -43,10 +43,10 @@ export class Web3Service {
     }
 
     public getBalance(ethAddress: string): Promise<number> {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         this.web3.eth.getBalance(ethAddress, (error, balance) => {
           if (error) {
-            throw Error(error);
+            reject(new Error(error));
           }
           resolve(Number(this.web3.fromWei(balance)));
         });
@@ -94,8 +94,10 @@ export class Web3Service {
           web3.version.getNetwork((err, chainId) => {
             if (!err) 
             {
+              console.log(`Targetted network: ${Web3Service.Network}`)
               let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
+              console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId})`);
               Web3Service._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === testrpcNetworkId);
               if (!Web3Service._isCorrectChain) {
                 reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
