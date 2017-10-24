@@ -14,7 +14,7 @@ export class EthBalance {
     this.ethAddress = this.web3.defaultAccount;
   }
 
-  attached() {
+  async attached() {
     this.readBalance();    
   }
 
@@ -25,28 +25,21 @@ export class EthBalance {
     }
   }
 
-  readBalance() {
-    /**
-     * TODO:  is suspicious or at least inefficient, how it is getting the balance multiple times.  
-     * Need to commment or improve. --dkent
-     * 
-     * TODO:  are these asynchronous? Can we return a promise here? --dkent
-     */
-    this.web3.getBalance(this.ethAddress, (error, res) => {
-      if (!error) {
-        this.ethBalance = Number(this.web3.fromWei(res)).toFixed(2);
-      }
-    });
-
+  async readBalance() {
+    this.getBalance();
     /**
      * Note I changed the first param from {} to latest to get this to work.  Dunno if that is the most efficient  -dkent
      */
-    this.filter = this.web3.eth.filter('latest', () => {
-     this.web3.getBalance(this.ethAddress, (error, res) => {
-        if (!error) {
-          this.ethBalance = Number(this.web3.fromWei(res)).toFixed(2);
-        }
-      })
+    this.filter = this.web3.eth.filter('latest', async () => {
+      this.getBalance();
     });
+  }
+
+  async getBalance() {
+    try {
+      this.ethBalance = (await this.web3.getBalance(this.ethAddress)).toFixed(2);
+    } catch(ex) {
+      console.log("EthBalance: failed to obtain eth balance");
+    }
   }
 }

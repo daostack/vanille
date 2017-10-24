@@ -1,7 +1,9 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
+import { TokenService } from "../services/TokenService";
 import { ArcService } from "../services/ArcService";
 import { OrganizationService, Organization, Founder } from "../services/OrganizationService";
+import "./deploy.scss";
 
 @autoinject
 export class DeployGen  {
@@ -23,10 +25,12 @@ export class DeployGen  {
     private web3: Web3Service
     , private arcService: ArcService
     , private organizationService: OrganizationService
+    , private tokenService: TokenService
   ) {
       this.userAddress = arcService.defaultAccount;
-      this.founders = new Array({ address: this.userAddress, tokens: 1000, reputation: 1000 });
-  }
+      this.founders = new Array();
+      
+    }
 
   async activate() {
     /**
@@ -34,13 +38,20 @@ export class DeployGen  {
      * until deploySequence is invoked.
      * Here I am initializing to '' which I believe is still not valid.
      */
+    // ($(".founder-add-button") as any).tooltip();
     return this.readBalances();
   }
 
-    private async readBalances() {
+  attached() {
+    this.addFounderInput({ address: this.userAddress, tokens: 1000, reputation: 1000 });
+    ($(".founder-add-button") as any).tooltip();
+  }
+
+  private async readBalances() {
       const token = await this.arcService.getDAOStackMintableToken();
-      this.tknBalance = Number(this.web3.fromWei(await token.balanceOf(this.userAddress)));
-      this.ethBalance = Number(this.web3.fromWei(this.web3.eth.getBalance(this.userAddress)));
+
+      this.tknBalance = (await this.tokenService.getUserTokenBalance(token));
+      this.ethBalance = (await this.web3.getBalance(this.userAddress));
       // console.log(`token balance: ${this.tknBalance}`);
       // console.log(`eth balance: ${this.ethBalance}`);
   }
@@ -73,12 +84,15 @@ export class DeployGen  {
   }
 
   removeFounder(idx: number) {
+    ($(".founder-delete-button") as any).tooltip("hide");
     if (this.founders.length > 1) {
       this.founders.splice(idx, 1);
     }
   }
 
-  addFounderInput() {
-      this.founders.push({ address: '', tokens: 1000, reputation: 1000 });
-  }
+  addFounderInput(founder:Founder = { address: null, tokens: 1000, reputation: 1000 }) {
+      this.founders.push(founder);
+      setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
+      ($(".founder-add-button") as any).tooltip("hide");
+    }
 }

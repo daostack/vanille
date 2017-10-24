@@ -25,22 +25,20 @@ export class FaucetButton {
             this.usrAddrss = web3.defaultAccount;
         }
 
-    sendToFaucet() {
+    async sendToFaucet() {
         const web3 = this.web3;
         const faucetAddrss = this.faucetAddrss
         const defAddrss = web3.defaultAccount;
         const amountInWei = web3.toWei(0.1, 'ether');
         this.getEthErrorMessage = null;
         this.getEthSuccessMessage = 'Working...';
-        web3.eth.sendTransaction({ to: faucetAddrss, from: defAddrss, value: amountInWei }, () => {
-        web3.eth.getBalance(this.usrAddrss, (err, res) => {
-            if (!err) {
-                this.getEthSuccessMessage = '0.1 ETH sent successfully';
-                this.ethBalance = Number(web3.fromWei(res));
-            } else {
-                this.getEthErrorMessage = err;
-            }
-        })
+        web3.eth.sendTransaction({ to: faucetAddrss, from: defAddrss, value: amountInWei }, async () => {
+          try {
+            this.ethBalance = (await this.web3.getBalance(this.usrAddrss));
+            this.getEthSuccessMessage = '0.1 ETH sent successfully';
+          } catch(ex) {
+            this.getEthErrorMessage = ex;
+          }
         })
     }
 

@@ -11,5 +11,11 @@
 
 .home .card-title {
   @extend .blue-text;
-  font-weight: 600 !important;
+  // font-weight: 500 !important;
+  font-size: 1.4rem;
+  font-family: sans-serif;
+}
+
+.home .card-image {
+  margin-bottom: 1.5rem;
 }

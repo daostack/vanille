@@ -14,7 +14,7 @@ export class TokenService {
     return await token.symbol();
   }
 
-  public async getUserTokenBalance(token: TruffleContract): Promise<Number> {
+  public async getUserTokenBalance(token: TruffleContract): Promise<number> {
     let userAddress = this.arcService.defaultAccount;
     return await Number(this.web3.fromWei(await token.balanceOf(userAddress)));
   }

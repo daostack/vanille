@@ -37,6 +37,43 @@ h1 {
   font-weight: 400;
 }
 
+.progress {
+  height: 1.25rem;
+}
+
+/* I suspect this is required due to a bug in the bootstrap beta v1 required by mdbootstrap */
+.progress-bar {
+  height: 1.25rem !important;
+  padding-top: .1rem;
+}
+
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+
 /* animate page transitions */
 section.au-enter-active {
   animation: fadeInRight 1s;
@@ -45,45 +82,4 @@ section.au-enter-active {
 div.au-stagger {
   /* 50ms will be applied between each successive enter operation */
   animation-delay: 50ms;
-}
-
-/* animation definitions */
-@-webkit-keyframes fadeInRight {
-  0% {
-    opacity: 0;
-    transform: translate3d(100%, 0, 0)
-  }
-  100% {
-    opacity: 1;
-    transform: none
-  }
-}
-
-@keyframes fadeInRight {
-  0% {
-    opacity: 0;
-    transform: translate3d(100%, 0, 0)
-  }
-  100% {
-    opacity: 1;
-    transform: none
-  }
-}
-
-@-webkit-keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }

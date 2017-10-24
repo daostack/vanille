@@ -134,6 +134,6 @@ export class App {
       ]);
     }
 
-    this.router = router;
+    this.router = router; 
   }
 }

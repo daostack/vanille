@@ -64,12 +64,6 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       app: ['aurelia-bootstrapper'],
       vendor: [
         'bluebird', 
-        'aurelia-templating', 
-        'aurelia-binding', 
-        'aurelia-router', 
-        'aurelia-templating-binding', 
-        'aurelia-polyfills',
-        'aurelia-event-aggregator',
         'emergent-arc',
         'ethereumjs-tx',
         'truffle-contract',
@@ -155,12 +149,12 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
     }),
     new AureliaPlugin(),
     new ProvidePlugin({
-        'Promise': 'bluebird',
-        '$': 'jquery',
-        'jQuery': 'jquery',
+        Promise: 'bluebird',
+        $: 'jquery',
+        jQuery: 'jquery',
         'window.jQuery': 'jquery',
-        'Popper': 'popper.js',
-        'Waves': 'node-waves'
+        Popper: ['popper.js', 'default'],
+        Waves: 'node-waves'
       }),
       new TsConfigPathsPlugin(),
       new CheckerPlugin(),

@@ -42,9 +42,16 @@ export class Web3Service {
         return this.web3.toWei(res, unit);
     }
 
-    public getBalance(ethAddress: string, callback: (error, res) => void):void {
-        this.web3.eth.getBalance(ethAddress, callback);
-    } 
+    public getBalance(ethAddress: string): Promise<number> {
+      return new Promise((resolve) => {
+        this.web3.eth.getBalance(ethAddress, (error, balance) => {
+          if (error) {
+            throw Error(error);
+          }
+          resolve(Number(this.web3.fromWei(balance)));
+        });
+      });
+    }
 
     public static Network = process.env.ETH_ENV;
     // not going to worry about the exact id for testrpc, which is dynamic, unless we absolutely have to
