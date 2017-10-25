@@ -42,9 +42,9 @@
     
     <ul class="list-group founders" repeat.for='founder of founders'>
       <span if.bind='$index > 0' class="delete-founder">
-          <round-delete-button data-toggle="tooltip" data-placement="left" title="Delete this founder" 
+          <round-trash-button data-toggle="tooltip" data-placement="left" title="Delete this founder" 
               class="founder-delete-button"
-              click.delegate='removeFounder($index)'></button>
+              click.delegate='removeFounder($index)'></round-trash-button>
       </span>
       <li class="list-group-item">
           <form class="form-inline">
