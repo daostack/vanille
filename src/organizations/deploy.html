@@ -19,16 +19,16 @@
 
     <section>
       <h4>Basic Information</h4>
-      <div class="md-form">
-        <input class="form-control" type='text' id.bind='orgName' value.bind='orgName' name.bind='orgName' style="width:400px" />
-        <label for.bind='orgName'>DAO Name</label>
+      <div class="md-form"  style="width:400px">
+        <input class="form-control" type='text' id='orgName' value.bind='orgName' />
+        <label for='orgName'>DAO Name</label>
       </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id.bind='tokenName' value.bind='tokenName' name.bind='tokenName' style="width:400px" />
-        <label for.bind='tokenName'>Token Name</label>
+      <div class="md-form" style="width:400px" >
+        <input class="form-control" type='text' id='tokenName' value.bind='tokenName' />
+        <label for='tokenName'>Token Name</label>
     </div>
-    <div class="md-form">
-        <input class="form-control" id.bind='tokenSymbol' type='text' value.bind='tokenSymbol | toUpper' name.bind='tokenSymbol' style="width:100px" />
+    <div class="md-form"  style="width:100px">
+        <input class="form-control"type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
         <label for='tokenSymbol'>Token Symbol</label>
       </div>
     </section>
@@ -58,9 +58,9 @@
               placeholder='enter wallet address'
               type='text'
               value.bind='founder.address'
-              name.bind='founder_address'
+              id.bind="appendIndex('founder_address',$index)"
             />
-            <label class="active" style="font-weight:bold" for='founder_address'>Founder ${ $index + 1 }</label>
+            <label class="active" style="font-weight:bold" for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
           </div>
           <div class="md-form">
             <input
@@ -68,9 +68,9 @@
               style="width:80px" 
               type='number'
               value.bind='founder.tokens'
-              name.bind='founder_tokens'
+              id.bind="appendIndex('founder_tokens',$index)"
             />
-            <label class="active" for='founder_tokens'>Tokens</label>
+            <label class="active" for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
           </div>
           <div class="md-form">
             <input 
@@ -78,9 +78,9 @@
               style="width:80px" 
               type='number'
               value.bind='founder.reputation'
-              name.bind='founder_reputation'
+              id.bind="appendIndex('founder_reputation',$index)"
             />
-            <label class="active" for='founder_reputation'>Reputation</label>
+            <label class="active" for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
           </div>
         </form>
       </li>

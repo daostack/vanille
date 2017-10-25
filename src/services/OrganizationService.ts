@@ -112,7 +112,7 @@ export class OrganizationService {
               //     return b.promotedAmount - a.promotedAmount;
               // });
 
-              console.log("Firing Daos changed");
+              // console.log("Firing Daos changed");
               this.publish(OrganizationService.daoSetChangedEvent, this.allOrganizations);
 
               resolve();

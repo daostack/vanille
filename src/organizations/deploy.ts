@@ -96,4 +96,8 @@ export class DeployGen  {
       setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
       ($(".founder-add-button") as any).tooltip("hide");
     }
+
+  appendIndex(str:string, ndx:number):string {
+    return str+ndx;
+  }
 }
