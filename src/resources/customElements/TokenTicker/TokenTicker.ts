@@ -1,10 +1,4 @@
 import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
-// import { TruffleContractService } from '../../../services/TruffleContractService';
-import { Web3Service } from "../../../services/Web3Service";
-
-// let MintableToken = require('../../../data/contracts/MintableToken.json');
-import { ArcService } from "../../../services/ArcService";
-
 import { TokenService } from  "../../../services/TokenService";
 
 @autoinject
@@ -16,7 +10,6 @@ export class TokenTicker {
     private balance:Number;
 
     constructor(
-      private arcService: ArcService,
       private tokenService: TokenService
     ) {
     }
@@ -27,7 +20,7 @@ export class TokenTicker {
 
   async readBalance() {
 
-    const token = await this.arcService.getDAOStackMintableToken();
+    const token = await this.tokenService.getDAOStackMintableToken();
     
     this.tknSymbol = await this.tokenService.getTokenName(token);
 

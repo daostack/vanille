@@ -13,4 +13,10 @@
       <dd> ${ userTokenbalance }</dd>
     </dl>
     <h3>Schemes</h3>
+      <ul class="list-group" repeat.for="scheme of schemes">
+        <li class="list-group-item">
+          <div style="font-weight: bold">${scheme.name}</div>
+          <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+        </li>
+    </ul>
 </template>

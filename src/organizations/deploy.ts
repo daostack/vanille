@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
-import { ArcService } from "../services/ArcService";
+import { ArcService, ContractInfo } from "../services/ArcService";
 import { OrganizationService, Organization, Founder } from "../services/OrganizationService";
 import "./deploy.scss";
 
@@ -13,6 +13,7 @@ export class DeployGen  {
   private ethBalance:number = null;
   private tknBalance:number = null;
   private controllerAddrss= '';
+  private knownSchemes: Array<ContractInfo>;
 
   private orgName:string = '';
   private tokenName:string = '';
@@ -29,7 +30,7 @@ export class DeployGen  {
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
-      
+      this.knownSchemes = this.arcService.knownSchemes;
     }
 
   async activate() {
@@ -48,7 +49,7 @@ export class DeployGen  {
   }
 
   private async readBalances() {
-      const token = await this.arcService.getDAOStackMintableToken();
+      const token = await this.tokenService.getDAOStackMintableToken();
 
       this.tknBalance = (await this.tokenService.getUserTokenBalance(token));
       this.ethBalance = (await this.web3.getBalance(this.userAddress));

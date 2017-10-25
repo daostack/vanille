@@ -1,3 +1,4 @@
+import { ContractInfo } from './ArcService';
 // import { autoinject } from "aurelia-framework";
 import  { Organization
     , getDefaultAccount
@@ -12,86 +13,144 @@ import * as Web3 from "web3";
 // @autoinject()
 export class ArcService {
     
-    private static universalContracts: ArcSettings;
+  constructor() {
+    this.contractCache = new Map<string,TruffleContract>();
+  }
+  /**
+   * The schemes managed by Arc
+   */
+  private _universalContracts: ArcSettings;
+  // private daoSchemes: Map<string,ContractInfo>;
+  private contractCache: Map<string,TruffleContract>;
+  /**
+   * The scheme contracts that we know about, that we present to the user
+   */
+  public knownSchemes: Array<ContractInfo>;
+  
+  public get defaultAccount(): string { return getDefaultAccount(); }
+  public get universalContracts(): ArcUniversalContracts { return this._universalContracts ? this._universalContracts.daostackContracts : null; }
+  
+  public async initialize() {
+      /**
+       * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
+       * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
+       */
+      this._universalContracts = await getUniversalContracts();
 
-    public get defaultAccount(): string { return getDefaultAccount(); }
-    public get contracts(): ArcDeployedContracts { return ArcService.universalContracts ? ArcService.universalContracts.daostackContracts : null; }
+      this.knownSchemes = [
+        this._universalContracts.daostackContracts.SchemeRegistrar
+        , this._universalContracts.daostackContracts.UpgradeScheme
+        , this._universalContracts.daostackContracts.GlobalConstraintRegistrar
+        , this._universalContracts.daostackContracts.SimpleContributionScheme
+      ];
+  
+      /**
+       * get names of contracts by converting camel case property name to first-capitalized text
+       */
+      let contractInfos = this.universalContracts;
+      // each property is a contractInfo
+      for(let contractName in this.universalContracts) {
+        // let actualContract = await this.getContract(contractName);
+        // contractInfos[contractName].name = this.convertCamelCaseToText(actualContract.contractName)
+        contractInfos[contractName].name = this.convertCamelCaseToText(contractName);
+        contractInfos[contractName].key = contractName;
+      }
+    }
+  
+  public async getContract(name: string, at?: string): Promise<TruffleContract> {
+
+    let actualContract = this.contractCache.get(at);
+    if (actualContract) {
+      return actualContract;
+    }
     
-    public static async initialize() {
-        /**
-         * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
-         * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
-         */
-        ArcService.universalContracts = await getUniversalContracts();
-   }
-    
-    public async getContract(name: string, at?: string) {
-        let contract: TruffleContract;
-        let arcContractSpec:ArcContractInfo = ArcService.universalContracts.daostackContracts[name];
-        if (arcContractSpec !== undefined) {
-            contract = arcContractSpec.contract;
-            if (!at) {
-                at = arcContractSpec.address;
-            }
-        } else {
-            contract = requireContract(name);
-            if (!at) {
-                const deployed = await contract.deployed();
-                at = deployed.address;
-            }
+    let truffleContract: TruffleContract;
+
+    let arcContractSpec = this._universalContracts.daostackContracts[name];
+    if (arcContractSpec !== undefined) {
+        truffleContract = arcContractSpec.contract;
+        if (!at) {
+            at = arcContractSpec.address;
         }
-        return await contract.at(at);
+    } else {
+        truffleContract = requireContract(name);
+        if (!at) {
+            const deployed = await truffleContract.deployed();
+            at = deployed.address;
+        }
     }
+    actualContract = await truffleContract.at(at);
+    this.contractCache.set(at, actualContract);
+    return actualContract;
+  }
 
-    // TODO: Probably should move this into a separate service
-    public async getDAOStackMintableToken() {
-        const schemeRegistrar = await this.getContract("SchemeRegistrar");
-        const mintableTokenAddress = await schemeRegistrar.nativeToken();
-        const mintableTokenContract = await this.getContract("MintableToken", mintableTokenAddress);
-        return mintableTokenContract;
+  /**
+   *  Enumerate all known schemes and determine whether the given DAO is registered to them.
+   * Return the TruffleContracts for each one in which the DAO is registered.
+   * @param daoAddress
+   */
+  public async getSchemesForDao(daoAddress: string): Promise<Array<ContractInfo>> {
+
+    // TODO: cache these
+    let schemes = new Array<ContractInfo>();
+    for (let schemeInfo of this.knownSchemes) {
+      let truffleContract = await this.getContract(schemeInfo.key);
+      let isRegistered = await truffleContract.isRegistered(daoAddress);
+      if (isRegistered) {
+        schemes.push(schemeInfo);
+      }
     }
+    return schemes;
+  }
+  /**
+   * @param tx The transaction
+   * @param argName The name of the property whose value we wish to return, from  the args object: tx.logs[index].args[argName]
+   * @param eventName Overrides index, identifies which log, where tx.logs[n].event  === eventName
+   * @param index Identifies which log, when eventName is not given
+   */
+  public getValueFromTransactionLog(tx, argName, eventName?, index=0) {
+      return getValueFromLogs(tx, argName, eventName, index);
+  }
 
-    // private getArcContractInfo(name: string): ArcContractInfo {
-    //     return ArcService.settings.daostackContracts[name];
-    // }
-
-    // private getTruffleContract(name: string): TruffleContract {
-    //     return this.getArcContractInfo(name).contract;
-    // }
-
-    /**
-     * @param tx The transaction
-     * @param argName The name of the property whose value we wish to return, from  the args object: tx.logs[index].args[argName]
-     * @param eventName Overrides index, identifies which log, where tx.logs[n].event  === eventName
-     * @param index Identifies which log, when eventName is not given
-     */
-    public getValueFromTransactionLog(tx, argName, eventName?, index=0) {
-        return getValueFromLogs(tx, argName, eventName, index);
-    }
+  private convertCamelCaseToText(cc: string): string {
+    return cc
+      // insert a space before all caps
+      .replace(/([A-Z])/g, ' $1')
+      // uppercase the first character
+      .replace(/^./, function(str){ return str.toUpperCase(); }) 
+  }
 }
 
 interface ArcSettings {
     votingMachine: string;
-    daostackContracts: ArcDeployedContracts;
+    daostackContracts: ArcUniversalContracts;
 }
 
-interface ArcDeployedContracts {
-    SimpleContributionScheme: ArcContractInfo;
-    GenesisScheme: ArcContractInfo;
-    GlobalConstraintRegistrar: ArcContractInfo;
-    SchemeRegistrar: ArcContractInfo;
-    SimpleICO: ArcContractInfo;
-    TokenCapGC: ArcContractInfo;
-    UpgradeScheme: ArcContractInfo;
-    SimpleVote: ArcContractInfo;
-    OrganizationRegister: ArcContractInfo;
+interface ArcUniversalContracts {
+    SimpleContributionScheme: ContractInfo;
+    GenesisScheme: ContractInfo;
+    GlobalConstraintRegistrar: ContractInfo;
+    SchemeRegistrar: ContractInfo;
+    SimpleICO: ContractInfo;
+    TokenCapGC: ContractInfo;
+    UpgradeScheme: ContractInfo;
+    SimpleVote: ContractInfo;
+    OrganizationRegister: ContractInfo;
     // DAOToken: ArcContractInfo;
     // MintableToken: ArcContractInfo;
 }
 
-export interface ArcContractInfo {
-    contract: TruffleContract;
+export interface ContractInfo {
+    /**
+     * call contract.at(address) to get TruffleContract
+     */
+    contract: any;
     address: string;
+    name: string;
+    /**
+     * pass this to getContract to obtain the TruffleContract
+     */
+    key: string;
 }
 
 export { Organization } from 'emergent-arc'; 

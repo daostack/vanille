@@ -1,8 +1,9 @@
-﻿/// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
+﻿import { ArcService } from './services/ArcService';
+/// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 import { Aurelia } from 'aurelia-framework';
+import { OrganizationService } from './services/OrganizationService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
-import { ArcService } from "./services/ArcService";
 import { Web3Service } from "./services/Web3Service";
 import  { configure as configureEmergentArc } from 'emergent-arc';
 
@@ -54,10 +55,24 @@ export async function configure(aurelia: Aurelia) {
       network : { name: process.env.ETH_ENV }
     });
   
-    await Web3Service.initialize(web3);
-  
-    await ArcService.initialize();
+    const web3Service = new Web3Service();
+    await web3Service.initialize(web3);
+    aurelia.container.registerSingleton(Web3Service, () => {
+      return web3Service;
+    });
 
+    const arcService = new ArcService();
+    await arcService.initialize();
+    aurelia.container.registerSingleton(ArcService, () => {
+      return arcService;
+    });
+
+    const orgService = new OrganizationService(arcService, web3Service);
+    await orgService.initialize();
+    aurelia.container.registerSingleton(OrganizationService, () => {
+      return orgService;
+    });
+    
   } catch(ex) {
     console.log(`Error initializing blockchain services: ${ex}`)
   }

@@ -19,4 +19,9 @@ export class TokenService {
     return await Number(this.web3.fromWei(await token.balanceOf(userAddress)));
   }
 
+    public async getDAOStackMintableToken() {
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+      const mintableTokenAddress = await schemeRegistrar.nativeToken();
+      return await this.arcService.getContract("MintableToken", mintableTokenAddress);
+  }
 }

@@ -23,22 +23,18 @@ export class OrganizationService {
 
   public async getDAOStackOrganization() {
       const avatarAddress = await this.getDAOStackAddress();
-      const org = await this.organizationAt(avatarAddress);
-      return org;
+      return await this.organizationAt(avatarAddress);
   }
 
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<Organization> {
-    const org = await Organization.new(config);
-    // this.cache.set(org.avatar.address,org);
-    return org;
+    return await Organization.new(config);
   }
 
   public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<Organization> {
     let org: Organization;
     if (!fromCache || !(org = this.cache.get(avatarAddress)) ) {
         org = await Organization.at(avatarAddress);
-        // this.cache.set(avatarAddress,org);
     }
     return org;
   }
@@ -48,78 +44,81 @@ export class OrganizationService {
     return this.web3.bytes32ToUtf8(await org.avatar.orgName());     
   }
 
-  public get allOrganizations(): Promise<Array<Organization>> {
-    if (!this.myEvent) {
-      return this.getAllOrganizations();
-    } 
-    else 
-    {
-      return Promise.resolve(Array.from(this.cache.values()));
-    }
+  public get allOrganizations(): Array<Organization> {
+    return Array.from(this.cache.values());
   }
 
   private myEvent:any;
   public static daoSetChangedEvent:string = "daoSetChanged";
 
-  private async getAllOrganizations() : Promise<Array<Organization>>
+  public async initialize()
     {
       // let orgRegister = await this.arcService.getContract("OrganizationRegister");
       let genesisScheme = await this.arcService.getContract("GenesisScheme");
       
       this.myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
 
-      return new Promise<Array<Organization>>((resolve,reject) => {
-        this.myEvent.get(async (err, eventsArray) => {
-          if (!err) {
-              let newOrganizationArray = [];
-              let counter = 0;
-              let count = eventsArray.length;
-              for (let i = 0; i < eventsArray.length; i++) {
-                  let promotedAmount = 0;
-                  let avatarAddress =  eventsArray[i].args._avatar;
-                  let organization = await this.organizationAt(avatarAddress);
-                  organization.name =await this.organizationName(organization);
-                  organization.address = avatarAddress;
-
-                  this.cache.set(organization.address,organization);
-
-                  // var org = await this.arcService.organizationAt(avatarAddress);
-
-                  /**
-                   * note that orderList.call is asynchronous, and that
-                   * the results may not come back in the order invoked.
-                   */
-                // promotedAmount = Number(this.web3.fromWei(eventsArray[i]));
-                  
-                  // promotedAmount = i;
-
-                  // newOrganizationArray.push({
-                  //     rank: i + 1,
-                  //     name: avatarName,
-                  //     members: 3,
-                  //     tokens: 300000,
-                  //     reputation: 30000,
-                  //     promotedAmount: promotedAmount,
-                  //     address: avatarAddress,
-                  // });
-                  ++counter;
-
-                  if (counter == count) { // then we're done
-                      // newOrganizationArray = newOrganizationArray.sort((a, b) => {
-                      //     return b.promotedAmount - a.promotedAmount;
-                      // });
-
-                      let orgs = Array.from(this.cache.values());
-
-                      console.log("Firing Daos changed");
-                      this.publish("daoSetChanged", orgs);
-
-                      resolve(orgs);
-                  }
-              }
-          }
+      /**
+       * handleNewOrg will get called for every DAO in the system, and thereafter
+       * whenever a new DAO is created
+       */
+      return new Promise((resolve,reject) => {
+        this.myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
       });
-    });
+    
+}
+
+  private handleNewOrg(err, eventsArray) : Promise<void>
+  {
+    return new Promise(async (resolve,reject) => {
+      let newOrganizationArray = [];
+      if (!(eventsArray instanceof Array)) {
+        eventsArray = [eventsArray];
+      }
+      let counter = 0;
+      let count = eventsArray.length;
+      for (let i = 0; i < eventsArray.length; i++) {
+          let promotedAmount = 0;
+          let avatarAddress =  eventsArray[i].args._avatar;
+          let organization = await this.organizationAt(avatarAddress);
+          organization.name = await this.organizationName(organization);
+          organization.address = avatarAddress;
+
+          this.cache.set(organization.address,organization);
+
+          // var org = await this.arcService.organizationAt(avatarAddress);
+
+          /**
+           * note that orderList.call is asynchronous, and that
+           * the results may not come back in the order invoked.
+           */
+        // promotedAmount = Number(this.web3.fromWei(eventsArray[i]));
+          
+          // promotedAmount = i;
+
+          // newOrganizationArray.push({
+          //     rank: i + 1,
+          //     name: avatarName,
+          //     members: 3,
+          //     tokens: 300000,
+          //     reputation: 30000,
+          //     promotedAmount: promotedAmount,
+          //     address: avatarAddress,
+          // });
+          ++counter;
+
+          if (counter == count) { // then we're done
+              // newOrganizationArray = newOrganizationArray.sort((a, b) => {
+              //     return b.promotedAmount - a.promotedAmount;
+              // });
+
+              console.log("Firing Daos changed");
+              this.publish(OrganizationService.daoSetChangedEvent, this.allOrganizations);
+
+              resolve();
+          }
+        }
+      });
   }
 
   /*****

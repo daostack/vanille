@@ -1,11 +1,11 @@
 import { Subscription  } from 'aurelia-event-aggregator';
-import { autoinject } from "aurelia-framework";
+import { autoinject, singleton } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
 import { ArcService } from "../services/ArcService";
 import { OrganizationService, Organization } from "../services/OrganizationService";
 import "./list.scss";
 
-
+@singleton(false)
 @autoinject
 export class OrganizationsList {
 
@@ -21,8 +21,8 @@ export class OrganizationsList {
 
     organizationArray: Array<any> = [];
 
-    async activate() {
-        this.organizationArray = await this.organizationService.allOrganizations;
+    activate() {
+        this.organizationArray = this.organizationService.allOrganizations;
         this.daoChangedSubscription = this.organizationService
           .subscribe(OrganizationService.daoSetChangedEvent,
               (orgs) => {this.organizationArray = orgs;} );

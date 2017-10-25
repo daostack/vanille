@@ -5,15 +5,15 @@ import { HttpProvider, Eth, version, BigNumber } from "web3";
 @autoinject()
 export class Web3Service {
 
-    private static _isCorrectChain: boolean = false;
-    private static _web3: Web3;
+    private _isCorrectChain: boolean = false;
+    private _web3: Web3;
 
     constructor(
         // private contractService: TruffleContractService
     ) {
     }
 
-    public get web3(): Web3 { return Web3Service._web3; }
+    public get web3(): Web3 { return this._web3; }
     
     public get accounts(): Array<string> { return this.web3 ? this.web3.eth.accounts : []; }
     
@@ -32,7 +32,7 @@ export class Web3Service {
         return this.web3.toUtf8(bytes32);
     }
 
-    public get isCorrectChain(): boolean { return Web3Service._isCorrectChain; }
+    public get isCorrectChain(): boolean { return this._isCorrectChain; }
 
     public fromWei(res: Number|String, unit?: string): String|Object {
         return this.web3.fromWei(res, unit);
@@ -56,7 +56,7 @@ export class Web3Service {
     public static Network = process.env.ETH_ENV;
     // not going to worry about the exact id for testrpc, which is dynamic, unless we absolutely have to
 
-    public static initialize(web3) : Promise<Web3> {
+    public initialize(web3) : Promise<Web3> {
 
       const testrpcNetworkId = '0';
       
@@ -98,16 +98,16 @@ export class Web3Service {
               let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
               console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId})`);
-              Web3Service._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === testrpcNetworkId);
-              if (!Web3Service._isCorrectChain) {
+              this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === testrpcNetworkId);
+              if (!this._isCorrectChain) {
                 reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
               } else {
                 console.log(`Connected to Ethereum (${Web3Service.Network})`);
-                Web3Service._web3 = web3;
-                resolve(Web3Service._web3);
+                this._web3 = web3;
+                resolve(this._web3);
               }
             } else {
-                reject(new Error(`Web3Service.initialize failed: isConnected: ${Web3Service._isCorrectChain} isCorrectChain: ${Web3Service._isCorrectChain}`));
+                reject(new Error(`Web3Service.initialize failed: isConnected: ${this._isCorrectChain} isCorrectChain: ${this._isCorrectChain}`));
             }
           });
           } catch(ex) {
