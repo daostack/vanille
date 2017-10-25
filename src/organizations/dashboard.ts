@@ -2,6 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { OrganizationService, Organization } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService, ContractInfo } from  "../services/ArcService";
+import "./dashboard.scss";
 
 @autoinject
 export class DAODashboard {
@@ -30,6 +31,19 @@ export class DAODashboard {
     this.schemes = await this.arcService.getSchemesForDao(this.address);
   }
 
-  async attached() {
+  attached() {
+    ($(".scheme-use-button") as any).tooltip();
+    ($(".scheme-delete-button") as any).tooltip();
+    ($(`.collapse`) as any).data("parent","#accordian");
+    // workaround for accordian behavior not working.  Check to see if it's fixed when the
+    // final version 4 is released
+    $('.collapse').on('show.bs.collapse', () =>  {
+      ($('.collapse') as any).collapse("hide");
+    });
+  }
+
+  toggleDashboardVisibility(key) {
+    ($(`#${key}`) as any).collapse("toggle");
+    setTimeout(() => { ($(`.scheme-use-button`) as any).tooltip("hide"); });
   }
 }

@@ -37,6 +37,9 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
+    PLATFORM.moduleName("resources/customElements/round-add-button.html"),
+    PLATFORM.moduleName("resources/customElements/round-delete-button.html"),
+    PLATFORM.moduleName("resources/customElements/round-dashboard-button.html"),
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
     PLATFORM.moduleName("resources/customAttributes/blur-image"),
     PLATFORM.moduleName("resources/valueConverters/toUpper")

@@ -54,6 +54,7 @@
     "mapCoverage": true
   },
   "devDependencies": {
+    "@types/bootstrap": "^3.3.36",
     "@types/jest": "20.0.4",
     "@types/jquery": "^3.2.13",
     "@types/lodash": "4.14.69",

@@ -3,10 +3,12 @@
 
 .orgs i.dashboard {
   font-size: 8rem;
-  @extend .blue-text;
+  @extend .grey-text;
+  @extend .darken-2;
 }
 
 .orgs .card-title {
+  @extend .blue-text;
   font-weight: 600 !important;
 }
 

@@ -1,5 +1,5 @@
 <template>    
-  <h2 style="margin-bottom:3rem">Birth a New DAO</h2>
+  <h2>Birth a New DAO</h2>
 
   <div style="padding-left:20px;">
     <section>
@@ -37,16 +37,14 @@
     <h4>Founders</h4>
 
     <span class="add-founder">
-      <button types="button" data-toggle="tooltip" data-placement="right" title="Add a Founder" 
-      class="btn btn-default btn-circle founder-add-button"
-      click.delegate='addFounderInput()'><i class='material-icons' style="font-size:1rem">create</i></button>
+      <round-add-button class="founder-add-button" click.delegate='addFounderInput()' data-toggle="tooltip" data-placement="right" title="Add a founder"></round-add-button>
     </span>
     
     <ul class="list-group founders" repeat.for='founder of founders'>
       <span if.bind='$index > 0' class="delete-founder">
-          <button types="button" data-toggle="tooltip" data-placement="left" title="Delete this Founder" 
-            class="btn btn-default btn-circle founder-delete-button"
-              click.delegate='removeFounder($index)'><i class='material-icons' style="font-size:1rem">delete_forever</i></button>
+          <round-delete-button data-toggle="tooltip" data-placement="left" title="Delete this founder" 
+              class="founder-delete-button"
+              click.delegate='removeFounder($index)'></button>
       </span>
       <li class="list-group-item">
           <form class="form-inline">

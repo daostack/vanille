@@ -37,6 +37,18 @@ h1 {
   font-weight: 400;
 }
 
+h2 {
+  margin-bottom: 3rem; 
+}
+
+section {
+  margin-bottom: 3rem;
+}
+
+section h4 {
+  margin-bottom: 1rem;
+}
+
 .progress {
   height: 1.25rem;
 }

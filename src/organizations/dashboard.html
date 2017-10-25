@@ -1,6 +1,8 @@
 <template>
     <h2>${orgName}</h2>
-    <dl>
+    <section>
+      <h3>Basic Information</h3>
+      <dl>
       <dt>Avatar</dt>
       <dd><etherscanlink address=${address}>${address}</etherscanlink></dd>
       <dt>Controller</dt>
@@ -12,11 +14,37 @@
       <dt>Your Token Balance</dt>
       <dd> ${ userTokenbalance }</dd>
     </dl>
-    <h3>Schemes</h3>
-      <ul class="list-group" repeat.for="scheme of schemes">
-        <li class="list-group-item">
-          <div style="font-weight: bold">${scheme.name}</div>
-          <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
-        </li>
-    </ul>
+  </section>
+  <section>
+      <h3>Schemes</h3>
+      <div id="accordion" role="tablist">
+          <ul class="list-group schemes" repeat.for="scheme of schemes">
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-10">
+                  <div style="font-weight: bold">${scheme.name}</div>
+                    <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+                  </div>
+                <div class="col-1">
+                    <round-dashboard-button 
+                      class="scheme-use-button"
+                      data-toggle="tooltip" data-placement="top" title="Use this scheme"
+                      click.delegate="toggleDashboardVisibility(scheme.key)">
+                    </round-dashboard-button>
+                </div>
+                <div class="col-1">
+                    <round-delete-button 
+                      class="scheme-delete-button"
+                      data-toggle="tooltip" data-placement="top" title="Remove this scheme" 
+                      click.delegate='removeScheme(scheme)'>
+                    </round-delete-button>
+                </div>
+              </div>
+              <div id.bind="scheme.key" class="collapse" data-parent-"#accordian">
+                  ${scheme.name} dashboard
+              </div>
+            </li>
+        </ul>
+    </div>
+  </section>
 </template>
