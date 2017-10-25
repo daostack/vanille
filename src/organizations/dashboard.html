@@ -16,34 +16,42 @@
     </dl>
   </section>
   <section>
-      <h3>Schemes</h3>
+    <div class="row">
+      <div class="col-10"><h3>Schemes</h3></div>
+      <div class="col-2" style="text-align: right">
+        <div class="add-scheme">
+            <round-add-button class="scheme-add-button" click.delegate='addScheme()' data-toggle="tooltip" data-placement="right" title="Add a scheme"></round-add-button>
+        </div>
+      </div>
+    </div>
+      
       <div id="accordion" role="tablist">
-          <ul class="list-group schemes" repeat.for="scheme of schemes">
-            <li class="list-group-item">
-              <div class="row">
-                <div class="col-10">
-                  <div style="font-weight: bold">${scheme.name}</div>
-                    <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
-                  </div>
-                <div class="col-1">
-                    <round-dashboard-button 
-                      class="scheme-use-button"
-                      data-toggle="tooltip" data-placement="top" title="Use this scheme"
-                      click.delegate="toggleDashboardVisibility(scheme.key)">
-                    </round-dashboard-button>
+        <ul class="list-group schemes" repeat.for="scheme of schemes">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-10">
+                <div style="font-weight: bold">${scheme.name}</div>
+                  <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
                 </div>
-                <div class="col-1">
-                    <round-delete-button 
-                      class="scheme-delete-button"
-                      data-toggle="tooltip" data-placement="top" title="Remove this scheme" 
-                      click.delegate='removeScheme(scheme)'>
-                    </round-delete-button>
-                </div>
+              <div class="col-1">
+                  <round-dashboard-button 
+                    class="scheme-use-button"
+                    data-toggle="tooltip" data-placement="top" title="Work with this scheme"
+                    click.delegate="toggleDashboardVisibility(scheme.key)">
+                  </round-dashboard-button>
               </div>
-              <div id.bind="scheme.key" class="collapse" data-parent-"#accordian">
-                  ${scheme.name} dashboard
+              <div class="col-1">
+                  <round-delete-button 
+                    class="scheme-delete-button"
+                    data-toggle="tooltip" data-placement="top" title="Remove this scheme" 
+                    click.delegate='removeScheme(scheme)'>
+                  </round-delete-button>
               </div>
-            </li>
+            </div>
+            <div id.bind="scheme.key" class="collapse" data-parent-"#accordian">
+                ${scheme.name} dashboard
+            </div>
+          </li>
         </ul>
     </div>
   </section>
