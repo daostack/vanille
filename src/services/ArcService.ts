@@ -52,7 +52,7 @@ export class ArcService {
       for(let contractName in this.deployedArcContracts) {
         // let actualContract = await this.getContract(contractName);
         // contractInfos[contractName].name = this.convertCamelCaseToText(actualContract.contractName)
-        contractInfos[contractName].name = this.convertCamelCaseToText(contractName);
+        contractInfos[contractName].name = this.convertKeyToFriendlyName(contractName);
         contractInfos[contractName].key = contractName;
       }
     }
@@ -91,25 +91,6 @@ export class ArcService {
     this.contractCache.set(at, contract);
     return contract;
   }
-
-  /**
-   *  Enumerate all known schemes and determine whether the given DAO is registered to them.
-   * Return the TruffleContracts for each one in which the DAO is registered.
-   * @param daoAddress
-   */
-  public async getSchemesForDao(daoAddress: string): Promise<Array<ContractInfo>> {
-
-    // TODO: cache these
-    let schemes = new Array<ContractInfo>();
-    for (let schemeInfo of this.knownSchemes) {
-      let truffleContract = await this.getContract(schemeInfo.key);
-      let isRegistered = await truffleContract.isRegistered(daoAddress);
-      if (isRegistered) {
-        schemes.push(schemeInfo);
-      }
-    }
-    return schemes;
-  }
   /**
    * @param tx The transaction
    * @param argName The name of the property whose value we wish to return, from  the args object: tx.logs[index].args[argName]
@@ -120,8 +101,8 @@ export class ArcService {
       return getValueFromLogs(tx, argName, eventName, index);
   }
 
-  private convertCamelCaseToText(cc: string): string {
-    return cc
+  public convertKeyToFriendlyName(key: string): string {
+    return key
       // insert a space before all caps
       .replace(/([A-Z])/g, ' $1')
       // uppercase the first character

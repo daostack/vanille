@@ -65,7 +65,6 @@ export class OrganizationService {
       return new Promise((resolve,reject) => {
         this.myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
       });
-    
 }
 
   private handleNewOrg(err, eventsArray) : Promise<void>

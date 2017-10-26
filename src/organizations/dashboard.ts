@@ -1,7 +1,8 @@
 import { autoinject } from "aurelia-framework";
 import { OrganizationService, Organization } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
-import { ArcService, ContractInfo } from  "../services/ArcService";
+import { ArcService } from  "../services/ArcService";
+import { DaoSchemeRepositoryService, SchemeInfo } from  "../services/DaoSchemeRepositoryService";
 import "./dashboard.scss";
 
 @autoinject
@@ -12,12 +13,13 @@ export class DAODashboard {
   private orgName: string;
   private tokenSymbol: string;
   private userTokenbalance:Number;
-  private schemes: Array<ContractInfo>;
+  private schemes: Array<SchemeInfo>;
   
   constructor(
     private organizationService: OrganizationService
     , private tokenService: TokenService
     , private arcService: ArcService
+    , private daoSchemeRepositoryService: DaoSchemeRepositoryService
     
   ) {
   }
@@ -28,7 +30,7 @@ export class DAODashboard {
     this.orgName = await this.organizationService.organizationName(this.org);
     this.tokenSymbol = await this.tokenService.getTokenName(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
-    this.schemes = await this.arcService.getSchemesForDao(this.address);
+    this.schemes = await this.daoSchemeRepositoryService.getSchemesInDao(this.address);
   }
 
   attached() {
