@@ -3,7 +3,7 @@ import { ContractInfo } from './ArcService';
 import  { Organization
     , getDefaultAccount
     , configure as configureArc
-    , getUniversalContracts
+    , getUniversalContracts as getArcSettings
     , getValueFromLogs
     , requireContract } from 'emergent-arc';
 import { PLATFORM } from 'aurelia-framework';
@@ -19,7 +19,7 @@ export class ArcService {
   /**
    * The schemes managed by Arc
    */
-  private _universalContracts: ArcSettings;
+  private _arcSettings: ArcSettings;
   // private daoSchemes: Map<string,ContractInfo>;
   private contractCache: Map<string,TruffleContract>;
   /**
@@ -28,28 +28,28 @@ export class ArcService {
   public knownSchemes: Array<ContractInfo>;
   
   public get defaultAccount(): string { return getDefaultAccount(); }
-  public get universalContracts(): ArcUniversalContracts { return this._universalContracts ? this._universalContracts.daostackContracts : null; }
+  public get deployedArcContracts(): ArcDeployedContracts { return this._arcSettings ? this._arcSettings.daostackContracts : null; }
   
   public async initialize() {
       /**
        * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
-      this._universalContracts = await getUniversalContracts();
+      this._arcSettings = await getArcSettings();
 
       this.knownSchemes = [
-        this._universalContracts.daostackContracts.SchemeRegistrar
-        , this._universalContracts.daostackContracts.UpgradeScheme
-        , this._universalContracts.daostackContracts.GlobalConstraintRegistrar
-        , this._universalContracts.daostackContracts.SimpleContributionScheme
+        this._arcSettings.daostackContracts.SchemeRegistrar
+        , this._arcSettings.daostackContracts.UpgradeScheme
+        , this._arcSettings.daostackContracts.GlobalConstraintRegistrar
+        , this._arcSettings.daostackContracts.SimpleContributionScheme
       ];
   
       /**
        * get names of contracts by converting camel case property name to first-capitalized text
        */
-      let contractInfos = this.universalContracts;
+      let contractInfos = this.deployedArcContracts;
       // each property is a contractInfo
-      for(let contractName in this.universalContracts) {
+      for(let contractName in this.deployedArcContracts) {
         // let actualContract = await this.getContract(contractName);
         // contractInfos[contractName].name = this.convertCamelCaseToText(actualContract.contractName)
         contractInfos[contractName].name = this.convertCamelCaseToText(contractName);
@@ -59,29 +59,37 @@ export class ArcService {
   
   public async getContract(name: string, at?: string): Promise<TruffleContract> {
 
-    let actualContract = this.contractCache.get(at);
-    if (actualContract) {
-      return actualContract;
+    /**
+     * The TruffleContract class actually represents multiple stages of the process:
+     *  1) require("artifact.json");
+     *  2) .deployed()
+     *  3) .at()
+     * 
+     * The result of .at() is the only one that appears to be complete, with events and everything.
+     * You can call .at() without having called .deployed().
+     * The contracts in _arcSettings.daostackContracts are all the result of .deployed()
+     */
+    let contract = this.contractCache.get(at);
+    if (contract) {
+      return contract;
     }
     
-    let truffleContract: TruffleContract;
-
-    let arcContractSpec = this._universalContracts.daostackContracts[name];
-    if (arcContractSpec !== undefined) {
-        truffleContract = arcContractSpec.contract;
-        if (!at) {
-            at = arcContractSpec.address;
-        }
+    let contractInfo = this._arcSettings.daostackContracts[name];
+    if (contractInfo !== undefined) {
+      if (!at) {
+        at = contractInfo.address;
+      }
+      contract = await contractInfo.contract.at(at);
     } else {
-        truffleContract = requireContract(name);
-        if (!at) {
-            const deployed = await truffleContract.deployed();
-            at = deployed.address;
-        }
+      contract = requireContract(name);
+      if (!at) {
+          contract = await contract.deployed();
+          at = contract.address;
+      }
+      contract = await contract.at(at);
     }
-    actualContract = await truffleContract.at(at);
-    this.contractCache.set(at, actualContract);
-    return actualContract;
+    this.contractCache.set(at, contract);
+    return contract;
   }
 
   /**
@@ -123,10 +131,10 @@ export class ArcService {
 
 interface ArcSettings {
     votingMachine: string;
-    daostackContracts: ArcUniversalContracts;
+    daostackContracts: ArcDeployedContracts;
 }
 
-interface ArcUniversalContracts {
+interface ArcDeployedContracts {
     SimpleContributionScheme: ContractInfo;
     GenesisScheme: ContractInfo;
     GlobalConstraintRegistrar: ContractInfo;
@@ -142,13 +150,16 @@ interface ArcUniversalContracts {
 
 export interface ContractInfo {
     /**
-     * call contract.at(address) to get TruffleContract
+     * deployed TruffleContract
      */
-    contract: any;
+    contract: TruffleContract;
     address: string;
+    /**
+     * Pretty name
+     */
     name: string;
     /**
-     * pass this to getContract to obtain the TruffleContract
+     * short name (property name in ArcDeployedContracts).
      */
     key: string;
 }

@@ -34,6 +34,7 @@ export class DAODashboard {
   attached() {
     ($(".scheme-use-button") as any).tooltip();
     ($(".scheme-delete-button") as any).tooltip();
+    ($(".scheme-add-button") as any).tooltip();
     ($(`.collapse`) as any).data("parent","#accordian");
     // workaround for accordian behavior not working.  Check to see if it's fixed when the
     // final version 4 is released
