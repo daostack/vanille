@@ -29,7 +29,6 @@
                 </div>
               <div class="col-1">
                   <round-dashboard-button 
-                    if.bind="scheme.name"
                     class="scheme-use-button"
                     data-toggle="tooltip" data-placement="top" title="Work with this scheme"
                     click.delegate="toggleDashboardVisibility(scheme.key)">
@@ -51,10 +50,12 @@
               </div>
             </div>
             <div id.bind="scheme.key" class="collapse" data-parent-"#accordian">
-                ${scheme.name} dashboard
+                <!-- <compose view-model="${getDashboardView(scheme.key)}"></compose> -->
+                <compose view-model="../daoSchemeDashboards/${scheme.key}" model.bind="scheme"></compose>
             </div>
           </li>
         </ul>
     </div>
+
   </section>
 </template>

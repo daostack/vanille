@@ -15,6 +15,11 @@ export class DaoSchemeRepositoryService {
   ) {      
 }
  
-  public dashboardForScheme(schemeKey: string) {
+  public dashboardForScheme(schemeKey: string): string {
+    if (!schemeKey) {
+      schemeKey = "NonArc";
+    }
+
+    return `../daoSchemeDashboards/${schemeKey}`;
   }
 }

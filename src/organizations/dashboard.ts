@@ -66,6 +66,10 @@ export class DAODashboard {
     ($(`#${key}`) as any).collapse("toggle");
     setTimeout(() => { ($(`.scheme-use-button`) as any).tooltip("hide"); });
   }
+
+  getDashboardView(key:string):string {
+    return this.daoSchemeRepositoryService.dashboardForScheme(key);
+  }
 }
 
 interface DashboardSchemeInfo extends SchemeInfo {

@@ -14,4 +14,7 @@ export class DaoSchemeDashboard {
      * short name (used by ArcService.getContract())
      */
     key: string;
+    activate(model) {
+      this.name = model.name;
+  }
 }

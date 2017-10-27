@@ -32,6 +32,12 @@ export async function configure(aurelia: Aurelia) {
   // Anyone wanting to use HTMLImports to load views, will need to install the following plugin.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-html-import-template-loader'));
 
+  PLATFORM.moduleName("daoSchemeDashboards/GlobalConstraintRegistrar")
+  PLATFORM.moduleName("daoSchemeDashboards/NonArc")
+  PLATFORM.moduleName("daoSchemeDashboards/SchemeRegistrar")
+  PLATFORM.moduleName("daoSchemeDashboards/SimpleContributionScheme")
+  PLATFORM.moduleName("daoSchemeDashboards/UpgradeScheme")
+  
   aurelia.use.globalResources([
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
