@@ -1,3 +1,73 @@
 <template>
-  <h5>${name} Dashboard</h5>
+  <ul class="nav nav-tabs scheme-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose Scheme</a>
+    </li>
+    <!-- <li class="nav-item">
+      <a class="nav-link" href="#Parameters" data-toggle="tab" id="parameters-tab" role="tab" aria-controls="Parameters" aria-selected="true">Parameters</a>
+    </li> -->
+    <li class="nav-item">
+      <a class="nav-link" href="#Organizations" data-toggle="tab" id="organization-tab" role="tab" aria-controls="Organizations" aria-selected="false">Organizations</a>
+    </li>
+  </ul>
+  <div class="tab-content" >
+    <!-- <div class="tab-pane fade" id="Parameters" role="tabpanel" aria-labelledby="parameters-tab">
+        <form>
+          <div repeat.for="i of 3">
+              <div class="md-form">
+                <input class="form-control" type='text' id="${'parameter'+$index}" />
+                <label  for="${'parameter'+$index}">Parameter ${ $index + 1 }</label>
+              </div>
+            </div>
+            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-secondary">Fetch</button>
+        </form>
+    </div> -->
+
+    <div class="tab-pane fade  show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
+      
+    <form>
+      <div class="form-group">
+        <input type="checkbox" id="isRegistering"/>
+        <label for="isRegistering">Can Register Schemes</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="cap" value.bind="proposeParams.cap"/>
+        <label class="active" for="cap">Cap</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="price" value.bind="proposeParams.price"/>
+        <label class="active" for="price">Price</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="price" value.bind="proposeParams.price"/>
+        <label class="active" for="startBlock">Start Block</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="endBlock" value.bind="proposeParams.endBlock"/>
+        <label class="active" for="endBlock">End Block</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary"/>
+        <label for="beneficiary">Beneficiary</label>
+      </div>
+      <div class="md-form">
+        <input class="form-control" type='text' id="admin" value.bind="proposeParams.admin"/>
+        <label for="admin">Administrator</label>
+      </div>
+     <button class="btn btn-primary" click.delegate="proposeScheme()">Propose</button>
+    </form>
+  </div>
+  
+
+    <div class="tab-pane fade" id="Organizations" role="tabpanel" aria-labelledby="organization-tab">
+        <form>
+        <div class="md-form">
+          <input class="form-control" type='text' id="addressToRegister" value.bind="orgAddressToRegister"/>
+          <label for="addressToRegister">Address</label>
+        </div>
+         <button class="btn btn-primary" click.delegate="registerOrg()">Register</button>
+        </form>
+    </div>
+  </div>
 </template>

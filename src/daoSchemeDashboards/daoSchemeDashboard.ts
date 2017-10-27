@@ -1,4 +1,7 @@
-import { TruffleContract } from '../services/ArcService';
+import { autoinject } from "aurelia-framework";
+import { ArcService, TruffleContract } from '../services/ArcService';
+import { OrganizationService, Organization } from "../services/OrganizationService";
+import "./daoSchemeDashboard.scss";
 
 export class DaoSchemeDashboard {
     /**
@@ -14,7 +17,14 @@ export class DaoSchemeDashboard {
      * short name (used by ArcService.getContract())
      */
     key: string;
+    isRegistered: boolean;
+    org: Organization;
+
     activate(model) {
       this.name = model.name;
+      this.key = model.key;
+      this.address = model.address;
+      this.isRegistered = model.isRegistered;
+      this.org = model.organization;
   }
 }

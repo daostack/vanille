@@ -2,9 +2,9 @@ import { autoinject } from "aurelia-framework";
 import { OrganizationService, Organization } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
-import { DaoSchemeRepositoryService } from  "../services/DaoSchemeRepositoryService";
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import "./dashboard.scss";
+import { PLATFORM } from 'aurelia-pal';
 
 @autoinject
 export class DAODashboard {
@@ -14,40 +14,48 @@ export class DAODashboard {
   private orgName: string;
   private tokenSymbol: string;
   private userTokenbalance:Number;
-  private schemes: Array<DashboardSchemeInfo>;
+  private schemesMap = new Map<string,DashboardSchemeInfo>();
+  private get schemes(): Array<DashboardSchemeInfo> { return Array.from(this.schemesMap.values()); }
   
   constructor(
     private organizationService: OrganizationService
     , private tokenService: TokenService
     , private arcService: ArcService
-    , private daoSchemeRepositoryService: DaoSchemeRepositoryService
     , private schemeService: SchemeService
     
   ) {
   }
 
   async activate(options: any) {
+
+    PLATFORM.moduleName("../daoSchemeDashboards/GlobalConstraintRegistrar")
+    PLATFORM.moduleName("../daoSchemeDashboards/NonArc")
+    PLATFORM.moduleName("../daoSchemeDashboards/SchemeRegistrar")
+    PLATFORM.moduleName("../daoSchemeDashboards/SimpleContributionScheme")
+    PLATFORM.moduleName("../daoSchemeDashboards/UpgradeScheme")
+      
     this.address = options.address;
     this.org = await this.organizationService.organizationAt(this.address);
     this.orgName = await this.organizationService.organizationName(this.org);
     this.tokenSymbol = await this.tokenService.getTokenName(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
-    let schemes = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (s as any).isRegistered = true; return s as DashboardSchemeInfo; });
+    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (s as any).isRegistered = true; return s as DashboardSchemeInfo; });
 
+    for (let scheme of schemesArray) {
+      this.schemesMap.set(scheme.address, scheme);
+    }
     /**
      * now merge the list of daos that the org has with daos that it doesn't have
      */
 
     let availableSchemes = this.schemeService.availableSchemes;
-    let schemesAvailableToBeAdded:Array<DashboardSchemeInfo> = [];
     for (let availableScheme of availableSchemes) {
-      let found = schemes.find((s) => s.key === availableScheme.key);
+      let found = this.schemesMap.get(availableScheme.address);
       if (!found) {
         (availableScheme as any).isRegistered = false;
-        schemesAvailableToBeAdded.push(availableScheme as DashboardSchemeInfo );
+        this.schemesMap.set(availableScheme.address, availableScheme as DashboardSchemeInfo );
       }
     }
-    this.schemes = schemes.concat(schemesAvailableToBeAdded);
   }
 
   attached() {
@@ -68,7 +76,15 @@ export class DAODashboard {
   }
 
   getDashboardView(key:string):string {
-    return this.daoSchemeRepositoryService.dashboardForScheme(key);
+    if (!key) {
+      key = "NonArc";
+    }
+
+    return `../daoSchemeDashboards/${key}`;
+  }
+
+  schemeDashboardViewModel(address: string) {
+    return Object.assign(this.schemesMap.get(address), { organization: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol })
   }
 }
 

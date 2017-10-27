@@ -49,9 +49,9 @@
                     </round-remove-button>
               </div>
             </div>
-            <div id.bind="scheme.key" class="collapse" data-parent-"#accordian">
-                <!-- <compose view-model="${getDashboardView(scheme.key)}"></compose> -->
-                <compose view-model="../daoSchemeDashboards/${scheme.key}" model.bind="scheme"></compose>
+            <div id.bind="scheme.key" class="scheme-dashboard" data-parent-"#accordian">
+                <div class="space">&nbsp;</div>
+                <compose view-model="${getDashboardView(scheme.key)}" model.bind="schemeDashboardViewModel(scheme.address)"></compose>
             </div>
           </li>
         </ul>
