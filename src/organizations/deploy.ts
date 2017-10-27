@@ -13,7 +13,6 @@ export class DeployGen  {
   private ethBalance:number = null;
   private tknBalance:number = null;
   private controllerAddrss= '';
-  private knownSchemes: Array<ContractInfo>;
 
   private orgName:string = '';
   private tokenName:string = '';
@@ -30,7 +29,6 @@ export class DeployGen  {
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
-      this.knownSchemes = this.arcService.knownSchemes;
     }
 
   async activate() {

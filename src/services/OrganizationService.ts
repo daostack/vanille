@@ -1,8 +1,8 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract } from './ArcService';
+import { ArcService, TruffleContract,  Organization } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
-import  { Organization, getContract } from 'emergent-arc';
 import { EventAggregator, includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
+import { Permissions } from '../services/ControllerService';
 
 @autoinject
 export class OrganizationService {
@@ -14,7 +14,8 @@ export class OrganizationService {
     includeEventsIn(this);
   }
 
-  private cache = new Map<string,Organization>();
+  private daoCache = new Map<string,Organization>();
+  private schemeCache = new Map<string,Array<ArcSchemeInfo>>();
 
   public async getDAOStackAddress() {
     const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
@@ -33,7 +34,7 @@ export class OrganizationService {
 
   public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<Organization> {
     let org: Organization;
-    if (!fromCache || !(org = this.cache.get(avatarAddress)) ) {
+    if (!fromCache || !(org = this.daoCache.get(avatarAddress)) ) {
         org = await Organization.at(avatarAddress);
     }
     return org;
@@ -45,7 +46,7 @@ export class OrganizationService {
   }
 
   public get allOrganizations(): Array<Organization> {
-    return Array.from(this.cache.values());
+    return Array.from(this.daoCache.values());
   }
 
   private myEvent:any;
@@ -65,7 +66,47 @@ export class OrganizationService {
       return new Promise((resolve,reject) => {
         this.myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
       });
-}
+
+
+ 
+    /**
+     * TODO:  To sync cache on organization schemes, must subscribe to this event on every organization.
+     * 
+      let controller = await this.arcService.getContract("Controller");
+      
+      this.registerSchemaEvent = await controller.RegisterScheme({}, { fromBlock: 0 });
+
+      return new Promise(async (resolve,reject) => {
+        this.registerSchemaEvent.watch((err, eventsArray) => {
+
+        if (!(eventsArray instanceof Array)) {
+          eventsArray = [eventsArray];
+        }
+
+        for (let i = 0; i < eventsArray.length; i++) {
+            // let orgAddress =  eventsArray[i].args._sender;
+            let schemeAddress =  eventsArray[i].args._scheme as string;
+            let scheme = await this.arcService.getContract(schemeAddress);
+            let schemeKey = scheme.contract as string;
+            let schemeFriendlyName = this.arcService.convertKeyToFriendlyName(schemeKey);
+            let permissions = await controller.getSchemePermissions(schemeAddress) as string;
+            
+            let orgSchemes = this.cache.get(orgAddress) || [];
+            let schemeInfo = {
+              address: schemeAddress,
+              permissions: permissions,
+              name: schemeFriendlyName,
+              key: schemeKey
+            };
+            orgSchemes.push(schemeInfo);
+              
+            /// this.publish(DaoSchemeRepositoryService.daoSchemeSetChangedEvent, orgSchemes);
+          }
+        });
+      }
+   */
+
+    }
 
   private handleNewOrg(err, eventsArray) : Promise<void>
   {
@@ -83,7 +124,7 @@ export class OrganizationService {
           organization.name = await this.organizationName(organization);
           organization.address = avatarAddress;
 
-          this.cache.set(organization.address,organization);
+          this.daoCache.set(organization.address,organization);
 
           // var org = await this.arcService.organizationAt(avatarAddress);
 
@@ -118,6 +159,16 @@ export class OrganizationService {
           }
         }
       });
+  }
+
+  public async getSchemesInOrganization(daoAddress: string): Promise<Array<ArcSchemeInfo>> {
+    let schemes = this.schemeCache.get(daoAddress);
+    if (!schemes) {
+      let org = await this.organizationAt(daoAddress);
+      schemes = await org.schemes();
+      this.schemeCache.set(org.address, schemes);  
+    }
+    return schemes;
   }
 
   /*****
@@ -159,20 +210,17 @@ export interface OrganizationCreateConfig {
   founders: Array<Founder>;
 }
 
-// export class Organization extends ArcOrganization {
-  
-//   constructor() {
-//     super();
-//   }
 
-//   public name: string;
-//   /**
-//    * the avatar's address
-//    */
-//   public address: string;
-// }
+/**
+ * returned by Organization.schemes()
+ */
+export interface ArcSchemeInfo {
+  contract: string; // is the contract key
+  address: string;
+  permissions: string;
+}
 
-export { Organization } from 'emergent-arc';
+export { Organization } from './ArcService';
 
 // export default class Organization {
 //   /**

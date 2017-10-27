@@ -76,7 +76,7 @@ export async function configure(aurelia: Aurelia) {
     aurelia.container.registerSingleton(OrganizationService, () => {
       return orgService;
     });
-    
+
   } catch(ex) {
     console.log(`Error initializing blockchain services: ${ex}`)
   }

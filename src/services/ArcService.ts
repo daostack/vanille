@@ -1,4 +1,3 @@
-import { ContractInfo } from './ArcService';
 // import { autoinject } from "aurelia-framework";
 import  { Organization
     , getDefaultAccount
@@ -20,12 +19,7 @@ export class ArcService {
    * The schemes managed by Arc
    */
   private _arcSettings: ArcSettings;
-  // private daoSchemes: Map<string,ContractInfo>;
   private contractCache: Map<string,TruffleContract>;
-  /**
-   * The scheme contracts that we know about, that we present to the user
-   */
-  public knownSchemes: Array<ContractInfo>;
   
   public get defaultAccount(): string { return getDefaultAccount(); }
   public get deployedArcContracts(): ArcDeployedContracts { return this._arcSettings ? this._arcSettings.daostackContracts : null; }
@@ -36,14 +30,6 @@ export class ArcService {
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
       this._arcSettings = await getArcSettings();
-
-      this.knownSchemes = [
-        this._arcSettings.daostackContracts.SchemeRegistrar
-        , this._arcSettings.daostackContracts.UpgradeScheme
-        , this._arcSettings.daostackContracts.GlobalConstraintRegistrar
-        , this._arcSettings.daostackContracts.SimpleContributionScheme
-      ];
-  
       /**
        * get names of contracts by converting camel case property name to first-capitalized text
        */
@@ -102,11 +88,28 @@ export class ArcService {
   }
 
   public convertKeyToFriendlyName(key: string): string {
+    if (!key) return null;
+
     return key
       // insert a space before all caps
       .replace(/([A-Z])/g, ' $1')
       // uppercase the first character
       .replace(/^./, function(str){ return str.toUpperCase(); }) 
+  }
+
+  /**
+   * If the contract belows to Arc and was given to use in the ArcSettings,
+   * then we'll return the name of it here.
+   * @param address 
+   */
+  public contractKeyFromAddress(address) {
+    for(var contractKey in this._arcSettings.daostackContracts) {
+      var contract = this._arcSettings.daostackContracts[contractKey];
+      if (contract.address === address) {
+        return contractKey;
+      }
+    }
+    return null;
   }
 }
 
@@ -125,16 +128,25 @@ interface ArcDeployedContracts {
     UpgradeScheme: ContractInfo;
     SimpleVote: ContractInfo;
     OrganizationRegister: ContractInfo;
-    // DAOToken: ArcContractInfo;
-    // MintableToken: ArcContractInfo;
+    // DAOToken: ContractInfo;
+    // MintableToken: ContractInfo;
 }
 
-export interface ContractInfo {
-    /**
-     * deployed TruffleContract
-     */
-    contract: TruffleContract;
-    address: string;
+/**
+ * this is what we get from Arc
+ */
+export interface ArcContractInfo {
+  /**
+   * deployed-only TruffleContract
+   */
+  contract: TruffleContract;
+  address: string;
+}
+
+/**
+ * what we get from Arc, plus some
+ */
+export interface ContractInfo extends ArcContractInfo {
     /**
      * Pretty name
      */

@@ -2,7 +2,8 @@ import { autoinject } from "aurelia-framework";
 import { OrganizationService, Organization } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
-import { DaoSchemeRepositoryService, SchemeInfo } from  "../services/DaoSchemeRepositoryService";
+import { DaoSchemeRepositoryService } from  "../services/DaoSchemeRepositoryService";
+import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import "./dashboard.scss";
 
 @autoinject
@@ -13,13 +14,14 @@ export class DAODashboard {
   private orgName: string;
   private tokenSymbol: string;
   private userTokenbalance:Number;
-  private schemes: Array<SchemeInfo>;
+  private schemes: Array<DashboardSchemeInfo>;
   
   constructor(
     private organizationService: OrganizationService
     , private tokenService: TokenService
     , private arcService: ArcService
     , private daoSchemeRepositoryService: DaoSchemeRepositoryService
+    , private schemeService: SchemeService
     
   ) {
   }
@@ -30,7 +32,22 @@ export class DAODashboard {
     this.orgName = await this.organizationService.organizationName(this.org);
     this.tokenSymbol = await this.tokenService.getTokenName(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
-    this.schemes = await this.daoSchemeRepositoryService.getSchemesInDao(this.address);
+    let schemes = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (s as any).isRegistered = true; return s as DashboardSchemeInfo; });
+
+    /**
+     * now merge the list of daos that the org has with daos that it doesn't have
+     */
+
+    let availableSchemes = this.schemeService.availableSchemes;
+    let schemesAvailableToBeAdded:Array<DashboardSchemeInfo> = [];
+    for (let availableScheme of availableSchemes) {
+      let found = schemes.find((s) => s.key === availableScheme.key);
+      if (!found) {
+        (availableScheme as any).isRegistered = false;
+        schemesAvailableToBeAdded.push(availableScheme as DashboardSchemeInfo );
+      }
+    }
+    this.schemes = schemes.concat(schemesAvailableToBeAdded);
   }
 
   attached() {
@@ -49,4 +66,8 @@ export class DAODashboard {
     ($(`#${key}`) as any).collapse("toggle");
     setTimeout(() => { ($(`.scheme-use-button`) as any).tooltip("hide"); });
   }
+}
+
+interface DashboardSchemeInfo extends SchemeInfo {
+  isRegistered: boolean;
 }
