@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const { AureliaPlugin } = require('aurelia-webpack-plugin');
 const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack');
 const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
-//var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // config helpers:
 const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || []
@@ -66,12 +66,7 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         'bluebird', 
         'emergent-arc',
         'ethereumjs-tx',
-        'truffle-contract',
-        'bootstrap', 
-        'jquery', 
-        'node-waves', 
-        'popper.js', 
-        'mdbootstrap'
+        'truffle-contract'
         ],
     },
     output: {

@@ -12,7 +12,8 @@
     <link href="styles.css" rel="stylesheet">
     
   </head>
-  <body aurelia-app="main">
+  <body >
+    <div aurelia-app="main">
     <div class="container">
       <div class="section"  style="text-align: center">
           <h1 style="margin-bottom: 2rem;">Welcome to <%- htmlWebpackPlugin.options.metadata.title %></h1>
@@ -23,10 +24,11 @@
           </div> -->
       </div>
     </div>
+    </div>
   
     <% if (htmlWebpackPlugin.options.metadata.server) { %>
     <!-- Webpack Dev Server reload -->
     <script src="/webpack-dev-server.js"></script>
     <% } %>
-  </body>
+    </body>
 </html>

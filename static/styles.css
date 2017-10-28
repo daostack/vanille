@@ -90,6 +90,14 @@ section h4 {
   font-weight:bold;
 } */
 
+.md-form.address {
+  width: 20rem;
+}
+
+.md-form.address input.form-control {
+  width: inherit;
+}
+
 /* animate page transitions */
 section.au-enter-active {
   animation: fadeInRight 1s;

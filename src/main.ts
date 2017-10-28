@@ -7,10 +7,7 @@ import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
 import  { configure as configureEmergentArc } from 'emergent-arc';
 
-import "jquery";
-import "popper.js";
-import "node-waves";
-import "bootstrap";
+import 'bootstrap';
 import "mdbootstrap";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)

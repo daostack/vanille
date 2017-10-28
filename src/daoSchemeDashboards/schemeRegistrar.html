@@ -14,6 +14,7 @@
       </li> -->
     </ul>
     <div class="tab-content" >
+      
       <!-- <div class="tab-pane fade" id="Parameters" role="tabpanel" aria-labelledby="parameters-tab">
           <form>
             <div repeat.for="i of 3">
@@ -33,12 +34,28 @@
       After submitting the proposal, a vote will automatically be initiated.</div>
     
         <form>
+           <!-- <div class="md-form address">
+                <input class="form-control" type='text' id="schemeAddressToPropose" 
+                value.bind="schemeAddressToPropose"
+                placeholder="Enter scheme address"/>
+                <label class="active" for="schemeAddressToPropose">Scheme Address</label>
+              </div> -->
           <div class="md-form">
-            <input class="form-control" type='text' id="schemeAddressToPropose" 
-             value.bind="schemeAddressToPropose"
-             placeholder="Enter scheme address"/>
-            <label class="active" for="schemeAddressToPropose">Scheme Address</label>
+            <div class="dropdown d-inline">
+              <button class="btn btn-sm btn-outline-light dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select Scheme
+              </button>
+
+              <div class="dropdown-menu" aria-labelledby="availableSchemes">
+                <a class="dropdown-item" href="#">Upgrade Scheme</a>
+                <a class="dropdown-item" href="#">Global Constraint Registrar</a>
+                <a class="dropdown-item" href="#">Simple Contribution Scheme</a>
+              </div>
+            </div>
+
+            <div class="d-inline ml-2">${schemeAddressToPropose}</div>
           </div>
+
           <div class="md-form">
             <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary" placeholder="Enter beneficiary"/>
             <label class="active" for="beneficiary">Beneficiary</label>
