@@ -50,7 +50,7 @@
           <form class="form-inline">
           <div class="md-form">
             <input
-              disabled="disabled"
+              disabled.bind="$first ? 'disabled' : null"
               class="form-control" 
               style="width:400px"
               placeholder='enter wallet address'
@@ -58,7 +58,7 @@
               value.bind='founder.address'
               id.bind="appendIndex('founder_address',$index)"
             />
-            <label class="active"  for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
+            <label class="active"  for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }&nbsp;<span if.bind="$first">(you)</span></label>
           </div>
           <div class="md-form">
             <input

@@ -36,7 +36,7 @@
               </div>
               <div class="col-1">
                     <round-add-button 
-                      if.bind="!scheme.isRegistered"
+                      if.bind="!scheme.isRegistered && scheme.key"
                       class="scheme-add-button"
                       click.delegate='addScheme()'
                       data-toggle="tooltip" data-placement="right" title="Add this scheme">
@@ -49,9 +49,13 @@
                     </round-remove-button>
               </div>
             </div>
-            <div id.bind="scheme.key" class="scheme-dashboard" data-parent-"#accordian">
-                <div class="space">&nbsp;</div>
-                <compose view-model="${getDashboardView(scheme.key)}" model.bind="schemeDashboardViewModel(scheme.address)"></compose>
+            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+              <hr/>
+                <div class="card">
+              <div class="card-body">
+                <compose view-model="${getDashboardView(scheme)}" model.bind="schemeDashboardViewModel(scheme)"></compose>
+              </div>
+            </div>
             </div>
           </li>
         </ul>

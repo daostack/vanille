@@ -1,6 +1,28 @@
-.tab-content .md-form,
-.tab-content .form-group {
-  margin-top: 2rem;
+@import "~static/bootstrap";
+@import "~bootstrap-sass/utilities/text";
+
+
+.tab-pane {
+  border-top:none;
 }
+
+.instructions {
+  margin-bottom: 2rem;
+  @extend .font-weight-light
+}
+
+.org-name {
+  font-style: italic;
+}
+
+ul .nav{
+  margin-bottom:2rem;
+}
+
+// .tab-content .md-form,
+// .tab-content .form-group,
+// .instructions {
+//   margin-top: 2rem;
+// }
 
 

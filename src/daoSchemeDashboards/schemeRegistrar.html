@@ -1,73 +1,99 @@
 <template>
-  <ul class="nav nav-tabs scheme-tabs" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose Scheme</a>
-    </li>
-    <!-- <li class="nav-item">
-      <a class="nav-link" href="#Parameters" data-toggle="tab" id="parameters-tab" role="tab" aria-controls="Parameters" aria-selected="true">Parameters</a>
-    </li> -->
-    <li class="nav-item">
-      <a class="nav-link" href="#Organizations" data-toggle="tab" id="organization-tab" role="tab" aria-controls="Organizations" aria-selected="false">Organizations</a>
-    </li>
-  </ul>
-  <div class="tab-content" >
-    <!-- <div class="tab-pane fade" id="Parameters" role="tabpanel" aria-labelledby="parameters-tab">
-        <form>
-          <div repeat.for="i of 3">
-              <div class="md-form">
-                <input class="form-control" type='text' id="${'parameter'+$index}" />
-                <label  for="${'parameter'+$index}">Parameter ${ $index + 1 }</label>
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
+          <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Schemes</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" href="#unPropose" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#Parameters" data-toggle="tab" id="parameters-tab" role="tab" aria-controls="Parameters" aria-selected="true">Parameters</a>
+      </li> -->
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#OrgRegistration" data-toggle="tab" id="register-tab" role="tab" aria-controls="OrgRegistration" aria-selected="false">Register DAO</a>
+      </li> -->
+    </ul>
+    <div class="tab-content" >
+      <!-- <div class="tab-pane fade" id="Parameters" role="tabpanel" aria-labelledby="parameters-tab">
+          <form>
+            <div repeat.for="i of 3">
+                <div class="md-form">
+                  <input class="form-control" type='text' id="${'parameter'+$index}" />
+                  <label  for="${'parameter'+$index}">Parameter ${ $index + 1 }</label>
+                </div>
               </div>
-            </div>
-            <button class="btn btn-primary">Save</button>
-            <button class="btn btn-secondary">Fetch</button>
+              <button class="btn btn-primary">Save</button>
+              <button class="btn btn-secondary">Fetch</button>
+          </form>
+      </div> -->
+
+    <div class="tab-pane fade show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
+          
+    <div class="instructions">Add functionality to <span class="org-name">${orgName}</span> by proposing to add new schemes.
+      After submitting the proposal, a vote will automatically be initiated.</div>
+    
+        <form>
+          <div class="md-form">
+            <input class="form-control" type='text' id="schemeAddressToPropose" 
+             value.bind="schemeAddressToPropose"
+             placeholder="Enter scheme address"/>
+            <label class="active" for="schemeAddressToPropose">Scheme Address</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='number' id="cap" value.bind="proposeParams.cap" placeholder="Enter cap"/>
+            <label class="active" for="cap">Cap</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='number' id="price" value.bind="proposeParams.price" placeholder="Enter price"/>
+            <label class="active" for="price">Price</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='number' id="startBlock" value.bind="proposeParams.startBlock" placeholder="Enter start block"/>
+            <label class="active" for="startBlock">Start Block</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='number' id="endBlock" value.bind="proposeParams.endBlock" placeholder="Enter end block"/>
+            <label class="active" for="endBlock">End Block</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary" placeholder="Enter beneficiary"/>
+            <label class="active" for="beneficiary">Beneficiary</label>
+          </div>
+          <div class="md-form">
+            <input class="form-control" type='text' id="admin" value.bind="proposeParams.admin" placeholder="Enter administrator"/>
+            <label class="active" for="admin">Administrator</label>
+          </div>
+          <div class="form-group">
+            <input type="checkbox" id="isRegistering"/>
+            <label for="isRegistering">Can Register Schemes</label>
+          </div>
+        <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
+        </form>
+            
+      </div>
+  
+
+    <!-- <div class="tab-pane fade" id="OrgRegistration" role="tabpanel" aria-labelledby="register-tab">
+    <div class="instructions">Register <span class="org-name">${orgName}</span> with schemes.</div>
+        <form>
+        <div class="md-form">
+          <input class="form-control" type='text' id="schemeAddressToRegister" value.bind="schemeAddressToRegister"/>
+          <label for="schemeAddressToRegister">Scheme Address</label>
+        </div>
+         <button class="btn btn-primary" click.delegate="registerDAOInScheme()">Register DAO</button>
         </form>
     </div> -->
 
-    <div class="tab-pane fade  show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
-      
-    <form>
-      <div class="form-group">
-        <input type="checkbox" id="isRegistering"/>
-        <label for="isRegistering">Can Register Schemes</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="cap" value.bind="proposeParams.cap"/>
-        <label class="active" for="cap">Cap</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="price" value.bind="proposeParams.price"/>
-        <label class="active" for="price">Price</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="price" value.bind="proposeParams.price"/>
-        <label class="active" for="startBlock">Start Block</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="endBlock" value.bind="proposeParams.endBlock"/>
-        <label class="active" for="endBlock">End Block</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary"/>
-        <label for="beneficiary">Beneficiary</label>
-      </div>
-      <div class="md-form">
-        <input class="form-control" type='text' id="admin" value.bind="proposeParams.admin"/>
-        <label for="admin">Administrator</label>
-      </div>
-     <button class="btn btn-primary" click.delegate="proposeScheme()">Propose</button>
-    </form>
-  </div>
-  
-
-    <div class="tab-pane fade" id="Organizations" role="tabpanel" aria-labelledby="organization-tab">
+    <div class="tab-pane fade" id="unPropose" role="tabpanel" aria-labelledby="unpropose-tab">
+      <div class="instructions">Remove functionality from <span class="org-name">${orgName}</span> by proposing to remove schemes.
+        After submitting the proposal, a vote will automatically be initiated.</div>
         <form>
         <div class="md-form">
-          <input class="form-control" type='text' id="addressToRegister" value.bind="orgAddressToRegister"/>
-          <label for="addressToRegister">Address</label>
+          <input class="form-control" type='text' id="schemeAddressToRemove" value.bind="schemeAddressToRemove"/>
+          <label for="schemeAddressToRemove">Scheme Address</label>
         </div>
-         <button class="btn btn-primary" click.delegate="registerOrg()">Register</button>
+         <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
         </form>
     </div>
-  </div>
+    </div>
 </template>

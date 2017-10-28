@@ -86,9 +86,9 @@ section h4 {
   border-radius: 2rem;
 }
 
-.md-form label{
+/* .md-form label{
   font-weight:bold;
-}
+} */
 
 /* animate page transitions */
 section.au-enter-active {

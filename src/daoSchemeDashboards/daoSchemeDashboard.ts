@@ -19,6 +19,7 @@ export class DaoSchemeDashboard {
     key: string;
     isRegistered: boolean;
     org: Organization;
+    orgName: string;
 
     activate(model) {
       this.name = model.name;
@@ -26,5 +27,6 @@ export class DaoSchemeDashboard {
       this.address = model.address;
       this.isRegistered = model.isRegistered;
       this.org = model.organization;
+      this.orgName = model.orgName;
   }
 }

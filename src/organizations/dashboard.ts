@@ -30,6 +30,7 @@ export class DAODashboard {
 
     PLATFORM.moduleName("../daoSchemeDashboards/GlobalConstraintRegistrar")
     PLATFORM.moduleName("../daoSchemeDashboards/NonArc")
+    PLATFORM.moduleName("../daoSchemeDashboards/NotRegistered")
     PLATFORM.moduleName("../daoSchemeDashboards/SchemeRegistrar")
     PLATFORM.moduleName("../daoSchemeDashboards/SimpleContributionScheme")
     PLATFORM.moduleName("../daoSchemeDashboards/UpgradeScheme")
@@ -39,7 +40,7 @@ export class DAODashboard {
     this.orgName = await this.organizationService.organizationName(this.org);
     this.tokenSymbol = await this.tokenService.getTokenName(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
-    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (s as any).isRegistered = true; return s as DashboardSchemeInfo; });
+    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (<DashboardSchemeInfo>s).isRegistered = true; return s as DashboardSchemeInfo; });
 
     for (let scheme of schemesArray) {
       this.schemesMap.set(scheme.address, scheme);
@@ -56,6 +57,7 @@ export class DAODashboard {
         this.schemesMap.set(availableScheme.address, availableScheme as DashboardSchemeInfo );
       }
     }
+    this.schemesMap.set("0xkjhasd789ewkjhrdsyuia", <DashboardSchemeInfo>{ address: "0xkjhasd789ewkjhrdsyuia" });
   }
 
   attached() {
@@ -75,16 +77,21 @@ export class DAODashboard {
     setTimeout(() => { ($(`.scheme-use-button`) as any).tooltip("hide"); });
   }
 
-  getDashboardView(key:string):string {
-    if (!key) {
+  getDashboardView(scheme: DashboardSchemeInfo):string {
+    let key:string;
+    if (!scheme.key) {
       key = "NonArc";
+    } else if (!scheme.isRegistered) {
+      key = "NotRegistered";
+    } else {
+      key = scheme.key;
     }
 
     return `../daoSchemeDashboards/${key}`;
   }
 
-  schemeDashboardViewModel(address: string) {
-    return Object.assign(this.schemesMap.get(address), { organization: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol })
+  schemeDashboardViewModel(scheme: DashboardSchemeInfo) {
+    return Object.assign(scheme, { organization: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol })
   }
 }
 
