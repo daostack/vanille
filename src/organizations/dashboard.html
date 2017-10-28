@@ -30,7 +30,7 @@
               <div class="col-1">
                   <round-dashboard-button 
                     class="scheme-use-button"
-                    data-toggle="tooltip" data-placement="top" title="Work with this scheme"
+                    data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
                     click.delegate="toggleDashboardVisibility(scheme.key)">
                   </round-dashboard-button>
               </div>
@@ -39,13 +39,13 @@
                       if.bind="!scheme.isRegistered && scheme.key"
                       class="scheme-add-button"
                       click.delegate='addScheme()'
-                      data-toggle="tooltip" data-placement="right" title="Add this scheme">
+                      data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Add this scheme">
                     </round-add-button>
                     <round-remove-button 
                       if.bind="scheme.isRegistered"
                       class="scheme-delete-button"
                       click.delegate='removeScheme(scheme)'
-                      data-toggle="tooltip" data-placement="top" title="Remove this scheme">
+                      data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Remove this scheme">
                     </round-remove-button>
               </div>
             </div>

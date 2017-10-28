@@ -74,7 +74,6 @@ export class DAODashboard {
 
   toggleDashboardVisibility(key) {
     ($(`#${key}`) as any).collapse("toggle");
-    setTimeout(() => { ($(`.scheme-use-button`) as any).tooltip("hide"); });
   }
 
   getDashboardView(scheme: DashboardSchemeInfo):string {

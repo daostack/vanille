@@ -37,7 +37,6 @@ export class DeployGen  {
      * until deploySequence is invoked.
      * Here I am initializing to '' which I believe is still not valid.
      */
-    // ($(".founder-add-button") as any).tooltip();
     return this.readBalances();
   }
 
@@ -83,16 +82,15 @@ export class DeployGen  {
   }
 
   removeFounder(idx: number) {
-    ($(".founder-delete-button") as any).tooltip("hide");
     if (this.founders.length > 1) {
       this.founders.splice(idx, 1);
     }
+    ($(".founder-delete-button") as any).tooltip("dispose");
   }
 
   addFounderInput(founder:Founder = { address: null, tokens: 1000, reputation: 1000 }) {
       this.founders.push(founder);
       setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
-      ($(".founder-add-button") as any).tooltip("hide");
     }
 
   appendIndex(str:string, ndx:number):string {

@@ -33,16 +33,16 @@
       </div>
     </section>
     
-    <section>
+    <section id="founders">
     <h4>Founders</h4>
 
     <span class="add-founder">
-      <round-add-button class="founder-add-button" click.delegate='addFounderInput()' data-toggle="tooltip" data-placement="right" title="Add a founder"></round-add-button>
+      <round-add-button class="founder-add-button" click.delegate='addFounderInput()' data-container="#founders" data-toggle="tooltip" data-trigger="hover" data-placement="right" title="Add a founder"></round-add-button>
     </span>
     
     <ul class="list-group founders" repeat.for='founder of founders'>
       <span if.bind='$index > 0' class="delete-founder">
-          <round-trash-button data-toggle="tooltip" data-placement="left" title="Delete this founder" 
+          <round-trash-button data-toggle="tooltip" data-placement="left" data-trigger="hover" title="Delete this founder" 
               class="founder-delete-button"
               click.delegate='removeFounder($index)'></round-trash-button>
       </span>
