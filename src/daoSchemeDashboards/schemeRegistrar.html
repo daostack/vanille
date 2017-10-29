@@ -56,7 +56,7 @@
           </div>
 
           <div if.bind="!!schemeToPropose">
-            <compose view.bind="paramsView" model.bind="proposeParams"></compose>
+            <compose view-model.bind="paramsView" model.bind="proposeParams"></compose>
           </div>
 
         <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>

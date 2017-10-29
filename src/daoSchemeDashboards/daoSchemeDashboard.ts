@@ -28,7 +28,7 @@ export class DaoSchemeDashboard {
       this.key = model.key;
       this.address = model.address;
       this.isRegistered = model.isRegistered;
-      this.org = model.organization;
+      this.org = model.org;
       this.orgName = model.orgName;
       this.allSchemes = model.schemes;
   }

@@ -18,6 +18,9 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     this.availableSchemes = model.allSchemes
       .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && !s.isRegistered);
     
+    // TODO: handle that every params form is using this same params object
+    this.proposeParams = { org: model.org, params: {} };
+
     return super.activate(model);
   }
 
@@ -30,7 +33,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   //       admin: null,// address _admin)  returns(bytes32) {
   //     };
 
-  proposeParams = {};
+  proposeParams: any;
 
   availableSchemes: Array<DashboardSchemeInfo>;
   schemeAddressToRegister: string;
@@ -67,8 +70,8 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
   @computedFrom("schemeToPropose")
   get paramsView() {
-    return this.schemeToPropose ? `./schemeProposalParams/${this.schemeToPropose.key}.html` : 'not set';
+    return this.schemeToPropose ? `./schemeProposalParams/${this.schemeToPropose.key}` : undefined;
   }
 }
 
-PLATFORM.moduleName("./schemeProposalParams/SimpleContributionScheme.html")
+PLATFORM.moduleName("./schemeProposalParams/SimpleContributionScheme")
