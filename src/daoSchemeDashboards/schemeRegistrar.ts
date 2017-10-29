@@ -1,23 +1,41 @@
+import { PLATFORM } from 'aurelia-pal';
+import { autoinject, computedFrom } from "aurelia-framework";
 import { DaoSchemeDashboard } from "./daoSchemeDashboard"
+import { SchemeService, SchemeInfo } from  "../services/SchemeService";
+import { DashboardSchemeInfo } from "../organizations/dashboard";
 
+@autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
 
-  constructor() {
+  constructor(
+    private schemeService: SchemeService
+  ) {
     super();
   }
 
-  proposeParams = {
-        cap: 0, // uint _cap,
-        price: 0, // uint _price,
-        startBlock: 0, // uint _startBlock,
-        endBlock: 0, // uint _endBlock,
-        beneficiary: null, // address _beneficiary,
-        admin: null,// address _admin)  returns(bytes32) {
-      };
+  activate(model) {
 
-    schemeAddressToRegister: string;
-    schemeAddressToPropose: string=null;
-    schemeAddressToRemove: string;
+    this.availableSchemes = model.allSchemes
+      .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && !s.isRegistered);
+    
+    return super.activate(model);
+  }
+
+  // proposeParams = {
+  //       cap: 0, // uint _cap,
+  //       price: 0, // uint _price,
+  //       startBlock: 0, // uint _startBlock,
+  //       endBlock: 0, // uint _endBlock,
+  //       beneficiary: null, // address _beneficiary,
+  //       admin: null,// address _admin)  returns(bytes32) {
+  //     };
+
+  proposeParams = {};
+
+  availableSchemes: Array<DashboardSchemeInfo>;
+  schemeAddressToRegister: string;
+  schemeToPropose: SchemeInfo=null;
+  schemeAddressToRemove: string;
 
   // schemeRegistrarParams:  {
   //   voteRegisterParams:string, // bytes32
@@ -32,8 +50,11 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   //   this.voteParametersHash = await this.org.votingMachine.getParametersHash(this.org.reputation.address, options.votePrec, options.ownerVote);
   // }
 
-  proposeScheme() {
+  selectSchemeToPropose(scheme: SchemeInfo) {
+    this.schemeToPropose = scheme;
+  }
 
+  proposeScheme() {
   }
 
   unProposeScheme() {
@@ -43,4 +64,11 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   registerDAOInScheme() {
 
   }
+
+  @computedFrom("schemeToPropose")
+  get paramsView() {
+    return this.schemeToPropose ? `./schemeProposalParams/${this.schemeToPropose.key}.html` : 'not set';
+  }
 }
+
+PLATFORM.moduleName("./schemeProposalParams/SimpleContributionScheme.html")

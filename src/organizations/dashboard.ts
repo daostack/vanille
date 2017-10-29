@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { OrganizationService, Organization } from "../services/OrganizationService";
+import { OrganizationService, DAO } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
@@ -9,7 +9,7 @@ import { PLATFORM } from 'aurelia-pal';
 @autoinject
 export class DAODashboard {
   
-  private org:Organization;
+  private org:DAO;
   private address:string;
   private orgName: string;
   private tokenSymbol: string;
@@ -28,6 +28,7 @@ export class DAODashboard {
 
   async activate(options: any) {
 
+    // so webpack can find them...
     PLATFORM.moduleName("../daoSchemeDashboards/GlobalConstraintRegistrar")
     PLATFORM.moduleName("../daoSchemeDashboards/NonArc")
     PLATFORM.moduleName("../daoSchemeDashboards/NotRegistered")
@@ -38,7 +39,8 @@ export class DAODashboard {
     this.address = options.address;
     this.org = await this.organizationService.organizationAt(this.address);
     this.orgName = await this.organizationService.organizationName(this.org);
-    this.tokenSymbol = await this.tokenService.getTokenName(this.org.token);
+    let token = this.org.token;
+    this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
     let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (<DashboardSchemeInfo>s).isRegistered = true; return s as DashboardSchemeInfo; });
 
@@ -90,10 +92,10 @@ export class DAODashboard {
   }
 
   schemeDashboardViewModel(scheme: DashboardSchemeInfo) {
-    return Object.assign(scheme, { organization: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol })
+    return Object.assign(scheme, { organization: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.schemes })
   }
 }
 
-interface DashboardSchemeInfo extends SchemeInfo {
+export interface DashboardSchemeInfo extends SchemeInfo {
   isRegistered: boolean;
 }

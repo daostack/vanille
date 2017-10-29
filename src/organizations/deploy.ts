@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractInfo } from "../services/ArcService";
-import { OrganizationService, Organization, Founder } from "../services/OrganizationService";
+import { OrganizationService, DAO, Founder } from "../services/OrganizationService";
 import "./deploy.scss";
 
 @autoinject

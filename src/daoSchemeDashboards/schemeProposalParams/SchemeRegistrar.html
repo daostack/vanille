@@ -1,0 +1,41 @@
+<template>
+  <h1>THIS MAKES NO SENSE TO EXIST, BUT WAS A FALSE START THAT I AM KEEPING AS A CODING EXAMPLE FOR OTHER CASES THAT DO MAKE SENSE.</h1>
+  <div class="md-form">
+    <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary" placeholder="Enter beneficiary"/>
+    <label class="active" for="beneficiary">Beneficiary</label>
+  </div>
+  <div class="md-form">
+    <input class="form-control" type='text' id="admin" value.bind="proposeParams.admin" placeholder="Enter administrator"/>
+    <label class="active" for="admin">Administrator</label>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="md-form">
+        <input class="form-control" type='number' id="cap" value.bind="proposeParams.cap" placeholder="Enter cap"/>
+        <label class="active" for="cap">Cap</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="md-form">
+        <input class="form-control" type='number' id="price" value.bind="proposeParams.price" placeholder="Enter price"/>
+        <label class="active" for="price">Price</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="md-form">
+        <input class="form-control" type='number' id="startBlock" value.bind="proposeParams.startBlock" placeholder="Enter start block"/>
+        <label class="active" for="startBlock">Start Block</label>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="md-form">
+        <input class="form-control" type='number' id="endBlock" value.bind="proposeParams.endBlock" placeholder="Enter end block"/>
+        <label class="active" for="endBlock">End Block</label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="checkbox" id="isRegistering"/>
+    <label for="isRegistering">Can Register Schemes</label>
+  </div>
+</template>

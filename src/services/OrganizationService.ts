@@ -14,7 +14,7 @@ export class OrganizationService {
     includeEventsIn(this);
   }
 
-  private daoCache = new Map<string,Organization>();
+  private daoCache = new Map<string,DAO>();
   private schemeCache = new Map<string,Array<ArcSchemeInfo>>();
 
   public async getDAOStackAddress() {
@@ -28,24 +28,23 @@ export class OrganizationService {
   }
 
 
-  public async createOrganization(config: OrganizationCreateConfig): Promise<Organization> {
+  public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
     return await Organization.new(config);
   }
 
-  public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<Organization> {
-    let org: Organization;
+  public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<DAO> {
+    let org: DAO;
     if (!fromCache || !(org = this.daoCache.get(avatarAddress)) ) {
         org = await Organization.at(avatarAddress);
     }
     return org;
   }
 
-  // TODO: move this into the organization class.
-  public async organizationName(org: Organization) {
+  public async organizationName(org: DAO) {
     return this.web3.bytes32ToUtf8(await org.avatar.orgName());     
   }
 
-  public get allOrganizations(): Array<Organization> {
+  public get allOrganizations(): Array<DAO> {
     return Array.from(this.daoCache.values());
   }
 
@@ -220,35 +219,41 @@ export interface ArcSchemeInfo {
   permissions: string;
 }
 
-export { Organization } from './ArcService';
+// export { Organization } from './ArcService';
 
-// export default class Organization {
-//   /**
-//    * includes static `new` and `at`
-//    */
-//   // Avatar truffle contract
-//   avatar: TruffleContract; 
-//   /**
-//    * Controller truffle contract
-//    */ 
-//   controller: TruffleContract; 
-//   /**
-//    * DAOToken truffle contract
-//    */ 
-//   token: TruffleContract; 
-//   /**
-//    * Reputation truffle contract
-//    */ 
-//   reputation: TruffleContract; 
-//   /**
-//    * AbsoluteVote truffle contract
-//    */ 
-//   votingMachine: TruffleContract; 
+/**
+ * The way the code is structured, the compiler doesn't know about the Organization interface.
+ * TODO: Create a d.ts.
+ */
+export interface DAO {
+  address: string;
+  name: string;
+  /**
+   * includes static `new` and `at`
+   */
+  // Avatar truffle contract
+  avatar: TruffleContract; 
+  /**
+   * Controller truffle contract
+   */ 
+  controller: TruffleContract; 
+  /**
+   * DAOToken truffle contract
+   */ 
+  token: TruffleContract; 
+  /**
+   * Reputation truffle contract
+   */ 
+  reputation: TruffleContract; 
+  /**
+   * AbsoluteVote truffle contract
+   */ 
+  votingMachine: TruffleContract; 
 
-//   schemes(contractName:string);
-//   scheme(contractName:string);
-//   checkSchemeConditions(contractName:string);
-//   proposeScheme(options?);
-//   proposeGlobalConstraint(options?);
-//   vote(proposalId, choice, params);
-// }
+  schemes(contractName?:string);
+  scheme(contractName:string);
+  checkSchemeConditions(contractName:string);
+  proposeScheme(options?);
+  proposeGlobalConstraint(options?);
+  vote(proposalId, choice, params);
+}

@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, ContractInfo } from '../services/ArcService';
-import { OrganizationService, Organization } from '../services/OrganizationService';
+import { OrganizationService, DAO } from '../services/OrganizationService';
 // import { DaoSchemeDashboard } from "../daoSchemeDashboards/daoSchemeDashboard";
 
 @autoinject
@@ -19,7 +19,7 @@ export class ControllerService {
     permissions: Permissions ) {
 
     let org = await this.organizationService.organizationAt(daoAddress);
-    let controller = org.organization;
+    let controller = org.controller;
     let scheme = await this.arcService.getContract(schemeAddress);
 
     let txAddToController = await controller.registerScheme(schemeAddress, parameters, permissions);
@@ -34,7 +34,7 @@ export class ControllerService {
     schemeAddress: string ) {
 
     let org = await this.organizationService.organizationAt(daoAddress);
-    let controller = org.organization;
+    let controller = org.controller;
     let scheme = await this.arcService.getContract(schemeAddress);
 
     let txRemoFromToController = await controller.unregisterScheme(schemeAddress);

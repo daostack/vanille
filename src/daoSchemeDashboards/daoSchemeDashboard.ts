@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract } from '../services/ArcService';
-import { OrganizationService, Organization } from "../services/OrganizationService";
+import { OrganizationService, DAO } from "../services/OrganizationService";
+import { DashboardSchemeInfo } from "../organizations/dashboard";
 import "./daoSchemeDashboard.scss";
 
 export class DaoSchemeDashboard {
@@ -18,8 +19,9 @@ export class DaoSchemeDashboard {
      */
     key: string;
     isRegistered: boolean;
-    org: Organization;
+    org: DAO;
     orgName: string;
+    allSchemes: Array<DashboardSchemeInfo>;
 
     activate(model) {
       this.name = model.name;
@@ -28,5 +30,6 @@ export class DaoSchemeDashboard {
       this.isRegistered = model.isRegistered;
       this.org = model.organization;
       this.orgName = model.orgName;
+      this.allSchemes = model.schemes;
   }
 }

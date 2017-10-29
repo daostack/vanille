@@ -2,7 +2,7 @@ import { Subscription  } from 'aurelia-event-aggregator';
 import { autoinject, singleton } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
 import { ArcService } from "../services/ArcService";
-import { OrganizationService, Organization } from "../services/OrganizationService";
+import { OrganizationService, DAO } from "../services/OrganizationService";
 import "./list.scss";
 
 @singleton(false)

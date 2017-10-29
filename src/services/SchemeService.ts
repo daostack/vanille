@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
-import { OrganizationService, Organization, ArcSchemeInfo } from '../services/OrganizationService';
+import { OrganizationService, DAO, ArcSchemeInfo } from '../services/OrganizationService';
 import { Permissions } from '../services/ControllerService';
 
 @autoinject

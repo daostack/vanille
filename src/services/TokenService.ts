@@ -10,8 +10,12 @@ export class TokenService {
     , private arcService: ArcService
   ) {}
 
-  public async getTokenName(token: TruffleContract): Promise<string> {
+  public async getTokenSymbol(token: TruffleContract): Promise<string> {
     return await token.symbol();
+  }
+
+  public async getTokenName(token: TruffleContract): Promise<string> {
+    return await token.name();
   }
 
   public async getUserTokenBalance(token: TruffleContract): Promise<number> {

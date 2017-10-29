@@ -41,59 +41,24 @@
                 <label class="active" for="schemeAddressToPropose">Scheme Address</label>
               </div> -->
           <div class="md-form">
-            <div class="dropdown d-inline">
-              <button class="btn btn-sm btn-outline-light dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select Scheme
+            <div>Proposing to add<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : '(Select a Scheme)'}</span>
               </button>
 
-              <div class="dropdown-menu" aria-labelledby="availableSchemes">
-                <a class="dropdown-item" href="#">Upgrade Scheme</a>
-                <a class="dropdown-item" href="#">Global Constraint Registrar</a>
-                <a class="dropdown-item" href="#">Simple Contribution Scheme</a>
-              </div>
+              <ul class="dropdown-menu" aria-labelledby="availableSchemes" repeat.for="scheme of availableSchemes">
+                <li class="dropdown-item" click.delegate="selectSchemeToPropose(scheme)">${scheme.name}</li>
+              </ul>
             </div>
 
-            <div class="d-inline ml-2">${schemeAddressToPropose}</div>
+            <div if.bind="!!schemeToPropose">
+              <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
+            </div>
           </div>
 
-          <div class="md-form">
-            <input class="form-control" type='text' id="beneficiary" value.bind="proposeParams.beneficiary" placeholder="Enter beneficiary"/>
-            <label class="active" for="beneficiary">Beneficiary</label>
+          <div if.bind="!!schemeToPropose">
+            <compose view.bind="paramsView" model.bind="proposeParams"></compose>
           </div>
-          <div class="md-form">
-            <input class="form-control" type='text' id="admin" value.bind="proposeParams.admin" placeholder="Enter administrator"/>
-            <label class="active" for="admin">Administrator</label>
-          </div>
-          <div class="row">
-            <div class="col-3">
-              <div class="md-form">
-                <input class="form-control" type='number' id="cap" value.bind="proposeParams.cap" placeholder="Enter cap"/>
-                <label class="active" for="cap">Cap</label>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="md-form">
-                <input class="form-control" type='number' id="price" value.bind="proposeParams.price" placeholder="Enter price"/>
-                <label class="active" for="price">Price</label>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="md-form">
-                <input class="form-control" type='number' id="startBlock" value.bind="proposeParams.startBlock" placeholder="Enter start block"/>
-                <label class="active" for="startBlock">Start Block</label>
-              </div>
-            </div>
-            <div class="col-3">
-              <div class="md-form">
-                <input class="form-control" type='number' id="endBlock" value.bind="proposeParams.endBlock" placeholder="Enter end block"/>
-                <label class="active" for="endBlock">End Block</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <input type="checkbox" id="isRegistering"/>
-            <label for="isRegistering">Can Register Schemes</label>
-          </div>
+
         <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
         </form>
             

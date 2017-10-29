@@ -22,7 +22,7 @@ export class TokenTicker {
 
     const token = await this.tokenService.getDAOStackMintableToken();
     
-    this.tknSymbol = await this.tokenService.getTokenName(token);
+    this.tknSymbol = await this.tokenService.getTokenSymbol(token);
 
     // console.log('symbol: '+ this.tknSymbol);
 
