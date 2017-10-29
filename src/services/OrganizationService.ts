@@ -33,8 +33,8 @@ export class OrganizationService {
   }
 
   public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<DAO> {
-    let org: DAO;
-    if (!fromCache || !(org = this.daoCache.get(avatarAddress)) ) {
+    let org: DAO = fromCache ? this.daoCache.get(avatarAddress) : null;
+    if (!fromCache || !org) {
         org = await Organization.at(avatarAddress);
     }
     return org;
@@ -85,7 +85,7 @@ export class OrganizationService {
         for (let i = 0; i < eventsArray.length; i++) {
             // let orgAddress =  eventsArray[i].args._sender;
             let schemeAddress =  eventsArray[i].args._scheme as string;
-            let scheme = await this.arcService.getContract(schemeAddress);
+            let scheme = await this.arcService.getContract(schemeName, schemeAddress);
             let schemeKey = scheme.contract as string;
             let schemeFriendlyName = this.arcService.convertKeyToFriendlyName(schemeKey);
             let permissions = await controller.getSchemePermissions(schemeAddress) as string;

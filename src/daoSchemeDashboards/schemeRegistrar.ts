@@ -75,3 +75,6 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 }
 
 PLATFORM.moduleName("./schemeProposalParams/SimpleContributionScheme")
+PLATFORM.moduleName("./schemeProposalParams/GlobalConstraintRegistrar")
+PLATFORM.moduleName("./schemeProposalParams/UpgradeScheme")
+PLATFORM.moduleName("./schemeProposalParams/SchemeRegistrar")

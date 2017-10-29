@@ -31,15 +31,15 @@
                   <round-dashboard-button 
                     class="scheme-use-button"
                     data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
-                    click.delegate="toggleDashboardVisibility(scheme.key)">
+                    click.delegate="useScheme(scheme)">
                   </round-dashboard-button>
               </div>
               <div class="col-1">
                     <round-add-button 
-                      if.bind="!scheme.isRegistered && scheme.key"
+                      if.bind="canAddScheme(scheme)"
                       class="scheme-add-button"
-                      click.delegate='addScheme()'
-                      data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Add this scheme">
+                      click.delegate='addScheme(scheme)'
+                      data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Add this scheme">
                     </round-add-button>
                     <round-remove-button 
                       if.bind="scheme.isRegistered"
@@ -52,10 +52,16 @@
             <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
-              <div class="card-body">
-                <compose view-model="${getDashboardView(scheme)}" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                  <div class="card-body">
+                    <compose show.bind="using" view-model="${getDashboardView(scheme, true)}" model.bind="schemeDashboardViewModel(scheme, true)"></compose>
+                    <span if.bind="canAddScheme(scheme)">
+                      <compose show.bind="adding" view-model="${getDashboardView(scheme, false)}" model.bind="schemeDashboardViewModel(scheme, false)"></compose>
+                      <div show.bind="adding">
+                        <button class="btn btn-primary" click.delegate="onAddSchemeSubmit(scheme)">Submit</button>
+                      </div>
+                    </span>
+                  </div>
               </div>
-            </div>
             </div>
           </li>
         </ul>

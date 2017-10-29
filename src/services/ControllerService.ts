@@ -14,32 +14,34 @@ export class ControllerService {
   
   public async addSchemeToDao(
     daoAddress: string,
+    schemeKey: string,
     schemeAddress: string,
     parameters: any,
     permissions: Permissions ) {
 
     let org = await this.organizationService.organizationAt(daoAddress);
     let controller = org.controller;
-    let scheme = await this.arcService.getContract(schemeAddress);
+    let scheme = await this.arcService.getContract(schemeKey, schemeAddress);
 
     let txAddToController = await controller.registerScheme(schemeAddress, parameters, permissions);
 
     await org.token.transfer(daoAddress, await scheme.fee());
 
-    let txAddToSchema = await scheme.registerOrganization(daoAddress);
+    let txRegisterOrganizationOnSchema = await scheme.registerOrganization(daoAddress);
   }
 
   public async removeSchemeFromDao(
     daoAddress: string,
+    schemeKey: string,
     schemeAddress: string ) {
 
     let org = await this.organizationService.organizationAt(daoAddress);
     let controller = org.controller;
-    let scheme = await this.arcService.getContract(schemeAddress);
+    let scheme = await this.arcService.getContract(schemeKey, schemeAddress);
 
-    let txRemoFromToController = await controller.unregisterScheme(schemeAddress);
+    let txUnregisterSchemeFromController = await controller.unregisterScheme(schemeAddress);
 
-    let txRemoveFromSchema = await scheme.unregisterOrganization(daoAddress);
+    let txUnregisterOrgFromSchema = await scheme.unregisterOrganization(daoAddress);
   }
 
 }

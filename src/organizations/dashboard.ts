@@ -1,7 +1,8 @@
-import { autoinject } from "aurelia-framework";
+import { autoinject, computedFrom } from "aurelia-framework";
 import { OrganizationService, DAO } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
+import { ControllerService } from  "../services/ControllerService";
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import "./dashboard.scss";
 import { PLATFORM } from 'aurelia-pal';
@@ -16,9 +17,19 @@ export class DAODashboard {
   private userTokenbalance:Number;
   private schemesMap = new Map<string,DashboardSchemeInfo>();
   private get schemes(): Array<DashboardSchemeInfo> { return Array.from(this.schemesMap.values()); }
-  
+  // false if adding
+  private state: State = State.Neither;
+  private currentScheme: DashboardSchemeInfo;
+
+  @computedFrom("state")
+  private get using() { return this.state === State.Using; }
+
+  @computedFrom("state")
+  private get adding() { return this.state === State.Adding; }
+
   constructor(
     private organizationService: OrganizationService
+    , private controllerService: ControllerService
     , private tokenService: TokenService
     , private arcService: ArcService
     , private schemeService: SchemeService
@@ -59,7 +70,7 @@ export class DAODashboard {
         this.schemesMap.set(availableScheme.address, availableScheme as DashboardSchemeInfo );
       }
     }
-    this.schemesMap.set("0xkjhasd789ewkjhrdsyuia", <DashboardSchemeInfo>{ address: "0xkjhasd789ewkjhrdsyuia" });
+    this.schemesMap.set("0x9ac0d209653719c86420bfca5d31d3e695f0b530", <DashboardSchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
   }
 
   attached() {
@@ -74,28 +85,85 @@ export class DAODashboard {
     });
   }
 
-  toggleDashboardVisibility(key) {
-    ($(`#${key}`) as any).collapse("toggle");
+  useScheme(scheme: DashboardSchemeInfo) {
+    this.toggleDashboardVisibility(scheme, State.Using);
   }
 
-  getDashboardView(scheme: DashboardSchemeInfo):string {
-    let key:string;
-    if (!scheme.key) {
-      key = "NonArc";
-    } else if (!scheme.isRegistered) {
-      key = "NotRegistered";
-    } else {
-      key = scheme.key;
+
+  addScheme(scheme: DashboardSchemeInfo) {
+    this.toggleDashboardVisibility(scheme, State.Adding);
+  }
+
+  onAddSchemeSubmit(scheme: DashboardSchemeInfo) {
+    // this.controllerService.addSchemeToDao(this.org.address, scheme.key, scheme.address);
+  }
+
+  toggleDashboardVisibility(scheme: DashboardSchemeInfo, newState: State) {
+    let currentState = this.state;
+
+    if ((newState == currentState) && (currentState != State.Neither)) {
+      newState = State.Neither;
     }
 
-    return `../daoSchemeDashboards/${key}`;
+    // let currentScheme = this.currentScheme;
+    // let newScheme = (newState != State.Neither) ? scheme: null;
+
+    // if (newScheme && (newScheme != currentScheme)) {
+    //   if (currentScheme) {
+    //     ($(`#${currentScheme.key}`) as any).collapse("hide");
+    //   }
+    // }
+    // this.currentScheme = newScheme;
+
+    this.state = newState;
+    
+    // if ((newState == State.Neither) || (currentState == State.Neither) || (newScheme && (newScheme != currentScheme)))  {
+    //   ($(`#${scheme.key}`) as any).collapse("toggle");
+    // }
+    if ((newState == State.Neither) || (currentState == State.Neither))  {
+      ($(`#${scheme.key}`) as any).collapse("toggle");
+    }
   }
 
-  schemeDashboardViewModel(scheme: DashboardSchemeInfo) {
-    return Object.assign(scheme, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.schemes })
+  getDashboardView(scheme: DashboardSchemeInfo, using:boolean):string {
+    if (using) {
+      let key:string;
+      if (!scheme.key) {
+        key = "NonArc";
+      } else if (!scheme.isRegistered) {
+        key = "NotRegistered";
+      } else {
+        key = scheme.key;
+      }
+      return `../daoSchemeDashboards/${key}`;
+    } else {
+      return `../daoSchemeDashboards/schemeProposalParams/${scheme.key}`;
+    }
+  }
+
+  canAddScheme(scheme: DashboardSchemeInfo) {
+    return !scheme.isRegistered && !!scheme.key;
+  }
+
+  schemeDashboardViewModel(scheme: DashboardSchemeInfo, using:boolean): any {
+    if (using) {
+      return Object.assign(scheme, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.schemes })
+    } else {
+      return { org: this.org, params: {} }
+    }
+  }
+
+  removeScheme(scheme: DashboardSchemeInfo) {
+    // this.controllerService.removeSchemeFromDao(this.org.avatar.address, scheme.key, scheme.address);
   }
 }
 
 export interface DashboardSchemeInfo extends SchemeInfo {
   isRegistered: boolean;
+}
+
+enum State {
+  Neither,
+  Adding,
+  Using
 }
