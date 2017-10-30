@@ -16,16 +16,19 @@ export class DAODashboard {
   private tokenSymbol: string;
   private userTokenbalance:Number;
   private schemesMap = new Map<string,DashboardSchemeInfo>();
-  private get schemes(): Array<DashboardSchemeInfo> { return Array.from(this.schemesMap.values()); }
+  private registeredArcSchemes: Array<DashboardSchemeInfo>;
+  private unregisteredArcSchemes: Array<DashboardSchemeInfo>;
+  private nonArcSchemes: Array<DashboardSchemeInfo>;
+  private arcSchemes: Array<DashboardSchemeInfo>;
   // false if adding
-  private state: State = State.Neither;
-  private currentScheme: DashboardSchemeInfo;
+  // private state: State = State.Neither;
+  // private currentScheme: DashboardSchemeInfo;
 
-  @computedFrom("state")
-  private get using() { return this.state === State.Using; }
+  // @computedFrom("state")
+  // private get using() { return this.state === State.Using; }
 
-  @computedFrom("state")
-  private get adding() { return this.state === State.Adding; }
+  // @computedFrom("state")
+  // private get adding() { return this.state === State.Adding; }
 
   constructor(
     private organizationService: OrganizationService
@@ -71,6 +74,16 @@ export class DAODashboard {
       }
     }
     this.schemesMap.set("0x9ac0d209653719c86420bfca5d31d3e695f0b530", <DashboardSchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
+
+    this.registeredArcSchemes = Array.from(this.schemesMap.values())
+      .filter((s: DashboardSchemeInfo) => s.isRegistered);
+    this.unregisteredArcSchemes = Array.from(this.schemesMap.values())
+      .filter((s: DashboardSchemeInfo) => s.key && !s.isRegistered);
+    this.nonArcSchemes = Array.from(this.schemesMap.values())
+      .filter((s: DashboardSchemeInfo) => !s.key);
+    this.arcSchemes = Array.from(this.schemesMap.values())
+      .filter((s: DashboardSchemeInfo) => s.key);
+
   }
 
   attached() {
@@ -86,47 +99,49 @@ export class DAODashboard {
   }
 
   useScheme(scheme: DashboardSchemeInfo) {
-    this.toggleDashboardVisibility(scheme, State.Using);
+    this.toggleDashboardVisibility(scheme);
   }
 
 
-  addScheme(scheme: DashboardSchemeInfo) {
-    this.toggleDashboardVisibility(scheme, State.Adding);
-  }
+  // addScheme(scheme: DashboardSchemeInfo) {
+  //   this.toggleDashboardVisibility(scheme, State.Adding);
+  // }
 
-  onAddSchemeSubmit(scheme: DashboardSchemeInfo) {
-    // this.controllerService.addSchemeToDao(this.org.address, scheme.key, scheme.address);
-  }
+  // onAddSchemeSubmit(scheme: DashboardSchemeInfo) {
+  //   // this.controllerService.addSchemeToDao(this.org.address, scheme.key, scheme.address);
+  // }
 
-  toggleDashboardVisibility(scheme: DashboardSchemeInfo, newState: State) {
-    let currentState = this.state;
+  toggleDashboardVisibility(scheme: DashboardSchemeInfo) {
+      ($(`#${scheme.key}`) as any).collapse("toggle");
 
-    if ((newState == currentState) && (currentState != State.Neither)) {
-      newState = State.Neither;
-    }
 
-    // let currentScheme = this.currentScheme;
-    // let newScheme = (newState != State.Neither) ? scheme: null;
+    // let currentState = this.state;
 
-    // if (newScheme && (newScheme != currentScheme)) {
-    //   if (currentScheme) {
-    //     ($(`#${currentScheme.key}`) as any).collapse("hide");
-    //   }
+    // if ((newState == currentState) && (currentState != State.Neither)) {
+    //   newState = State.Neither;
     // }
-    // this.currentScheme = newScheme;
 
-    this.state = newState;
+    // // let currentScheme = this.currentScheme;
+    // // let newScheme = (newState != State.Neither) ? scheme: null;
+
+    // // if (newScheme && (newScheme != currentScheme)) {
+    // //   if (currentScheme) {
+    // //     ($(`#${currentScheme.key}`) as any).collapse("hide");
+    // //   }
+    // // }
+    // // this.currentScheme = newScheme;
+
+    // this.state = newState;
     
-    // if ((newState == State.Neither) || (currentState == State.Neither) || (newScheme && (newScheme != currentScheme)))  {
+    // // if ((newState == State.Neither) || (currentState == State.Neither) || (newScheme && (newScheme != currentScheme)))  {
+    // //   ($(`#${scheme.key}`) as any).collapse("toggle");
+    // // }
+    // if ((newState == State.Neither) || (currentState == State.Neither))  {
     //   ($(`#${scheme.key}`) as any).collapse("toggle");
     // }
-    if ((newState == State.Neither) || (currentState == State.Neither))  {
-      ($(`#${scheme.key}`) as any).collapse("toggle");
-    }
   }
 
-  getDashboardView(scheme: DashboardSchemeInfo, using:boolean):string {
-    if (using) {
+  getDashboardView(scheme: DashboardSchemeInfo):string {
       let key:string;
       if (!scheme.key) {
         key = "NonArc";
@@ -136,26 +151,25 @@ export class DAODashboard {
         key = scheme.key;
       }
       return `../daoSchemeDashboards/${key}`;
-    } else {
-      return `../daoSchemeDashboards/schemeProposalParams/${scheme.key}`;
-    }
+    // } else {
+    //   return `../daoSchemeDashboards/schemeProposalParams/${scheme.key}`;
+    // }
   }
 
-  canAddScheme(scheme: DashboardSchemeInfo) {
-    return !scheme.isRegistered && !!scheme.key;
+  // canAddScheme(scheme: DashboardSchemeInfo) {
+  //   return !scheme.isRegistered && !!scheme.key;
+  // }
+
+  schemeDashboardViewModel(scheme: DashboardSchemeInfo): any {
+      return Object.assign(scheme, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes })
+    // } else {
+    //   return { org: this.org, params: {} }
+    // }
   }
 
-  schemeDashboardViewModel(scheme: DashboardSchemeInfo, using:boolean): any {
-    if (using) {
-      return Object.assign(scheme, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.schemes })
-    } else {
-      return { org: this.org, params: {} }
-    }
-  }
-
-  removeScheme(scheme: DashboardSchemeInfo) {
-    // this.controllerService.removeSchemeFromDao(this.org.avatar.address, scheme.key, scheme.address);
-  }
+  // removeScheme(scheme: DashboardSchemeInfo) {
+  //   // this.controllerService.removeSchemeFromDao(this.org.avatar.address, scheme.key, scheme.address);
+  // }
 }
 
 export interface DashboardSchemeInfo extends SchemeInfo {

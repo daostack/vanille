@@ -16,25 +16,26 @@
     </dl>
   </section>
   <section>
-      <h3>Schemes</h3>
+      <h3><span class="org-name">${orgName} Schemes</span></h3>
     </div>
       
       <div id="accordion" role="tablist">
-        <ul class="list-group schemes" repeat.for="scheme of schemes">
+        <ul class="list-group schemes" repeat.for="scheme of registeredArcSchemes">
           <li class="list-group-item">
             <div class="row">
-              <div class="col-10">
+              <div class="col-11">
                 <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
                   <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
                 </div>
               <div class="col-1">
                   <round-dashboard-button 
                     class="scheme-use-button"
+                    css="btn-success"
                     data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
                     click.delegate="useScheme(scheme)">
                   </round-dashboard-button>
               </div>
-              <div class="col-1">
+              <!-- <div class="col-1">
                     <round-add-button 
                       if.bind="canAddScheme(scheme)"
                       class="scheme-add-button"
@@ -47,19 +48,87 @@
                       click.delegate='removeScheme(scheme)'
                       data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Remove this scheme">
                     </round-remove-button>
+              </div> -->
+            </div>
+            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+              <hr/>
+                <div class="card">
+                  <div class="card-body">
+                    <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                    <!-- <span if.bind="canAddScheme(scheme)">
+                      <compose show.bind="adding" view-model="${getDashboardView(scheme, false)}" model.bind="schemeDashboardViewModel(scheme, false)"></compose>
+                      <div show.bind="adding">
+                        <button class="btn btn-primary" click.delegate="onAddSchemeSubmit(scheme)">Submit</button>
+                      </div>
+                    </span> -->
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+    </div>
+
+  </section>
+  <section>
+      <h3>Other Arc Schemes</span></h3>
+    </div>
+      
+      <div id="accordion" role="tablist">
+        <ul class="list-group schemes" repeat.for="scheme of unregisteredArcSchemes">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-11">
+                <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+                  <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+                </div>
+              <div class="col-1">
+                  <round-dashboard-button 
+                    class="scheme-use-button"
+                    css="btn-primary"
+                    data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
+                    click.delegate="useScheme(scheme)">
+                  </round-dashboard-button>
               </div>
             </div>
             <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
                   <div class="card-body">
-                    <compose show.bind="using" view-model="${getDashboardView(scheme, true)}" model.bind="schemeDashboardViewModel(scheme, true)"></compose>
-                    <span if.bind="canAddScheme(scheme)">
-                      <compose show.bind="adding" view-model="${getDashboardView(scheme, false)}" model.bind="schemeDashboardViewModel(scheme, false)"></compose>
-                      <div show.bind="adding">
-                        <button class="btn btn-primary" click.delegate="onAddSchemeSubmit(scheme)">Submit</button>
-                      </div>
-                    </span>
+                    <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                  </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+    </div>
+
+  </section>
+  <section>
+      <h3>Non-Arc Schemes</span></h3>
+    </div>
+      
+      <div id="accordion" role="tablist">
+        <ul class="list-group schemes" repeat.for="scheme of nonArcSchemes">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-11">
+                <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+                  <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+                </div>
+              <div class="col-1">
+                  <round-dashboard-button 
+                    class="scheme-use-button"
+                    css="btn-dark"
+                    data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
+                    click.delegate="useScheme(scheme)">
+                  </round-dashboard-button>
+              </div>
+            </div>
+            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+              <hr/>
+                <div class="card">
+                  <div class="card-body">
+                    <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
                   </div>
               </div>
             </div>
