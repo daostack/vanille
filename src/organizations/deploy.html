@@ -50,7 +50,6 @@
           <form class="form-inline">
           <div class="md-form">
             <input
-              disabled.bind="$first ? 'disabled' : null"
               class="form-control" 
               style="width:400px"
               placeholder='enter wallet address'
@@ -58,7 +57,7 @@
               value.bind='founder.address'
               id.bind="appendIndex('founder_address',$index)"
             />
-            <label class="active"  for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }&nbsp;<span if.bind="$first">(you)</span></label>
+            <label class="active"  for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
           </div>
           <div class="md-form">
             <input
@@ -87,9 +86,15 @@
 
   <section>
     <h4>Schemes</h4>
-    <!-- <div repeat.for="scheme of knownSchemes">
-      <h5>${scheme.name}</h5>
-    </div> -->
+    <h5 class="red-text">[Currently Arc runs out of gas when supplied with a list of contracts. Until that is resolved, the following is just for display.]</h5>
+    <div repeat.for="scheme of arcSchemes">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input disabled.bind="scheme.required" class="form-check-input" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes">
+          ${scheme.name}
+        </label>
+      </div>
+    </div>
   </section>
   
   <div>

@@ -111,10 +111,9 @@
         <ul class="list-group schemes" repeat.for="scheme of nonArcSchemes">
           <li class="list-group-item">
             <div class="row">
-              <div class="col-11">
-                <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+              <div class="col-11" style="padding-top:.5rem">
                   <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
-                </div>
+              </div>
               <div class="col-1">
                   <round-dashboard-button 
                     class="scheme-use-button"

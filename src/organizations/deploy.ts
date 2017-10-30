@@ -3,6 +3,7 @@ import { Web3Service } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractInfo } from "../services/ArcService";
 import { OrganizationService, DAO, Founder } from "../services/OrganizationService";
+import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import "./deploy.scss";
 
 @autoinject
@@ -20,15 +21,26 @@ export class DeployGen  {
 
   private addOrgResultMessage: string= '';
   private deployOrgStatus:string = null;
+  private arcSchemes: Array<SchemeInfo>;
+  private selectedSchemes: Array<SchemeInfo> = [];
 
   constructor(
     private web3: Web3Service
     , private arcService: ArcService
     , private organizationService: OrganizationService
     , private tokenService: TokenService
+    , private schemeService: SchemeService
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
+      this.arcSchemes = this.schemeService.availableSchemes;
+      for(let scheme of this.arcSchemes) {
+        if (scheme.key !== "SimpleContributionScheme")
+        {
+          (<DeploySchemeInfo>scheme).required = true;
+          this.selectedSchemes.push(scheme);
+        }
+      }
     }
 
   async activate() {
@@ -63,6 +75,7 @@ export class DeployGen  {
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
         founders: this.founders
+        // , schemes: this.selectedSchemes.map((s) => { return { contract: s.key, address: s.address }; } )
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
@@ -96,4 +109,8 @@ export class DeployGen  {
   appendIndex(str:string, ndx:number):string {
     return str+ndx;
   }
+}
+
+interface DeploySchemeInfo extends SchemeInfo {
+  required: boolean;
 }

@@ -29,13 +29,13 @@ export class OrganizationService {
 
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
-    return await Organization.new(config);
+    return <DAO>(await Organization.new(config) as any);
   }
 
   public async organizationAt(avatarAddress: string, fromCache: boolean = true): Promise<DAO> {
     let org: DAO = fromCache ? this.daoCache.get(avatarAddress) : null;
     if (!fromCache || !org) {
-        org = await Organization.at(avatarAddress);
+        org = <DAO>(await Organization.at(avatarAddress) as any);
     }
     return org;
   }
@@ -207,6 +207,7 @@ export interface OrganizationCreateConfig {
   tokenName: string;
   tokenSymbol: string;
   founders: Array<Founder>;
+  // schemes: Array<{ contract: string, address: string }>
 }
 
 
