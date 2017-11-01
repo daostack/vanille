@@ -16,7 +16,7 @@ At this time there are no web server-side components.
 Alchemy uses a library of reusable and configurable Ethereum smart contracts called "Arc".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/daostack).
 
 ## See It Live
-You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net).  This deployment of the DAOStack application assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
+You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net).  This deployment of Alchemy assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
 
 ## Building The Code
 
