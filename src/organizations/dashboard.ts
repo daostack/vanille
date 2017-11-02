@@ -167,7 +167,7 @@ export class DAODashboard {
   // }
 
   schemeDashboardViewModel(scheme: DashboardSchemeInfo): any {
-      return Object.assign(scheme, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes })
+      return Object.assign({}, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes }, scheme )
     // } else {
     //   return { org: this.org, params: {} }
     // }

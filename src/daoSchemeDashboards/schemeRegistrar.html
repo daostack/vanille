@@ -41,12 +41,12 @@
                 <label class="active" for="schemeAddressToPropose">Scheme Address</label>
               </div> -->
           <div class="md-form">
-            <div>Proposing to add<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div>Propose to add<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : '(Select a Scheme)'}</span>
               </button>
 
-              <ul class="dropdown-menu" aria-labelledby="availableSchemes" repeat.for="scheme of availableSchemes">
-                <li class="dropdown-item" click.delegate="selectSchemeToPropose(scheme)">${scheme.name}</li>
+              <ul class="dropdown-menu" aria-labelledby="availableSchemes">
+                <li class="dropdown-item" click.delegate="selectSchemeToPropose(scheme)"  repeat.for="scheme of availableSchemes">${scheme.name}</li>
               </ul>
             </div>
 
@@ -80,9 +80,22 @@
       <div class="instructions">Remove functionality from <span class="org-name">${orgName}</span> by proposing to remove schemes.
         After submitting the proposal, a vote will automatically be initiated.</div>
         <form>
-        <div class="md-form">
-          <input class="form-control" type='text' id="schemeAddressToRemove" value.bind="schemeAddressToRemove"/>
-          <label for="schemeAddressToRemove">Scheme Address</label>
+          <div class="md-form">
+            <div>Propose to remove<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="removableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : '(Select a Scheme)'}</span>
+              </button>
+
+            <ul class="dropdown-menu" aria-labelledby="removableSchemes">
+              <li class="dropdown-item" click.delegate="selectSchemeToUnPropose(scheme)" repeat.for="scheme of removableSchemes">${scheme.name}</li>
+            </ul>
+
+          <div if.bind="!!schemeToUnPropose">
+              <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>
+            </div>
+          </div>
+
+          <!-- <input class="form-control" type='text' id="schemeAddressToRemove" value.bind="schemeAddressToRemove"/>
+          <label for="schemeAddressToRemove">Scheme Address</label> -->
         </div>
          <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
         </form>

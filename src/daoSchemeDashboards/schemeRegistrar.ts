@@ -17,6 +17,8 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
     this.availableSchemes = model.allSchemes
       .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && !s.isRegistered);
+    this.removableSchemes = model.allSchemes
+      .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && s.isRegistered);
     
     // TODO: handle that every params form is using this same params object
     this.proposeParams = { org: model.org, params: {} };
@@ -36,9 +38,9 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   proposeParams: any;
 
   availableSchemes: Array<DashboardSchemeInfo>;
-  schemeAddressToRegister: string;
+  removableSchemes: Array<DashboardSchemeInfo>;
   schemeToPropose: SchemeInfo=null;
-  schemeAddressToRemove: string;
+  schemeToUnPropose: SchemeInfo=null;
 
   // schemeRegistrarParams:  {
   //   voteRegisterParams:string, // bytes32
@@ -55,6 +57,10 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
   selectSchemeToPropose(scheme: SchemeInfo) {
     this.schemeToPropose = scheme;
+  }
+
+  selectSchemeToUnPropose(scheme: SchemeInfo) {
+    this.schemeToUnPropose = scheme;
   }
 
   proposeScheme() {

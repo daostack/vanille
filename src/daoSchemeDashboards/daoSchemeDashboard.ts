@@ -30,6 +30,6 @@ export class DaoSchemeDashboard {
       this.isRegistered = model.isRegistered;
       this.org = model.org;
       this.orgName = model.orgName;
-      this.allSchemes = model.schemes;
+      this.allSchemes = model.allSchemes;
   }
 }

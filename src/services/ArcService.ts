@@ -29,7 +29,7 @@ export class ArcService {
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
       this.arcSchemes = await getUniversalSchemes() as ArcSchemes;
-      console.log(this.arcSchemes);
+      // console.log(this.arcSchemes);
       // each property is a contractInfo
       for(let contractName in this.arcSchemes) {
         // let actualContract = await this.getContract(contractName);
@@ -86,11 +86,11 @@ export class ArcService {
   public convertKeyToFriendlyName(key: string): string {
     if (!key) return null;
 
-    return key
-      // insert a space before all caps
-      .replace(/([A-Z])/g, ' $1')
-      // uppercase the first character
-      .replace(/^./, function(str){ return str.toUpperCase(); }) 
+    // insert a space before all caps except at beginning
+    key = key.replace(/(?!^)([A-Z])/g, ' $1');
+
+    // uppercase the first character
+    return key.replace(/^./, function(str){ return str.toUpperCase(); }) 
   }
 
   /**
