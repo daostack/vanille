@@ -53,7 +53,6 @@ export class OrganizationService {
 
   public async initialize()
     {
-      // let orgRegister = await this.arcService.getContract("OrganizationRegister");
       let genesisScheme = await this.arcService.getContract("GenesisScheme");
       
       this.myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
@@ -207,7 +206,7 @@ export interface OrganizationCreateConfig {
   tokenName: string;
   tokenSymbol: string;
   founders: Array<Founder>;
-  // schemes: Array<{ contract: string, address: string }>
+  schemes: Array<{ contract: string, address: string }>
 }
 
 

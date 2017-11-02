@@ -1,36 +1,27 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { Web3Service } from "../services/Web3Service";
 import { OrganizationService, DAO, ArcSchemeInfo } from '../services/OrganizationService';
-import { Permissions } from '../services/ControllerService';
+import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 
 @autoinject
 export class SchemeService {
+   
+  /**
+   * The Arc scheme contracts that we make available to the user
+   */
+  public availableSchemes: Array<ContractInfo>;
 
   constructor(
     private arcService: ArcService
-    , private web3: Web3Service
     , private organizationService: OrganizationService
   ) {
       this.availableSchemes = [
-        this.arcService.deployedArcContracts.SchemeRegistrar
-        , this.arcService.deployedArcContracts.UpgradeScheme
-        , this.arcService.deployedArcContracts.GlobalConstraintRegistrar
-        , this.arcService.deployedArcContracts.SimpleContributionScheme
-      ].map((contractInfo) => {
-        return {
-          address: contractInfo.address,
-          permissions: null,
-          name: contractInfo.name,
-          key: contractInfo.key
-        }
-      });      
+        this.arcService.arcSchemes.SchemeRegistrar
+        , this.arcService.arcSchemes.UpgradeScheme
+        , this.arcService.arcSchemes.GlobalConstraintRegistrar
+        , this.arcService.arcSchemes.SimpleContributionScheme
+      ];
     }
-
-  /**
-   * The Arc scheme contracts that we can present to the user
-   */
-  public availableSchemes: Array<SchemeInfo>;
 
   /**
    * Schemes, both Arc and otherwise, that are in the given DAO.
@@ -39,11 +30,14 @@ export class SchemeService {
    */
   public async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
     let arcSchemeInfos = await this.organizationService.getSchemesInOrganization(daoAddress);
+    // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
 
     return arcSchemeInfos.map((schemeInfo) => {
+    // console.log('schemeInfo in loop: ' + schemeInfo.permissions);
+    // console.log('ToPermissionsEnum in loop: ' + ToPermissionsEnum(schemeInfo.permissions));
       return {
         address: schemeInfo.address,
-        permissions: null, //schemeInfo.permissions,
+        permissions: ToPermissionsEnum(schemeInfo.permissions),
         name: this.arcService.convertKeyToFriendlyName(schemeInfo.contract),
         key: schemeInfo.contract
       }

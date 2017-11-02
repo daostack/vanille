@@ -3,7 +3,7 @@ import { Web3Service } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractInfo } from "../services/ArcService";
 import { OrganizationService, DAO, Founder } from "../services/OrganizationService";
-import { SchemeService, SchemeInfo } from  "../services/SchemeService";
+import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
 
 @autoinject
@@ -21,8 +21,8 @@ export class DeployGen  {
 
   private addOrgResultMessage: string= '';
   private deployOrgStatus:string = null;
-  private arcSchemes: Array<SchemeInfo>;
-  private selectedSchemes: Array<SchemeInfo> = [];
+  private arcSchemes: Array<ContractInfo>;
+  private selectedSchemes: Array<ContractInfo> = [];
 
   constructor(
     private web3: Web3Service
@@ -75,15 +75,19 @@ export class DeployGen  {
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
         founders: this.founders
-        // , schemes: this.selectedSchemes.map((s) => { return { contract: s.key, address: s.address }; } )
+        , schemes: this.selectedSchemes.map((s) => { return { contract: s.key, address: s.address }; } )
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
 
+      // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcSchemes.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;
-      // let testOrg = await this.arcService.organizationAt(avatarAddress, false);
+      // let testOrg = await this.organizationService.organizationAt(avatarAddress, false);
       // console.log(`org: ${organization.avatar.address}, testOrg: ${testOrg.avatar.address}`)
-      // testOrg = await this.arcService.organizationAt(avatarAddress, true);
+      // console.log('testOrg permissions: ' + await testOrg.controller.getSchemePermissions(this.arcService.arcSchemes.GlobalConstraintRegistrar.address));
+      // let schemes = await testOrg.schemes("GlobalConstraintRegistrar");
+      // console.log('testOrg from scheme() permissions: ' + schemes.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
+      // testOrg = await this.organizationService.organizationAt(avatarAddress, true);
       // console.log(`org: ${organization.avatar.address}, cached testOrg: ${testOrg.avatar.address}`)
 
     }
@@ -111,6 +115,6 @@ export class DeployGen  {
   }
 }
 
-interface DeploySchemeInfo extends SchemeInfo {
+interface DeploySchemeInfo extends ContractInfo {
   required: boolean;
 }

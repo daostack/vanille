@@ -2,7 +2,7 @@ import { autoinject, computedFrom } from "aurelia-framework";
 import { OrganizationService, DAO } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
-import { ControllerService } from  "../services/ControllerService";
+import { ControllerService, Permissions } from  "../services/ControllerService";
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import "./dashboard.scss";
 import { PLATFORM } from 'aurelia-pal';
@@ -56,23 +56,29 @@ export class DAODashboard {
     let token = this.org.token;
     this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
-    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => { (<DashboardSchemeInfo>s).isRegistered = true; return s as DashboardSchemeInfo; });
+    /**
+     * Get all schemes associated with the DAO.  These can include non-Arc schemes.
+     * They are missing isRegistered, which we set here, but they do have permissions (which may be 0 if non-Arc)
+     */
+    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => Object.assign(s, { isRegistered: true }) as DashboardSchemeInfo);
 
     for (let scheme of schemesArray) {
       this.schemesMap.set(scheme.address, scheme);
     }
     /**
-     * now merge the list of daos that the org has with daos that it doesn't have
+     * Now merge the list of daos that the org has with daos that it doesn't have
      */
-
     let availableSchemes = this.schemeService.availableSchemes;
     for (let availableScheme of availableSchemes) {
       let found = this.schemesMap.get(availableScheme.address);
       if (!found) {
-        (availableScheme as any).isRegistered = false;
-        this.schemesMap.set(availableScheme.address, availableScheme as DashboardSchemeInfo );
+        let schemeObtainedFromDAO = schemesArray.filter((s) => s.key == availableScheme.key);
+        // These are missing both isRegistered and permissions
+        this.schemesMap.set(availableScheme.address, Object.assign(availableScheme, { isRegistered: false, permissions: Permissions.None }) as DashboardSchemeInfo );
       }
     }
+
+    // add a fake non-Arc scheme
     this.schemesMap.set("0x9ac0d209653719c86420bfca5d31d3e695f0b530", <DashboardSchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
 
     this.registeredArcSchemes = Array.from(this.schemesMap.values())

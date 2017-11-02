@@ -2,7 +2,7 @@
 import  { Organization
     , getDefaultAccount
     , configure as configureArc
-    , getUniversalContracts as getArcSettings
+    , getUniversalSchemes
     , getValueFromLogs
     , requireContract } from 'emergent-arc';
 import { PLATFORM } from 'aurelia-framework';
@@ -18,28 +18,24 @@ export class ArcService {
   /**
    * The schemes managed by Arc
    */
-  private _arcSettings: ArcSettings;
+  public arcSchemes: ArcSchemes;
   private contractCache: Map<string,TruffleContract>;
   
   public get defaultAccount(): string { return getDefaultAccount(); }
-  public get deployedArcContracts(): ArcDeployedContracts { return this._arcSettings ? this._arcSettings.daostackContracts : null; }
-  
+
   public async initialize() {
       /**
        * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
-      this._arcSettings = await getArcSettings();
-      /**
-       * get names of contracts by converting camel case property name to first-capitalized text
-       */
-      let contractInfos = this.deployedArcContracts;
+      this.arcSchemes = await getUniversalSchemes() as ArcSchemes;
+      console.log(this.arcSchemes);
       // each property is a contractInfo
-      for(let contractName in this.deployedArcContracts) {
+      for(let contractName in this.arcSchemes) {
         // let actualContract = await this.getContract(contractName);
         // contractInfos[contractName].name = this.convertCamelCaseToText(actualContract.contractName)
-        contractInfos[contractName].name = this.convertKeyToFriendlyName(contractName);
-        contractInfos[contractName].key = contractName;
+        this.arcSchemes[contractName].name = this.convertKeyToFriendlyName(contractName);
+        this.arcSchemes[contractName].key = contractName;
       }
     }
   
@@ -53,14 +49,14 @@ export class ArcService {
      * 
      * The result of .at() is the only one that appears to be complete, with events and everything.
      * You can call .at() without having called .deployed().
-     * The contracts in _arcSettings.daostackContracts are all the result of .deployed()
+     * The contracts in arcSchemes are all the result of .deployed()
      */
     let contract = this.contractCache.get(at);
     if (contract) {
       return contract;
     }
     
-    let contractInfo = this._arcSettings.daostackContracts[name];
+    let contractInfo = this.arcSchemes[name];
     if (contractInfo !== undefined) {
       if (!at) {
         at = contractInfo.address;
@@ -103,8 +99,8 @@ export class ArcService {
    * @param address 
    */
   public contractKeyFromAddress(address) {
-    for(var contractKey in this._arcSettings.daostackContracts) {
-      var contract = this._arcSettings.daostackContracts[contractKey];
+    for(var contractKey in this.arcSchemes) {
+      var contract = this.arcSchemes[contractKey];
       if (contract.address === address) {
         return contractKey;
       }
@@ -113,12 +109,7 @@ export class ArcService {
   }
 }
 
-interface ArcSettings {
-    votingMachine: string;
-    daostackContracts: ArcDeployedContracts;
-}
-
-interface ArcDeployedContracts {
+interface ArcSchemes {
     SimpleContributionScheme: ContractInfo;
     GenesisScheme: ContractInfo;
     GlobalConstraintRegistrar: ContractInfo;
@@ -126,8 +117,8 @@ interface ArcDeployedContracts {
     SimpleICO: ContractInfo;
     TokenCapGC: ContractInfo;
     UpgradeScheme: ContractInfo;
-    SimpleVote: ContractInfo;
-    OrganizationRegister: ContractInfo;
+    // SimpleVote: ContractInfo;
+    // OrganizationRegister: ContractInfo;
     // DAOToken: ContractInfo;
     // MintableToken: ContractInfo;
 }

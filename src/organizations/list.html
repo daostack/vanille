@@ -1,12 +1,12 @@
 <template>
     <h2>The Ecosystem of DAOs</h2>
-    <div class="row orgs" ref="list">
+    <div class="row dao-list" ref="list">
         <div class="col col-sm-12 col-md-3" repeat.for="org of organizationArray">
           <div class="card hoverable hot text-center" 
                     click-to-route="route:daoDashboard;params.bind:{address: org.address }"
                     >
-            <div class="card-image">
-              <i class="fa fa-dashboard dashboard"></i>
+            <div class="card-image text-center">
+              <i class="fa fa-cogs"></i>
             </div>
             <div class="card-body text-center">
               <div class="card-title center">${org.name}</div>

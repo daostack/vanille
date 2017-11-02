@@ -1,17 +1,17 @@
 @import "~static/bootstrap";
 @import "~mdbootstrap-sass/data/colors";
 
-.orgs i.dashboard {
+.dao-list .card-image i {
   font-size: 8rem;
-  @extend .grey-text;
-  @extend .darken-2;
+  color: #2BBBAD;
 }
 
-.orgs .card-title {
+.dao-list .card-title {
   @extend .blue-text;
   font-weight: 600 !important;
 }
 
-.card {
+.dao-list .card {
+  padding-top: 1.5rem;
   margin-bottom: 1rem;
 }
