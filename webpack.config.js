@@ -138,7 +138,7 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-        NODE_ENV: JSON.stringify(ENV),
+        ENV: JSON.stringify(ENV),
         ETH_ENV: JSON.stringify(ETH_ENV),
         },
     }),

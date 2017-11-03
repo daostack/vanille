@@ -117,8 +117,8 @@ interface ArcSchemes {
     SimpleICO: ContractInfo;
     TokenCapGC: ContractInfo;
     UpgradeScheme: ContractInfo;
-    // SimpleVote: ContractInfo;
-    // OrganizationRegister: ContractInfo;
+    SimpleVote: ContractInfo;
+    AbsoluteVote: ContractInfo;
     // DAOToken: ContractInfo;
     // MintableToken: ContractInfo;
 }

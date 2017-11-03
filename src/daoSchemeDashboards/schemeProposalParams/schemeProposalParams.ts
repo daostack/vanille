@@ -1,7 +1,6 @@
 // import { autoinject } from "aurelia-framework";
-// import { ArcService, TruffleContract } from '../../services/ArcService';
 import { DAO } from "../../services/OrganizationService";
-// import { DashboardSchemeInfo } from "../../organizations/dashboard";
+// import { DaoSchemeInfo } from "../../services/SchemeService";
 
 export class SchemeProposalParams {
   org: DAO;

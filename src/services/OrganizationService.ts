@@ -1,8 +1,8 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract,  Organization } from './ArcService';
+import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
 import { EventAggregator, includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
-import { Permissions } from '../services/ControllerService';
+import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 
 @autoinject
 export class OrganizationService {
@@ -15,7 +15,7 @@ export class OrganizationService {
   }
 
   private daoCache = new Map<string,DAO>();
-  private schemeCache = new Map<string,Array<ArcSchemeInfo>>();
+  private schemeCache = new Map<string,Array<DaoSchemeInfo>>();
 
   public async getDAOStackAddress() {
     const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
@@ -159,14 +159,28 @@ export class OrganizationService {
       });
   }
 
-  public async getSchemesInOrganization(daoAddress: string): Promise<Array<ArcSchemeInfo>> {
+  public async getSchemesInOrganization(daoAddress: string): Promise<Array<DaoSchemeInfo>> {
     let schemes = this.schemeCache.get(daoAddress);
     if (!schemes) {
       let org = await this.organizationAt(daoAddress);
-      schemes = await org.schemes();
-      this.schemeCache.set(org.address, schemes);  
+      schemes = (await org.schemes()).map((orgSchemeInfo: OrganizationSchemeInfo) => {
+        return {
+          address: orgSchemeInfo.address,
+          permissions: ToPermissionsEnum(orgSchemeInfo.permissions),
+          name: this.arcService.convertKeyToFriendlyName(orgSchemeInfo.contract),
+          key: orgSchemeInfo.contract
+        }
+      });
+      this.schemeCache.set(org.address, schemes);
     }
     return schemes;
+  }
+
+  public contractInfoToDaoSchemeInfo(contractInfo: ContractInfo, permissions: Permissions=Permissions.None): DaoSchemeInfo {
+    let scheme = <DaoSchemeInfo>(<any>contractInfo);
+    // default for permissions is None because at this point we aren't getting them from Arc
+    scheme.permissions = permissions;
+    return scheme;
   }
 
   /*****
@@ -213,10 +227,30 @@ export interface OrganizationCreateConfig {
 /**
  * returned by Organization.schemes()
  */
-export interface ArcSchemeInfo {
-  contract: string; // is the contract key
+interface OrganizationSchemeInfo {
+  contract: string; // is the contract key!!!
   address: string;
   permissions: string;
+}
+
+/**
+ * scheme that is in a DAO
+ */
+export class DaoSchemeInfo {
+
+  public address: string;
+  /**
+   * Pretty name
+   */
+  public name: string;
+  /**
+   * short name (property name in ArcDeployedContracts).
+   */
+  public key: string;
+  /**
+   * TODO: consider removing this if it is not going to be used
+   */
+  public permissions: Permissions;
 }
 
 // export { Organization } from './ArcService';

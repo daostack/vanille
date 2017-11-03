@@ -2,10 +2,17 @@ import { PLATFORM } from 'aurelia-pal';
 import { autoinject, computedFrom } from "aurelia-framework";
 import { DaoSchemeDashboard } from "./daoSchemeDashboard"
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
-import { DashboardSchemeInfo } from "../organizations/dashboard";
+import {  } from "../services/SchemeService";
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
+
+  proposeParams: any;
+  availableSchemes: Array<SchemeInfo>;
+  removableSchemes: Array<SchemeInfo>;
+  schemeToPropose: SchemeInfo=null;
+  schemeToUnPropose: SchemeInfo=null;
+
 
   constructor(
     private schemeService: SchemeService
@@ -16,9 +23,9 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   activate(model) {
 
     this.availableSchemes = model.allSchemes
-      .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && !s.isRegistered);
+      .filter((s: SchemeInfo) => s.inArc && !s.inDao && (s.key !== model.key));
     this.removableSchemes = model.allSchemes
-      .filter((s: DashboardSchemeInfo) => s.key && (s.key !== model.key) && s.isRegistered);
+      .filter((s: SchemeInfo) => s.inArc && s.inDao && (s.key !== model.key));
     
     // TODO: handle that every params form is using this same params object
     this.proposeParams = { org: model.org, params: {} };
@@ -34,13 +41,6 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   //       beneficiary: null, // address _beneficiary,
   //       admin: null,// address _admin)  returns(bytes32) {
   //     };
-
-  proposeParams: any;
-
-  availableSchemes: Array<DashboardSchemeInfo>;
-  removableSchemes: Array<DashboardSchemeInfo>;
-  schemeToPropose: SchemeInfo=null;
-  schemeToUnPropose: SchemeInfo=null;
 
   // schemeRegistrarParams:  {
   //   voteRegisterParams:string, // bytes32

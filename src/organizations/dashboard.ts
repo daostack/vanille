@@ -15,14 +15,14 @@ export class DAODashboard {
   private orgName: string;
   private tokenSymbol: string;
   private userTokenbalance:Number;
-  private schemesMap = new Map<string,DashboardSchemeInfo>();
-  private registeredArcSchemes: Array<DashboardSchemeInfo>;
-  private unregisteredArcSchemes: Array<DashboardSchemeInfo>;
-  private nonArcSchemes: Array<DashboardSchemeInfo>;
-  private arcSchemes: Array<DashboardSchemeInfo>;
+  private schemesMap = new Map<string,SchemeInfo>();
+  private registeredArcSchemes: Array<SchemeInfo>;
+  private unregisteredArcSchemes: Array<SchemeInfo>;
+  private nonArcSchemes: Array<SchemeInfo>;
+  private arcSchemes: Array<SchemeInfo>;
   // false if adding
   // private state: State = State.Neither;
-  // private currentScheme: DashboardSchemeInfo;
+  // private currentScheme: DaoSchemeInfo;
 
   // @computedFrom("state")
   // private get using() { return this.state === State.Using; }
@@ -58,37 +58,38 @@ export class DAODashboard {
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
     /**
      * Get all schemes associated with the DAO.  These can include non-Arc schemes.
-     * They are missing isRegistered, which we set here, but they do have permissions (which may be 0 if non-Arc)
      */
-    let schemesArray = (await this.schemeService.getSchemesInDao(this.address)).map((s) => Object.assign(s, { isRegistered: true }) as DashboardSchemeInfo);
+    let daoShemes = await this.schemeService.getSchemesInDao(this.address);
 
-    for (let scheme of schemesArray) {
+    /**
+     * add to map
+     */
+    for (let scheme of daoShemes) {
       this.schemesMap.set(scheme.address, scheme);
     }
     /**
-     * Now merge the list of daos that the org has with daos that it doesn't have
+     * Now merge the list of schemes that the org has with the available Arc schemes that it doesn't have
+     * so that schemesMap contains all the schemes both contained and not contained by the Dao.
      */
     let availableSchemes = this.schemeService.availableSchemes;
     for (let availableScheme of availableSchemes) {
-      let found = this.schemesMap.get(availableScheme.address);
-      if (!found) {
-        let schemeObtainedFromDAO = schemesArray.filter((s) => s.key == availableScheme.key);
-        // These are missing both isRegistered and permissions
-        this.schemesMap.set(availableScheme.address, Object.assign(availableScheme, { isRegistered: false, permissions: Permissions.None }) as DashboardSchemeInfo );
+      let isInDao = !!this.schemesMap.get(availableScheme.address);
+      if (!isInDao) {
+        this.schemesMap.set(availableScheme.address, this.schemeService.contractInfoToSchemeInfo(availableScheme, false));
       }
     }
 
     // add a fake non-Arc scheme
-    this.schemesMap.set("0x9ac0d209653719c86420bfca5d31d3e695f0b530", <DashboardSchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
+    this.schemesMap.set("0x9ac0d209653719c86420bfca5d31d3e695f0b530", <SchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
 
     this.registeredArcSchemes = Array.from(this.schemesMap.values())
-      .filter((s: DashboardSchemeInfo) => s.isRegistered);
+      .filter((s: SchemeInfo) => s.inArc && s.inDao);
     this.unregisteredArcSchemes = Array.from(this.schemesMap.values())
-      .filter((s: DashboardSchemeInfo) => s.key && !s.isRegistered);
+      .filter((s: SchemeInfo) => s.inArc && !s.inDao);
     this.nonArcSchemes = Array.from(this.schemesMap.values())
-      .filter((s: DashboardSchemeInfo) => !s.key);
+      .filter((s: SchemeInfo) => !s.inArc);
     this.arcSchemes = Array.from(this.schemesMap.values())
-      .filter((s: DashboardSchemeInfo) => s.key);
+      .filter((s: SchemeInfo) => s.inArc);
 
   }
 
@@ -104,20 +105,20 @@ export class DAODashboard {
     });
   }
 
-  useScheme(scheme: DashboardSchemeInfo) {
+  useScheme(scheme: SchemeInfo) {
     this.toggleDashboardVisibility(scheme);
   }
 
 
-  // addScheme(scheme: DashboardSchemeInfo) {
+  // addScheme(scheme: DaoSchemeInfo) {
   //   this.toggleDashboardVisibility(scheme, State.Adding);
   // }
 
-  // onAddSchemeSubmit(scheme: DashboardSchemeInfo) {
+  // onAddSchemeSubmit(scheme: DaoSchemeInfo) {
   //   // this.controllerService.addSchemeToDao(this.org.address, scheme.key, scheme.address);
   // }
 
-  toggleDashboardVisibility(scheme: DashboardSchemeInfo) {
+  toggleDashboardVisibility(scheme: SchemeInfo) {
       ($(`#${scheme.key}`) as any).collapse("toggle");
 
 
@@ -147,11 +148,11 @@ export class DAODashboard {
     // }
   }
 
-  getDashboardView(scheme: DashboardSchemeInfo):string {
+  getDashboardView(scheme: SchemeInfo):string {
       let key:string;
-      if (!scheme.key) {
+      if (!scheme.inArc) {
         key = "NonArc";
-      } else if (!scheme.isRegistered) {
+      } else if (!scheme.inDao) {
         key = "NotRegistered";
       } else {
         key = scheme.key;
@@ -162,24 +163,9 @@ export class DAODashboard {
     // }
   }
 
-  // canAddScheme(scheme: DashboardSchemeInfo) {
-  //   return !scheme.isRegistered && !!scheme.key;
-  // }
-
-  schemeDashboardViewModel(scheme: DashboardSchemeInfo): any {
+  schemeDashboardViewModel(scheme: SchemeInfo): any {
       return Object.assign({}, { org: this.org, orgName: this.orgName, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes }, scheme )
-    // } else {
-    //   return { org: this.org, params: {} }
-    // }
   }
-
-  // removeScheme(scheme: DashboardSchemeInfo) {
-  //   // this.controllerService.removeSchemeFromDao(this.org.avatar.address, scheme.key, scheme.address);
-  // }
-}
-
-export interface DashboardSchemeInfo extends SchemeInfo {
-  isRegistered: boolean;
 }
 
 enum State {

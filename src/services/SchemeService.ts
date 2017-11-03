@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { OrganizationService, DAO, ArcSchemeInfo } from '../services/OrganizationService';
-import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
+import { ArcService, ContractInfo } from './ArcService';
+import { OrganizationService, DaoSchemeInfo } from '../services/OrganizationService';
+import { Permissions } from '../services/ControllerService';
 
 @autoinject
 export class SchemeService {
@@ -29,25 +29,35 @@ export class SchemeService {
    * @param daoAddress
    */
   public async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
-    let arcSchemeInfos = await this.organizationService.getSchemesInOrganization(daoAddress);
+    return (await this.organizationService.getSchemesInOrganization(daoAddress)).map((daoSchemeInfo: DaoSchemeInfo) => {
+          return SchemeInfo.fromDaoSchemeInfo(daoSchemeInfo);
+        });
     // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
+  }
 
-    return arcSchemeInfos.map((schemeInfo) => {
-    // console.log('schemeInfo in loop: ' + schemeInfo.permissions);
-    // console.log('ToPermissionsEnum in loop: ' + ToPermissionsEnum(schemeInfo.permissions));
-      return {
-        address: schemeInfo.address,
-        permissions: ToPermissionsEnum(schemeInfo.permissions),
-        name: this.arcService.convertKeyToFriendlyName(schemeInfo.contract),
-        key: schemeInfo.contract
-      }
-    });
+  public contractInfoToSchemeInfo(contractInfo: ContractInfo, isRegistered:boolean, permissions: Permissions=Permissions.None): SchemeInfo {
+    let schemeInfo = SchemeInfo.fromDaoSchemeInfo(<SchemeInfo>this.organizationService.contractInfoToDaoSchemeInfo(contractInfo, permissions));
+    schemeInfo.isRegistered = isRegistered;
+    return schemeInfo;
   }
 }
 
-export interface SchemeInfo {
-  address: string;
-  permissions: Permissions,
-  name: string;
-  key: string;
+/**
+ * can be any scheme, in the DAO, not in the DAO, not even in Arc
+ * In the DAO: has key, isRegistered is true
+ * In Arc but not in the DAO:  has key, isRegistered is true
+ * Not in Arc:  has no key, 
+ */
+export class SchemeInfo extends DaoSchemeInfo {
+
+  public static fromDaoSchemeInfo(daoSchemeInfo) {
+    let schemeInfo = new SchemeInfo();
+    Object.assign(schemeInfo, daoSchemeInfo);
+    schemeInfo.isRegistered = true;
+    return schemeInfo;
+  }
+
+  public isRegistered: boolean;
+  public get inDao() { return this.isRegistered; }
+  public get inArc() { return !!this.key; }
 }
