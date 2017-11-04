@@ -175,13 +175,6 @@ export class OrganizationService {
     return schemes;
   }
 
-  // public contractInfoToDaoSchemeInfo(contractInfo: ContractInfo, permissions: Permissions=Permissions.None): DaoSchemeInfo {
-  //   let scheme = <DaoSchemeInfo>(<any>contractInfo);
-  //   // default for permissions is None because in the contractInfo point we don't get them from Arc
-  //   scheme.permissions = permissions;
-  //   return scheme;
-  // }
-
   /*****
    * The following three event methods will be replaced by the event aggregator
    */

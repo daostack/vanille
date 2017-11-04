@@ -8,11 +8,8 @@ import {  } from "../services/SchemeService";
 export class SchemeRegistrar extends DaoSchemeDashboard {
 
   proposeParams: any;
-  // availableSchemes: Array<SchemeInfo>;
-  // removableSchemes: Array<SchemeInfo>;
   schemeToPropose: SchemeInfo=null;
   schemeToUnPropose: SchemeInfo=null;
-
 
   constructor(
     private schemeService: SchemeService
@@ -21,12 +18,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   }
 
   activate(model) {
-
-    // this.availableSchemes = model.allSchemes
-    //   .filter((s: SchemeInfo) => s.inArc && !s.inDao && (s.key !== model.key));
-    // this.removableSchemes = model.allSchemes
-    //   .filter((s: SchemeInfo) => s.inArc && s.inDao && (s.key !== model.key));
-    
+   
     // TODO: handle that every params form is using this same params object
     this.proposeParams = { org: model.org, params: {} };
 

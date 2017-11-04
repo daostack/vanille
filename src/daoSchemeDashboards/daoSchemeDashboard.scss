@@ -7,16 +7,18 @@
 }
 
 .instructions {
-  margin-bottom: 2rem;
-  @extend .text-info
+  @extend .text-info;
+  font-size: 1.1rem;
+  font-style: italic;
 }
 
 .org-name {
   font-style: italic;
 }
 
-ul .nav{
-  margin-bottom:2rem;
+.scheme-tabs .tab-content {
+  padding:.5rem;
+  padding-top:2rem;
 }
 
 .tab-content .md-form,
@@ -25,4 +27,11 @@ ul .nav{
   margin-bottom: 2rem;
 }
 
+.scheme-tabs {
+  border-bottom: none;
+  margin-bottom: 0;
+}
 
+div.instructions + form {
+  margin-top: 1rem;
+}

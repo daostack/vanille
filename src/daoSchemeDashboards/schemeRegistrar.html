@@ -15,12 +15,12 @@
     
         <form>
           <div class="md-form">
-            <div>Propose to add<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : '(Select a Scheme)'}</span>
+            <div><button class="btn-link dropdown-toggle text-dark" style="padding-left:0; border-left:none" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme to Add'}</span>
               </button>
 
               <dao-schemes-dropdown
-                on-select.call="selectSchemeToPropose"
+                on-select.bind="selectSchemeToPropose.bind($this)"
                 dao-address.bind="orgAddress"
                 exclude-registered.bind="true"
                 exclude-keys="${[key]}"
@@ -46,12 +46,12 @@
         After submitting the proposal, a vote will automatically be initiated.</div>
         <form>
           <div class="md-form">
-            <div>Propose to remove<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="removableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : '(Select a Scheme)'}</span>
+            <button class="btn-link dropdown-toggle text-dark" style="padding-left:0; border-left:none" type="button" role="button" id="removableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : 'Select Scheme to Remove'}</span>
               </button>
 
             <dao-schemes-dropdown
-              on-select.call="selectSchemeToUnPropose"
+              on-select.bind="selectSchemeToUnPropose.bind($this)"
               dao-address.bind="orgAddress"
               schemes.bind="allSchemes"
               exclude-un-registered.bind="true"
@@ -65,7 +65,6 @@
 
           <!-- <input class="form-control" type='text' id="schemeAddressToRemove" value.bind="schemeAddressToRemove"/>
           <label for="schemeAddressToRemove">Scheme Address</label> -->
-        </div>
          <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
         </form>
     </div>
