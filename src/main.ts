@@ -32,6 +32,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use.globalResources([
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
+    PLATFORM.moduleName("resources/customElements/daoSchemesDropdown/daoSchemesDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/round-add-button.html"),

@@ -11,11 +11,9 @@
     "lib": [
       "es2017", "dom"
     ]
-  },
-  "files":[
-    "./node_modules/@types/webpack/index.d.ts"
-  ],
-  "exclude": [
+  }
+  , "include": [ "./src/**/*", "./node_modules/@types/webpack/index.d.ts", "./custom_typings/**/*"]
+  , "exclude": [
     "node_modules",
     "dist",
     "static"

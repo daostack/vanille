@@ -6,50 +6,27 @@
       <li class="nav-item">
           <a class="nav-link" href="#unPropose" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#Parameters" data-toggle="tab" id="parameters-tab" role="tab" aria-controls="Parameters" aria-selected="true">Parameters</a>
-      </li> -->
-      <!-- <li class="nav-item">
-        <a class="nav-link" href="#OrgRegistration" data-toggle="tab" id="register-tab" role="tab" aria-controls="OrgRegistration" aria-selected="false">Register DAO</a>
-      </li> -->
-    </ul>
     <div class="tab-content" >
-      
-      <!-- <div class="tab-pane fade" id="Parameters" role="tabpanel" aria-labelledby="parameters-tab">
-          <form>
-            <div repeat.for="i of 3">
-                <div class="md-form">
-                  <input class="form-control" type='text' id="${'parameter'+$index}" />
-                  <label  for="${'parameter'+$index}">Parameter ${ $index + 1 }</label>
-                </div>
-              </div>
-              <button class="btn btn-primary">Save</button>
-              <button class="btn btn-secondary">Fetch</button>
-          </form>
-      </div> -->
 
     <div class="tab-pane fade show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
-          
+         
     <div class="instructions">Add functionality to <span class="org-name">${orgName}</span> by proposing to add new schemes.
       After submitting the proposal, a vote will automatically be initiated.</div>
     
         <form>
-           <!-- <div class="md-form address">
-                <input class="form-control" type='text' id="schemeAddressToPropose" 
-                value.bind="schemeAddressToPropose"
-                placeholder="Enter scheme address"/>
-                <label class="active" for="schemeAddressToPropose">Scheme Address</label>
-              </div> -->
           <div class="md-form">
             <div>Propose to add<button class="btn-link dropdown-toggle text-dark" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : '(Select a Scheme)'}</span>
               </button>
 
-              <ul class="dropdown-menu" aria-labelledby="availableSchemes">
-                <li class="dropdown-item" click.delegate="selectSchemeToPropose(scheme)"  repeat.for="scheme of availableSchemes">${scheme.name}</li>
-              </ul>
+              <dao-schemes-dropdown
+                on-select.call="selectSchemeToPropose"
+                dao-address.bind="orgAddress"
+                exclude-registered.bind="true"
+                exclude-keys="${[key]}"
+              ></dao-schemes-dropdown>
             </div>
-
+            
             <div if.bind="!!schemeToPropose">
               <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
             </div>
@@ -63,18 +40,6 @@
         </form>
             
       </div>
-  
-
-    <!-- <div class="tab-pane fade" id="OrgRegistration" role="tabpanel" aria-labelledby="register-tab">
-    <div class="instructions">Register <span class="org-name">${orgName}</span> with schemes.</div>
-        <form>
-        <div class="md-form">
-          <input class="form-control" type='text' id="schemeAddressToRegister" value.bind="schemeAddressToRegister"/>
-          <label for="schemeAddressToRegister">Scheme Address</label>
-        </div>
-         <button class="btn btn-primary" click.delegate="registerDAOInScheme()">Register DAO</button>
-        </form>
-    </div> -->
 
     <div class="tab-pane fade" id="unPropose" role="tabpanel" aria-labelledby="unpropose-tab">
       <div class="instructions">Remove functionality from <span class="org-name">${orgName}</span> by proposing to remove schemes.
@@ -85,9 +50,13 @@
                 <span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : '(Select a Scheme)'}</span>
               </button>
 
-            <ul class="dropdown-menu" aria-labelledby="removableSchemes">
-              <li class="dropdown-item" click.delegate="selectSchemeToUnPropose(scheme)" repeat.for="scheme of removableSchemes">${scheme.name}</li>
-            </ul>
+            <dao-schemes-dropdown
+              on-select.call="selectSchemeToUnPropose"
+              dao-address.bind="orgAddress"
+              schemes.bind="allSchemes"
+              exclude-un-registered.bind="true"
+              exclude-keys="${[key]}"
+             ></dao-schemes-dropdown>
 
           <div if.bind="!!schemeToUnPropose">
               <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>

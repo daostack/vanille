@@ -1,7 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, ContractInfo } from './ArcService';
 import { OrganizationService, DaoSchemeInfo } from '../services/OrganizationService';
-import { Permissions } from '../services/ControllerService';
 
 @autoinject
 export class SchemeService {
@@ -29,16 +28,41 @@ export class SchemeService {
    * @param daoAddress
    */
   public async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
-    return (await this.organizationService.getSchemesInOrganization(daoAddress)).map((daoSchemeInfo: DaoSchemeInfo) => {
+    let schemes = (await this.organizationService.getSchemesInOrganization(daoAddress)).map((daoSchemeInfo: DaoSchemeInfo) => {
           return SchemeInfo.fromDaoSchemeInfo(daoSchemeInfo);
         });
     // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
+    return schemes;
   }
 
-  public contractInfoToSchemeInfo(contractInfo: ContractInfo, isRegistered:boolean, permissions: Permissions=Permissions.None): SchemeInfo {
-    let schemeInfo = SchemeInfo.fromDaoSchemeInfo(<SchemeInfo>this.organizationService.contractInfoToDaoSchemeInfo(contractInfo, permissions));
-    schemeInfo.isRegistered = isRegistered;
-    return schemeInfo;
+  /**
+   * Return all the schemes in the DAO, plus all the arc schemes not in the DAO
+   * @param daoAddress
+   * @param excludeNonArcSchemes
+   */
+  public async getSchemesForDao(daoAddress: string, excludeNonArcSchemes:boolean = false): Promise<Array<SchemeInfo>> {
+
+    let schemes = (await this.getSchemesInDao(daoAddress)).filter((s) => !excludeNonArcSchemes || s.inArc);
+
+    let schemesMap = new Map<string,SchemeInfo>();
+
+    for (let scheme of schemes) {
+        schemesMap.set(scheme.address, scheme);
+    }
+
+    /**
+     * Now merge the list of schemes that the org has with the available Arc schemes that it doesn't have
+     * so that schemesMap contains all the schemes both contained and not contained by the Dao.
+     */
+    let availableSchemes = this.availableSchemes;
+    for (let availableScheme of availableSchemes) {
+      let isInDao = schemesMap.has(availableScheme.address);
+      if (!isInDao) {
+        schemes.push(SchemeInfo.fromContractInfo(availableScheme, false));
+      }
+    }
+
+    return schemes;
   }
 }
 
@@ -46,7 +70,7 @@ export class SchemeService {
  * can be any scheme, in the DAO, not in the DAO, not even in Arc
  * In the DAO: has key, isRegistered is true
  * In Arc but not in the DAO:  has key, isRegistered is true
- * Not in Arc:  has no key, 
+ * Not in Arc:  has no key, nor a name
  */
 export class SchemeInfo extends DaoSchemeInfo {
 
@@ -54,6 +78,14 @@ export class SchemeInfo extends DaoSchemeInfo {
     let schemeInfo = new SchemeInfo();
     Object.assign(schemeInfo, daoSchemeInfo);
     schemeInfo.isRegistered = true;
+    return schemeInfo;
+  }
+
+  public static fromContractInfo(contractInfo, isRegistered: boolean) {
+    let schemeInfo = new SchemeInfo();
+    // note this will include a contract property that is the TruffleContract, technically not part of SchemeInfo
+    Object.assign(schemeInfo, contractInfo);
+    schemeInfo.isRegistered = isRegistered;
     return schemeInfo;
   }
 

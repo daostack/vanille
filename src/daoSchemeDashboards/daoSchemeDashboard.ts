@@ -10,6 +10,7 @@ export class DaoSchemeDashboard {
      */
     // contract: TruffleContract;
     address: string;
+    orgAddress: string;
     /**
      * Pretty name
      */
@@ -28,6 +29,7 @@ export class DaoSchemeDashboard {
       this.address = model.address;
       this.org = model.org;
       this.orgName = model.orgName;
+      this.orgAddress = model.orgAddress;
       this.allSchemes = model.allSchemes;
   }
 }

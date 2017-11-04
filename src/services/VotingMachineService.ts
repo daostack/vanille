@@ -1,7 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
 // import { OrganizationService, DAO, DaoSchemeInfo } from '../services/OrganizationService';
-// import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 
 @autoinject
 export class VotingMachineService {
