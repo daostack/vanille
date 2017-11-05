@@ -12,7 +12,7 @@ public votingMachines: Array<VotingMachineInfo>;
 constructor(
   private arcService: ArcService
 ) {
-    this.votingMachines = [this.arcService.arcSchemes.AbsoluteVote];
+    this.votingMachines = this.arcService.arcVotingMachines;
   }
 }
 

@@ -14,12 +14,7 @@ export class SchemeService {
     private arcService: ArcService
     , private organizationService: OrganizationService
   ) {
-      this.availableSchemes = [
-        this.arcService.arcSchemes.SchemeRegistrar
-        , this.arcService.arcSchemes.UpgradeScheme
-        , this.arcService.arcSchemes.GlobalConstraintRegistrar
-        , this.arcService.arcSchemes.SimpleContributionScheme
-      ];
+      this.availableSchemes = this.arcService.arcSchemes;
     }
 
   /**

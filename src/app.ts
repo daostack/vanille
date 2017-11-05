@@ -24,7 +24,7 @@ export class App {
         /**
          * can be connected 
          */
-        const haveDAOStack = !!this.arcService.arcSchemes;
+        const haveDAOStack = !!this.arcService.arcContracts;
         const isConnected = this.web3.isConnected;
         const isCorrectChain = this.web3.isCorrectChain;
         const noAccount = !this.web3.defaultAccount;

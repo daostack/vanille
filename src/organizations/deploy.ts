@@ -80,11 +80,11 @@ export class DeployGen  {
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
 
-      // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcSchemes.GlobalConstraintRegistrar.address));
+      // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;
       // let testOrg = await this.organizationService.organizationAt(avatarAddress, false);
       // console.log(`org: ${organization.avatar.address}, testOrg: ${testOrg.avatar.address}`)
-      // console.log('testOrg permissions: ' + await testOrg.controller.getSchemePermissions(this.arcService.arcSchemes.GlobalConstraintRegistrar.address));
+      // console.log('testOrg permissions: ' + await testOrg.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // let schemes = await testOrg.schemes("GlobalConstraintRegistrar");
       // console.log('testOrg from scheme() permissions: ' + schemes.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
       // testOrg = await this.organizationService.organizationAt(avatarAddress, true);

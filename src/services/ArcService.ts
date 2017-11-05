@@ -2,7 +2,7 @@
 import  { Organization
     , getDefaultAccount
     , configure as configureArc
-    , getUniversalSchemes
+    , getDeployedContracts
     , getValueFromLogs
     , requireContract } from 'emergent-arc';
 import { PLATFORM } from 'aurelia-framework';
@@ -18,7 +18,10 @@ export class ArcService {
   /**
    * The schemes managed by Arc
    */
-  public arcSchemes: ArcSchemes;
+  public arcContracts: ArcContracts;
+  public arcSchemes: Array<ContractInfo>;
+  public arcVotingMachines: Array<ContractInfo>;
+
   private contractCache: Map<string,TruffleContract>;
   
   public get defaultAccount(): string { return getDefaultAccount(); }
@@ -28,15 +31,19 @@ export class ArcService {
        * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
-      this.arcSchemes = await getUniversalSchemes() as ArcSchemes;
-      // console.log(this.arcSchemes);
-      // each property is a contractInfo
-      for(let contractName in this.arcSchemes) {
-        // let actualContract = await this.getContract(contractName);
-        // contractInfos[contractName].name = this.convertCamelCaseToText(actualContract.contractName)
-        this.arcSchemes[contractName].name = this.convertKeyToFriendlyName(contractName);
-        this.arcSchemes[contractName].key = contractName;
+      let arcSettings = await getDeployedContracts() as ArcSettings;
+      let arcContracts = arcSettings.allContracts;
+
+      for(let contractName in arcContracts) {
+        arcContracts[contractName].name = this.convertKeyToFriendlyName(contractName);
+        arcContracts[contractName].key = contractName;
       }
+
+      this.arcContracts = arcContracts;
+      this.arcSchemes = arcSettings.schemes;
+      this.arcVotingMachines = arcSettings.votingMachines;
+      // console.log(this.arcContracts);
+      // each property is a contractInfo
     }
   
   public async getContract(name: string, at?: string): Promise<TruffleContract> {
@@ -48,15 +55,15 @@ export class ArcService {
      *  3) .at()
      * 
      * The result of .at() is the only one that appears to be complete, with events and everything.
-     * You can call .at() without having called .deployed().
-     * The contracts in arcSchemes are all the result of .deployed()
+     * You can call .at() without having called .deployed() if you already have the address.
+     * The contracts in arcContracts are all the result of require()
      */
     let contract = this.contractCache.get(at);
     if (contract) {
       return contract;
     }
     
-    let contractInfo = this.arcSchemes[name];
+    let contractInfo = this.arcContracts[name];
     if (contractInfo !== undefined) {
       if (!at) {
         at = contractInfo.address;
@@ -99,8 +106,8 @@ export class ArcService {
    * @param address 
    */
   public contractKeyFromAddress(address) {
-    for(var contractKey in this.arcSchemes) {
-      var contract = this.arcSchemes[contractKey];
+    for(var contractKey in this.arcContracts) {
+      var contract = this.arcContracts[contractKey];
       if (contract.address === address) {
         return contractKey;
       }
@@ -109,7 +116,15 @@ export class ArcService {
   }
 }
 
-interface ArcSchemes {
+interface ArcSettings {
+  allContracts: ArcContracts;
+  // is actually ArcContractInfo until we add the addtional properties in initialize()
+  schemes: Array<ContractInfo>;
+  // is actually ArcContractInfo until we add the addtional properties in initialize()
+  votingMachines: Array<ContractInfo>
+}
+
+export interface ArcContracts {
     SimpleContributionScheme: ContractInfo;
     GenesisScheme: ContractInfo;
     GlobalConstraintRegistrar: ContractInfo;
@@ -117,7 +132,6 @@ interface ArcSchemes {
     SimpleICO: ContractInfo;
     TokenCapGC: ContractInfo;
     UpgradeScheme: ContractInfo;
-    SimpleVote: ContractInfo;
     AbsoluteVote: ContractInfo;
     // DAOToken: ContractInfo;
     // MintableToken: ContractInfo;
@@ -128,7 +142,7 @@ interface ArcSchemes {
  */
 export class ArcContractInfo {
   /**
-   * deployed-only TruffleContract
+   * TruffleContract obtained via require()
    */
   contract: TruffleContract;
   address: string;
