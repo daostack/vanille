@@ -20,7 +20,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   activate(model) {
    
     // TODO: handle that every params form is using this same params object
-    this.proposeParams = { org: model.org, params: {} };
+    this.proposeParams = { };
 
     return super.activate(model);
   }
@@ -47,13 +47,13 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   //   this.voteParametersHash = await this.org.votingMachine.getParametersHash(this.org.reputation.address, options.votePrec, options.ownerVote);
   // }
 
-  selectSchemeToPropose(scheme: SchemeInfo) {
-    this.schemeToPropose = scheme;
-  }
+  // selectSchemeToPropose(scheme: SchemeInfo) {
+  //   this.schemeToPropose = scheme;
+  // }
 
-  selectSchemeToUnPropose(scheme: SchemeInfo) {
-    this.schemeToUnPropose = scheme;
-  }
+  // selectSchemeToUnPropose(scheme: SchemeInfo) {
+  //   this.schemeToUnPropose = scheme;
+  // }
 
   proposeScheme() {
   }
@@ -65,14 +65,4 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   registerDAOInScheme() {
 
   }
-
-  @computedFrom("schemeToPropose")
-  get paramsView() {
-    return this.schemeToPropose ? `./schemeProposalParams/${this.schemeToPropose.key}` : undefined;
-  }
 }
-
-PLATFORM.moduleName("./schemeProposalParams/SimpleContributionScheme")
-PLATFORM.moduleName("./schemeProposalParams/GlobalConstraintRegistrar")
-PLATFORM.moduleName("./schemeProposalParams/UpgradeScheme")
-PLATFORM.moduleName("./schemeProposalParams/SchemeRegistrar")

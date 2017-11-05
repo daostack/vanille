@@ -32,7 +32,8 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use.globalResources([
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
-    PLATFORM.moduleName("resources/customElements/daoSchemesDropdown/daoSchemesDropdown"),
+    PLATFORM.moduleName("resources/customElements/ArcSchemesDropdown/arcSchemesDropdown"),
+    PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/round-add-button.html"),
@@ -43,6 +44,24 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customAttributes/blur-image"),
     PLATFORM.moduleName("resources/valueConverters/toUpper")
   ]);
+
+
+    
+  PLATFORM.moduleName("./daoSchemeDashboards/GlobalConstraintRegistrar")
+  PLATFORM.moduleName("./daoSchemeDashboards/NonArc")
+  PLATFORM.moduleName("./daoSchemeDashboards/NotRegistered")
+  PLATFORM.moduleName("./daoSchemeDashboards/SchemeRegistrar")
+  PLATFORM.moduleName("./daoSchemeDashboards/SimpleContributionScheme")
+  PLATFORM.moduleName("./daoSchemeDashboards/UpgradeScheme")
+
+  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/SimpleContributionScheme")
+  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/GlobalConstraintRegistrar")
+  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/UpgradeScheme")
+  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/SchemeRegistrar")
+
+  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/votingMachineConfiguration/AbsoluteVote")
+    
+
 
   await aurelia.start();
 

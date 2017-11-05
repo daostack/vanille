@@ -1,6 +1,5 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-// import { OrganizationService, DAO, DaoSchemeInfo } from '../services/OrganizationService';
 
 @autoinject
 export class VotingMachineService {
@@ -8,13 +7,14 @@ export class VotingMachineService {
 /**
  * The Arc voting machine that we make available to the user
  */
-public availableVotingMachines: Array<ContractInfo>;
+public votingMachines: Array<VotingMachineInfo>;
 
 constructor(
   private arcService: ArcService
 ) {
-    this.availableVotingMachines = [
-      this.arcService.arcSchemes.AbsoluteVote
-    ];
+    this.votingMachines = [this.arcService.arcSchemes.AbsoluteVote];
   }
+}
+
+export class VotingMachineInfo extends ContractInfo {
 }

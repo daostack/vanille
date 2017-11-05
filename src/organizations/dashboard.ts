@@ -39,14 +39,6 @@ export class DAODashboard {
 
   async activate(options: any) {
 
-    // so webpack can find them...
-    PLATFORM.moduleName("../daoSchemeDashboards/GlobalConstraintRegistrar")
-    PLATFORM.moduleName("../daoSchemeDashboards/NonArc")
-    PLATFORM.moduleName("../daoSchemeDashboards/NotRegistered")
-    PLATFORM.moduleName("../daoSchemeDashboards/SchemeRegistrar")
-    PLATFORM.moduleName("../daoSchemeDashboards/SimpleContributionScheme")
-    PLATFORM.moduleName("../daoSchemeDashboards/UpgradeScheme")
-      
     this.address = options.address;
     this.org = await this.organizationService.organizationAt(this.address);
     this.orgName = await this.organizationService.organizationName(this.org);

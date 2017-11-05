@@ -4,6 +4,7 @@
 
 .tab-pane {
   border-top:none;
+  padding-top:2rem;
 }
 
 .instructions {
@@ -34,4 +35,15 @@
 
 div.instructions + form {
   margin-top: 1rem;
+}
+
+div.voting-machine-config,
+div.scheme-config
+{
+  padding-top: 2rem;
+}
+
+.arc-scheme-dashboard .arc-schemes-dropdown-button {
+  padding-left:0;
+  border-left:none;
 }

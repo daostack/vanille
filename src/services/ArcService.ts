@@ -126,7 +126,7 @@ interface ArcSchemes {
 /**
  * this is what we get from Arc
  */
-export interface ArcContractInfo {
+export class ArcContractInfo {
   /**
    * deployed-only TruffleContract
    */
@@ -137,7 +137,7 @@ export interface ArcContractInfo {
 /**
  * what we get from Arc, plus some
  */
-export interface ContractInfo extends ArcContractInfo {
+export class ContractInfo extends ArcContractInfo {
     /**
      * Pretty name
      */

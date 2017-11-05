@@ -6,9 +6,9 @@ import { SchemeService, SchemeInfo } from  "../../../services/SchemeService";
  */
 @containerless
 @autoinject
-export class DaoSchemesDropdown {
+export class ArcSchemesDropdown {
 
-  @bindable( { defaultBindingMode: bindingMode.oneTime }) onSelect: (scheme) => boolean;
+  @bindable( { defaultBindingMode: bindingMode.twoWay }) scheme: SchemeInfo;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) daoAddress: string;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeRegistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnRegistered: boolean = false;
@@ -34,6 +34,6 @@ export class DaoSchemesDropdown {
   }
     
   onItemClick(scheme) {
-    return this.onSelect(scheme);
+    this.scheme = scheme;
   }
 }

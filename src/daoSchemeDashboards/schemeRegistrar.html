@@ -1,72 +1,63 @@
 <template>
-    <ul class="nav nav-tabs scheme-tabs" role="tablist">
-      <li class="nav-item">
-          <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Schemes</a>
+<div class="arc-scheme-dashboard">
+  <ul class="nav nav-tabs scheme-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Schemes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#unPropose" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
       </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#unPropose" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
-      </li>
-    <div class="tab-content" >
+  </ul>
+    
+  <div class="tab-content">
 
     <div class="tab-pane fade show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
          
-    <div class="instructions">Add functionality to <span class="org-name">${orgName}</span> by proposing to add new schemes.
-      After submitting the proposal, a vote will automatically be initiated.</div>
-    
-        <form>
-          <div class="md-form">
-            <div><button class="btn-link dropdown-toggle text-dark" style="padding-left:0; border-left:none" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme to Add'}</span>
-              </button>
-
-              <dao-schemes-dropdown
-                on-select.bind="selectSchemeToPropose.bind($this)"
-                dao-address.bind="orgAddress"
-                exclude-registered.bind="true"
-                exclude-keys="${[key]}"
-              ></dao-schemes-dropdown>
-            </div>
-            
-            <div if.bind="!!schemeToPropose">
-              <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
-            </div>
+      <div class="instructions">Add functionality to <span class="org-name">${orgName}</span> by proposing to add new schemes.
+        After submitting the proposal, a vote will automatically be initiated.</div>
+        
+      <form>
+        <arc-schemes-dropdown
+          scheme.bind="schemeToPropose"
+          dao-address.bind="orgAddress"
+          exclude-registered.bind="true"
+          exclude-keys="${[key]}"
+        >
+        <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span>
+        <span slot="buttonText"><span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme to Add'}</span></span>
+      </arc-schemes-dropdown>
+        
+        <div if.bind="!!schemeToPropose">
+          <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
+          <div class="scheme-config">
+            <compose view-model="${'./schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeParams"></compose>
+            <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
           </div>
-
-          <div if.bind="!!schemeToPropose">
-            <compose view-model.bind="paramsView" model.bind="proposeParams"></compose>
-          </div>
-
-        <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
-        </form>
-            
-      </div>
+        </div>
+      </form>
+    </div>  
 
     <div class="tab-pane fade" id="unPropose" role="tabpanel" aria-labelledby="unpropose-tab">
       <div class="instructions">Remove functionality from <span class="org-name">${orgName}</span> by proposing to remove schemes.
         After submitting the proposal, a vote will automatically be initiated.</div>
-        <form>
-          <div class="md-form">
-            <button class="btn-link dropdown-toggle text-dark" style="padding-left:0; border-left:none" type="button" role="button" id="removableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : 'Select Scheme to Remove'}</span>
-              </button>
+      <form>
+          <arc-schemes-dropdown
+            scheme.bind="schemeToUnPropose"
+            dao-address.bind="orgAddress"
+            schemes.bind="allSchemes"
+            exclude-un-registered.bind="true"
+            exclude-keys="${[key]}"
+            >
+            <span slot="noSchemes"><span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
+            <span slot="buttonText"><span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : 'Select Scheme to Remove'}</span></span>
+          </arc-schemes-dropdown>
 
-            <dao-schemes-dropdown
-              on-select.bind="selectSchemeToUnPropose.bind($this)"
-              dao-address.bind="orgAddress"
-              schemes.bind="allSchemes"
-              exclude-un-registered.bind="true"
-              exclude-keys="${[key]}"
-             ></dao-schemes-dropdown>
-
-          <div if.bind="!!schemeToUnPropose">
-              <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>
-            </div>
-          </div>
-
-          <!-- <input class="form-control" type='text' id="schemeAddressToRemove" value.bind="schemeAddressToRemove"/>
-          <label for="schemeAddressToRemove">Scheme Address</label> -->
-         <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
-        </form>
+        <div if.bind="!!schemeToUnPropose">
+            <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>
+            <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
+        </div>
+      </form>
     </div>
-    </div>
+  </div>
+</div>
 </template>
