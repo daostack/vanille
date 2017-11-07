@@ -102,6 +102,24 @@ section h4 {
   width: inherit;
 }
 
+div.voting-machine-config,
+div.global-constraint-config,
+div.scheme-config
+{
+  padding-top: 2rem;
+}
+
+.arc-schemes-dropdown-button
+.voting-machine-dropdown-button
+.global-constraints-dropdown-button {
+  font-weight: bold;
+}
+
+.form-section-header {
+  font-weight: bold;
+  padding-top: 1.5rem;
+}
+
 /* animate page transitions */
 section.au-enter-active {
   animation: fadeInRight 1s;

@@ -2,6 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
 import { EventAggregator, includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
+import { VotingMachineService, VotingMachineInfo } from  "../services/VotingMachineService";
 
 @autoinject
 export class OrganizationService {
@@ -9,12 +10,31 @@ export class OrganizationService {
   constructor(
     private arcService: ArcService
     , private web3: Web3Service
+    , private votingMachineService: VotingMachineService
   ) {
     includeEventsIn(this);
   }
 
   private daoCache = new Map<string,DAO>();
   private schemeCache = new Map<string,Array<DaoSchemeInfo>>();
+
+  public static daoSetChangedEvent:string = "daoSetChanged";
+
+  public async initialize()
+    {
+      let genesisScheme = await this.arcService.getContract("GenesisScheme");
+      /**
+       * TODO:  To sync cache on organization schemes, must subscribe to this event on every organization.
+       */
+      let myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
+      /**
+       * handleNewOrg will be called right away for every DAO in the system, and thereafter
+       * whenever a new DAO is created
+       */
+      return new Promise((resolve,reject) => {
+        myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
+      });
+    }
 
   public async getDAOStackAddress() {
     const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
@@ -47,64 +67,6 @@ export class OrganizationService {
     return Array.from(this.daoCache.values());
   }
 
-  private myEvent:any;
-  public static daoSetChangedEvent:string = "daoSetChanged";
-
-  public async initialize()
-    {
-      let genesisScheme = await this.arcService.getContract("GenesisScheme");
-      
-      this.myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
-
-      /**
-       * handleNewOrg will get called for every DAO in the system, and thereafter
-       * whenever a new DAO is created
-       */
-      return new Promise((resolve,reject) => {
-        this.myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
-      });
-
-
- 
-    /**
-     * TODO:  To sync cache on organization schemes, must subscribe to this event on every organization.
-     * 
-      let controller = await this.arcService.getContract("Controller");
-      
-      this.registerSchemaEvent = await controller.RegisterScheme({}, { fromBlock: 0 });
-
-      return new Promise(async (resolve,reject) => {
-        this.registerSchemaEvent.watch((err, eventsArray) => {
-
-        if (!(eventsArray instanceof Array)) {
-          eventsArray = [eventsArray];
-        }
-
-        for (let i = 0; i < eventsArray.length; i++) {
-            // let orgAddress =  eventsArray[i].args._sender;
-            let schemeAddress =  eventsArray[i].args._scheme as string;
-            let scheme = await this.arcService.getContract(schemeName, schemeAddress);
-            let schemeKey = scheme.contract as string;
-            let schemeFriendlyName = this.arcService.convertKeyToFriendlyName(schemeKey);
-            let permissions = await controller.getSchemePermissions(schemeAddress) as string;
-            
-            let orgSchemes = this.cache.get(orgAddress) || [];
-            let schemeInfo = {
-              address: schemeAddress,
-              permissions: permissions,
-              name: schemeFriendlyName,
-              key: schemeKey
-            };
-            orgSchemes.push(schemeInfo);
-              
-            /// this.publish(DaoSchemeRepositoryService.daoSchemeSetChangedEvent, orgSchemes);
-          }
-        });
-      }
-   */
-
-    }
-
   private handleNewOrg(err, eventsArray) : Promise<void>
   {
     return new Promise(async (resolve,reject) => {
@@ -122,36 +84,10 @@ export class OrganizationService {
           organization.address = avatarAddress;
 
           this.daoCache.set(organization.address,organization);
-
-          // var org = await this.arcService.organizationAt(avatarAddress);
-
-          /**
-           * note that orderList.call is asynchronous, and that
-           * the results may not come back in the order invoked.
-           */
-        // promotedAmount = Number(this.web3.fromWei(eventsArray[i]));
-          
-          // promotedAmount = i;
-
-          // newOrganizationArray.push({
-          //     rank: i + 1,
-          //     name: avatarName,
-          //     members: 3,
-          //     tokens: 300000,
-          //     reputation: 30000,
-          //     promotedAmount: promotedAmount,
-          //     address: avatarAddress,
-          // });
           ++counter;
 
           if (counter == count) { // then we're done
-              // newOrganizationArray = newOrganizationArray.sort((a, b) => {
-              //     return b.promotedAmount - a.promotedAmount;
-              // });
-
-              // console.log("Firing Daos changed");
               this.publish(OrganizationService.daoSetChangedEvent, this.allOrganizations);
-
               resolve();
           }
         }
@@ -168,6 +104,7 @@ export class OrganizationService {
           // permissions: ToPermissionsEnum(orgSchemeInfo.permissions),
           name: this.arcService.convertKeyToFriendlyName(orgSchemeInfo.contract),
           key: orgSchemeInfo.contract
+          // , contract: this.arcService.arcContractMap.get(orgSchemeInfo.contract)
         }
       });
       this.schemeCache.set(daoAddress, schemes);
@@ -175,6 +112,17 @@ export class OrganizationService {
     return schemes;
   }
 
+  public async getVoteParametersHash(
+    orgAddress: string,
+    votingMachineInfo: VotingMachineInfo,
+    votePrec: Number,
+    ownerVote: boolean) {
+      
+    const org = await this.organizationAt(orgAddress);
+    const reputationAddress = await org.controller.nativeReputation();
+    return await this.votingMachineService.getVoteParametersHash(votingMachineInfo, reputationAddress, votePrec, ownerVote);
+  }
+  
   /*****
    * The following three event methods will be replaced by the event aggregator
    */
@@ -212,6 +160,9 @@ export interface OrganizationCreateConfig {
   tokenName: string;
   tokenSymbol: string;
   founders: Array<Founder>;
+  votingMachine: string, // address
+  votePrec: Number,
+  ownerVote: boolean,
   schemes: Array<{ contract: string, address: string }>
 }
 
@@ -239,6 +190,10 @@ export class DaoSchemeInfo {
    * short name (property name in ArcDeployedContracts).
    */
   public key: string;
+  /**
+   * contract prior to .at().  Undefined if not an Arc contract.
+   */
+  // public contract: TruffleContract;
   //public permissions: Permissions;
 }
 

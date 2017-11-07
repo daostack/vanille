@@ -1,4 +1,4 @@
-import { DaoSchemeDashboard } from "./daoSchemeDashboard"
+import { DaoSchemeDashboard } from "./schemeDashboard"
 
 export class NotRegistered extends DaoSchemeDashboard {
 

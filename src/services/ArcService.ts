@@ -21,6 +21,11 @@ export class ArcService {
   public arcContracts: ArcContracts;
   public arcSchemes: Array<ContractInfo>;
   public arcVotingMachines: Array<ContractInfo>;
+  public arcGlobalConstraints: Array<ContractInfo>;
+  /**
+   * maps address to ContractInfo
+   */
+  public arcContractMap: Map<string,ContractInfo> = new Map<string,ContractInfo>();
 
   private contractCache: Map<string,TruffleContract>;
   
@@ -42,11 +47,18 @@ export class ArcService {
       this.arcContracts = arcContracts;
       this.arcSchemes = arcSettings.schemes;
       this.arcVotingMachines = arcSettings.votingMachines;
+      this.arcGlobalConstraints = [this.arcContracts.TokenCapGC]; // TODO:  should be arcSettings.globalConstraints;
+
+      for(var key in this.arcContracts) {
+        var contract = this.arcContracts[key];
+        this.arcContractMap.set(contract.address, contract);
+      }
+
       // console.log(this.arcContracts);
       // each property is a contractInfo
     }
   
-  public async getContract(name: string, at?: string): Promise<TruffleContract> {
+  public async getContract(key: string, at?: string): Promise<TruffleContract> {
 
     /**
      * The TruffleContract class actually represents multiple stages of the process:
@@ -58,22 +70,28 @@ export class ArcService {
      * You can call .at() without having called .deployed() if you already have the address.
      * The contracts in arcContracts are all the result of require()
      */
-    let contract = this.contractCache.get(at);
-    if (contract) {
-      return contract;
-    }
-    
-    let contractInfo = this.arcContracts[name];
+    let contractInfo = this.arcContracts[key];
+    let contract;
     if (contractInfo !== undefined) {
       if (!at) {
         at = contractInfo.address;
       }
-      contract = await contractInfo.contract.at(at);
+      let cachedContract = this.contractCache.get(at);
+      if (cachedContract) {
+        return cachedContract;
+      } else {
+        contract = await contractInfo.contract.at(at);
+      }
     } else {
-      contract = requireContract(name);
+      contract = requireContract(key);
       if (!at) {
           contract = await contract.deployed();
           at = contract.address;
+      } else {
+        let cachedContract = this.contractCache.get(at);
+        if (cachedContract) {
+          return cachedContract;
+        } 
       }
       contract = await contract.at(at);
     }
@@ -93,26 +111,11 @@ export class ArcService {
   public convertKeyToFriendlyName(key: string): string {
     if (!key) return null;
 
-    // insert a space before all caps except at beginning
-    key = key.replace(/(?!^)([A-Z])/g, ' $1');
+    // insert a space before all caps except at beginning.  Ignore consecutive caps alone (Like in TokenCapGC, ignore the 'C').
+    key = key.replace(/(?!^)([a-z]|^)([A-Z])/g, '$1 $2');
 
     // uppercase the first character
     return key.replace(/^./, function(str){ return str.toUpperCase(); }) 
-  }
-
-  /**
-   * If the contract belows to Arc and was given to use in the ArcSettings,
-   * then we'll return the name of it here.
-   * @param address 
-   */
-  public contractKeyFromAddress(address) {
-    for(var contractKey in this.arcContracts) {
-      var contract = this.arcContracts[contractKey];
-      if (contract.address === address) {
-        return contractKey;
-      }
-    }
-    return null;
   }
 }
 

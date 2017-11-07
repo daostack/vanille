@@ -1,4 +1,3 @@
-import { bindable } from 'aurelia-framework';
 import { SchemeConfigurationBase } from './schemeConfigurationBase';
 
 export class UpgradeScheme extends SchemeConfigurationBase  {
@@ -8,8 +7,8 @@ export class UpgradeScheme extends SchemeConfigurationBase  {
   }
 
   activate(model) {
-    model.votePrec = 50;
-    model.intVote = null;
+    model.votingMachineInfo = null;
+    model.fee = 0;
     return super.activate(model);
   }
 }

@@ -1,0 +1,27 @@
+<template>
+  <div class="row">
+    <div class="col-6">
+      <div class="md-form">
+        <input class="form-control" type='number' id="orgNativeTokenFee" value.bind="model.orgNativeTokenFee"/>
+        <label class="active" for="orgNativeTokenFee">DAO Token Fee</label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="md-form">
+        <input class="form-control" type='number' id="schemeNativeTokenFee" value.bind="model.schemeNativeTokenFee"/>
+        <label class="active" for="schemeNativeTokenFee">Native Token Fee</label>
+      </div>
+    </div>
+  </div>
+  <div class="md-form">
+
+    <voting-machines-dropdown machine.bind="model.votingMachineInfo"></voting-machines-dropdown>
+
+    <div if.bind="!!model.votingMachineInfo">
+      <etherscanlink address=${model.votingMachineInfo.address}>${model.votingMachineInfo.address}</etherscanlink>
+      <div class="voting-machine-config">
+        <compose view-model="${'../votingMachineConfiguration/' + model.votingMachineInfo.key}" model.bind="model"></compose>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, ContractInfo } from './ArcService';
+import { ArcService, ContractInfo, TruffleContract } from './ArcService';
 import { OrganizationService, DaoSchemeInfo } from '../services/OrganizationService';
+import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 
 @autoinject
 export class SchemeService {
@@ -13,6 +14,7 @@ export class SchemeService {
   constructor(
     private arcService: ArcService
     , private organizationService: OrganizationService
+    //, private controllerService: ControllerService
   ) {
       this.availableSchemes = this.arcService.arcSchemes;
     }
@@ -59,6 +61,31 @@ export class SchemeService {
 
     return schemes;
   }
+  
+  public async getSchemePermissions(schemeInfo: SchemeInfo): Promise<Permissions> {
+      const contract = await this.arcService.getContract(schemeInfo.key);
+      const permissions = contract.getDefaultPermissions();
+      return ToPermissionsEnum(permissions);
+    }
+    
+    /**
+     * Set the parameters on the scheme.  Returns hash.
+     * @param params 
+     */
+    public async setSchemeParameters(schemeInfo: SchemeInfo, params: any): Promise<string> {
+      const contract = await this.arcService.getContract(schemeInfo.key);
+      return await contract.setParams(params);
+    }
+
+    public async getSchemeNativeToken(schemeInfo: SchemeInfo): Promise<TruffleContract> {
+      const contract = await this.arcService.getContract(schemeInfo.key);
+      return await contract.nativeToken();
+    }
+
+    public async getSchemeFee(schemeInfo: SchemeInfo): Promise<Number> {
+      const contract = await this.arcService.getContract(schemeInfo.key);
+      return await contract.fee();
+    }
 }
 
 /**
@@ -69,16 +96,15 @@ export class SchemeService {
  */
 export class SchemeInfo extends DaoSchemeInfo {
 
-  public static fromDaoSchemeInfo(daoSchemeInfo) {
+  public static fromDaoSchemeInfo(daoSchemeInfo: DaoSchemeInfo) {
     let schemeInfo = new SchemeInfo();
     Object.assign(schemeInfo, daoSchemeInfo);
     schemeInfo.isRegistered = true;
     return schemeInfo;
   }
 
-  public static fromContractInfo(contractInfo, isRegistered: boolean) {
+  public static fromContractInfo(contractInfo: ContractInfo, isRegistered: boolean) {
     let schemeInfo = new SchemeInfo();
-    // note this will include a contract property that is the TruffleContract, technically not part of SchemeInfo
     Object.assign(schemeInfo, contractInfo);
     schemeInfo.isRegistered = isRegistered;
     return schemeInfo;

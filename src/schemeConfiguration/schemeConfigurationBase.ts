@@ -1,4 +1,4 @@
-import { DAO } from "../../services/OrganizationService";
+import { DAO } from "../services/OrganizationService";
 
 export class SchemeConfigurationBase {
   model: any;

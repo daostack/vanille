@@ -9,10 +9,6 @@ import { VotingMachineService, VotingMachineInfo } from  "../../../services/Voti
 export class VotingMachinesDropdown {
 
   @bindable( { defaultBindingMode: bindingMode.twoWay }) machine: VotingMachineInfo;
-  // @bindable( { defaultBindingMode: bindingMode.oneTime }) daoAddress: string;
-  // @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeRegistered: boolean = false;
-  // @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnRegistered: boolean = false;
-  // @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeKeys: Array<string> = [];
 
   machines: Array<VotingMachineInfo>;
 
@@ -22,7 +18,8 @@ export class VotingMachinesDropdown {
   }
 
   async attached() {
-    this.machines = await this.votingMachinesService.votingMachines
+    this.machines = await this.votingMachinesService.votingMachines;
+    this.machine = this.votingMachinesService.defaultMachine;
   }
     
   onItemClick(machine) {

@@ -1,15 +1,16 @@
 import { bindable } from 'aurelia-framework';
 import { SchemeConfigurationBase } from './schemeConfigurationBase';
 
-export class GlobalConstraintRegistrar extends SchemeConfigurationBase  {
+export class SchemeRegistrar extends SchemeConfigurationBase  {
 
   constructor() {
     super();
   }
 
   activate(model) {
-    model.votePrec = 50;
-    model.intVote = null;
+    model.registerVoteParams = {};
+    model.removeVoteParams = {};
+    model.votingMachineInfo=null;
     return super.activate(model);
   }
 }

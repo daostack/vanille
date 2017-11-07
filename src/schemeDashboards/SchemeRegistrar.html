@@ -2,44 +2,42 @@
 <div class="arc-scheme-dashboard">
   <ul class="nav nav-tabs scheme-tabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" href="#Propose" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Schemes</a>
+        <a class="nav-link active" href="#ProposeScheme" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Schemes</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#unPropose" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
+        <a class="nav-link" href="#unProposeScheme" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Schemes</a>
       </li>
   </ul>
     
   <div class="tab-content">
 
-    <div class="tab-pane fade show active" id="Propose" role="tabpanel" aria-labelledby="propose-tab">
+    <div class="tab-pane fade show active" id="ProposeScheme" role="tabpanel" aria-labelledby="propose-tab">
          
       <div class="instructions">Add functionality to <span class="org-name">${orgName}</span> by proposing to add new schemes.
-        After submitting the proposal, a vote will automatically be initiated.</div>
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</div>
         
       <form>
         <arc-schemes-dropdown
           scheme.bind="schemeToPropose"
           dao-address.bind="orgAddress"
-          exclude-registered.bind="true"
-          exclude-keys="${[key]}"
         >
-        <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span>
-        <span slot="buttonText"><span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme to Add'}</span></span>
+        <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
+        <span slot="buttonText"><span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme'}</span></span>
       </arc-schemes-dropdown>
         
         <div if.bind="!!schemeToPropose">
           <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
           <div class="scheme-config">
-            <compose view-model="${'./schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeParams"></compose>
+            <compose view-model="${'../schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeParams"></compose>
             <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
           </div>
         </div>
       </form>
     </div>  
 
-    <div class="tab-pane fade" id="unPropose" role="tabpanel" aria-labelledby="unpropose-tab">
+    <div class="tab-pane fade" id="unProposeScheme" role="tabpanel" aria-labelledby="unpropose-tab">
       <div class="instructions">Remove functionality from <span class="org-name">${orgName}</span> by proposing to remove schemes.
-        After submitting the proposal, a vote will automatically be initiated.</div>
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</div>
       <form>
           <arc-schemes-dropdown
             scheme.bind="schemeToUnPropose"

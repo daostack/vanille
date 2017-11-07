@@ -1,10 +1,13 @@
 <template>
 
-  <button class="btn-link dropdown-toggle text-dark" style="padding-left:0; border-left:none" type="button" role="button" id="availableSchemes" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="dropdown-toggle voting-machine-dropdown-button" 
+    id="availableMachines"
+    href="#"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <slot name="buttonText"><span class="font-weight-bold">${machine ? machine.name : 'Select a Voting Machine'}</span></slot>
-  </button>
+  </a>
 
-  <ul class="dropdown-menu" aria-labelledby="vitingMachinesDropdown">
+  <ul class="dropdown-menu" aria-labelledby="votingMachinesDropdown">
     <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="machine of machines">${machine.name}</li>
   </ul>
 </template>

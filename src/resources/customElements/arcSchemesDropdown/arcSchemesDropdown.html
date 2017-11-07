@@ -1,12 +1,11 @@
 <template>
 
   <div show.bind="schemes.length" >
-    <button class="btn-link dropdown-toggle text-dark arc-schemes-dropdown-button" 
-      type="button" role="button"
+    <a class="dropdown-toggle arc-schemes-dropdown-button"
+      href="#"
       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <slot name="buttonText"><span class="font-weight-bold">${scheme ? scheme.name : 'Select a Scheme'}</span></slot>
-    </button>
-
+    </a>
 
     <ul class="dropdown-menu" aria-labelledby="arcSchemesDropdown">
       <li class="dropdown-item" click.delegate="onItemClick(scheme)" repeat.for="scheme of schemes">${scheme.name}</li>

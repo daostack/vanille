@@ -5,6 +5,7 @@ import { ArcService, ContractInfo } from "../services/ArcService";
 import { OrganizationService, DAO, Founder } from "../services/OrganizationService";
 import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
+import { VotingMachineInfo } from "../services/VotingMachineService";
 
 @autoinject
 export class DeployGen  {
@@ -23,6 +24,8 @@ export class DeployGen  {
   private deployOrgStatus:string = null;
   private arcSchemes: Array<ContractInfo>;
   private selectedSchemes: Array<ContractInfo> = [];
+  private votingMachineInfo: VotingMachineInfo = null;
+  private votingMachineModel:any = {};
 
   constructor(
     private web3: Web3Service
@@ -41,6 +44,7 @@ export class DeployGen  {
           this.selectedSchemes.push(scheme);
         }
       }
+
     }
 
   async activate() {
@@ -75,6 +79,9 @@ export class DeployGen  {
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
         founders: this.founders
+        , votingMachine: this.votingMachineInfo.address
+        , votePrec: this.votingMachineModel.votePrec
+        , ownerVote: this.votingMachineModel.ownerVote
         , schemes: this.selectedSchemes.map((s) => { return { contract: s.key, address: s.address }; } )
       });
       this.deployOrgStatus= 'deployed';

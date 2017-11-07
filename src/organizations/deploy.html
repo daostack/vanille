@@ -85,6 +85,17 @@
   </section>
 
   <section>
+    <h4>Voting Machine</h4>
+    <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown>
+
+    <div if.bind="!!votingMachineInfo">
+      <etherscanlink address=${model.votingMachineInfo.address}>${model.votingMachineInfo.address}</etherscanlink>
+      <div class="voting-machine-config">
+        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineModel"></compose>
+      </div>
+    </div>
+  </section>
+  <section>
     <h4>Schemes</h4>
     <div repeat.for="scheme of arcSchemes">
       <div class="form-check">

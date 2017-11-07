@@ -6,6 +6,7 @@ import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
 import  { configure as configureEmergentArc } from 'emergent-arc';
+import { VotingMachineService } from  "./services/VotingMachineService";
 
 import 'bootstrap';
 import "mdbootstrap";
@@ -34,6 +35,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
     PLATFORM.moduleName("resources/customElements/ArcSchemesDropdown/arcSchemesDropdown"),
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
+    PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/round-add-button.html"),
@@ -47,22 +49,21 @@ export async function configure(aurelia: Aurelia) {
 
 
     
-  PLATFORM.moduleName("./daoSchemeDashboards/GlobalConstraintRegistrar")
-  PLATFORM.moduleName("./daoSchemeDashboards/NonArc")
-  PLATFORM.moduleName("./daoSchemeDashboards/NotRegistered")
-  PLATFORM.moduleName("./daoSchemeDashboards/SchemeRegistrar")
-  PLATFORM.moduleName("./daoSchemeDashboards/SimpleContributionScheme")
-  PLATFORM.moduleName("./daoSchemeDashboards/UpgradeScheme")
+  PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
+  PLATFORM.moduleName("./schemeDashboards/NonArc")
+  PLATFORM.moduleName("./schemeDashboards/NotRegistered")
+  PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
+  PLATFORM.moduleName("./schemeDashboards/SimpleContributionScheme")
+  PLATFORM.moduleName("./schemeDashboards/UpgradeScheme")
 
-  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/SimpleContributionScheme")
-  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/GlobalConstraintRegistrar")
-  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/UpgradeScheme")
-  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/SchemeRegistrar")
+  PLATFORM.moduleName("./schemeConfiguration/SimpleContributionScheme")
+  PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
+  PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
+  PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
 
-  PLATFORM.moduleName("./daoSchemeDashboards/schemeConfiguration/votingMachineConfiguration/AbsoluteVote")
+  PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
+  PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
     
-
-
   await aurelia.start();
 
   try {
@@ -88,7 +89,7 @@ export async function configure(aurelia: Aurelia) {
       return arcService;
     });
 
-    const orgService = new OrganizationService(arcService, web3Service);
+    const orgService = new OrganizationService(arcService, web3Service, aurelia.container.get(VotingMachineService));
     await orgService.initialize();
     aurelia.container.registerSingleton(OrganizationService, () => {
       return orgService;

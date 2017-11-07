@@ -61,7 +61,6 @@ export class DAODashboard {
 
   attached() {
     ($(".scheme-use-button") as any).tooltip();
-    ($(`.collapse`) as any).data("parent","#accordian");
     // workaround for accordian behavior not working.  Check to see if it's fixed when the
     // final version 4 is released
     $('.collapse').on('show.bs.collapse', () =>  {
@@ -86,7 +85,7 @@ export class DAODashboard {
       } else {
         key = scheme.key;
       }
-      return `../daoSchemeDashboards/${key}`;
+      return `../schemeDashboards/${key}`;
   }
 
   schemeDashboardViewModel(scheme: SchemeInfo): any {
