@@ -5,11 +5,11 @@
 
     <div if.bind="!!model.votingMachineInfo">
       <etherscanlink address=${model.votingMachineInfo.address}>${model.votingMachineInfo.address}</etherscanlink>
-      <div class="form-section-header">Vote Parameters for Adding Schemes</div>
+      <div class="form-section-header">Voting Parameters for Adding Schemes</div>
       <div class="voting-machine-config">
         <compose view-model="${'../votingMachineConfiguration/' + model.votingMachineInfo.key}" model.bind="model.registerVoteParams"></compose>
       </div>
-      <div class="form-section-header">Vote Parameters for Removing Schemes</div>
+      <div class="form-section-header">Voting Parameters for Removing Schemes</div>
       <div class="voting-machine-config">
         <compose view-model="${'../votingMachineConfiguration/' + model.votingMachineInfo.key}" model.bind="model.removeVoteParams"></compose>
       </div>

@@ -120,6 +120,9 @@ div.scheme-config
   padding-top: 1.5rem;
 }
 
+.fee-input {
+  width:7rem;
+}
 /* animate page transitions */
 section.au-enter-active {
   animation: fadeInRight 1s;

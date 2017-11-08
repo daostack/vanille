@@ -19,7 +19,8 @@ export class App {
   configureRouter(config: RouterConfiguration, router: Router) {
 
     config.title = 'DAOStack Alchemy';
-    config.options.pushState = true;
+    // config.options.pushState = true;
+    // config.options.root = '/';
 
         /**
          * can be connected 
