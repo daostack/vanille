@@ -3,7 +3,7 @@ import {Router, RouterConfiguration} from 'aurelia-router';
 import {PLATFORM} from 'aurelia-pal';
 import { Web3Service } from "./services/Web3Service";
 import { ArcService } from "./services/ArcService";
-import '../static/styles.css';
+import '../static/styles.scss';
 
 @autoinject
 export class App {

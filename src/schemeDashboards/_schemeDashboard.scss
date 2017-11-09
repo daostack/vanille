@@ -1,7 +1,3 @@
-@import "~static/bootstrap";
-@import "~bootstrap-sass/utilities/text";
-
-
 .tab-pane {
   border-top:none;
   padding-top:2rem;
@@ -35,4 +31,9 @@
 
 div.instructions + form {
   margin-top: 1.5rem;
+}
+
+.btn-submit-proposal {
+  @extend .btn-primary;
+  @extend .btn-sm;
 }

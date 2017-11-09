@@ -2,7 +2,6 @@ import { autoinject } from "aurelia-framework";
 import { ArcService } from '../services/ArcService';
 import { OrganizationService, DAO } from "../services/OrganizationService";
 import { SchemeInfo } from "../services/SchemeService";
-import "./schemeDashboard.scss";
 
 export class DaoSchemeDashboard {
     /**

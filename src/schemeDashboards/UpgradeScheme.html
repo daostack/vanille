@@ -21,7 +21,7 @@
           <input class="form-control" type='text' id="controllerAddress" value.bind="controllerAddress"/>
           <label for="controllerAddress">Controller Address</label>
         </div>
-        <button class="btn btn-primary" click.delegate="proposeController()">Submit Proposal</button>
+        <button class="btn-submit-proposal" click.delegate="proposeController()">Submit Proposal</button>
       </form>
     </div>  
 
@@ -36,7 +36,7 @@
 
         <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeParams"></compose>
 
-        <button class="btn btn-primary" click.delegate="submitUpgradingScheme()">Submit Proposal</button>
+        <button class="btn-submit-proposal" click.delegate="submitUpgradingScheme()">Submit Proposal</button>
       </form>
     </div>
   </div>

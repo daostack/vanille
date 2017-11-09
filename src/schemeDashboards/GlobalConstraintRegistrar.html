@@ -26,7 +26,7 @@
             <etherscanlink address=${constraintToPropose.address}>${constraintToPropose.address}</etherscanlink>
             <div class="global-constraint-config">
               <compose view-model="${'../globalConstraintConfiguration/' + constraintToPropose.key}" model.bind="proposeParams"></compose>
-              <button class="btn btn-primary" click.delegate="proposeConstraint()">Submit Proposal</button>
+              <button class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
             </div>
           </div>
         </form>
@@ -42,7 +42,7 @@
 
           <div if.bind="!!constraintToUnPropose">
               <etherscanlink address=${constraintToUnPropose.address}>${constraintToUnPropose.address}</etherscanlink>
-              <button class="btn btn-primary" click.delegate="unProposeConstraint()">Submit Proposal</button>
+              <button class="btn-submit-proposal" click.delegate="unProposeConstraint()">Submit Proposal</button>
           </div>
         </form>
       </div>

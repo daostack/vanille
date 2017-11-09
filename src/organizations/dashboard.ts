@@ -3,7 +3,6 @@ import { OrganizationService, DAO } from "../services/OrganizationService";
 import { TokenService } from  "../services/TokenService";
 import { ArcService } from  "../services/ArcService";
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
-import "./dashboard.scss";
 import { PLATFORM } from 'aurelia-pal';
 
 @autoinject

@@ -169,10 +169,10 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         { from: 'node_modules/mdbootstrap/font/roboto', to: 'font/roboto'},
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
         { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
-        { from: 'node_modules/mdbootstrap/css/bootstrap.min.css', to: 'bootstrap.min.css'},
+        { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'bootstrap.min.css'},
         { from: 'node_modules/mdbootstrap/css/mdb.min.css', to: 'mdb.min.css'},
         // for the spash page
-        { from: 'static/styles.css', to: 'styles.css' },    
+        { from: 'static/base.css' },
       ]),
       ...when(extractCss, new ExtractTextPlugin({
         filename: production ? '[contenthash].css' : '[id].css',

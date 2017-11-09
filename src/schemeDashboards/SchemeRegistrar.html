@@ -29,7 +29,7 @@
           <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
           <div class="scheme-config">
             <compose view-model="${'../schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeParams"></compose>
-            <button class="btn btn-primary" click.delegate="proposeScheme()">Submit Proposal</button>
+            <button class="btn-submit-proposal" click.delegate="proposeScheme()">Submit Proposal</button>
           </div>
         </div>
       </form>
@@ -52,7 +52,7 @@
 
         <div if.bind="!!schemeToUnPropose">
             <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>
-            <button class="btn btn-primary" click.delegate="unProposeScheme()">Submit Proposal</button>
+            <button class="btn-submit-proposal" click.delegate="unProposeScheme()">Submit Proposal</button>
         </div>
       </form>
     </div>
