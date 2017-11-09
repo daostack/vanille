@@ -42,7 +42,7 @@
 
           <div if.bind="!!constraintToUnPropose">
               <etherscanlink address=${constraintToUnPropose.address}>${constraintToUnPropose.address}</etherscanlink>
-              <button class="btn-submit-proposal" click.delegate="unProposeConstraint()">Submit Proposal</button>
+             <div class="mt-3"><button class="btn-submit-proposal" click.delegate="unProposeConstraint()">Submit Proposal</button></div>
           </div>
         </form>
       </div>

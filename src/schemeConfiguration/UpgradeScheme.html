@@ -1,6 +1,4 @@
 <template>
-  <div class="md-form">
-
     <div class="md-form fee-input">
       <input class="form-control" type='number' id="fee" value.bind="model.fee"/>
       <label class="active" for="fee">Fee</label>
@@ -14,5 +12,4 @@
         <compose view-model="${'../votingMachineConfiguration/' + model.votingMachineInfo.key}" model.bind="model"></compose>
       </div>
     </div>
-  </div>
 </template>

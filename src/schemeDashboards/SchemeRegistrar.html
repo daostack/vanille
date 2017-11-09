@@ -52,7 +52,7 @@
 
         <div if.bind="!!schemeToUnPropose">
             <etherscanlink address=${schemeToUnPropose.address}>${schemeToUnPropose.address}</etherscanlink>
-            <button class="btn-submit-proposal" click.delegate="unProposeScheme()">Submit Proposal</button>
+            <div class="mt-3"><button class="btn-submit-proposal" click.delegate="unProposeScheme()">Submit Proposal</button></div>
         </div>
       </form>
     </div>
