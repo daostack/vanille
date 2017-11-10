@@ -4,6 +4,9 @@ import { DisposableCollection } from "./DisposableCollection";
 import { LogManager } from 'aurelia-framework';
 import 'snackbarjs';
 
+  /**
+   * TODO:  Show queue up simultaneous messages so they are shown sequentially
+   */
 @autoinject
 export class SnackbarService {
 
