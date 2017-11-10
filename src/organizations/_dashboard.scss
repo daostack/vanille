@@ -1,14 +1,18 @@
-.dashboard-schemes > li {
+.dashboard-schemes li.list-group-item {
   margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: .325rem !important;
 }
 
-.scheme-use-button {
-  position: relative; 
-  z-index: 1;
-  width: 0;
-  height: 0;
+.dashboard-schemes li.list-group-item .scheme-name {
+  font-weight: bold;
+  margin-bottom:.5rem;
 }
 
-.add-scheme {
-  padding-bottom:.5rem;
+.dashboard-schemes .list-group-item :first-child {
+  margin-right: unset; // override BMD
+}
+
+.dashboard-schemes li.list-group-item div.row {
+  width:100%;
 }

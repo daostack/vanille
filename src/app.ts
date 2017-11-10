@@ -16,6 +16,10 @@ export class App {
     ) {
     }
   
+  attached() {
+    (<any>$('body')).bootstrapMaterialDesign();
+  }
+    
   configureRouter(config: RouterConfiguration, router: Router) {
 
     config.title = 'DAOStack Alchemy';

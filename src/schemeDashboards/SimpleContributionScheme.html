@@ -1,42 +1,43 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <div class="instructions">Propose to submit a contribution. After submitting the proposal, a vote will automatically be initiated using this scheme's
-      voting machine.</div>
+    <instructions text="Propose to submit a contribution. After submitting the proposal, a vote will automatically be initiated using this scheme's
+      voting machine."></instructions>
+    <div class="tab-content">
     <form>
-
-      <div class="md-form basic-textarea rounded-corners shadow-textarea">
-        <textarea type="text" id="ContributionDescription" class="md-textarea" value.bind="description" rows="2"></textarea>
+      <div class="form-group">
         <label for="ContributionDescription">Description</label>
+        <textarea type="text" id="ContributionDescription" class="form-control" value.bind="description" rows="2"></textarea>
       </div>
       <div class="row">
         <div class="col-3">
-          <div class="md-form">
+          <div class="form-group">
+            <label for="nativeTokenReward">Native Token Award</label>
             <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward" />
-            <label class="active" for="nativeTokenReward">Native Token Award</label>
           </div>
         </div>
           <div class="col-3">
-            <div class="md-form">
+            <div class="form-group">
+              <label for="ethReward">Eth Reward</label>
               <input class="form-control" type='number' id="ethReward" value.bind="ethReward" />
-              <label class="active" for="ethReward">Eth Reward</label>
             </div>
           </div>
           <div class="col-3">
-            <div class="md-form">
+            <div class="form-group">
+              <label for="externalTokenReward">External Token Reward</label>
               <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward" />
-              <label class="active" for="externalTokenReward">External Token Reward</label>
             </div>
           </div>
         </div>
-        <div class="md-form">
-          <input class="form-control" type='text' id="externalTokenAddress" value.bind="externalTokenAddress" />
+        <div class="form-group">
           <label for="externalTokenAddress">External Token Address</label>
+          <input class="form-control" type='text' id="externalTokenAddress" value.bind="externalTokenAddress" />
         </div>
-        <div class="md-form">
-          <input class="form-control" type='text' id="beneficiaryAddress" value.bind="beneficiaryAddress" />
+        <div class="form-group">
           <label for="beneficiaryAddress">Beneficiary Address</label>
+          <input class="form-control" type='text' id="beneficiaryAddress" value.bind="beneficiaryAddress" />
         </div>
         <button class="btn-submit-proposal" click.delegate="proposeContribution()">Submit Proposal</button>
     </form>
+  </div>
   </div>
 </template>

@@ -8,8 +8,8 @@ import { Web3Service } from "./services/Web3Service";
 import  { configure as configureEmergentArc } from 'emergent-arc';
 import { VotingMachineService } from  "./services/VotingMachineService";
 
-import 'bootstrap';
-import "mdbootstrap";
+import 'arrive'; // do bmd does it's thing whenever views are attached
+import 'bootstrap-material-design';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -42,9 +42,10 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/round-remove-button.html"),
     PLATFORM.moduleName("resources/customElements/round-trash-button.html"),
     PLATFORM.moduleName("resources/customElements/round-dashboard-button.html"),
+    PLATFORM.moduleName("resources/customElements/instructions.html"),
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
     PLATFORM.moduleName("resources/customAttributes/blur-image"),
-    PLATFORM.moduleName("resources/valueConverters/toUpper")
+    PLATFORM.moduleName("resources/valueConverters/toUpper"),
   ]);
 
 

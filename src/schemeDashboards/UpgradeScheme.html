@@ -13,25 +13,25 @@
 
     <div class="tab-pane fade show active" id="ProposeNewController" role="tabpanel" aria-labelledby="propose-new-controller-tab">
          
-      <div class="instructions">Propose to add a new controller to <span class="org-name">${orgName}</span>.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</div>
+      <instructions text="Propose to add a new controller to <span class='org-name'>${orgName}</span>.
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine."></instructions>
         
       <form>
-        <div class="md-form">
-          <input class="form-control" type='text' id="controllerAddress" value.bind="controllerAddress"/>
+        <div class="form-group">
           <label for="controllerAddress">Controller Address</label>
+          <input class="form-control" type='text' id="controllerAddress" value.bind="controllerAddress"/>
         </div>
         <button class="btn-submit-proposal" click.delegate="proposeController()">Submit Proposal</button>
       </form>
     </div>  
 
     <div class="tab-pane fade" id="ProposeNewUpgradingScheme" role="tabpanel" aria-labelledby="propose-new-upgrading-scheme-tab">
-      <div class="instructions">Propose to replace this UpgradeScheme with another that has upgrading scheme permissions.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</div>
+      <instructions text="Propose to replace this UpgradeScheme with another that has upgrading scheme permissions.
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine."></instructions>
       <form>
-        <div class="md-form">
-          <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/>
+        <div class="form-group">
           <label for="upgradingSchemeAddress">Upgrading Scheme Address</label>
+          <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/>
         </div>
 
         <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeParams"></compose>

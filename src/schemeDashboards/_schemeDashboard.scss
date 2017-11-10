@@ -3,12 +3,6 @@
   padding-top:2rem;
 }
 
-.instructions {
-  @extend .text-info;
-  font-size: 1.1rem;
-  font-style: italic;
-}
-
 .org-name {
   font-style: italic;
 }
@@ -18,22 +12,17 @@
   padding-top:2rem;
 }
 
-.tab-content .md-form,
-.tab-content .form-group,
-{
-  margin-bottom: 2rem;
-}
-
 .scheme-tabs {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-div.instructions + form {
-  margin-top: 1.5rem;
+.tab-content form {
+  padding-left:1rem;
+  padding-top:1rem;
 }
 
 .btn-submit-proposal {
+  @extend .btn;
   @extend .btn-primary;
-  @extend .btn-sm;
 }

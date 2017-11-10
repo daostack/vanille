@@ -24,7 +24,7 @@
           <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
             <div class="row">
               <div class="col-11">
-                <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+                <div class="scheme-name">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
                   <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
                 </div>
               <div class="col-1">
@@ -39,7 +39,7 @@
             <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
                   </div>
               </div>
@@ -63,7 +63,7 @@
               <div class="col-1">
                   <round-dashboard-button 
                     class="scheme-use-button"
-                    css="btn-dark"
+                    css="btn-secondary"
                     data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Work with this scheme"
                     click.delegate="useScheme(scheme)">
                   </round-dashboard-button>
@@ -72,7 +72,7 @@
             <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
                   </div>
               </div>
@@ -92,7 +92,7 @@
           <li class="list-group-item" repeat.for="scheme of unregisteredArcSchemes">
             <div class="row">
               <div class="col-11">
-                <div style="font-weight: bold">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+                <div class="scheme-name">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
                   <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
                 </div>
               <div class="col-1">
@@ -107,7 +107,7 @@
             <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
                   </div>
               </div>

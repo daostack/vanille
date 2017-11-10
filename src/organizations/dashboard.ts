@@ -65,6 +65,8 @@ export class DAODashboard {
     $('.collapse').on('show.bs.collapse', () =>  {
       ($('.collapse') as any).collapse("hide");
     });
+
+    // $("<hr/>").insertAfter(".instructions");
   }
 
   useScheme(scheme: SchemeInfo) {

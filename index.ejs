@@ -6,21 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="<%- htmlWebpackPlugin.options.metadata.baseUrl %>">
     <link href="font-awesome.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <link href="mdb.min.css" rel="stylesheet">
-    <link href="base.css" rel="stylesheet">
-    
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
   <body >
-    <!-- hack to workabound mdbootstrap bug -->
-    <span class="navbar" style="display:none"></span>
+    <!-- Bootstrap Material Design -->
     <div aurelia-app="main">
+    <link rel="stylesheet" href="./bootstrap-material-design.min.css">
+    <link rel="stylesheet" href="base.css">
     <div class="container">
       <div class="section"  style="text-align: center">
           <h1 style="margin-bottom: 2rem;">Welcome to <%- htmlWebpackPlugin.options.metadata.title %></h1>
           <h4 style="margin-bottom:2rem">Breath deeply while we fetch some JavaScript and connect to the blockchain...</h4>
-          <i class="fa fa-spinner fa-spin fa-4x light-blue-text"></i>
+          <i class="fa fa-spinner fa-spin fa-4x text-primary"></i>
           <!-- <div class="progress" style="height: 1.5rem;">
               <div style="height: 100%" class="teal darken-2 progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
           </div> -->
@@ -32,5 +31,5 @@
     <!-- Webpack Dev Server reload -->
     <script src="/webpack-dev-server.js"></script>
     <% } %>
-    </body>
+  </body>
 </html>

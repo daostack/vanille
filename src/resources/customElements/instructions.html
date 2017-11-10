@@ -1,0 +1,11 @@
+<template bindable="text">
+  <div class="instructions">
+    <table>
+      <tr>
+        <td><i class="fa fa-info-circle text-info"></i></td>
+        <td class="instructions-body" innerhtml.bind="text | sanitizeHTML"></td>
+      </tr>
+    </table>
+    <hr/>
+  </div>
+</template>

@@ -1,5 +1,6 @@
 <template>
 
+  <div class="dropdown">
   <a class="dropdown-toggle voting-machine-dropdown-button" 
     id="availableMachines"
     href="#"
@@ -10,4 +11,5 @@
   <ul class="dropdown-menu" aria-labelledby="votingMachinesDropdown">
     <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="machine of machines">${machine.name}</li>
   </ul>
+</div>
 </template>

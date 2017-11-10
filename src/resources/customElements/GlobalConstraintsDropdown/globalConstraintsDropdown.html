@@ -1,5 +1,6 @@
 <template>
 
+  <div class="dropdown">
   <a class="dropdown-toggle global-constraints-dropdown-button" 
     id="availableConstraints"
     href="#"
@@ -10,4 +11,5 @@
   <ul class="dropdown-menu" aria-labelledby="globalConstraintsDropdown">
     <li class="dropdown-item" click.delegate="onItemClick(constraint)" repeat.for="constraint of constraints">${constraint.name}</li>
   </ul>
+</div>
 </template>

@@ -1,8 +1,9 @@
 
-@import "~static/bootstrap";
-@import "~mdbootstrap-sass/data/colors";
-@import "~bootstrap-sass/utilities/text";
-@import "~bootstrap-sass/buttons";
+// @import "~static/bootstrap";
+// @import "~mdbootstrap-sass/data/colors";
+// @import "~bootstrap-sass/utilities/text";
+// @import "~bootstrap-sass/buttons";
+@import "~BMD/core"; 
 @import "./src/organizations/list";
 @import "./src/home";
 @import "./src/schemeDashboards/schemeDashboard";

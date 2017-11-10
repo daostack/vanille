@@ -58,7 +58,7 @@ section h4 {
 }
 
 /* I suspect this is required due to a bug in the bootstrap beta v1 required by mdbootstrap */
-.progress-bar {
+/* .progress-bar {
   height: 1.25rem !important;
   padding-top: .1rem;
 }
@@ -88,25 +88,34 @@ section h4 {
   font-size: 1.5rem;
   line-height: 1.33;
   border-radius: 2rem;
-}
+} */
 
-/* .md-form label{
+/* .form-group label{
   font-weight:bold;
 } */
 
-.md-form.address {
+.form-group.address {
   width: 20rem;
 }
 
-.md-form.address input.form-control {
+.form-group.address input.form-control {
   width: inherit;
 }
 
-div.voting-machine-config,
-div.global-constraint-config,
-div.scheme-config
-{
-  padding-top: 2rem;
+
+.instructions {
+  margin-bottom: 1.5rem;
+}
+
+.instructions-body {
+  font-size: 1.1rem;
+  opacity: .6;
+  font-style: italic;
+  padding-left: 1rem;
+}
+
+.instructions i {
+  font-size: 2rem;
 }
 
 .arc-schemes-dropdown-button
@@ -115,10 +124,20 @@ div.scheme-config
   font-weight: bold;
 }
 
+.dropdown {
+  margin-bottom: .75rem;
+  display: inline-block;
+}
+
 .form-section-header {
   font-weight: bold;
   padding-top: 1.5rem;
 }
+
+/* .bmd-form-group {
+  padding-top: 0;
+  padding-bottom: 1.8rem;
+} */
 
 .fee-input {
   width:7rem;

@@ -19,17 +19,17 @@
 
     <section>
       <h4>Basic Information</h4>
-      <div class="md-form"  style="width:400px">
-        <input class="form-control" type='text' id='orgName' value.bind='orgName' />
+      <div class="form-group"  style="width:400px">
         <label for='orgName'>DAO Name</label>
+        <input class="form-control" type='text' id='orgName' value.bind='orgName' />
       </div>
-      <div class="md-form" style="width:400px" >
-        <input class="form-control" type='text' id='tokenName' value.bind='tokenName' />
+      <div class="form-group" style="width:400px" >
         <label for='tokenName'>Token Name</label>
+        <input class="form-control" type='text' id='tokenName' value.bind='tokenName' />
     </div>
-    <div class="md-form"  style="width:100px">
-        <input class="form-control"type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
+    <div class="form-group"  style="width:100px">
         <label for='tokenSymbol'>Token Symbol</label>
+        <input class="form-control"type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
       </div>
     </section>
     
@@ -48,7 +48,8 @@
                 class="founder-delete-button"
                 click.delegate='removeFounder($index)'></round-trash-button>
         </span>
-          <div class="md-form">
+          <div class="form-group">
+            <label for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
             <input
               class="form-control" 
               style="width:400px"
@@ -57,9 +58,9 @@
               value.bind='founder.address'
               id.bind="appendIndex('founder_address',$index)"
             />
-            <label class="active"  for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
           </div>
-          <div class="md-form">
+          <div class="form-group">
+            <label for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
             <input
             class="form-control" 
               style="width:80px" 
@@ -67,9 +68,9 @@
               value.bind='founder.tokens'
               id.bind="appendIndex('founder_tokens',$index)"
             />
-            <label class="active" for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
           </div>
-          <div class="md-form">
+          <div class="form-group">
+            <label for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
             <input 
             class="form-control" 
               style="width:80px" 
@@ -77,7 +78,6 @@
               value.bind='founder.reputation'
               id.bind="appendIndex('founder_reputation',$index)"
             />
-            <label class="active" for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
           </div>
         </form>
       </li>
@@ -98,9 +98,9 @@
   <section>
     <h4>Schemes</h4>
     <div repeat.for="scheme of arcSchemes">
-      <div class="form-check">
-        <label class="form-check-label">
-          <input disabled.bind="scheme.required" class="form-check-input" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes">
+      <div class="checkbox">
+        <label>
+          <input disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes">
           ${scheme.name}
         </label>
       </div>
@@ -114,6 +114,7 @@
         <i class='fa fa-rocket'></i> Deploy Organization
       </button>
     </div>
+    
     <div if.bind="deployOrgStatus === 'deploying'">
       <div class="progress">
           <div if.bind="addOrgResultMessage === 'adding_org'" class="progress-bar progress-bar-striped progress-bar-animated" style='width:100%'>

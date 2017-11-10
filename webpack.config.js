@@ -53,8 +53,10 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       modules: [srcDir, 'node_modules'],
       alias: {
         // prepend '~' to import path in order to use this alias
-        "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
-        "mdbootstrap-sass": path.resolve(nodeModulesDir,"mdbootstrap/sass/mdb/free/"),
+        // "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
+        // "mdbootstrap-sass": path.resolve(nodeModulesDir,"mdbootstrap/sass/mdb/free/"),
+        "bootstrap": path.resolve(nodeModulesDir,"bootstrap/"),
+        "BMD": path.resolve(nodeModulesDir,"bootstrap-material-design/scss/"),
         "static": path.resolve(__dirname,"static"),
       }
       },
@@ -166,11 +168,12 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       }),
       new CopyWebpackPlugin([
         { from: 'static/favicon.ico' },    
-        { from: 'node_modules/mdbootstrap/font/roboto', to: 'font/roboto'},
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
         { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
-        { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'bootstrap.min.css'},
-        { from: 'node_modules/mdbootstrap/css/mdb.min.css', to: 'mdb.min.css'},
+        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css'},
+        // { from: 'node_modules/mdbootstrap/font/roboto', to: 'font/roboto'},
+        // { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'bootstrap.min.css'},
+        // { from: 'node_modules/mdbootstrap/css/mdb.min.css', to: 'mdb.min.css'},
         // for the spash page
         { from: 'static/base.css' },
       ]),
