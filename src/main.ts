@@ -10,6 +10,7 @@ import { VotingMachineService } from  "./services/VotingMachineService";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
 import 'bootstrap-material-design';
+import { SnackbarService } from "./services/SnackbarService";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -78,6 +79,9 @@ export async function configure(aurelia: Aurelia) {
       network : { name: process.env.ETH_ENV }
     });
   
+    // just to initialize it and get it running
+    aurelia.container.get(SnackbarService);
+    
     const web3Service = new Web3Service();
     await web3Service.initialize(web3);
     aurelia.container.registerSingleton(Web3Service, () => {

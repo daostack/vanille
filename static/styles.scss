@@ -9,3 +9,17 @@
 @import "./src/schemeDashboards/schemeDashboard";
 @import "./src/organizations/dashboard";
 @import "~static/base";
+
+
+.snackbar.snack-failure .snackbar-content {
+  @extend .bg-danger;
+}
+
+.snackbar.snack-info .snackbar-content {
+  @extend .bg-info;
+}
+
+.snackbar.snack-warning .snackbar-content {
+  @extend .bg-warning;
+  @extend .text-dark;
+}

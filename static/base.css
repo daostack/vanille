@@ -134,20 +134,16 @@ section h4 {
   padding-top: 1.5rem;
 }
 
-/* .bmd-form-group {
-  padding-top: 0;
-  padding-bottom: 1.8rem;
-} */
-
 .fee-input {
   width:7rem;
 }
-/* animate page transitions */
-section.au-enter-active {
-  animation: fadeInRight 1s;
-}
 
-div.au-stagger {
-  /* 50ms will be applied between each successive enter operation */
+/* animate page transitions */
+/* section.au-enter-active {
+  animation: fadeInRight 1s;
+} */
+
+/* div.au-stagger {
+  /* 50ms will be applied between each successive enter operation
   animation-delay: 50ms;
-}
+} */

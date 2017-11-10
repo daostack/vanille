@@ -170,6 +170,7 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         { from: 'static/favicon.ico' },    
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
         { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
+        { from: 'node_modules/snackbarjs/dist/snackbar.min.css'},
         { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css'},
         // { from: 'node_modules/mdbootstrap/font/roboto', to: 'font/roboto'},
         // { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'bootstrap.min.css'},

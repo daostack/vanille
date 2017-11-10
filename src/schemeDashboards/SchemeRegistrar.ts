@@ -6,6 +6,7 @@ import { OrganizationService } from '../services/OrganizationService';
 import {  } from "../services/SchemeService";
 import { ArcService, ContractInfo } from  "../services/ArcService";
 import { Permissions } from '../services/ControllerService';
+import { EventAggregator  } from 'aurelia-event-aggregator';
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
@@ -18,6 +19,8 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     private schemeService: SchemeService
     , private arcService: ArcService
     , private organizationService: OrganizationService
+    , private eventAggregator: EventAggregator
+
   ) {
     super();
   }
@@ -61,10 +64,10 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         nativeToken,
         fee,
         true);
-      console.log(`ProposalId: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-
+        
+       this.eventAggregator.publish("handleSuccess", `Proposal submitted successfully, proposalId: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
     } catch(ex) {
-        console.log(`proposeScheme: ${ex}`);
+        this.eventAggregator.publish("handleException", ex);
     }
   }
 
@@ -74,10 +77,10 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
     try {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
-      console.log(`ProposalId: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
+      this.eventAggregator.publish("handleSuccess", `Proposal submitted successfully, proposalId: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
 
     } catch(ex) {
-        console.log(`unProposeScheme: ${ex}`);
+        this.eventAggregator.publish("handleException", ex);
     }
   }
 }

@@ -118,6 +118,7 @@
     "jquery": "3.2.1",
     "node-waves": "^0.7.5",
     "popper.js": "^1.12.6",
+    "snackbarjs": "^1.1.0",
     "truffle-contract": "^3.0.0"
   }
 }
