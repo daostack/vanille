@@ -14,6 +14,7 @@ export class SnackbarService {
   subscriptions: DisposableCollection = new DisposableCollection();
   logger = LogManager.getLogger("Alchemy");
   timeout = 3000;
+  htmlAllowed: true;
 
   constructor(
     eventAggregator: EventAggregator
@@ -31,7 +32,7 @@ export class SnackbarService {
       timeout: this.timeout,
       style: "snack-info",
       content: message,
-      htmlAllowed: true
+      htmlAllowed: this.htmlAllowed
     });
   }
 
@@ -41,7 +42,7 @@ export class SnackbarService {
       timeout: this.timeout,
       style: "snack-failure",
       content: message,
-      htmlAllowed: true
+      htmlAllowed: this.htmlAllowed
     });
   }
 
@@ -51,7 +52,7 @@ export class SnackbarService {
       timeout: this.timeout,
       style: "snack-warning",
       content: message,
-      htmlAllowed: true
+      htmlAllowed: this.htmlAllowed
     });
   }
 }
