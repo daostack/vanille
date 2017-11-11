@@ -38,24 +38,24 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
   async proposeScheme() {
   
-    const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
-    const scheme = this.schemeToPropose;
-    const params = this.proposeParams;
-
-    const votingMachineInfo = params.votingMachineInfo;
-    const voteParametersHash = await this.organizationService.getVoteParametersHash(
-        this.orgAddress,
-        votingMachineInfo,
-        params.votePrec,
-        params.ownerVote);
-
-    const parametersHash = await this.schemeService.setSchemeParameters(scheme, 
-        Object.assign({}, params, { voteParametersHash: voteParametersHash, votingMachine: votingMachineInfo.address }));
-    const permissions = await this.schemeService.getSchemePermissions(scheme);
-    const nativeToken = await this.schemeService.getSchemeNativeToken(scheme);
-    const fee = await this.schemeService.getSchemeFee(scheme);
-
     try {
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+      const scheme = this.schemeToPropose;
+      const params = this.proposeParams;
+
+      const votingMachineInfo = params.votingMachineInfo;
+      const voteParametersHash = await this.organizationService.getVoteParametersHash(
+          this.orgAddress,
+          votingMachineInfo,
+          params.votePrec,
+          params.ownerVote);
+
+      const parametersHash = await this.schemeService.setSchemeParameters(scheme, 
+          Object.assign({}, params, { voteParametersHash: voteParametersHash, votingMachine: votingMachineInfo.address }));
+      const permissions = await this.schemeService.getSchemePermissions(scheme);
+      const nativeToken = await this.schemeService.getSchemeNativeToken(scheme);
+      const fee = await this.schemeService.getSchemeFee(scheme);
+
       const tx = await schemeRegistrar.proposeScheme(
         this.orgAddress,
         scheme.address,
