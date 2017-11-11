@@ -1,4 +1,3 @@
-
 // @import "~static/bootstrap";
 // @import "~mdbootstrap-sass/data/colors";
 // @import "~bootstrap-sass/utilities/text";
@@ -10,6 +9,17 @@
 @import "./src/organizations/dashboard";
 @import "~static/base";
 
+.bg-warning {
+  background-color: #ff9100 !important; }
+
+a.bg-warning:focus, a.bg-warning:hover {
+  background-color: #ff6d00 !important; }
+
+.text-warning {
+  color: #ff6d00 !important; }
+
+a.text-warning:focus, a.text-warning:hover {
+  color: #ff6d00 !important; }
 
 .snackbar.snack-failure .snackbar-content {
   @extend .bg-danger;

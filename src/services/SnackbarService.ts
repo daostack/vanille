@@ -19,11 +19,11 @@ export class SnackbarService {
   constructor(
     eventAggregator: EventAggregator
   ) {
-    this.subscriptions.push(eventAggregator.subscribe("handleException", (ex) => this.handleFailure(ex.message)));
-    this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (params) => this.handleSuccess(params)));
-    this.subscriptions.push(eventAggregator.subscribe("handleWarning", (params) => this.handleWarning(params)));
-    this.subscriptions.push(eventAggregator.subscribe("handleFailure", (params) => this.handleFailure(params)));
-    this.subscriptions.push(eventAggregator.subscribe("showMessage", (params) => this.handleSuccess(params)));
+    this.subscriptions.push(eventAggregator.subscribe("handleException", (ex) => this.handleException(ex)));
+    this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (message) => this.handleSuccess(message)));
+    this.subscriptions.push(eventAggregator.subscribe("handleWarning", (message) => this.handleWarning(message)));
+    this.subscriptions.push(eventAggregator.subscribe("handleFailure", (message) => this.handleFailure(message)));
+    this.subscriptions.push(eventAggregator.subscribe("showMessage", (message) => this.handleSuccess(message)));
   }
 
   public handleSuccess(message: string) {
@@ -31,6 +31,17 @@ export class SnackbarService {
     (<any>$).snackbar({
       timeout: this.timeout,
       style: "snack-info",
+      content: message,
+      htmlAllowed: this.htmlAllowed
+    });
+  }
+
+  public handleException(ex) {
+    let message = ex.message;
+    this.logger.error(`${message}\n{$ex.stack}`);
+    (<any>$).snackbar({
+      timeout: this.timeout,
+      style: "snack-failure",
       content: message,
       htmlAllowed: this.htmlAllowed
     });

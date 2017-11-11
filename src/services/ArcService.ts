@@ -8,10 +8,13 @@ import  { Organization
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
 import * as Web3 from "web3";
+import { LogManager } from 'aurelia-framework';
 
 // @autoinject()
 export class ArcService {
-    
+   
+  logger = LogManager.getLogger("Alchemy");
+
   constructor() {
     this.contractCache = new Map<string,TruffleContract>();
   }
@@ -105,7 +108,14 @@ export class ArcService {
    * @param index Identifies which log, when eventName is not given
    */
   public getValueFromTransactionLog(tx, argName, eventName?, index=0) {
+    try {
       return getValueFromLogs(tx, argName, eventName, index);
+    } catch(ex) {
+      this.logger.error(`${ex.message}\n${ex.stack}`);
+      return "[not found]";
+      // console.log(`${ex.message}\n{$ex.stack}`);
+      // console.log(tx);
+    }
   }
 
   public convertKeyToFriendlyName(key: string): string {
