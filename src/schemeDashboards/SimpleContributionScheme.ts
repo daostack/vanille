@@ -9,10 +9,6 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
   externalTokenAddress: string;
   beneficiaryAddress: string;
   
-  activate(model) {
-    return super.activate(model);
-  }
-
   proposeContribution() {
     
   }

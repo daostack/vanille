@@ -13,7 +13,7 @@ export class SnackbarService {
   // probably doesn't really need to be a disposable collection since this is a singleton service
   subscriptions: DisposableCollection = new DisposableCollection();
   logger = LogManager.getLogger("Alchemy");
-  timeout = 3000;
+  timeout = 0; // 0 means user must dismiss by clicking on it
   htmlAllowed: true;
 
   constructor(

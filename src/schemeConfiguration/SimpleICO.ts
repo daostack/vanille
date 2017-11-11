@@ -1,19 +1,36 @@
 import { bindable } from 'aurelia-framework';
-import { SchemeConfigurationBase } from './schemeConfigurationBase';
+import { SchemeConfigurator} from './schemeConfigurationBase';
+import { SchemeService, SchemeInfo } from '../services/SchemeService';
 
-export class SchemeRegistrar extends SchemeConfigurationBase  {
+/**
+ * NOT CURRENTLY IN USE, JUST HERE BECAUSE I WROTE IT ACCIDENTALLY AND IT MIGHT SOMEDAY BE USEFUL
+ */
+export class SchemeRegistrar implements SchemeConfigurator  {
 
-  constructor() {
-    super();
+  cap= 0;
+  price= 0;
+  startBlock= 0;
+  endBlock= 0;
+  beneficiary= null;
+  admin= null;
+
+  constructor(
+    private schemeService: SchemeService
+  ) {
   }
 
   activate(model) {
-    model.cap= 0;
-    model.price= 0;
-    model.startBlock= 0;
-    model.endBlock= 0;
-    model.beneficiary= null;
-    model.admin= null;
-    return super.activate(model);
+      model.getConfigurationHash = this.getConfigurationHash.bind(this);
+  }
+
+  async getConfigurationHash(scheme: SchemeInfo, orgAddress: string): Promise<any> {
+    return await this.schemeService.setSchemeParameters(scheme, {
+      cap: this.cap
+      , price: this.price
+      , startBlock: this.startBlock
+      , endBlock: this.endBlock
+      , beneficiary: this.beneficiary
+      , admin: this.admin
+    });
   }
 }

@@ -94,7 +94,7 @@ export async function configure(aurelia: Aurelia) {
       return arcService;
     });
 
-    const orgService = new OrganizationService(arcService, web3Service, aurelia.container.get(VotingMachineService));
+    const orgService = new OrganizationService(arcService, web3Service);
     await orgService.initialize();
     aurelia.container.registerSingleton(OrganizationService, () => {
       return orgService;

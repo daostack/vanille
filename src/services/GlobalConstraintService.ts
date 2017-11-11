@@ -17,16 +17,6 @@ constructor(
     this.defaultConstraint = this.globalConstraints.filter((vm) => vm.key === "TokenCapGC")[0];
   }
 
-  public async getVoteParametersHash(
-    globalConstraintInfo: GlobalConstraintInfo,
-    reputationAddress: string, 
-    votePrec: Number, 
-    ownerVote: boolean) {
-    
-    const contract = await this.arcService.getContract(globalConstraintInfo.key);
-    return await contract.getParametersHash(reputationAddress, votePrec, ownerVote);
-  }
-
   public defaultConstraint: GlobalConstraintInfo;
 }
 

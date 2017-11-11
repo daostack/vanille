@@ -1,18 +1,19 @@
 <template>
-    <div class="form-group fee-input">
-      <label for="fee">Fee</label>
-      <input class="form-control" type='number' id="fee" value.bind="model.fee"/>
-    </div>
-
     <div class="form-group">
-      <voting-machines-dropdown machine.bind="model.votingMachineInfo"></voting-machines-dropdown>
+      <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown>
 
-      <div if.bind="!!model.votingMachineInfo">
-        <etherscanlink address=${model.votingMachineInfo.address}>${model.votingMachineInfo.address}</etherscanlink>
+      <div if.bind="!!votingMachineInfo">
+        <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
 
         <div class="voting-machine-config">
-          <compose view-model="${'../votingMachineConfiguration/' + model.votingMachineInfo.key}" model.bind="model"></compose>
+          <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineConfig"></compose>
         </div>
       </div>
     </div>
+
+    <div class="form-group fee-input">
+      <label for="fee">Fee</label>
+      <input class="form-control" type='number' id="fee" value.bind="fee"/>
+    </div>
+
   </template>

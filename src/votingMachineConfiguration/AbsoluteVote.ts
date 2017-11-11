@@ -1,10 +1,20 @@
-export class AbsoluteVote  {
+import { VotingMachineConfig } from '../services/VotingMachineService';
+import { TruffleContract } from '../services/ArcService';
+import { Organization } from '../services/OrganizationService';
 
-  model: any;
+export class AbsoluteVote implements VotingMachineConfig  {
 
-  activate(model:any) {
-    model.votePrec = 50;
-    model.ownerVote = true;
-    this.model = model;
+  votePrec = 50;
+  ownerVote = true;
+
+  activate(model) {
+    model.getVoteParametersHash = this.getVoteParametersHash.bind(this);
+  }
+
+  public async getVoteParametersHash(
+    votingMachine: TruffleContract,
+    org: Organization) {
+      
+    return await votingMachine.getParametersHash(org.reputation.address, this.votePrec, this.ownerVote);
   }
 }

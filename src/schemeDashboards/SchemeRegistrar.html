@@ -28,7 +28,7 @@
         <div if.bind="!!schemeToPropose">
           <etherscanlink address=${schemeToPropose.address}>${schemeToPropose.address}</etherscanlink>
           <div class="scheme-config">
-            <compose view-model="${'../schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeParams"></compose>
+            <compose view-model="${'../schemeConfiguration/' + schemeToPropose.key}" model.bind="proposeConfiguration"></compose>
             <button class="btn-submit-proposal" click.delegate="proposeScheme()">Submit Proposal</button>
           </div>
         </div>

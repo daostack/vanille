@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
 import { EventAggregator, includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
-import { VotingMachineService, VotingMachineInfo } from  "../services/VotingMachineService";
+// import { VotingMachineService, VotingMachineInfo } from  "../services/VotingMachineService";
 
 @autoinject
 export class OrganizationService {
@@ -10,7 +10,7 @@ export class OrganizationService {
   constructor(
     private arcService: ArcService
     , private web3: Web3Service
-    , private votingMachineService: VotingMachineService
+    //, private votingMachineService: VotingMachineService
   ) {
     includeEventsIn(this);
   }
@@ -112,17 +112,6 @@ export class OrganizationService {
     return schemes;
   }
 
-  public async getVoteParametersHash(
-    orgAddress: string,
-    votingMachineInfo: VotingMachineInfo,
-    votePrec: Number,
-    ownerVote: boolean) {
-      
-    const org = await this.organizationAt(orgAddress);
-    const reputationAddress = await org.controller.nativeReputation();
-    return await this.votingMachineService.getVoteParametersHash(votingMachineInfo, reputationAddress, votePrec, ownerVote);
-  }
-  
   /*****
    * The following three event methods will be replaced by the event aggregator
    */
@@ -235,3 +224,5 @@ export interface DAO {
   proposeGlobalConstraint(options?);
   vote(proposalId, choice, params);
 }
+
+export {Organization} from './ArcService';

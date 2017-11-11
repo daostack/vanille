@@ -1,9 +1,17 @@
-import { DAO } from "../services/OrganizationService";
+import { SchemeInfo } from  "../services/SchemeService";
+// export class SchemeConfigurationBase implements SchemeConfigurator {
+//   model: any;
 
-export class SchemeConfigurationBase {
-  model: any;
+//   activate(model) {
+//     model.getConfigurationHash = this.getConfigurationHash.bind(this);
+//     this.model = model;
+//   }
+// }
 
-  activate(model) {
-    this.model = model;
-  }
+export interface SchemeConfigurator {
+  /**
+   * subclasses must implement this to return an object with properties that
+   * Arc will map to parameters for the given scheme.
+   */
+  getConfigurationHash(scheme: SchemeInfo, orgAddress: string): Promise<string>;
 }
