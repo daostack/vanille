@@ -1,9 +1,9 @@
-<template bindable="text">
+<template>
   <div class="instructions">
     <table>
       <tr>
         <td><i class="fa fa-info-circle text-info"></i></td>
-        <td class="instructions-body" innerhtml.bind="text | sanitizeHTML"></td>
+        <td class="instructions-body"><slot></slot></td>
       </tr>
     </table>
     <hr/>

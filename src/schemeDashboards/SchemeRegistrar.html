@@ -13,8 +13,8 @@
 
     <div class="tab-pane fade show active" id="ProposeScheme" role="tabpanel" aria-labelledby="propose-tab">
          
-      <instructions text="Add functionality to <span class='org-name'>${orgName}</span> by proposing to add new schemes.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine."></instructions>
+      <instructions>Add functionality to <span class='org-name'>${orgName}</span> by proposing to add new schemes.
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
       
       <form>
         <arc-schemes-dropdown
@@ -36,8 +36,8 @@
     </div>  
 
     <div class="tab-pane fade" id="unProposeScheme" role="tabpanel" aria-labelledby="unpropose-tab">
-      <instructions text="Remove functionality from <span class='org-name'>${orgName}</span> by proposing to remove schemes.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine."></instructions>
+      <instructions>Remove functionality from <span class='org-name'>${orgName}</span> by proposing to remove schemes.
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
       <form>
           <arc-schemes-dropdown
             scheme.bind="schemeToUnPropose"

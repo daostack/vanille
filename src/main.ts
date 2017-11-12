@@ -9,6 +9,7 @@ import  { configure as configureEmergentArc } from 'emergent-arc';
 import { VotingMachineService } from  "./services/VotingMachineService";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
+import "popper.js";
 import 'bootstrap-material-design';
 import { SnackbarService } from "./services/SnackbarService";
 

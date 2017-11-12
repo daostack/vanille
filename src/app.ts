@@ -17,7 +17,7 @@ export class App {
     }
   
   attached() {
-    (<any>$('body')).bootstrapMaterialDesign();
+    (<any>$('body')).bootstrapMaterialDesign({ global: { label: { className: "bmd-label-floating"} } });
   }
     
   configureRouter(config: RouterConfiguration, router: Router) {

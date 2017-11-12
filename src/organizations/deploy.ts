@@ -6,6 +6,7 @@ import { OrganizationService, DAO, Founder } from "../services/OrganizationServi
 import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
+import { SnackbarService } from "../services/SnackbarService";
 
 @autoinject
 export class DeployGen  {
@@ -26,6 +27,7 @@ export class DeployGen  {
   private selectedSchemes: Array<ContractInfo> = [];
   private votingMachineInfo: VotingMachineInfo = null;
   private votingMachineModel:any = {};
+  private myView: any;
 
   constructor(
     private web3: Web3Service
@@ -33,6 +35,7 @@ export class DeployGen  {
     , private organizationService: OrganizationService
     , private tokenService: TokenService
     , private schemeService: SchemeService
+    , private snackbarService: SnackbarService
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
@@ -86,6 +89,7 @@ export class DeployGen  {
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
+      this.snackbarService.handleSuccess("${orgName} has been successfully deployed!");
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;
@@ -100,8 +104,8 @@ export class DeployGen  {
     }
     catch(ex) {
       this.deployOrgStatus= 'error';    
-      // console.log(ex);
       this.addOrgResultMessage= ex;
+      this.snackbarService.handleException(ex);
     }
   }
 
@@ -115,6 +119,9 @@ export class DeployGen  {
   addFounderInput(founder:Founder = { address: null, tokens: 1000, reputation: 1000 }) {
       this.founders.push(founder);
       setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
+      // setTimeout(() => { 
+      //   (<any>$(".founders")).bootstrapMaterialDesign();
+      //  },200);
     }
 
   appendIndex(str:string, ndx:number):string {

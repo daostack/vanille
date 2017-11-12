@@ -3,11 +3,11 @@
 // @import "~bootstrap-sass/utilities/text";
 // @import "~bootstrap-sass/buttons";
 @import "~BMD/core"; 
+@import "~static/base";
 @import "./src/organizations/list";
 @import "./src/home";
 @import "./src/schemeDashboards/schemeDashboard";
 @import "./src/organizations/dashboard";
-@import "~static/base";
 
 .bg-warning {
   background-color: #ff9100 !important; }
@@ -32,4 +32,13 @@ a.text-warning:focus, a.text-warning:hover {
 .snackbar.snack-warning .snackbar-content {
   @extend .bg-warning;
   @extend .text-dark;
+}
+
+/** eliminate the nasty 32 pixel margin that BMD adds **/
+.list-group.clean .list-group-item :first-child {
+  margin-right: unset; // override BMD
+}
+
+.list-group.clean .list-group-item .material-icons:last-child {
+  padding-left: unset !important;
 }

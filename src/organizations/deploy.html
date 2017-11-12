@@ -19,15 +19,15 @@
 
     <section>
       <h4>Basic Information</h4>
-      <div class="form-group"  style="width:400px">
+      <div class="form-group"  style="width:30rem">
         <label for='orgName'>DAO Name</label>
         <input class="form-control" type='text' id='orgName' value.bind='orgName' />
       </div>
-      <div class="form-group" style="width:400px" >
+      <div class="form-group" style="width:20rem" >
         <label for='tokenName'>Token Name</label>
         <input class="form-control" type='text' id='tokenName' value.bind='tokenName' />
     </div>
-    <div class="form-group"  style="width:100px">
+    <div class="form-group"  style="width:8rem">
         <label for='tokenSymbol'>Token Symbol</label>
         <input class="form-control"type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
       </div>
@@ -36,50 +36,66 @@
     <section id="founders">
     <h4>Founders</h4>
 
-    <span class="add-founder">
-      <round-add-button class="founder-add-button" click.delegate='addFounderInput()' data-container="#founders" data-toggle="tooltip" data-trigger="hover" data-placement="right" title="Add a founder"></round-add-button>
-    </span>
-    
-    <ul class="list-group founders">
+<div style="position:relative">
+    <div class="add-founder">
+      <round-add-button 
+        class="founder-add-button" 
+        css="btn-success"
+        click.delegate='addFounderInput()'
+        data-container="#founders"
+        data-toggle="tooltip"
+        data-trigger="hover"
+        data-placement="right"
+        title="Add a founder"></round-add-button>
+    </div>
+</div>
+
+    <ul class="list-group clean founders">
       <li class="list-group-item"  repeat.for='founder of founders'>
         <form class="form-inline">
-        <span if.bind='$index > 0' class="delete-founder">
-            <round-trash-button data-toggle="tooltip" data-placement="left" data-trigger="hover" title="Delete this founder" 
-                class="founder-delete-button"
-                click.delegate='removeFounder($index)'></round-trash-button>
-        </span>
           <div class="form-group">
             <label for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
             <input
               class="form-control" 
-              style="width:400px"
-              placeholder='enter wallet address'
+              style="width:25rem"
               type='text'
               value.bind='founder.address'
               id.bind="appendIndex('founder_address',$index)"
-            />
+              />
+              <!-- show is to workaround BMD bug -->
+              <span class="bmd-help" show.bind="!founder.address" >Enter a wallet address</span>
           </div>
           <div class="form-group">
             <label for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
             <input
-            class="form-control" 
-              style="width:80px" 
-              type='number'
-              value.bind='founder.tokens'
-              id.bind="appendIndex('founder_tokens',$index)"
-            />
+              class="form-control" 
+                style="width:5rem" 
+                type='number'
+                value.bind='founder.tokens'
+                id.bind="appendIndex('founder_tokens',$index)"
+              />
           </div>
           <div class="form-group">
             <label for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
             <input 
             class="form-control" 
-              style="width:80px" 
+              style="width:5rem" 
               type='number'
               value.bind='founder.reputation'
               id.bind="appendIndex('founder_reputation',$index)"
             />
           </div>
         </form>
+        <div if.bind='$index > 0' class="delete-founder">
+            <round-trash-button
+              class="founder-delete-button"
+              css="btn-success"
+              click.delegate='removeFounder($index)'
+              data-toggle="tooltip"
+              data-placement="right"
+              data-trigger="hover"
+              title="Delete this founder"></round-trash-button>
+        </div>
       </li>
     </ul>
   </section>
@@ -108,8 +124,8 @@
   </section>
   
   <div>
-    <div if.bind='!deployOrgStatus'>
-      <p><strong>* Forging a new organization requires the signing of three separate transactions at the moment. So please be patient and make sure to sign all three transactions. </strong></p>
+    <instructions>Forging a new organization requires the signing of several transactions at the moment. So please be patient and make sure to sign all three transactions.</instructions>
+    <div if.bind="deployOrgStatus != 'deploying'">
       <button type='button' class='btn  btn-primary' click.delegate='deploy()'>
         <i class='fa fa-rocket'></i> Deploy Organization
       </button>
@@ -131,9 +147,9 @@
     <div if.bind="deployOrgStatus === 'deployed'">
       <h4>Congratulations! ${orgName} has been successfully deployed! Check it out in the <a route-href='route: organizations' >Organization Index</a>.</h4>
     </div>
-    <div if.bind="deployOrgStatus === 'error'">
+    <!-- <div if.bind="deployOrgStatus === 'error'">
       <h4>Sorry! An error occurred adding ${orgName}: ${addOrgResultMessage}.</h4>
-    </div>
+    </div> -->
   </div>
   </div>
 
