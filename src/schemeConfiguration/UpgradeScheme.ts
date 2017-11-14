@@ -23,7 +23,7 @@ export class UpgradeScheme implements SchemeConfigurator  {
 
   async getConfigurationHash(scheme: SchemeInfo, orgAddress: string): Promise<any> {
 
-    const voteParamsHash = await this.votingMachineService.getVoteParametersHash(
+    const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
         orgAddress,
         this.votingMachineInfo,
         this.votingMachineConfig);

@@ -89,7 +89,7 @@ export class DeployGen  {
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
-      this.snackbarService.handleSuccess("${orgName} has been successfully deployed!");
+      this.snackbarService.handleSuccess(`${this.orgName} has been successfully deployed!`);
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;

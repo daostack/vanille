@@ -3,45 +3,57 @@
   <div class="arc-constraint-dashboard">
     <ul class="nav nav-tabs constraint-tabs" role="tablist">
       <li class="nav-item">
-          <a class="nav-link active" href="#ProposeConstraint" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Global Constraint</a>
+          <a class="nav-link active" href="#constraintToAdd" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose" aria-selected="false">Propose to Add Global Constraint</a>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="#unProposeConstraint" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Global Constraint</a>
+          <a class="nav-link" href="#constraintToRemove" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose" aria-selected="false">Propose to Remove Global Constraint</a>
         </li>
     </ul>
       
     <div class="tab-content">
 
-      <div class="tab-pane fade show active" id="ProposeConstraint" role="tabpanel" aria-labelledby="propose-tab">
+      <div class="tab-pane fade show active" id="constraintToAdd" role="tabpanel" aria-labelledby="propose-tab">
           
         <instructions>Propose to add new global constraints to <span class='org-name'>${orgName}</span>.
           After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
           
         <form>
-          <global-constraints-dropdown constraint.bind="constraintToPropose">
-          <span slot="buttonText"><span class="font-weight-bold">${constraintToPropose ? constraintToPropose.name : 'Select Global Constraint'}</span></span>
+          <global-constraints-dropdown constraint.bind="constraintToAddInfo">
+          <span slot="buttonText"><span class="font-weight-bold">${constraintToAddInfo ? constraintToAddInfo.name : 'Select Global Constraint'}</span></span>
         </global-constraints-dropdown>
 
-        <div if.bind="!!constraintToPropose">
-            <etherscanlink address=${constraintToPropose.address}>${constraintToPropose.address}</etherscanlink>
+        <div if.bind="!!constraintToAddInfo">
+            <etherscanlink address=${constraintToAddInfo.address}>${constraintToAddInfo.address}</etherscanlink>
             <div class="global-constraint-config">
-              <compose view-model="${'../globalConstraintConfiguration/' + constraintToPropose.key}" model.bind="proposeConfiguration"></compose>
-              <button class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
+              <compose view-model="${'../globalConstraintConfiguration/' + constraintToAddInfo.key}" model.bind="constraintToAddConfig"></compose>
             </div>
           </div>
+
+        <div class="form-group">
+          <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown><span style="padding-left: 1rem">(for removal of the constraint)</span>
+
+          <div if.bind="!!votingMachineInfo">
+            <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
+            <div class="voting-machine-config">
+              <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineConfig"></compose>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
         </form>
       </div>  
 
-      <div class="tab-pane fade" id="unProposeConstraint" role="tabpanel" aria-labelledby="unpropose-tab">
+      <div class="tab-pane fade" id="constraintToRemove" role="tabpanel" aria-labelledby="unpropose-tab">
         <instructions>Remove global constraints from <span class='org-name'>${orgName}</span>.
           After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
         <form>
-            <global-constraints-dropdown constraint.bind="constraintToUnPropose" >
-              <span slot="buttonText"><span class="font-weight-bold">${constraintToUnPropose ? constraintToUnPropose.name : 'Select Constraint to Remove'}</span></span>
+            <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" >
+              <span slot="buttonText"><span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.name : 'Select Constraint to Remove'}</span></span>
             </global-constraints-dropdown>
 
-          <div if.bind="!!constraintToUnPropose">
-              <etherscanlink address=${constraintToUnPropose.address}>${constraintToUnPropose.address}</etherscanlink>
+          <div if.bind="!!constraintToRemoveInfo">
+              <etherscanlink address=${constraintToRemoveInfo.address}>${constraintToRemoveInfo.address}</etherscanlink>
              <div class="mt-3"><button class="btn-submit-proposal" click.delegate="unProposeConstraint()">Submit Proposal</button></div>
           </div>
         </form>

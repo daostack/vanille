@@ -19,7 +19,7 @@ constructor(
     this.defaultMachine = this.votingMachines.filter((vm) => vm.key === "AbsoluteVote")[0];
   }
 
-  public async getVoteParametersHash(
+  public async getVotingMachineConfigHash(
     orgAddress: string,
     votingMachineInfo: VotingMachineInfo,    // ContractInfo
     votingMachineConfig: VotingMachineConfig // Knows how to compute the hash
@@ -27,7 +27,7 @@ constructor(
       
     const org = await this.organizationService.organizationAt(orgAddress);
     const votingMachine = await this.arcService.getContract(votingMachineInfo.key);
-    return await votingMachineConfig.getVoteParametersHash(votingMachine, org);
+    return await votingMachineConfig.getHash(votingMachine, org);
   }
 
   public defaultMachine: VotingMachineInfo;
@@ -37,5 +37,5 @@ export class VotingMachineInfo extends ContractInfo {
 }
 
 export interface VotingMachineConfig {
-  getVoteParametersHash(votingMachine: TruffleContract, org: Organization);
+  getHash(votingMachine: TruffleContract, org: Organization);
 }

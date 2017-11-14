@@ -38,7 +38,7 @@ export class SnackbarService {
 
   public handleException(ex) {
     let message = ex.message;
-    this.logger.error(`${message}\n{$ex.stack}`);
+    this.logger.error(`${message}\n${ex.stack}`);
     (<any>$).snackbar({
       timeout: this.timeout,
       style: "snack-failure",

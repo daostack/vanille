@@ -28,14 +28,14 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   async proposeScheme() {
   
     try {
-      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+      const scheme = await this.arcService.getContract("SchemeRegistrar");
       const schemeInfo = this.schemeToPropose;
       const parametersHash = await this.proposeConfiguration.getConfigurationHash(schemeInfo, this.orgAddress);
       const permissions = await this.schemeService.getSchemePermissions(schemeInfo);
       const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(schemeInfo);
       const fee = await this.schemeService.getSchemeFee(schemeInfo);
 
-      const tx = await schemeRegistrar.proposeScheme(
+      const tx = await scheme.proposeScheme(
         this.orgAddress,
         schemeInfo.address,
         parametersHash,

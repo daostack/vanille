@@ -7,13 +7,13 @@ export class AbsoluteVote implements VotingMachineConfig  {
   model: any;
 
   activate(model) {
-    model.getVoteParametersHash = this.getVoteParametersHash.bind(this);
+    model.getHash = this.getHash.bind(this);
     model.votePrec = model.votePrec !== undefined ? model.votePrec : 50;
     model.ownerVote = model.ownerVote !== undefined ? model.ownerVote : true;
     this.model = model;
   }
 
-  public async getVoteParametersHash(
+  public async getHash(
     votingMachine: TruffleContract,
     org: Organization) {
       

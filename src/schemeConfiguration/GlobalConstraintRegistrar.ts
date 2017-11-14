@@ -26,7 +26,7 @@ export class GlobalConstraintRegistrar implements SchemeConfigurator  {
 
     const votingMachineInfo = this.votingMachineInfo;
 
-    const voteParamsHash = await this.votingMachineService.getVoteParametersHash(
+    const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
         orgAddress,
         votingMachineInfo,
         this.votingMachineConfig);
