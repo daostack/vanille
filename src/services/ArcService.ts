@@ -1,10 +1,14 @@
 // import { autoinject } from "aurelia-framework";
-import  { Organization
+import  { 
+      Organization
+    , ArcDeployedContractKeys
+    , ArcContractInfo
+    , ArcDeployedContracts
     , getDefaultAccount
     , configure as configureArc
     , getDeployedContracts
     , getValueFromLogs
-    , requireContract } from 'emergent-arc';
+    , requireContract } from 'daostack-arc';
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
 import * as Web3 from "web3";
@@ -21,7 +25,7 @@ export class ArcService {
   /**
    * The schemes managed by Arc
    */
-  public arcContracts: ArcContracts;
+  public arcContracts: ArcDeployedContractKeys;
   public arcSchemes: Array<ContractInfo>;
   public arcVotingMachines: Array<ContractInfo>;
   public arcGlobalConstraints: Array<ContractInfo>;
@@ -36,10 +40,10 @@ export class ArcService {
 
   public async initialize() {
       /**
-       * Emergent-Arc's dependencies on contract json (artifact) files are manually defined
+       * Daostack-Arc's dependencies on contract json (artifact) files are manually defined
        * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
        */
-      let arcSettings = await getDeployedContracts() as ArcSettings;
+      let arcSettings = await getDeployedContracts();
       let arcContracts = arcSettings.allContracts;
 
       for(let contractName in arcContracts) {
@@ -48,9 +52,9 @@ export class ArcService {
       }
 
       this.arcContracts = arcContracts;
-      this.arcSchemes = arcSettings.schemes;
-      this.arcVotingMachines = arcSettings.votingMachines;
-      this.arcGlobalConstraints = [this.arcContracts.TokenCapGC]; // TODO:  should be arcSettings.globalConstraints;
+      this.arcSchemes = (<any>arcSettings.schemes) as Array<ContractInfo>;
+      this.arcVotingMachines = (<any>arcSettings.votingMachines) as Array<ContractInfo>;
+      this.arcGlobalConstraints = (<any>arcSettings.globalConstraints) as Array<ContractInfo>;
 
       for(var key in this.arcContracts) {
         var contract = this.arcContracts[key];
@@ -129,53 +133,23 @@ export class ArcService {
   }
 }
 
-interface ArcSettings {
-  allContracts: ArcContracts;
-  // is actually ArcContractInfo until we add the addtional properties in initialize()
-  schemes: Array<ContractInfo>;
-  // is actually ArcContractInfo until we add the addtional properties in initialize()
-  votingMachines: Array<ContractInfo>
-}
-
-export interface ArcContracts {
-    SimpleContributionScheme: ContractInfo;
-    GenesisScheme: ContractInfo;
-    GlobalConstraintRegistrar: ContractInfo;
-    SchemeRegistrar: ContractInfo;
-    SimpleICO: ContractInfo;
-    TokenCapGC: ContractInfo;
-    UpgradeScheme: ContractInfo;
-    AbsoluteVote: ContractInfo;
-    // DAOToken: ContractInfo;
-    // MintableToken: ContractInfo;
-}
-
-/**
- * this is what we get from Arc
- */
-export class ArcContractInfo {
-  /**
-   * TruffleContract obtained via require()
-   */
-  contract: TruffleContract;
-  address: string;
-}
-
 /**
  * what we get from Arc, plus some
  */
-export class ContractInfo extends ArcContractInfo {
+export class ContractInfo implements ArcContractInfo {
+    contract: any;
+    address: string;
     /**
      * Pretty name
      */
     name: string;
     /**
-     * short name (property name in ArcDeployedContracts).
+     * short name (property name in ArcContracts).
      */
     key: string;
 }
 
-export { Organization } from 'emergent-arc'; 
+export { Organization } from 'daostack-arc'; 
 export { TruffleContract } from 'truffle-contract';
 
 // export {GenesisScheme};

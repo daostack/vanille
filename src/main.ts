@@ -5,7 +5,7 @@ import { OrganizationService } from './services/OrganizationService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import  { configure as configureEmergentArc } from 'emergent-arc';
+import  { configure as configureDAOstackArc } from 'daostack-arc';
 import { VotingMachineService } from  "./services/VotingMachineService";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -21,9 +21,9 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration();
 
-  if (process.env.ENV == "development") {
+  // for now, always on for trouble-shooting:  if (process.env.ENV == "development") {
       aurelia.use.developmentLogging();
-  }    
+  // }
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));
@@ -71,7 +71,7 @@ export async function configure(aurelia: Aurelia) {
 
   try {
 
-    const web3 = configureEmergentArc({
+    const web3 = configureDAOstackArc({
       /**
        * EmergentArc must be initialized prior to 
        * ETH_ENV is supplied by webpack.

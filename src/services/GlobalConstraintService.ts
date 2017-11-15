@@ -15,7 +15,7 @@ constructor(
   , private organizationService: OrganizationService
 ) {
     this.globalConstraints = this.arcService.arcGlobalConstraints;
-    // TODO: should come from arcService or emergent-arc
+    // TODO: should come from arcService or daostack-arc
     this.defaultConstraint = this.globalConstraints.filter((vm) => vm.key === "TokenCapGC")[0];
   }
 
