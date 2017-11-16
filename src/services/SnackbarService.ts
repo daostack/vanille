@@ -27,7 +27,7 @@ export class SnackbarService {
   }
 
   public handleSuccess(message: string) {
-    this.logger.info(message);
+    this.logger.debug(message);
     (<any>$).snackbar({
       timeout: this.timeout,
       style: "snack-info",
@@ -58,7 +58,7 @@ export class SnackbarService {
   }
 
   public handleWarning(message: string) {
-    this.logger.info(message);
+    this.logger.debug(message);
     (<any>$).snackbar({
       timeout: this.timeout,
       style: "snack-warning",

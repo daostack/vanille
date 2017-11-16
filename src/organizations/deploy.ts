@@ -6,7 +6,7 @@ import { OrganizationService, DAO, Founder } from "../services/OrganizationServi
 import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
-import { SnackbarService } from "../services/SnackbarService";
+import { EventAggregator  } from 'aurelia-event-aggregator';
 
 @autoinject
 export class DeployGen  {
@@ -35,7 +35,7 @@ export class DeployGen  {
     , private organizationService: OrganizationService
     , private tokenService: TokenService
     , private schemeService: SchemeService
-    , private snackbarService: SnackbarService
+    , private eventAggregator: EventAggregator
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
@@ -89,7 +89,7 @@ export class DeployGen  {
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
-      this.snackbarService.handleSuccess(`${this.orgName} has been successfully deployed!`);
+       this.eventAggregator.publish("handleSuccess", `${this.orgName} has been successfully deployed!`);
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;
@@ -105,7 +105,7 @@ export class DeployGen  {
     catch(ex) {
       this.deployOrgStatus= 'error';    
       this.addOrgResultMessage= ex;
-      this.snackbarService.handleException(ex);
+       this.eventAggregator.publish("handleException", ex);
     }
   }
 

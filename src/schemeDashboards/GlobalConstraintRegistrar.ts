@@ -36,7 +36,7 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
          globalConstraintConfigHash,
          contrainRemovalVotingMachineInfoHash);
       
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+       this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.constraintToAddInfo.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
@@ -50,7 +50,7 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
 
       let tx = await scheme.proposeToRemoveGC(this.orgAddress, this.constraintToRemoveInfo.address);
       
-      this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+      this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

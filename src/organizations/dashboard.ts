@@ -39,7 +39,7 @@ export class DAODashboard {
 
     await this.loadSchemes();
 
-    this.subscription = this.organizationService.subscribe(OrganizationService.daoSchemeSetChangedEvent, (dao, schemes) => 
+    this.subscription = this.organizationService.subscribe(OrganizationService.daoSchemeSetChangedEvent, ({ dao, schemes }) => 
     {
       if (dao.address === this.address) {
         this.loadSchemes();

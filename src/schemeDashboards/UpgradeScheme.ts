@@ -25,7 +25,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme");
       let tx = await scheme.proposeUpgrade(this.orgAddress, this.controllerAddress);
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+       this.eventAggregator.publish("handleSuccess", `Proposal submitted to change controller to ${this.controllerAddress}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
@@ -45,7 +45,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
 
       //   );
-      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

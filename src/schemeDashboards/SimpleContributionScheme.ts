@@ -30,15 +30,15 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
       let tx = await scheme.submitContribution( {
           avatar: this.orgAddress,
           description: this.description,
-          nativeTokenReward: this.nativeTokenReward,
-          reputationReward: this.reputationTokenReward,
-          ethReward: this.ethReward,
-          externalToken: this.externalTokenAddress,
-          externalTokenReward: this.externalTokenReward,
+          nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
+          reputationReward: this.reputationTokenReward, // amount of contribution to reputation
+          ethReward: this.ethReward, // amount of contribution in ethers
+          externalToken: this.externalTokenAddress, 
+          externalTokenReward: this.externalTokenReward, // amount of contribution in terms of the given external token
           beneficiary: this.beneficiaryAddress
         }
       );
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+       this.eventAggregator.publish("handleSuccess", `Proposal submitted for contribution to ${this.beneficiaryAddress}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
