@@ -44,6 +44,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/round-remove-button.html"),
     PLATFORM.moduleName("resources/customElements/round-trash-button.html"),
     PLATFORM.moduleName("resources/customElements/round-dashboard-button.html"),
+    PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("resources/customElements/instructions.html"),
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
     PLATFORM.moduleName("resources/customAttributes/blur-image"),

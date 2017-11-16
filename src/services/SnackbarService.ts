@@ -23,7 +23,28 @@ export class SnackbarService {
     this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (message) => this.handleSuccess(message)));
     this.subscriptions.push(eventAggregator.subscribe("handleWarning", (message) => this.handleWarning(message)));
     this.subscriptions.push(eventAggregator.subscribe("handleFailure", (message) => this.handleFailure(message)));
-    this.subscriptions.push(eventAggregator.subscribe("showMessage", (message) => this.handleSuccess(message)));
+    this.subscriptions.push(eventAggregator.subscribe("showMessage", (config: ShowMessageEventConfig | string) => this.showMessage(config)));
+  }
+
+  public showMessage(config: ShowMessageEventConfig | string) {
+    let message:string;
+    let duration;
+
+    if (typeof(config) == "string") {
+      message = config;
+      duration = 3000;
+    } else {
+      message = config.message;
+      duration = (config.duration === undefined) ? 3000 : config.duration;
+    }
+
+    this.logger.info(message);
+    (<any>$).snackbar({
+      timeout: duration,
+      style: "snack-info",
+      content: message,
+      htmlAllowed: this.htmlAllowed
+    });
   }
 
   public handleSuccess(message: string) {
@@ -66,4 +87,9 @@ export class SnackbarService {
       htmlAllowed: this.htmlAllowed
     });
   }
+}
+
+export interface ShowMessageEventConfig {
+  message: string;
+  duration: Number; // in milliseconds, default 3000, 0 for never
 }
