@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import {OrganizationService, Organization } from './OrganizationService';
+import {OrganizationService, DAO } from './OrganizationService';
 
 @autoinject
 export class GlobalConstraintService {
@@ -37,5 +37,5 @@ export class GlobalConstraintInfo extends ContractInfo {
 }
 
 export interface GlobalConstraintConfig {
-  getHash(globalConstraintInfo: GlobalConstraintInfo, org: Organization);
+  getHash(globalConstraintInfo: GlobalConstraintInfo, org: DAO);
 }

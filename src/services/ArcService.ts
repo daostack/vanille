@@ -39,32 +39,41 @@ export class ArcService {
   public get defaultAccount(): string { return getDefaultAccount(); }
 
   public async initialize() {
-      /**
-       * Daostack-Arc's dependencies on contract json (artifact) files are manually defined
-       * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
-       */
-      let arcSettings = await getDeployedContracts();
-      let arcContracts = arcSettings.allContracts;
+    /**
+     * Daostack-Arc's dependencies on contract json (artifact) files are manually defined
+     * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
+     */
+    let arcSettings = await getDeployedContracts();
+    let arcContracts = arcSettings.allContracts;
 
-      for(let contractName in arcContracts) {
-        arcContracts[contractName].name = this.convertKeyToFriendlyName(contractName);
-        arcContracts[contractName].key = contractName;
-      }
-
-      this.arcContracts = arcContracts;
-      this.arcSchemes = (<any>arcSettings.schemes) as Array<ContractInfo>;
-      this.arcVotingMachines = (<any>arcSettings.votingMachines) as Array<ContractInfo>;
-      this.arcGlobalConstraints = (<any>arcSettings.globalConstraints) as Array<ContractInfo>;
-
-      for(var key in this.arcContracts) {
-        var contract = this.arcContracts[key];
-        this.arcContractMap.set(contract.address, contract);
-      }
-
-      // console.log(this.arcContracts);
-      // each property is a contractInfo
+    for(let contractName in arcContracts) {
+      arcContracts[contractName].name = this.convertKeyToFriendlyName(contractName);
+      arcContracts[contractName].key = contractName;
     }
+
+    this.arcContracts = arcContracts;
+    this.arcSchemes = (<any>arcSettings.schemes) as Array<ContractInfo>;
+    this.arcVotingMachines = (<any>arcSettings.votingMachines) as Array<ContractInfo>;
+    this.arcGlobalConstraints = (<any>arcSettings.globalConstraints) as Array<ContractInfo>;
+
+    for(var key in this.arcContracts) {
+      var contract = this.arcContracts[key];
+      this.arcContractMap.set(contract.address, contract);
+    }
+
+    // console.log(this.arcContracts);
+    // each property is a contractInfo
+  }
   
+  public contractInfoFromKey(key:string): ContractInfo {
+    return this.arcContracts[key] as ContractInfo;
+  }
+
+  public contractInfoFromAddress(address:string): ContractInfo {
+    return this.arcContractMap.get(address) as ContractInfo;
+  }
+
+
   public async getContract(key: string, at?: string): Promise<TruffleContract> {
 
     /**
@@ -77,7 +86,7 @@ export class ArcService {
      * You can call .at() without having called .deployed() if you already have the address.
      * The contracts in arcContracts are all the result of require()
      */
-    let contractInfo = this.arcContracts[key];
+    let contractInfo = this.contractInfoFromKey(key);
     let contract;
     if (contractInfo !== undefined) {
       if (!at) {
@@ -115,7 +124,8 @@ export class ArcService {
     try {
       return getValueFromLogs(tx, argName, eventName, index);
     } catch(ex) {
-      this.logger.error(`${ex.message}\n${ex.stack}`);
+      let message = ex.message ? ex.message : ex;
+      this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
       return "[not found]";
       // console.log(`${ex.message}\n{$ex.stack}`);
       // console.log(tx);

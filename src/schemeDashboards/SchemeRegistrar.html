@@ -44,7 +44,6 @@
             dao-address.bind="orgAddress"
             schemes.bind="allSchemes"
             exclude-un-registered.bind="true"
-            exclude-keys="${[key]}"
             >
             <span slot="noSchemes"><span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
             <span slot="buttonText"><span class="font-weight-bold">${schemeToUnPropose ? schemeToUnPropose.name : 'Select Scheme to Remove'}</span></span>

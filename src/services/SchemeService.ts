@@ -62,7 +62,7 @@ export class SchemeService {
     return schemes;
   }
   
-  public async getSchemePermissions(schemeInfo: SchemeInfo): Promise<Permissions> {
+  public async getSchemePermissions(schemeInfo: ContractInfo): Promise<Permissions> {
       const contract = await this.arcService.getContract(schemeInfo.key);
       const permissions = contract.getDefaultPermissions();
       return ToPermissionsEnum(permissions);
@@ -72,17 +72,17 @@ export class SchemeService {
      * Set the parameters on the scheme.  Returns hash.
      * @param params 
      */
-    public async setSchemeParameters(schemeInfo: SchemeInfo, params: any): Promise<string> {
+    public async setSchemeParameters(schemeInfo: ContractInfo, params: any): Promise<string> {
       const contract = await this.arcService.getContract(schemeInfo.key);
       return await contract.setParams(params);
     }
 
-    public async getSchemeNativeToken(schemeInfo: SchemeInfo): Promise<TruffleContract> {
+    public async getSchemeNativeToken(schemeInfo: ContractInfo): Promise<TruffleContract> {
       const contract = await this.arcService.getContract(schemeInfo.key);
       return await contract.nativeToken();
     }
 
-    public async getSchemeFee(schemeInfo: SchemeInfo): Promise<Number> {
+    public async getSchemeFee(schemeInfo: ContractInfo): Promise<Number> {
       const contract = await this.arcService.getContract(schemeInfo.key);
       return await contract.fee();
     }
@@ -96,14 +96,14 @@ export class SchemeService {
  */
 export class SchemeInfo extends DaoSchemeInfo {
 
-  public static fromDaoSchemeInfo(daoSchemeInfo: DaoSchemeInfo) {
+  public static fromDaoSchemeInfo(daoSchemeInfo: DaoSchemeInfo): SchemeInfo {
     let schemeInfo = new SchemeInfo();
     Object.assign(schemeInfo, daoSchemeInfo);
     schemeInfo.isRegistered = true;
     return schemeInfo;
   }
 
-  public static fromContractInfo(contractInfo: ContractInfo, isRegistered: boolean) {
+  public static fromContractInfo(contractInfo: ContractInfo, isRegistered: boolean): SchemeInfo {
     let schemeInfo = new SchemeInfo();
     Object.assign(schemeInfo, contractInfo);
     schemeInfo.isRegistered = isRegistered;
@@ -114,3 +114,5 @@ export class SchemeInfo extends DaoSchemeInfo {
   public get inDao() { return this.isRegistered; }
   public get inArc() { return !!this.key; }
 }
+
+export { ContractInfo } from "./ArcService";

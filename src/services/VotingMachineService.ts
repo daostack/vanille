@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import {OrganizationService, Organization } from './OrganizationService';
+import {OrganizationService, DAO } from './OrganizationService';
 
 @autoinject
 export class VotingMachineService {
@@ -37,5 +37,5 @@ export class VotingMachineInfo extends ContractInfo {
 }
 
 export interface VotingMachineConfig {
-  getHash(votingMachine: TruffleContract, org: Organization);
+  getHash(votingMachine: TruffleContract, org: DAO);
 }

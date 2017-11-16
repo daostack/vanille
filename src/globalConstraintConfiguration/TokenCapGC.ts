@@ -1,6 +1,6 @@
 import { GlobalConstraintConfig } from "../services/GlobalConstraintService";
 import { TruffleContract } from '../services/ArcService';
-import { Organization } from '../services/OrganizationService';
+import { DAO } from '../services/OrganizationService';
 
 export class TokenCapGC implements GlobalConstraintConfig   {
 
@@ -12,7 +12,7 @@ export class TokenCapGC implements GlobalConstraintConfig   {
     this.model = model;
   }
 
-  public async getHash(globalConstraint: TruffleContract, org: Organization) {
+  public async getHash(globalConstraint: TruffleContract, org: DAO) {
     return await globalConstraint.getParametersHash(org.token.address, this.model.cap);
   }
 

@@ -1,6 +1,6 @@
 import { VotingMachineConfig } from '../services/VotingMachineService';
 import { TruffleContract } from '../services/ArcService';
-import { Organization } from '../services/OrganizationService';
+import { DAO } from '../services/OrganizationService';
 
 export class AbsoluteVote implements VotingMachineConfig  {
 
@@ -15,7 +15,7 @@ export class AbsoluteVote implements VotingMachineConfig  {
 
   public async getHash(
     votingMachine: TruffleContract,
-    org: Organization) {
+    org: DAO) {
       
     return await votingMachine.getParametersHash(org.reputation.address, this.model.votePrec, this.model.ownerVote);
   }

@@ -17,15 +17,7 @@ export class DAODashboard {
   private unregisteredArcSchemes: Array<SchemeInfo>;
   private nonArcSchemes: Array<SchemeInfo>;
   private arcSchemes: Array<SchemeInfo>;
-  // false if adding
-  // private state: State = State.Neither;
-  // private currentScheme: DaoSchemeInfo;
-
-  // @computedFrom("state")
-  // private get using() { return this.state === State.Using; }
-
-  // @computedFrom("state")
-  // private get adding() { return this.state === State.Adding; }
+  private subscription;
 
   constructor(
     private organizationService: OrganizationService
@@ -44,6 +36,32 @@ export class DAODashboard {
     let token = this.org.token;
     this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
+
+    await this.loadSchemes();
+
+    this.subscription = this.organizationService.subscribe(OrganizationService.daoSchemeSetChangedEvent, (dao, schemes) => 
+    {
+      if (dao.address === this.address) {
+        this.loadSchemes();
+      }
+    });
+  }
+
+  deactivate() {
+    this.subscription.dispose();
+    this.subscription = null;
+  }
+
+  attached() {
+    ($(".scheme-use-button") as any).tooltip();
+    // workaround for accordian behavior not working.  Check to see if it's fixed when the
+    // final version 4 is released
+    $('.collapse').on('show.bs.collapse', () =>  {
+      ($('.collapse') as any).collapse("hide");
+    });
+  }
+
+  async loadSchemes() {
     /**
      * Get all schemes associated with the DAO.  These can include non-Arc schemes.
      */
@@ -56,17 +74,6 @@ export class DAODashboard {
     this.unregisteredArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc && !s.inDao);
     this.nonArcSchemes =          Array.from(schemes).filter((s: SchemeInfo) => !s.inArc);
     this.arcSchemes =             Array.from(schemes).filter((s: SchemeInfo) => s.inArc);
-  }
-
-  attached() {
-    ($(".scheme-use-button") as any).tooltip();
-    // workaround for accordian behavior not working.  Check to see if it's fixed when the
-    // final version 4 is released
-    $('.collapse').on('show.bs.collapse', () =>  {
-      ($('.collapse') as any).collapse("hide");
-    });
-
-    // $("<hr/>").insertAfter(".instructions");
   }
 
   useScheme(scheme: SchemeInfo) {
@@ -92,10 +99,4 @@ export class DAODashboard {
   schemeDashboardViewModel(scheme: SchemeInfo): any {
       return Object.assign({}, { org: this.org, orgName: this.orgName, orgAddress: this.address, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes }, scheme )
   }
-}
-
-enum State {
-  Neither,
-  Adding,
-  Using
 }

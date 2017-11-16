@@ -1,6 +1,6 @@
 import { bindable } from 'aurelia-framework';
 import { SchemeConfigurator} from './schemeConfigurationBase';
-import { SchemeService, SchemeInfo } from '../services/SchemeService';
+import { SchemeService, ContractInfo } from '../services/SchemeService';
 
 /**
  * NOT CURRENTLY IN USE, JUST HERE BECAUSE I WROTE IT ACCIDENTALLY AND IT MIGHT SOMEDAY BE USEFUL
@@ -23,7 +23,7 @@ export class SchemeRegistrar implements SchemeConfigurator  {
       model.getConfigurationHash = this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(scheme: SchemeInfo, orgAddress: string): Promise<any> {
+  async getConfigurationHash(scheme: ContractInfo, orgAddress: string): Promise<any> {
     return await this.schemeService.setSchemeParameters(scheme, {
       cap: this.cap
       , price: this.price

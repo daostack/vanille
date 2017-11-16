@@ -2,20 +2,20 @@ import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
+import { SchemeService, ContractInfo } from '../services/SchemeService';
 
 @autoinject
 export class UpgradeScheme extends DaoSchemeDashboard {
 
   controllerAddress: string;
   upgradingSchemeAddress: string;
-  upgradingSchemeParams:any = {};
+  upgradingSchemeConfig:any = {};
   upgradingSchemeFee:Number = 0;
 
   constructor(
-    // private schemeService: SchemeService
-    // , private arcService: ArcService
+      private schemeService: SchemeService
     // , private organizationService: OrganizationService
-    private eventAggregator: EventAggregator
+    , private eventAggregator: EventAggregator
     , private arcService: ArcService
   ) {
     super();
@@ -35,12 +35,17 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   async submitUpgradingScheme() {
     try {
       // const upgradeScheme = await this.arcService.getContract("UpgradeScheme");
+      // const contractInfo = this.arcService.contractInfoFromKey("UpgradeScheme");
+      // const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo);
+      // const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(contractInfo, this.orgAddress);
+
       // let tx = await upgradeScheme.proposeChangeUpgradingScheme(
       //   this.orgAddress,
       //   this.upgradingSchemeAddress,
 
+
       //   );
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
+      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

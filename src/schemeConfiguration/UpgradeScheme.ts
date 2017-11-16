@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { SchemeConfigurator} from './schemeConfigurationBase';
 import { VotingMachineService, VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { SchemeService, SchemeInfo } from '../services/SchemeService';
+import { SchemeService, ContractInfo } from '../services/SchemeService';
 
 @autoinject
 export class UpgradeScheme implements SchemeConfigurator  {
@@ -21,7 +21,7 @@ export class UpgradeScheme implements SchemeConfigurator  {
       model.getConfigurationHash = this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(scheme: SchemeInfo, orgAddress: string): Promise<any> {
+  async getConfigurationHash(scheme: ContractInfo, orgAddress: string): Promise<any> {
 
     const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
         orgAddress,
