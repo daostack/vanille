@@ -7,6 +7,7 @@ import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
 import { EventAggregator  } from 'aurelia-event-aggregator';
+import { Router } from 'aurelia-router';
 
 @autoinject
 export class DeployGen  {
@@ -36,6 +37,7 @@ export class DeployGen  {
     , private tokenService: TokenService
     , private schemeService: SchemeService
     , private eventAggregator: EventAggregator
+    , private router: Router
   ) {
       this.userAddress = arcService.defaultAccount;
       this.founders = new Array();
@@ -77,6 +79,7 @@ export class DeployGen  {
     this.deployOrgStatus = 'deploying';
     this.addOrgResultMessage= 'adding_org';
     try {
+
       const organization = await this.organizationService.createOrganization({
         orgName: this.orgName,
         tokenName: this.tokenName,
@@ -89,7 +92,12 @@ export class DeployGen  {
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
-       this.eventAggregator.publish("handleSuccess", `${this.orgName} has been successfully deployed!`);
+      this.eventAggregator.publish("handleSuccess", 
+        { 
+          message: `${this.orgName} has been successfully deployed!`,
+          action: () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); },
+          actionText: "See It Now"
+        });
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;

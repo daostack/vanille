@@ -1,0 +1,29 @@
+
+.snackbar.snack-failure .snackbar-content {
+  @extend .bg-danger;
+}
+
+.snackbar.snack-info .snackbar-content {
+  @extend .bg-info;
+}
+.snackbar.snack-warning .snackbar-content {
+  @extend .bg-warning;
+  @extend .text-dark;
+}
+
+.snackbar-message-text {
+
+}
+
+.snackbar-action-wrapper button {
+  color: $gray-700;
+  padding:.25rem;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-left: .5rem;  
+}
+
+.snackbar-action-wrapper button:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}

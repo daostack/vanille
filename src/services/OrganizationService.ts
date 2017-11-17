@@ -52,7 +52,9 @@ export class OrganizationService {
 
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
-    return <DAO>(await Organization.new(config) as any);
+    let dao = <DAO>(await Organization.new(config) as any);
+    this.daoCache.set(dao.address,dao);
+    return dao;
   }
 
   public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {

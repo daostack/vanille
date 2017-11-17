@@ -9,6 +9,7 @@
 @import "./src/schemeDashboards/schemeDashboard";
 @import "./src/organizations/dashboard";
 @import "./src/resources/customElements/copyToClipboardButton/copyToClipboardButton";
+@import "./src/services/snackbarService";
 
 .bg-warning {
   background-color: #ff9100 !important; }
@@ -21,19 +22,6 @@ a.bg-warning:focus, a.bg-warning:hover {
 
 a.text-warning:focus, a.text-warning:hover {
   color: #ff6d00 !important; }
-
-.snackbar.snack-failure .snackbar-content {
-  @extend .bg-danger;
-}
-
-.snackbar.snack-info .snackbar-content {
-  @extend .bg-info;
-}
-
-.snackbar.snack-warning .snackbar-content {
-  @extend .bg-warning;
-  @extend .text-dark;
-}
 
 /** eliminate the nasty 32 pixel margin that BMD adds **/
 .list-group.clean .list-group-item :first-child {
