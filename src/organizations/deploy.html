@@ -71,7 +71,7 @@
               class="form-control" 
                 style="width:5rem" 
                 type='number'
-                value.bind='founder.tokens'
+                value.bind='founder.tokensUI'
                 id.bind="appendIndex('founder_tokens',$index)"
               />
           </div>
@@ -81,12 +81,12 @@
             class="form-control" 
               style="width:5rem" 
               type='number'
-              value.bind='founder.reputation'
+              value.bind='founder.reputationUI'
               id.bind="appendIndex('founder_reputation',$index)"
             />
           </div>
         </form>
-        <div if.bind='$index > 0' class="delete-founder">
+        <div if.bind='founders.length > 1' class="delete-founder">
             <round-trash-button
               class="founder-delete-button"
               css="btn-success"

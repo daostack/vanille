@@ -12,7 +12,7 @@ import { EventAggregator  } from 'aurelia-event-aggregator';
 export class DeployGen  {
 
   private userAddress: any;
-  private founders: Array<Founder>;
+  private founders: Array<MyFounder>;
   private ethBalance:number = null;
   private tknBalance:number = null;
   private controllerAddrss= '';
@@ -60,7 +60,7 @@ export class DeployGen  {
   }
 
   attached() {
-    this.addFounderInput({ address: this.userAddress, tokens: 1000, reputation: 1000 });
+    this.addFounderInput(new MyFounder(this.web3, this.userAddress));
     ($(".founder-add-button") as any).tooltip();
   }
 
@@ -116,8 +116,8 @@ export class DeployGen  {
     ($(".founder-delete-button") as any).tooltip("dispose");
   }
 
-  addFounderInput(founder:Founder = { address: null, tokens: 1000, reputation: 1000 }) {
-      this.founders.push(founder);
+  addFounderInput(founder:MyFounder) {
+      this.founders.push(founder || new MyFounder(this.web3, null));
       setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
       // setTimeout(() => { 
       //   (<any>$(".founders")).bootstrapMaterialDesign();
@@ -131,4 +131,22 @@ export class DeployGen  {
 
 interface DeploySchemeInfo extends ContractInfo {
   required: boolean;
+}
+
+class MyFounder implements Founder {
+
+  web3: Web3Service;
+
+  constructor(web3: Web3Service, address: string, tokensUI: number = 1000, reputation: number = 1000) {
+    this.web3 = web3;
+    this.address = address;
+    this.tokensUI = tokensUI;
+    this.reputationUI = reputation;
+  }
+
+  address: string;
+  get tokens(): number { return Number(this.web3.toWei(this.tokensUI)); }
+  get reputation(): number { return Number(this.web3.toWei(this.reputationUI)); }
+  tokensUI: number;
+  reputationUI : number;
 }

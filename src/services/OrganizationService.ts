@@ -140,7 +140,7 @@ export class OrganizationService {
 
 export interface Founder {
   address: string;
-  tokens: number;
+  tokens: number; // in Wei
   reputation: number;
 }
 

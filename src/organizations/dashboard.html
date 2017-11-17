@@ -15,7 +15,7 @@
       <dd> ${ userTokenbalance }</dd>
     </dl>
   </section>
-  <section>
+  <section show.bind="registeredArcSchemes.length">
       <h3>Arc Schemes</h3>
     </div>
       
@@ -49,8 +49,8 @@
     </div>
 
   </section>
-  <section>
-      <h3>Non-Arc Schemes</span></h3>
+  <section show.bind="nonArcSchemes.length">
+      <h3>Non-Arc Schemes</h3>
     </div>
       
       <div id="accordion" role="tablist">
@@ -83,8 +83,8 @@
 
   </section>
 
-  <section>
-      <h3>Unused Arc Schemes</span></h3>
+  <section show.bind="unregisteredArcSchemes.length">
+      <h3>Unused Arc Schemes</h3>
     </div>
       
       <div id="accordion" role="tablist">
