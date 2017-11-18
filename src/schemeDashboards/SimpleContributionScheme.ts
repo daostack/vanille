@@ -11,7 +11,7 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
   ethReward: Number = 0;
   externalTokenReward: Number = 0;
   reputationTokenReward: Number = 0;
-  externalTokenAddress: string;
+  externalTokenAddress: string =  null; // null so optional property will always be defined for solidity 
   beneficiaryAddress: string;
 
   constructor(

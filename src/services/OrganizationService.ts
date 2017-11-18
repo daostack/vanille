@@ -3,7 +3,8 @@ import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcSe
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { LogManager } from 'aurelia-framework';
-import { DAO, DaoSchemeInfo } from '../entities/DAO';
+import { DAO } from '../entities/DAO';
+import { DaoSchemeInfo } from '../entities/DAOSchemeInfo';
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 
 @autoinject
@@ -92,19 +93,22 @@ export class OrganizationService {
     if (!(eventsArray instanceof Array)) {
       eventsArray = [eventsArray];
     }
-    let counter = 0;
     let count = eventsArray.length;
     for (let i = 0; i < count; i++) {
         let promotedAmount = 0;
         let avatarAddress =  eventsArray[i].args._avatar;
-        // this has side-effect of initializing and caching the dao
+        // this has side-effects of initializing and caching the dao
         let dao = await this.organizationAt(avatarAddress);
         this.logger.debug(`loaded org ${dao.name}: ${dao.avatar.address}`);
-        ++counter;
-
-        if (counter == count) { // then we're done
-            this.publish(OrganizationService.daoAddedEvent, dao);
-        }
+        /**
+         * NOTE: At the time we receive this for a newly-added dao, Arc will likely
+         * not yet have added the schemes for the dao.  We will get the notifications
+         * when they are, but the delay could be disconcerting for the user.
+         * Further, there can be a gap between initially querying for the schemes and 
+         * setting up the watch during which a scheme coud be added to the Dao without 
+         * us being aware. (see https://github.com/daostack/daostack/issues/132)
+         */
+        this.publish(OrganizationService.daoAddedEvent, dao);
       }
   }
 
