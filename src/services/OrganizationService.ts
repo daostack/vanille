@@ -167,4 +167,5 @@ interface OrganizationSchemeInfo {
   permissions: string;
 }
 
-export { DAO, DaoSchemeInfo } from '../entities/DAO';
+export { DAO } from '../entities/DAO';
+export { DaoSchemeInfo } from '../entities/DaoSchemeInfo';

@@ -39,9 +39,44 @@ export class DAODashboard {
 
     await this.loadSchemes();
 
-    this.subscription = this.org.subscribe(DAO.daoSchemeSetChangedEvent, ({ dao, schemes }) => 
+    this.subscription = this.org.subscribe(DAO.daoSchemeSetChangedEvent, (params: { dao:DAO, scheme: SchemeInfo }) => 
     {
-      this.loadSchemes();
+      let schemeInfo = params.scheme;
+      let addTo:Array<SchemeInfo>;
+      let removeFrom:Array<SchemeInfo>;
+
+      if (schemeInfo.inDao) { // adding
+        if (schemeInfo.inArc) {
+          addTo = this.registeredArcSchemes;
+          removeFrom = this.unregisteredArcSchemes;
+        } else { // adding non-Arc scheme to the DAO, not actually possible yet, but for completeness...
+          addTo = this.nonArcSchemes;
+        } 
+      } 
+      else { // removing
+        if (schemeInfo.inArc) {
+          addTo = this.unregisteredArcSchemes;
+          removeFrom = this.registeredArcSchemes;
+        } else {
+          removeFrom = this.nonArcSchemes;
+        }            
+      }
+
+      if (removeFrom) {
+        let index = this.getSchemeIndexFromAddress(schemeInfo.address, removeFrom);
+        if (index !== -1) // shouldn't ever be -1
+        {
+          // in case we're re-adding below, lets move the existing schemeInfo instance, in case that helps retain any information
+          schemeInfo = removeFrom.splice(index,1)[0];
+        }
+      }
+
+      if (addTo) {
+        let index = this.getSchemeIndexFromAddress(schemeInfo.address, addTo); // should always be -1
+        if (index === -1) {
+          addTo.push(schemeInfo);
+        }
+      }
     });
   }
 
@@ -96,5 +131,13 @@ export class DAODashboard {
 
   schemeDashboardViewModel(scheme: SchemeInfo): any {
       return Object.assign({}, { org: this.org, orgName: this.orgName, orgAddress: this.address, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes }, scheme )
+  }
+
+  getSchemeIndexFromAddress(address:string, collection: Array<SchemeInfo>): number {
+    let result = collection.filter((s) => s.address === address);
+    if (result.length > 1) {
+      throw new Error("getSchemeInfoWithAddress: More than one schemes found");
+    }
+    return result.length ? collection.indexOf(result[0]) : -1;
   }
 }

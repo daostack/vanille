@@ -59,7 +59,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
        this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToUnPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-
+      this.schemeToUnPropose = null;
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

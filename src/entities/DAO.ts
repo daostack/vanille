@@ -1,6 +1,8 @@
-import { ArcService, TruffleContract, Organization, ContractInfo } from '../services/ArcService';
+import { ArcService, Organization, ContractInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
+import { SchemeInfo } from "../entities/SchemeInfo";
+import { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
 
 export class DAO extends Organization {
 
@@ -70,11 +72,14 @@ export class DAO extends Organization {
     if (!(eventsArray instanceof Array)) {
       eventsArray = [eventsArray];
     }
-    let counter = 0;
     let count = eventsArray.length;
     for (let i = 0; i < count; i++) {
       let schemeAddress =  eventsArray[i].args._scheme;
-      let contractInfo = this.arcService.contractInfoFromAddress(schemeAddress);
+      let contractInfo:ContractInfo = this.arcService.contractInfoFromAddress(schemeAddress);
+      if (!contractInfo) {
+        // then it is a non-arc scheme
+        contractInfo = <any>{ address: schemeAddress };
+      }
       //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
       if (adding) {
@@ -85,15 +90,11 @@ export class DAO extends Organization {
           this.schemesCache.delete(schemeAddress);
       }
 
-      ++counter;
-
-      if (counter == count) { // then we're done
-          this.publish(DAO.daoSchemeSetChangedEvent, 
-          {
-            dao: this,
-            schemes:  Array.from(this.allSchemes)
-          });
-      }
+      this.publish(DAO.daoSchemeSetChangedEvent, 
+      {
+        dao: this,
+        scheme:  SchemeInfo.fromContractInfo(contractInfo, adding)
+      });
     }
   }
   /**
@@ -117,12 +118,3 @@ export class DAO extends Organization {
       */
       public subscribeOnce(event: string | Function, callback: Function): Subscription  { return null; }
 }
-
-
-/**
- * scheme that is in a DAO
- */
-export class DaoSchemeInfo extends ContractInfo {
-  //public permissions: Permissions;
-}
-
