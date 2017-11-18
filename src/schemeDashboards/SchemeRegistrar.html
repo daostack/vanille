@@ -20,6 +20,7 @@
         <arc-schemes-dropdown
           scheme.bind="schemeToPropose"
           dao-address.bind="orgAddress"
+          exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
         >
         <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
         <span slot="buttonText"><span class="font-weight-bold">${schemeToPropose ? schemeToPropose.name : 'Select Scheme'}</span></span>

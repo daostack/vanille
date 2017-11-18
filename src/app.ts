@@ -82,7 +82,7 @@ export class App {
             //     name: 'about',
             //     moduleId: PLATFORM.moduleName('../about/about'),
             //     nav: false,
-            //     title: 'About DAOstack'
+            //     title: 'About DAOStack'
             // }
             // ,
             // {

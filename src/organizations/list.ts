@@ -20,11 +20,11 @@ export class OrganizationsList {
 
     organizationArray: Array<any> = [];
 
-    activate() {
+    async activate() {
         this.organizationArray = this.organizationService.allOrganizations;
         this.daoChangedSubscription = this.organizationService
-          .subscribe(OrganizationService.daoSetChangedEvent,
-              (orgs) => {this.organizationArray = orgs;} );
+          .subscribe(OrganizationService.daoAddedEvent,
+              (dao) => {this.organizationArray.push(dao);} );
     }
 
     deactivate() {

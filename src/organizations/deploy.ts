@@ -96,7 +96,7 @@ export class DeployGen  {
         { 
           message: `${this.orgName} has been successfully deployed!`,
           action: () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); },
-          actionText: "See It Now"
+          actionText: "See The New DAO"
         });
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));

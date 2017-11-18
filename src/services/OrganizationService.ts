@@ -1,8 +1,10 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
-import { EventAggregator, includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
+import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { LogManager } from 'aurelia-framework';
+import { DAO, DaoSchemeInfo } from '../entities/DAO';
+import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 
 @autoinject
 export class OrganizationService {
@@ -21,24 +23,23 @@ export class OrganizationService {
   /**
    * a DAO has been added or removed
    */
-  public static daoSetChangedEvent:string = "daoSetChanged";
-  /**
-   * a Scheme has been added or removed from a DAO.
-   */
-  public static daoSchemeSetChangedEvent:string = "daoSchemeSetChanged";
+  public static daoAddedEvent:string = "daoSetChanged";
 
   public async initialize()
-    {
+  {
+    return new Promise(async (resolve,reject) => {
+
       let genesisScheme = await this.arcService.getContract("GenesisScheme");
       let myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
       /**
-       * handleNewOrg will be called right away for all the DAOs in the system, and thereafter
-       * whenever a new DAO is created
+       * get():  fires once for all the DAOs in the system; resolve() will be called properly.
+       * watch(): fires whenever a new DAO is created thereafter
        */
-      return new Promise((resolve,reject) => {
-        myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { resolve(); }));
-      });
-    }
+      myEvent.get((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { this.logger.debug("Finished loading daos"); resolve(); }));
+      myEvent = genesisScheme.NewOrg({});
+      myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
+    });
+  }
 
   public async getDAOStackAddress() {
     const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
@@ -46,10 +47,9 @@ export class OrganizationService {
   }
 
   public async getDAOStackOrganization() {
-      const avatarAddress = await this.getDAOStackAddress();
-      return await this.organizationAt(avatarAddress);
+    const avatarAddress = await this.getDAOStackAddress();
+    return await this.organizationAt(avatarAddress);
   }
-
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
     let dao = <DAO>(await Organization.new(config) as any);
@@ -58,7 +58,6 @@ export class OrganizationService {
   }
 
   public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
-
     let dao: DAO;
     let cachedDao = this.daoCache.get(avatarAddress);
 
@@ -66,13 +65,13 @@ export class OrganizationService {
         let org = <DAO>(await Organization.at(avatarAddress) as any);
         org.name = await this.organizationName(org);
         org.address = avatarAddress;
-        dao = await DAO.fromOrganization(org, this.arcService, this);
+        dao = await DAO.fromOrganization(org, this.arcService);
     } else {
       dao = cachedDao;
     }
 
     if (!cachedDao) {
-      this.logger.debug(`caching dao: ${dao.name ? `${dao.name}: ` : ""}${dao.address}`);
+      // this.logger.debug(`caching dao: ${dao.name ? `${dao.name}: ` : ""}${dao.address}`);
       this.daoCache.set(dao.address,dao);
     }
 
@@ -100,22 +99,23 @@ export class OrganizationService {
         let avatarAddress =  eventsArray[i].args._avatar;
         // this has side-effect of initializing and caching the dao
         let dao = await this.organizationAt(avatarAddress);
+        this.logger.debug(`loaded org ${dao.name}: ${dao.avatar.address}`);
         ++counter;
 
         if (counter == count) { // then we're done
-            this.publish(OrganizationService.daoSetChangedEvent, this.allOrganizations);
+            this.publish(OrganizationService.daoAddedEvent, dao);
         }
       }
   }
 
   public async getSchemesInOrganization(daoAddress: string): Promise<Array<DaoSchemeInfo>> {
-      let org = await this.organizationAt(daoAddress);
-      return org.allSchemes;
+    let org = await this.organizationAt(daoAddress);
+    return org.allSchemes;
   }
 
   /*****
    * The following three event methods will be replaced by the event aggregator.
-   * See OrganizationService.daoSetChangedEvent
+   * See OrganizationService.daoAddedEvent
    */
 
   /**
@@ -167,94 +167,4 @@ interface OrganizationSchemeInfo {
   permissions: string;
 }
 
-/**
- * scheme that is in a DAO
- */
-export class DaoSchemeInfo extends ContractInfo {
-  //public permissions: Permissions;
-}
-
-export class DAO extends Organization {
-
-  private schemesCache = new Map<string,DaoSchemeInfo>();
-  private registerSchemeEvent;
-  private unRegisterSchemeEvent;
-  public arcService: ArcService;
-  public organizationService: OrganizationService;
-  logger = LogManager.getLogger("Alchemy");
-
-  /* this is not meant to be instantiated here, only in Arc */
-  private constructor() {
-    super();
-  }
-
-  public static async fromOrganization(
-      org: Organization
-      , arcService: ArcService
-      , organizationService: OrganizationService): Promise<DAO> {
-
-    let newDAO = Object.assign(new DAO(), org);
-    newDAO.arcService = arcService;
-    newDAO.organizationService = organizationService;
-    await newDAO.initialize();
-    return newDAO;
-  }
-
-  public async initialize()
-  {
-    /**
-     * this is triggered right away for every scheme in the DAO, and thereafter
-     * whenever a new scheme is registered
-     */
-    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0, toBlock: 'latest'});
-
-    await new Promise((resolve,reject) => {
-      this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true).then(() => { resolve(); }));
-    });
-
-    this.registerSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 0, toBlock: 'latest'});
-
-    return new Promise((resolve,reject) => {
-      this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false).then(() => { resolve(); }));
-    });
-  }
-  
-  public get allSchemes(): Array<DaoSchemeInfo> {
-    return Array.from(this.schemesCache.values());
-  }
-
-  private async handleSchemeEvent(err, eventsArray, adding:boolean) : Promise<void>
-  {
-    let newSchemesArray = [];
-    if (!(eventsArray instanceof Array)) {
-      eventsArray = [eventsArray];
-    }
-    let counter = 0;
-    let count = eventsArray.length;
-    for (let i = 0; i < count; i++) {
-      let schemeAddress =  eventsArray[i].args._scheme;
-      let contractInfo = this.arcService.contractInfoFromAddress(schemeAddress);
-      //let permissions = await this.controller.getSchemePermissions(schemeAddress);
-
-      if (adding) {
-        this.logger.debug(`caching scheme: ${contractInfo.name}: ${contractInfo.address}`);
-        this.schemesCache.set(schemeAddress,contractInfo);
-      } else if (this.schemesCache.has(schemeAddress)) {
-          this.logger.debug(`uncaching scheme: ${contractInfo.name}: ${contractInfo.address}`);
-          this.schemesCache.delete(schemeAddress);
-      }
-
-      ++counter;
-
-      if (counter == count) { // then we're done
-          this.organizationService.publish(OrganizationService.daoSchemeSetChangedEvent, 
-          {
-            dao: this,
-            schemes:  Array.from(this.allSchemes)
-          });
-      }
-    }
-  }
-}
-
-// export {Organization} from './ArcService';
+export { DAO, DaoSchemeInfo } from '../entities/DAO';
