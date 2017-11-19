@@ -3,6 +3,7 @@ import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
 import { SchemeService, ContractInfo } from '../services/SchemeService';
+import { ActionType } from "../entities/GeneralEvents";
 
 @autoinject
 export class UpgradeScheme extends DaoSchemeDashboard {
@@ -25,7 +26,13 @@ export class UpgradeScheme extends DaoSchemeDashboard {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme");
       let tx = await scheme.proposeUpgrade(this.orgAddress, this.controllerAddress);
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted to change controller to ${this.controllerAddress}`);
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted to change controller',
+        actionType: ActionType.address,
+        actionText: tx.tx,
+        addressType: "tx"
+      });
+       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to change controller to ${this.controllerAddress}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
@@ -43,6 +50,12 @@ export class UpgradeScheme extends DaoSchemeDashboard {
       //   this.orgAddress,
       //   this.upgradingSchemeAddress,
 
+      // this.eventAggregator.publish("handleSuccess", {
+      //   message: 'Proposal submitted to change upgrading scheme',
+      //   actionType: ActionType.address,
+      //   actionText: tx.tx,
+      //   addressType: "tx"
+      // });
 
       //   );
       //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);

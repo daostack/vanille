@@ -8,6 +8,7 @@ import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { Router } from 'aurelia-router';
+import { ActionType } from "../entities/GeneralEvents";
 
 @autoinject
 export class DeployGen  {
@@ -96,6 +97,7 @@ export class DeployGen  {
         { 
           message: `${this.orgName} has been successfully deployed!`,
           action: () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); },
+          actionType: ActionType.button,
           actionText: "See The New DAO"
         });
 

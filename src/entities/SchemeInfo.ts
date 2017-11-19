@@ -1,4 +1,4 @@
-import { DaoSchemeInfo } from './DAOSchemeInfo';
+import { DaoSchemeInfo } from './DaoSchemeInfo';
 import { ContractInfo } from '../services/ArcService';
 /**
  * can be any scheme, in the DAO, not in the DAO, not even in Arc

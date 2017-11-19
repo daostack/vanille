@@ -2,6 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
+import { ActionType } from "../entities/GeneralEvents";
 
 @autoinject
 export class SimpleContributionScheme extends DaoSchemeDashboard {
@@ -38,7 +39,12 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
           beneficiary: this.beneficiaryAddress
         }
       );
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted for contribution to ${this.beneficiaryAddress}`);
+       this.eventAggregator.publish("handleSuccess", {
+          message: 'Proposal submitted for a contribution',
+          actionType: ActionType.address,
+          actionText: tx.tx,
+          addressType: "tx"
+       });
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

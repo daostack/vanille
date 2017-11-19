@@ -3,7 +3,7 @@ import { EventAggregator  } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
 // import { LogManager } from 'aurelia-framework';
 import { AureliaHelperService } from "./AureliaHelperService";
-import { EventConfig } from "./GeneralEvents";
+import { EventConfig, ActionType } from "../entities/GeneralEvents";
 import 'snackbarjs';
 import { setTimeout } from "timers";
 
@@ -59,9 +59,9 @@ export class SnackbarService {
 
     let $snackbar = (<any>$).snackbar(this.getSnackbarConfig(completeConfig));
 
-    if (completeConfig.action) {
-      this.aureliaHelperService.enhanceElement($snackbar[0], completeConfig);
-    }
+    // for actions, but this means you can put binding code in the message too, 
+    // where the config is the bindingContext
+    this.aureliaHelperService.enhanceElement($snackbar[0], completeConfig);
   }
 
   completeConfig(config: EventConfig | string, defaults: any= {} ): EventConfig {
@@ -69,7 +69,7 @@ export class SnackbarService {
         config = { message: config as string } as EventConfig;
       }
 
-      return Object.assign({ style: "snack-info", duration: 0 }, defaults, config);
+      return Object.assign({ style: "snack-info", duration: 0, actionType: ActionType.none }, defaults, config);
   }
 
   getSnackbarConfig(config: EventConfig) {
@@ -83,7 +83,15 @@ export class SnackbarService {
   
   formatContent(config: EventConfig) {
     let templateMessage = `<span class="snackbar-message-text">${config.message}</span>`;
-    let templateAction = config.action ? `<span class="snackbar-action-wrapper"><button type="button" class="btn" click.delegate='action()'>${config.actionText}</button></span>` : "";
+    let templateAction="";
+    switch (config.actionType) {
+      case ActionType.address:
+        templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.actionText}" type="${config.addressType || 'address'}">${config.actionText}</etherscanlink></span>`;
+      break;
+      case ActionType.button:
+        templateAction = `<span class="snackbar-action-wrapper"><button type="button" class="btn" click.delegate='action()'>${config.actionText}</button></span>`;
+      break;
+    }
     return `${templateMessage}${templateAction}`;
   }
 }

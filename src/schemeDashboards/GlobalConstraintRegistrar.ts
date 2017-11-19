@@ -4,6 +4,7 @@ import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
 import { GlobalConstraintInfo, GlobalConstraintService } from "../services/GlobalConstraintService";
 import { VotingMachineService, VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
+import { ActionType } from "../entities/GeneralEvents";
 
 @autoinject
 export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
@@ -35,8 +36,15 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
         this.constraintToAddInfo.address,
          globalConstraintConfigHash,
          contrainRemovalVotingMachineInfoHash);
+
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted to add ${this.constraintToAddInfo.name}`',
+        actionType: ActionType.address,
+        actionText: tx.tx,
+        addressType: "tx"
+      });
       
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.constraintToAddInfo.name}`);
+       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.constraintToAddInfo.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
@@ -49,8 +57,15 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
       const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
 
       let tx = await scheme.proposeToRemoveGC(this.orgAddress, this.constraintToRemoveInfo.address);
+
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted to remove ${this.constraintToRemoveInfo.name}`',
+        actionType: ActionType.address,
+        actionText: tx.tx,
+        addressType: "tx"
+      });
       
-      this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`);
+      // this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

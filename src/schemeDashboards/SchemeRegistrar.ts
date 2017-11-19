@@ -7,6 +7,7 @@ import { ArcService, ContractInfo } from  "../services/ArcService";
 import { Permissions } from '../services/ControllerService';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { SchemeConfigurator} from '../schemeConfiguration/schemeConfigurationBase';
+import { ActionType } from "../entities/GeneralEvents";
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
@@ -43,8 +44,15 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         nativeTokenAddress,
         fee,
         true);
+
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted to add ${this.schemeToPropose.name}`',
+        actionType: ActionType.address,
+        actionText: tx.tx,
+        addressType: "tx"
+      });
         
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.schemeToPropose.name}`);
+       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.schemeToPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
@@ -57,7 +65,14 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
     try {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
-       this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToUnPropose.name}`);
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted to remove ${this.schemeToUnPropose.name}`',
+        actionType: ActionType.address,
+        actionText: tx.tx,
+        addressType: "tx"
+      });
+        
+       //this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToUnPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
       this.schemeToUnPropose = null;
     } catch(ex) {

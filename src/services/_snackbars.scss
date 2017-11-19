@@ -11,16 +11,16 @@
   @extend .text-dark;
 }
 
-.snackbar-message-text {
-
-}
-
 .snackbar-action-wrapper button {
   color: $gray-700;
   padding:.25rem;
   padding-top: 0px;
   padding-bottom: 0px;
   margin-left: .5rem;  
+}
+
+.snackbar-action-wrapper a {
+  color: $gray-800;
 }
 
 .snackbar-action-wrapper button:hover {

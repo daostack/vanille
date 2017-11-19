@@ -4,7 +4,7 @@ import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { LogManager } from 'aurelia-framework';
 import { DAO } from '../entities/DAO';
-import { DaoSchemeInfo } from '../entities/DAOSchemeInfo';
+import { DaoSchemeInfo } from '../entities/DaoSchemeInfo';
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 
 @autoinject

@@ -1,4 +1,4 @@
 <template>
-    <a ref="addressElement" href='https://${targetedNetwork}.etherscan.io/${type === "tx" ? "tx" : "address" }/${address}' target='_blank'><slot></slot></a>
-    <copy-to-clipboard-button element.bind="addressElement" message="Address has been copied to the clipboard"></copy-to-clipboard-button>
+    <a href='https://${targetedNetwork}.etherscan.io/${type === "tx" ? "tx" : "address" }/${address}' target='_blank'><slot></slot></a>
+    <copy-to-clipboard-button text-to-copy.bind="address" message="Address has been copied to the clipboard"></copy-to-clipboard-button>
 </template>
