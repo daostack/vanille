@@ -8,7 +8,7 @@ import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { Router } from 'aurelia-router';
-import { ActionType } from "../entities/GeneralEvents";
+import { EventConfigAction } from "../entities/GeneralEvents";
 
 @autoinject
 export class DeployGen  {
@@ -93,13 +93,11 @@ export class DeployGen  {
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
-      this.eventAggregator.publish("handleSuccess", 
-        { 
-          message: `${this.orgName} has been successfully deployed!`,
-          action: () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); },
-          actionType: ActionType.button,
-          actionText: "See The New DAO"
-        });
+      this.eventAggregator.publish("handleSuccess", new EventConfigAction(
+          `${this.orgName} has been successfully deployed!`
+          , "See The New DAO"
+          , () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); }
+        ));
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;

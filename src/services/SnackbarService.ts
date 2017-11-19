@@ -5,10 +5,9 @@ import { DisposableCollection } from "./DisposableCollection";
 import { AureliaHelperService } from "./AureliaHelperService";
 import { EventConfig, ActionType } from "../entities/GeneralEvents";
 import 'snackbarjs';
-import { setTimeout } from "timers";
 
   /**
-   * TODO:  Show queue up simultaneous messages so they are shown sequentially
+   * TODO:  Ability to queue up simultaneous messages so they are shown sequentially (per Material Design spec)
    */
 @autoinject
 export class SnackbarService {
@@ -28,33 +27,38 @@ export class SnackbarService {
     this.subscriptions.push(eventAggregator.subscribe("showMessage", (config: EventConfig | string) => this.showMessage(config)));
   }
 
+  /* shouldn't actually ever happen */
+  dispose() {
+    this.subscriptions.dispose();
+  }
+
   public showMessage(config: EventConfig | string) {
     // this.logger.info(message);
-    this.serveSnack(config, { style: "snack-info", duration: 3000 } );
+    this.serveSnack(config);
   }
 
   public handleSuccess(config: EventConfig | string) {
     // this.logger.debug(message);
-    this.serveSnack(config, { style: "snack-info" });
+    this.serveSnack(config);
   }
 
   public handleException(ex) {
     let message = ex.message ? ex.message : ex;
     // this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
-    this.serveSnack(message, { style: "snack-failure" });
+    this.serveSnack(message);
   }
 
   public handleFailure(config: EventConfig | string) {
     // this.logger.error(message);
-    this.serveSnack(config, { style: "snack-failure" });
+    this.serveSnack(config);
   }
 
   public handleWarning(config: EventConfig | string) {
     // this.logger.debug(message);
-    this.serveSnack(config, { style: "snack-warning" });
+    this.serveSnack(config);
   }
 
-  serveSnack(config: EventConfig | string, defaults: any) {
+  private serveSnack(config: EventConfig | string, defaults: any = {}) {
     let completeConfig = this.completeConfig(config,defaults);
 
     let $snackbar = (<any>$).snackbar(this.getSnackbarConfig(completeConfig));
@@ -64,12 +68,12 @@ export class SnackbarService {
     this.aureliaHelperService.enhanceElement($snackbar[0], completeConfig);
   }
 
-  completeConfig(config: EventConfig | string, defaults: any= {} ): EventConfig {
+  completeConfig(config: EventConfig | string, defaults: any = {} ): EventConfig {
       if (typeof(config) == "string") {
         config = { message: config as string } as EventConfig;
       }
 
-      return Object.assign({ style: "snack-info", duration: 0, actionType: ActionType.none }, defaults, config);
+      return Object.assign({ style: "snack-info", duration: 3000, actionType: ActionType.none }, defaults, config);
   }
 
   getSnackbarConfig(config: EventConfig) {

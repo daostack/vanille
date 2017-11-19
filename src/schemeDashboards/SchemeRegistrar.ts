@@ -7,7 +7,7 @@ import { ArcService, ContractInfo } from  "../services/ArcService";
 import { Permissions } from '../services/ControllerService';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { SchemeConfigurator} from '../schemeConfiguration/schemeConfigurationBase';
-import { ActionType } from "../entities/GeneralEvents";
+import { EventConfigTransaction } from "../entities/GeneralEvents";
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
@@ -45,13 +45,8 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         fee,
         true);
 
-      this.eventAggregator.publish("handleSuccess", {
-        message: `Proposal submitted to add ${this.schemeToPropose.name}`,
-        actionType: ActionType.address,
-        actionText: "See Transaction",
-        address: tx.tx,
-        addressType: "tx"
-      });
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        `Proposal submitted to add ${this.schemeToPropose.name}`, tx.tx));
         
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.schemeToPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
@@ -66,13 +61,8 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
     try {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
-      this.eventAggregator.publish("handleSuccess", {
-        message: `Proposal submitted to remove ${this.schemeToUnPropose.name}`,
-        actionType: ActionType.address,
-        actionText: "See Transaction",
-        address: tx.tx,
-        addressType: "tx"
-      });
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        `Proposal submitted to remove ${this.schemeToUnPropose.name}`, tx.tx));
         
        //this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToUnPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
