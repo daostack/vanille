@@ -86,7 +86,7 @@ export class SnackbarService {
     let templateAction="";
     switch (config.actionType) {
       case ActionType.address:
-        templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.actionText}" type="${config.addressType || 'address'}">${config.actionText}</etherscanlink></span>`;
+        templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.address}" type="${config.addressType || 'address'}">${config.actionText || config.address}</etherscanlink></span>`;
       break;
       case ActionType.button:
         templateAction = `<span class="snackbar-action-wrapper"><button type="button" class="btn" click.delegate='action()'>${config.actionText}</button></span>`;

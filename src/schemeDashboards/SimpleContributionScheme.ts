@@ -39,12 +39,13 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
           beneficiary: this.beneficiaryAddress
         }
       );
-       this.eventAggregator.publish("handleSuccess", {
-          message: 'Proposal submitted for a contribution',
-          actionType: ActionType.address,
-          actionText: tx.tx,
-          addressType: "tx"
-       });
+      this.eventAggregator.publish("handleSuccess", {
+        message: 'Proposal submitted for a contribution',
+        actionType: ActionType.address,
+        actionText: "See Transaction",
+        address: tx.tx,
+        addressType: "tx"
+      });
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
        // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {

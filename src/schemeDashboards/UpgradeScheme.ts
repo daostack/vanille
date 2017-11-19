@@ -29,7 +29,8 @@ export class UpgradeScheme extends DaoSchemeDashboard {
       this.eventAggregator.publish("handleSuccess", {
         message: 'Proposal submitted to change controller',
         actionType: ActionType.address,
-        actionText: tx.tx,
+        actionText: "See Transaction",
+        address: tx.tx,
         addressType: "tx"
       });
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted to change controller to ${this.controllerAddress}`);
@@ -53,7 +54,8 @@ export class UpgradeScheme extends DaoSchemeDashboard {
       // this.eventAggregator.publish("handleSuccess", {
       //   message: 'Proposal submitted to change upgrading scheme',
       //   actionType: ActionType.address,
-      //   actionText: tx.tx,
+      // actionText: "See Transaction",
+      // address: tx.tx,
       //   addressType: "tx"
       // });
 

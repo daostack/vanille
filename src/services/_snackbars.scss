@@ -11,7 +11,7 @@
   @extend .text-dark;
 }
 
-.snackbar-action-wrapper button {
+.snackbar-action-wrapper > button {
   color: $gray-700;
   padding:.25rem;
   padding-top: 0px;
@@ -19,8 +19,9 @@
   margin-left: .5rem;  
 }
 
-.snackbar-action-wrapper a {
+.snackbar-action-wrapper > a {
   color: $gray-800;
+  margin-left: .5rem;  
 }
 
 .snackbar-action-wrapper button:hover {

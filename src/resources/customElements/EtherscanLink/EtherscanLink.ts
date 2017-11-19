@@ -1,14 +1,11 @@
 ﻿import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
 import { Web3Service } from '../../../services/Web3Service';
 
-@autoinject
 @containerless
+@autoinject
 @customElement("etherscanlink")
 export class EtherscanLink {
-    constructor() {
-        this.targetedNetwork = Web3Service.Network;
-    }
-
+    
     targetedNetwork: any;
 
     @bindable
@@ -17,6 +14,12 @@ export class EtherscanLink {
     @bindable
     type: string;
 
-    @bindable
-    children:any;
+    clipbutton: HTMLElement;
+
+    // @bindable
+    // children:any;
+
+    constructor() {
+        this.targetedNetwork = Web3Service.Network;
+    }
 }

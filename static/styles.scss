@@ -31,3 +31,7 @@ a.text-warning:focus, a.text-warning:hover {
 .list-group.clean .list-group-item .material-icons:last-child {
   padding-left: unset !important;
 }
+
+.tooltip {
+  z-index: 1000000;
+}

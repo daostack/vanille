@@ -1,8 +1,8 @@
 import { bindable, containerless, autoinject } from 'aurelia-framework';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 
-@autoinject
 @containerless
+@autoinject
 export class CopyToClipboardButton {
 
   /** supply either element or textToCopy */
@@ -17,12 +17,26 @@ export class CopyToClipboardButton {
   message:string = "Copied to the clipboard";
 
   button: HTMLElement;
-  placeholder: HTMLElement;
-
+  
   constructor(
     private eventAggregator: EventAggregator
   ) {}
 
+
+  attached() {
+    (<any>$(this.button)).tooltip(
+      {
+        toggle:"tooltip",
+        placement:"right",
+        title:"Copy to clipboard",
+        container:"body",
+        trigger:"hover"
+      }
+    )
+    //.css("z-index", "100000")
+    ;
+  }
+  
   listener(e) { e.clipboardData.setData("text/plain", this.textToCopy); e.preventDefault(); }
 
   copy()

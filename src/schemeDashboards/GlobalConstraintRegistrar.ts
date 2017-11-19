@@ -38,9 +38,10 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
          contrainRemovalVotingMachineInfoHash);
 
       this.eventAggregator.publish("handleSuccess", {
-        message: 'Proposal submitted to add ${this.constraintToAddInfo.name}`',
+        message: `Proposal submitted to add ${this.constraintToAddInfo.name}`,
         actionType: ActionType.address,
-        actionText: tx.tx,
+        actionText: "See Transaction",
+        address: tx.tx,
         addressType: "tx"
       });
       
@@ -59,9 +60,10 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
       let tx = await scheme.proposeToRemoveGC(this.orgAddress, this.constraintToRemoveInfo.address);
 
       this.eventAggregator.publish("handleSuccess", {
-        message: 'Proposal submitted to remove ${this.constraintToRemoveInfo.name}`',
+        message: `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`,
         actionType: ActionType.address,
-        actionText: tx.tx,
+        actionText: "See Transaction",
+        address: tx.tx,
         addressType: "tx"
       });
       
