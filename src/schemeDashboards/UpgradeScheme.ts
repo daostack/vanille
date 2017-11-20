@@ -9,9 +9,7 @@ import { EventConfigTransaction } from "../entities/GeneralEvents";
 export class UpgradeScheme extends DaoSchemeDashboard {
 
   controllerAddress: string;
-  upgradingSchemeAddress: string;
   upgradingSchemeConfig:any = {};
-  upgradingSchemeFee:Number = 0;
 
   constructor(
       private schemeService: SchemeService
@@ -37,22 +35,26 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      // const upgradeScheme = await this.arcService.getContract("UpgradeScheme");
-      // const contractInfo = this.arcService.contractInfoFromKey("UpgradeScheme");
-      // const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo);
-      // const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(contractInfo, this.orgAddress);
+      const upgradeScheme = await this.arcService.getContract("UpgradeScheme");
+      const contractInfo = this.arcService.contractInfoFromKey("UpgradeScheme");
+      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo);
+      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(contractInfo, this.orgAddress);
+      const fee = await this.schemeService.getSchemeFee(contractInfo);
 
-      // let tx = await upgradeScheme.proposeChangeUpgradingScheme(
-      //   this.orgAddress,
-      //   this.upgradingSchemeAddress,
+      let tx = await upgradeScheme.proposeChangeUpgradingScheme(
+        this.orgAddress,
+        contractInfo.address,
+        schemeParametersHash,
+        nativeTokenAddress,
+        fee);
 
-      // this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-      //   'Proposal submitted to upgrading scheme', tx.tx));
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        'Proposal submitted to upgrading scheme', tx.tx));
 
       //   );
       //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       this.eventAggregator.publish("handleWarning", `Not Implemented`);
+       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

@@ -43,9 +43,9 @@ export class SnackbarService {
   }
 
   public handleException(ex) {
-    let message = ex.message ? ex.message : ex;
+    let message = `An error occurred: ${ex.message ? ex.message : ex}`;
     // this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
-    this.serveSnack(message);
+    this.serveSnack(message, { duration: 0, style: "snack-failure" });
   }
 
   public handleFailure(config: EventConfig | string) {
