@@ -29,6 +29,10 @@
       <instructions>Propose to replace this UpgradeScheme with another that has upgrading scheme permissions.
         After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
       <form>
+        <div class="form-group"> 
+          <label for="upgradingSchemeAddress">New Upgrading Scheme Address</label> 
+          <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/> 
+        </div> 
 
         <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeConfig"></compose>
 

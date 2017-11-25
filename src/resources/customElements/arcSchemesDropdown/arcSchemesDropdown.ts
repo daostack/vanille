@@ -12,7 +12,7 @@ export class ArcSchemesDropdown {
   @bindable( { defaultBindingMode: bindingMode.twoWay }) scheme: SchemeInfo;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) daoAddress: string;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeRegistered: boolean = false;
-  @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnRegistered: boolean = false;
+  @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnregistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeKeys: Array<string> = [];
 
   schemes: Array<SchemeInfo>;
@@ -46,7 +46,7 @@ export class ArcSchemesDropdown {
         return s.inArc 
           && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(s.key) === -1))
           && (!this.excludeRegistered || !s.isRegistered)
-          && (!this.excludeUnRegistered || s.isRegistered)
+          && (!this.excludeUnregistered || s.isRegistered)
           ;
         })
         ;

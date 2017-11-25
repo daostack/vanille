@@ -10,6 +10,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   controllerAddress: string;
   upgradingSchemeConfig:any = {};
+  upgradingSchemeAddress: string;
 
   constructor(
       private schemeService: SchemeService
@@ -35,15 +36,14 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      const upgradeScheme = await this.arcService.getContract("UpgradeScheme");
-      const contractInfo = this.arcService.contractInfoFromKey("UpgradeScheme");
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo);
-      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(contractInfo, this.orgAddress);
-      const fee = await this.schemeService.getSchemeFee(contractInfo);
+      const upgradeSchemeToBeReplaced = await this.arcService.getContract("UpgradeScheme");
+      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken("UpgradeScheme", this.upgradingSchemeAddress);
+      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(this.orgAddress, this.upgradingSchemeAddress);
+      const fee = await this.schemeService.getSchemeFee("UpgradeScheme", this.upgradingSchemeAddress);
 
-      let tx = await upgradeScheme.proposeChangeUpgradingScheme(
+      let tx = await upgradeSchemeToBeReplaced.proposeChangeUpgradingScheme(
         this.orgAddress,
-        contractInfo.address,
+        this.upgradingSchemeAddress,
         schemeParametersHash,
         nativeTokenAddress,
         fee);

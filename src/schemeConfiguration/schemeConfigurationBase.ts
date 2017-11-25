@@ -1,4 +1,3 @@
-import { ContractInfo } from  "../services/SchemeService";
 // export class SchemeConfigurationBase implements SchemeConfigurator {
 //   model: any;
 
@@ -13,5 +12,5 @@ export interface SchemeConfigurator {
    * subclasses must implement this to return an object with properties that
    * Arc will map to parameters for the given scheme.
    */
-  getConfigurationHash(scheme: ContractInfo, orgAddress: string): Promise<string>;
+  getConfigurationHash(orgAddress: string, schemeAddress?: string, ): Promise<string>;
 }

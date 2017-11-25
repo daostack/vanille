@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
 import { LogManager } from 'aurelia-framework';
-import { EventConfig } from "../entities/GeneralEvents";
+import { EventConfig, EventConfigException } from "../entities/GeneralEvents";
 
 @autoinject
 export class ConsoleLogService {
@@ -14,7 +14,7 @@ export class ConsoleLogService {
   constructor(
     eventAggregator: EventAggregator
   ) {
-    this.subscriptions.push(eventAggregator.subscribe("handleException", (ex) => this.handleException(ex)));
+    this.subscriptions.push(eventAggregator.subscribe("handleException", (config: EventConfigException | any) => this.handleException(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (config: EventConfig | string) => this.handleSuccess(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleWarning", (config: EventConfig | string) => this.handleWarning(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
@@ -34,8 +34,18 @@ export class ConsoleLogService {
     this.logger.debug(this.getMessage(config));
   }
 
-  public handleException(ex) {
-    let message = ex.message ? ex.message : ex;
+  public handleException(config: EventConfigException | any) {
+    let message;
+    let ex;
+    if (!(config instanceof EventConfigException)) {
+      ex = config as any;
+      message = `${ex.message ? ex.message : ex}`;
+    } else {
+      config = config as EventConfigException;
+      ex = config.exception;
+      message = config.message;
+    }
+
     this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
   }
 

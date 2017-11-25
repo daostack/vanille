@@ -21,18 +21,18 @@ export class UpgradeScheme implements SchemeConfigurator  {
       model.getConfigurationHash = this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(scheme: ContractInfo, orgAddress: string): Promise<any> {
+  async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
 
     const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
         orgAddress,
         this.votingMachineInfo,
         this.votingMachineConfig);
 
-    return await this.schemeService.setSchemeParameters(scheme, {
+    return await this.schemeService.setSchemeParameters({
       "voteParametersHash" : voteParamsHash,
       "votingMachine" : this.votingMachineInfo.address
       , "fee" : this.fee
-    });
+    }, "UpgradeScheme", schemeAddress);
   }
 
 }

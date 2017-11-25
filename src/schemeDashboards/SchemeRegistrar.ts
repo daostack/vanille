@@ -12,9 +12,12 @@ import { EventConfigTransaction } from "../entities/GeneralEvents";
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
 
-  proposeConfiguration: SchemeConfigurator = <any>{};
-  schemeToPropose: SchemeInfo=null;
-  schemeToUnPropose: SchemeInfo=null;
+  modifiedSchemeConfiguration: SchemeConfigurator = <any>{};
+  schemeToModify: SchemeInfo=null;
+  schemeToRemove: SchemeInfo=null;
+  newSchemeConfiguration: SchemeConfigurator = <any>{};
+  currentSchemeSelection: SchemeInfo=null;
+  schemeToAddAddress: string;
 
   constructor(
     private schemeService: SchemeService
@@ -26,15 +29,22 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     super();
   }
 
-  async proposeScheme() {
+  useAddress() {
+    if (this.currentSchemeSelection)
+    {
+      this.schemeToAddAddress = this.currentSchemeSelection.address;
+    }
+  }
+
+  async modifyScheme() {
   
     try {
       const scheme = await this.arcService.getContract("SchemeRegistrar");
-      const contractInfo = this.schemeToPropose as ContractInfo;
-      const schemeParametersHash = await this.proposeConfiguration.getConfigurationHash(contractInfo, this.orgAddress);
-      const permissions = await this.schemeService.getSchemePermissions(contractInfo);
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo);
-      const fee = await this.schemeService.getSchemeFee(contractInfo);
+      const contractInfo = this.schemeToModify as ContractInfo;
+      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress);
+      const permissions = await this.schemeService.getSchemePermissions(contractInfo.key);
+      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo.key);
+      const fee = await this.schemeService.getSchemeFee(contractInfo.key);
 
       const tx = await scheme.proposeScheme(
         this.orgAddress,
@@ -46,7 +56,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         true);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.schemeToPropose.name}`, tx.tx));
+        `Proposal submitted to add ${this.schemeToModify.name}`, tx.tx));
         
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.schemeToPropose.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
@@ -55,18 +65,49 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     }
   }
 
-  async unProposeScheme() {
+  async addScheme() {
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+
+      /**
+       * STUCK HERE. CAN'T NECESSARILY KNOW WHAT THE SCHEME KEY IS IF IT ISN'T KNOW BY THE
+       * CURRENT VERSION OR ARC.  COULD BE OLDER OR NEWER.  GOTTA MODIFY ARC SCHEMES SO  THEY
+       * CAN IDENTIFY THEMSELVES. 
+       */ 
+      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(this.schemeToAddAddress);
+      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(this.orgAddress, this.upgradingSchemeAddress);
+      const fee = await this.schemeService.getSchemeFee("UpgradeScheme", this.upgradingSchemeAddress);
+
+      let tx = await upgradeSchemeToBeReplaced.proposeChangeUpgradingScheme(
+        this.orgAddress,
+        this.upgradingSchemeAddress,
+        schemeParametersHash,
+        nativeTokenAddress,
+        fee);
+
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        'Proposal submitted to upgrading scheme', tx.tx));
+
+      //   );
+      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);
+       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
+       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
+    } catch(ex) {
+        this.eventAggregator.publish("handleException", ex);
+    }  
+  }
+
+  async removeScheme() {
     const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
-    const scheme = this.schemeToUnPropose;
+    const scheme = this.schemeToRemove;
 
     try {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.schemeToUnPropose.name}`, tx.tx));
+        `Proposal submitted to remove ${this.schemeToRemove.name}`, tx.tx));
         
-       //this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToUnPropose.name}`);
+       //this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToRemove.name}`);
        // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-      this.schemeToUnPropose = null;
+      this.schemeToRemove = null;
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

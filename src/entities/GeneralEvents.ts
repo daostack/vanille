@@ -41,11 +41,27 @@ export class EventConfig {
    * "tx" or "address", when actionType is address.  Default is "address"
    */
   public addressType: string;
+  /**
+   * for when action is Exception
+   */
+  public exception: any;
+}
+
+export class EventConfigException extends EventConfig {
+  constructor (
+    message:string = "An error occurred"
+    , public exception: any
+    , type: EventMessageType = EventMessageType.Exception
+    , lifetime: SnackLifetime = SnackLifetime.clickToDismiss
+    ) {
+    super(message, type, lifetime);
+    this.message = `${this.message}: ${exception}`;
+  }
 }
 
 export class EventConfigAction extends EventConfig {
   constructor (
-    public message:string
+    message:string
     /**
      * text for control
      */
@@ -64,7 +80,7 @@ export class EventConfigAction extends EventConfig {
 
 export class EventConfigAddress extends EventConfig {
   constructor (
-    public message:string
+    message:string
     , public address:string
     /**
      * text to display instead of address
@@ -81,7 +97,7 @@ export class EventConfigAddress extends EventConfig {
 
 export class EventConfigTransaction extends EventConfigAddress {
   constructor (
-    public message:string
+    message:string
     , public address:string
     /**
      * text to display instead of address
@@ -95,6 +111,7 @@ export class EventConfigTransaction extends EventConfigAddress {
     this.addressType = "tx";
   }
 }
+
 export enum ActionType {
   none = 0,
   /**

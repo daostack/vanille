@@ -21,7 +21,7 @@ export class GlobalConstraintRegistrar implements SchemeConfigurator  {
       model.getConfigurationHash = this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(scheme: ContractInfo, orgAddress: string): Promise<any> {
+  async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
     let params:any = {};
 
     const votingMachineInfo = this.votingMachineInfo;
@@ -31,10 +31,10 @@ export class GlobalConstraintRegistrar implements SchemeConfigurator  {
         votingMachineInfo,
         this.votingMachineConfig);
 
-    return await this.schemeService.setSchemeParameters(scheme, {
+    return await this.schemeService.setSchemeParameters({
       "voteParametersHash" : voteParamsHash,
       "votingMachine" : this.votingMachineInfo.address
       , "fee" : this.fee
-    });
+    }, "GlobalConstraintRegistrar", schemeAddress);
   }
 }

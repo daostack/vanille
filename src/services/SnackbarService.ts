@@ -3,7 +3,7 @@ import { EventAggregator  } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
 // import { LogManager } from 'aurelia-framework';
 import { AureliaHelperService } from "./AureliaHelperService";
-import { EventConfig, ActionType } from "../entities/GeneralEvents";
+import { EventConfig, EventConfigException, ActionType } from "../entities/GeneralEvents";
 import 'snackbarjs';
 
   /**
@@ -14,13 +14,12 @@ export class SnackbarService {
 
   // probably doesn't really need to be a disposable collection since this is a singleton service
   subscriptions: DisposableCollection = new DisposableCollection();
-  // logger = LogManager.getLogger("Alchemy");
 
   constructor(
     eventAggregator: EventAggregator
     , private aureliaHelperService: AureliaHelperService
   ) {
-    this.subscriptions.push(eventAggregator.subscribe("handleException", (ex) => this.handleException(ex)));
+    this.subscriptions.push(eventAggregator.subscribe("handleException", (config: EventConfigException | any) => this.handleException(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (config: EventConfig | string) => this.handleSuccess(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleWarning", (config: EventConfig | string) => this.handleWarning(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
@@ -33,28 +32,31 @@ export class SnackbarService {
   }
 
   public showMessage(config: EventConfig | string) {
-    // this.logger.info(message);
     this.serveSnack(config);
   }
 
   public handleSuccess(config: EventConfig | string) {
-    // this.logger.debug(message);
     this.serveSnack(config);
   }
 
-  public handleException(ex) {
-    let message = `An error occurred: ${ex.message ? ex.message : ex}`;
-    // this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
-    this.serveSnack(message, { duration: 0, style: "snack-failure" });
+  /**
+   * @param config Can be EventConfig or just the thrown exception
+   */
+  public handleException(config: EventConfigException | any) {
+    if (!(config instanceof EventConfigException)) {
+      // then config is the exception itself
+      let ex = config as any;
+      config = { message: `${ex.message ? ex.message : ex}` } as EventConfig;
+    }
+
+    this.serveSnack(config);
   }
 
   public handleFailure(config: EventConfig | string) {
-    // this.logger.error(message);
     this.serveSnack(config);
   }
 
   public handleWarning(config: EventConfig | string) {
-    // this.logger.debug(message);
     this.serveSnack(config);
   }
 

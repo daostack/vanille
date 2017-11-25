@@ -45,9 +45,11 @@ export class CopyToClipboardButton {
       this.textToCopy = $(this.element).text();
     }
 
-    document.addEventListener("copy", this.listener.bind(this));
+    let handler = this.listener.bind(this);
+
+    document.addEventListener("copy", handler);
     document.execCommand("copy");
-    document.removeEventListener("copy", this.listener.bind(this));
+    document.removeEventListener("copy", handler);
 
     // let  div;
     // if ((<any>document).selection)

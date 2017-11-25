@@ -32,7 +32,7 @@ export class ArcService {
   /**
    * maps address to ContractInfo
    */
-  public arcContractMap: Map<string,ContractInfo> = new Map<string,ContractInfo>();
+  private arcContractMap: Map<string,ContractInfo> = new Map<string,ContractInfo>();
 
   private contractCache: Map<string,TruffleContract>;
   
@@ -65,7 +65,7 @@ export class ArcService {
     // each property is a contractInfo
   }
   
-  public contractInfoFromKey(key:string): ContractInfo {
+  private contractInfoFromKey(key:string): ContractInfo {
     return this.arcContracts[key] as ContractInfo;
   }
 

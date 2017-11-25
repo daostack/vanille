@@ -77,7 +77,7 @@ export class DAO extends Organization {
       let schemeAddress =  eventsArray[i].args._scheme;
       let contractInfo:ContractInfo = this.arcService.contractInfoFromAddress(schemeAddress);
       if (!contractInfo) {
-        // then it is a non-arc scheme
+        // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
         contractInfo = <any>{ address: schemeAddress };
       }
       //let permissions = await this.controller.getSchemePermissions(schemeAddress);

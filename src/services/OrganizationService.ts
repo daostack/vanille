@@ -6,6 +6,8 @@ import { LogManager } from 'aurelia-framework';
 import { DAO } from '../entities/DAO';
 import { DaoSchemeInfo } from '../entities/DaoSchemeInfo';
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
+import { EventAggregator  } from 'aurelia-event-aggregator';
+import  { EventConfigException } from '../entities/GeneralEvents';
 
 @autoinject
 export class OrganizationService {
@@ -13,7 +15,7 @@ export class OrganizationService {
   constructor(
     private arcService: ArcService
     , private web3: Web3Service
-    //, private votingMachineService: VotingMachineService
+    , private eventAggregator: EventAggregator
   ) {
     includeEventsIn(this);
   }
@@ -63,10 +65,18 @@ export class OrganizationService {
     let cachedDao = this.daoCache.get(avatarAddress);
 
     if (!takeFromCache || !cachedDao) {
+      try{
         let org = <DAO>(await Organization.at(avatarAddress) as any);
         org.name = await this.organizationName(org);
         org.address = avatarAddress;
+        /**
+         * DAO.fromOrganization() will cause the DAO's schemes to be loaded
+         */
         dao = await DAO.fromOrganization(org, this.arcService);
+      } catch(ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO`, ex));
+        return null;
+      }
     } else {
       dao = cachedDao;
     }
@@ -99,16 +109,18 @@ export class OrganizationService {
         let avatarAddress =  eventsArray[i].args._avatar;
         // this has side-effects of initializing and caching the dao
         let dao = await this.organizationAt(avatarAddress);
-        this.logger.debug(`loaded org ${dao.name}: ${dao.avatar.address}`);
-        /**
-         * NOTE: At the time we receive this for a newly-added dao, Arc will likely
-         * not yet have added the schemes for the dao.  We will get the notifications
-         * when they are, but the delay could be disconcerting for the user.
-         * Further, there can be a gap between initially querying for the schemes and 
-         * setting up the watch during which a scheme coud be added to the Dao without 
-         * us being aware. (see https://github.com/daostack/daostack/issues/132)
-         */
-        this.publish(OrganizationService.daoAddedEvent, dao);
+        if (dao) {
+          this.logger.debug(`loaded org ${dao.name}: ${dao.avatar.address}`);
+          /**
+           * NOTE: At the time we receive this for a newly-added dao, Arc will likely
+           * not yet have added the schemes for the dao.  We will get the notifications
+           * when they are, but the delay could be disconcerting for the user.
+           * Further, there can be a gap between initially querying for the schemes and 
+           * setting up the watch during which a scheme coud be added to the Dao without 
+           * us being aware. (see https://github.com/daostack/daostack/issues/132)
+           */
+          this.publish(OrganizationService.daoAddedEvent, dao);
+        }
       }
   }
 
