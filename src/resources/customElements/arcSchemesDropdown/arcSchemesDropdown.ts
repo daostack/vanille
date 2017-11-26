@@ -14,8 +14,11 @@ export class ArcSchemesDropdown {
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeRegistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnregistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeKeys: Array<string> = [];
+  /**
+   * this is one-way, but in the direction back to the container 
+   */
+  @bindable({ defaultBindingMode: bindingMode.fromView }) schemes: Array<SchemeInfo>;
 
-  schemes: Array<SchemeInfo>;
   subscription;
 
   constructor(

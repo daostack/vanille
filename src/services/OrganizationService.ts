@@ -55,9 +55,15 @@ export class OrganizationService {
   }
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
-    let dao = <DAO>(await Organization.new(config) as any);
-    this.daoCache.set(dao.address,dao);
-    return dao;
+    try {
+      let org = await Organization.new(config);
+      let dao = await DAO.fromOrganization(org, this.arcService, this.web3);
+      this.daoCache.set(dao.address,dao);
+      return dao;
+    } catch(ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error birthing DAO: ${config.orgName}`, ex));
+        return null;
+    }
   }
 
   public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
@@ -65,16 +71,18 @@ export class OrganizationService {
     let cachedDao = this.daoCache.get(avatarAddress);
 
     if (!takeFromCache || !cachedDao) {
-      try{
-        let org = <DAO>(await Organization.at(avatarAddress) as any);
-        org.name = await this.organizationName(org);
-        org.address = avatarAddress;
-        /**
-         * DAO.fromOrganization() will cause the DAO's schemes to be loaded
-         */
-        dao = await DAO.fromOrganization(org, this.arcService);
+      try {
+
+        let org = await Organization.at(avatarAddress);
+
+        // if (!org || !org.avatar) {
+        //   throw new Error(`DAO at ${avatarAddress} was not found`);
+        // }
+        dao = await DAO.fromOrganization(org, this.arcService, this.web3);
+
       } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO`, ex));
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
+        // this.eventAggregator.publish("handleFailure", `Error loading DAO:${avatarAddress}`);
         return null;
       }
     } else {
@@ -87,10 +95,6 @@ export class OrganizationService {
     }
 
     return dao;
-  }
-
-  public async organizationName(org: DAO) {
-    return this.web3.bytes32ToUtf8(await org.avatar.orgName());     
   }
 
   public get allOrganizations(): Array<DAO> {
@@ -110,7 +114,7 @@ export class OrganizationService {
         // this has side-effects of initializing and caching the dao
         let dao = await this.organizationAt(avatarAddress);
         if (dao) {
-          this.logger.debug(`loaded org ${dao.name}: ${dao.avatar.address}`);
+          this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
           /**
            * NOTE: At the time we receive this for a newly-added dao, Arc will likely
            * not yet have added the schemes for the dao.  We will get the notifications

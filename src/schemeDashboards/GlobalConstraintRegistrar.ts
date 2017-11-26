@@ -39,10 +39,6 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.constraintToAddInfo.name}`, tx.tx));
-      
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.constraintToAddInfo.name}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
@@ -56,10 +52,6 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`, tx.tx));
-      
-      // this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

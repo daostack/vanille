@@ -27,8 +27,6 @@ export class UpgradeScheme extends DaoSchemeDashboard {
       let tx = await scheme.proposeUpgrade(this.orgAddress, this.controllerAddress);
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted to change controller', tx.tx));
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to change controller to ${this.controllerAddress}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
@@ -49,12 +47,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
         fee);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to upgrading scheme', tx.tx));
-
-      //   );
-      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
+        'Proposal submitted to change upgrading scheme', tx.tx));
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

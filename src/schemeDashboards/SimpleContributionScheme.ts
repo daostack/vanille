@@ -41,9 +41,6 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
       );
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted for a contribution', tx.tx));
-
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

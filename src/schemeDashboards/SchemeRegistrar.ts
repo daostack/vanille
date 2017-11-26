@@ -18,6 +18,9 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   newSchemeConfiguration: SchemeConfigurator = <any>{};
   currentSchemeSelection: SchemeInfo=null;
   schemeToAddAddress: string;
+  hasSchemesToAdd: boolean;
+  addableSchemes: Array<SchemeInfo> = [];
+  addressControl: HTMLElement;
 
   constructor(
     private schemeService: SchemeService
@@ -29,10 +32,17 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     super();
   }
 
+// activate() {
+//   this.schemeService.getSchemesForDao(this.orgAddress, true).then((schemes) => {
+//       this.hasSchemesToAdd = schemes.filter((s:SchemeInfo) => { return !s.inDao; }).length > 0;
+//     });
+// }
+
   useAddress() {
     if (this.currentSchemeSelection)
     {
       this.schemeToAddAddress = this.currentSchemeSelection.address;
+      $(this.addressControl).addClass("is-filled"); // annoying thing you have to do for BMD
     }
   }
 
@@ -56,41 +66,34 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         true);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.schemeToModify.name}`, tx.tx));
-        
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted to add ${this.schemeToPropose.name}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
+        `Proposal submitted to modify ${this.schemeToModify.name}`, tx.tx));
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
   }
 
   async addScheme() {
+    try{
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
 
-      /**
-       * STUCK HERE. CAN'T NECESSARILY KNOW WHAT THE SCHEME KEY IS IF IT ISN'T KNOW BY THE
-       * CURRENT VERSION OR ARC.  COULD BE OLDER OR NEWER.  GOTTA MODIFY ARC SCHEMES SO  THEY
-       * CAN IDENTIFY THEMSELVES. 
-       */ 
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(this.schemeToAddAddress);
-      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(this.orgAddress, this.upgradingSchemeAddress);
-      const fee = await this.schemeService.getSchemeFee("UpgradeScheme", this.upgradingSchemeAddress);
+      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(this.currentSchemeSelection.key, this.schemeToAddAddress);
+      const fee = await this.schemeService.getSchemeFee(this.currentSchemeSelection.key, this.schemeToAddAddress);
+      const schemeParametersHash = await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress);
+      const permissions = await this.schemeService.getSchemePermissions(this.currentSchemeSelection.key);
 
-      let tx = await upgradeSchemeToBeReplaced.proposeChangeUpgradingScheme(
+      let tx = await schemeRegistrar.proposeScheme(
         this.orgAddress,
-        this.upgradingSchemeAddress,
+        this.schemeToAddAddress,
         schemeParametersHash,
+        (permissions & Permissions.CanRegisterOtherSchemes) != 0,
         nativeTokenAddress,
-        fee);
+        fee,
+        true);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to upgrading scheme', tx.tx));
+        `Proposal submitted to add ${this.currentSchemeSelection.name}`, tx.tx));
 
-      //   );
-      //  this.eventAggregator.publish("handleSuccess", `Proposal submitted to change upgrading scheme to ${this.upgradingSchemeAddress}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
-       // this.eventAggregator.publish("handleWarning", `Not Implemented`);
+      this.currentSchemeSelection = this.schemeToAddAddress = null; // reset so everything gets rebound properly
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }  
@@ -102,11 +105,10 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
     try {
       const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
+
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to remove ${this.schemeToRemove.name}`, tx.tx));
-        
-       //this.eventAggregator.publish("handleSuccess", `Proposal submitted to remove ${this.schemeToRemove.name}`);
-       // this.eventAggregator.publish("handleSuccess", `Proposal submitted, Id: ${this.arcService.getValueFromTransactionLog(tx,"_proposalId")}`);
+
       this.schemeToRemove = null;
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);

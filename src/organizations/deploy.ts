@@ -96,7 +96,7 @@ export class DeployGen  {
       this.eventAggregator.publish("handleSuccess", new EventConfigAction(
           `${this.orgName} has been successfully deployed!`
           , "See The New DAO"
-          , () => { this.router.navigateToRoute("daoDashboard", {address: organization.avatar.address}); }
+          , () => { this.router.navigateToRoute("daoDashboard", {address: organization.address}); }
         ));
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));

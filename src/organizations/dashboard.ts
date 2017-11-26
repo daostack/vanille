@@ -32,7 +32,7 @@ export class DAODashboard {
 
     this.address = options.address;
     this.org = await this.organizationService.organizationAt(this.address);
-    this.orgName = await this.organizationService.organizationName(this.org);
+    this.orgName = this.org.name;
     let token = this.org.token;
     this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
