@@ -27,7 +27,7 @@ export class SchemeService {
    * If not from Arc, then name and key will be empty.
    * @param daoAddress
    */
-  public async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
+  private async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
     let schemes = (await this.organizationService.getSchemesInOrganization(daoAddress)).map((daoSchemeInfo: DaoSchemeInfo) => {
           return SchemeInfo.fromDaoSchemeInfo(daoSchemeInfo);
         });
@@ -36,9 +36,10 @@ export class SchemeService {
   }
 
   /**
-   * Return all the schemes in the DAO, plus all the arc schemes not in the DAO
+   * Return all Arc schemes, whether or not in the DAO.  scheme.isRegistered will indicate whether
+   * the scheme is in the DAO.
    * @param daoAddress
-   * @param excludeNonArcSchemes
+   * @param excludeNonArcSchemes Default is false
    */
   public async getSchemesForDao(daoAddress: string, excludeNonArcSchemes:boolean = false): Promise<Array<SchemeInfo>> {
 
@@ -52,7 +53,7 @@ export class SchemeService {
 
     /**
      * Now merge the list of schemes that the org has with the available Arc schemes that it doesn't have
-     * so that schemesMap contains all the schemes both contained and not contained by the Dao.
+     * so that the returned list contains all the schemes both contained and not contained by the Dao.
      */
     let availableSchemes = this.availableSchemes;
     for (let availableScheme of availableSchemes) {

@@ -32,7 +32,7 @@
             schemes.bind="addableSchemes"
           >
             <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
-            <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.name : 'Schemes'}</span></span>
+            <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.name : 'Select Scheme Type to Add'}</span></span>
           </arc-schemes-dropdown>
 
           <div show.bind="currentSchemeSelection" class="form-group" style="padding-top:.5rem">
@@ -68,7 +68,8 @@
           exclude-unregistered.bind="true"
           exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
         >
-        <span slot="buttonText"><span class="font-weight-bold">${schemeToModify ? schemeToModify.name : 'Select Scheme'}</span></span>
+        <span slot="buttonText"><span class="font-weight-bold">${schemeToModify ? schemeToModify.name : 'Select Scheme to Modify'}</span></span>
+        <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
       </arc-schemes-dropdown>
         
         <div if.bind="!!schemeToModify">
@@ -90,6 +91,7 @@
             dao-address.bind="orgAddress"
             schemes.bind="allSchemes"
             exclude-unregistered.bind="true"
+            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
             >
             <span slot="noSchemes"><span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
             <span slot="buttonText"><span class="font-weight-bold">${schemeToRemove ? schemeToRemove.name : 'Select Scheme to Remove'}</span></span>

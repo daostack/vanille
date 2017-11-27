@@ -9,7 +9,7 @@ export class DAO extends Organization {
 
   public address: string;
   public name: string;
-  private schemesCache = new Map<string,DaoSchemeInfoFromLogs>();
+  private schemesCache = new Map<string,SchemeInfo>();
   private registerSchemeEvent;
   private unRegisterSchemeEvent;
   public arcService: ArcService;
@@ -49,7 +49,7 @@ export class DAO extends Organization {
      * this is triggered right away for every scheme in the DAO, and thereafter
      * whenever a new scheme is registered
      */
-    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0});
+    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0, toBlock: 'latest'});
 
     await new Promise((resolve,reject) => {
       this.registerSchemeEvent.get((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true).then(() => { resolve(); }));
@@ -57,7 +57,7 @@ export class DAO extends Organization {
       this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
     });
 
-    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 0});
+    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 'latest'});
 
     await new Promise((resolve,reject) => {
       this.unRegisterSchemeEvent.get((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false).then(() => { resolve(); }));
@@ -69,7 +69,8 @@ export class DAO extends Organization {
   }
   
   public get allSchemes(): Array<DaoSchemeInfo> {
-    return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
+    // return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
+    return Array.from(this.schemesCache.values());
   }
 
   private async handleSchemeEvent(err, eventsArray, adding:boolean) : Promise<void>
@@ -82,44 +83,37 @@ export class DAO extends Organization {
     for (let i = 0; i < count; i++) {
       let schemeAddress =  eventsArray[i].args._scheme;
       let scheme = this.arcService.contractInfoFromAddress(schemeAddress) as any;
+
+      // use if not in Arc or is one of the schemes we work with (ie, not GenesisScheme nor its ilk)
+      // TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
+      let keeper = !scheme || this.arcService.arcSchemes.filter((s) => { return s.address === scheme.address; }).length;
+
       if (!scheme) {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
         scheme = <any>{ address: schemeAddress };
-      }
+      } 
+      
+      if (keeper) {
+          
+          // then this is a scheme we can work with (ie, not the GenesisScheme)
+          //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
-      let daoSchemeInfoFromLogs = new DaoSchemeInfoFromLogs();
+          // TODO: get unknown name from Arc
+          if (adding) {
+            this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+            this.schemesCache.set(schemeAddress,scheme);
+          } else if (this.schemesCache.has(schemeAddress)) {
+              this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+              this.schemesCache.delete(schemeAddress);
+          }
 
-      daoSchemeInfoFromLogs.blockNumber = eventsArray[i].blockNumber;
-      daoSchemeInfoFromLogs.logIndex = eventsArray[i].logIndex;
-      daoSchemeInfoFromLogs.scheme = scheme;
-      daoSchemeInfoFromLogs.isInDao = adding;
-
-      //let permissions = await this.controller.getSchemePermissions(schemeAddress);
-
-      let current: DaoSchemeInfoFromLogs = this.schemesCache.get(schemeAddress);
-      let isNewer = 
-        !current || 
-        (daoSchemeInfoFromLogs.blockNumber > current.blockNumber) || 
-        ((daoSchemeInfoFromLogs.blockNumber == current.blockNumber) && (daoSchemeInfoFromLogs.logIndex > current.logIndex))
-          ;
-
-      if (isNewer) {
-        // TODO: get unknown name from Arc
-        if (adding) {
-          this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
-          this.schemesCache.set(schemeAddress,daoSchemeInfoFromLogs);
-        } else if (this.schemesCache.has(schemeAddress)) {
-            this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
-            this.schemesCache.delete(schemeAddress);
+          this.publish(DAO.daoSchemeSetChangedEvent, 
+          {
+            dao: this,
+            scheme:  SchemeInfo.fromContractInfo(scheme, adding)
+          });
         }
-
-        this.publish(DAO.daoSchemeSetChangedEvent, 
-        {
-          dao: this,
-          scheme:  SchemeInfo.fromContractInfo(scheme, adding)
-        });
       }
-    }
   }
   /**
     * Publishes a message.
@@ -141,11 +135,4 @@ export class DAO extends Organization {
       * @param callback The callback to be invoked when when the specified message is published.
       */
       public subscribeOnce(event: string | Function, callback: Function): Subscription  { return null; }
-}
-
-class DaoSchemeInfoFromLogs {
-  blockNumber: number;
-  logIndex: number;
-  scheme: DaoSchemeInfo;
-  isInDao: boolean;
 }
