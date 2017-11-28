@@ -32,13 +32,18 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
       const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
       const globalConstraintConfigHash = await this.globalConstraintService.getGlobalConstraintConfigHash(this.orgAddress, this.constraintToAddInfo, this.constraintToAddConfig);
       const contrainRemovalVotingMachineInfoHash = await this.votingMachineService.getVotingMachineConfigHash(this.orgAddress, this.votingMachineInfo, this.votingMachineConfig );
-      let tx = await scheme.proposeGlobalConstraint(this.orgAddress,
-        this.constraintToAddInfo.address,
-         globalConstraintConfigHash,
-         contrainRemovalVotingMachineInfoHash);
+
+      let tx = await scheme.proposeGlobalConstraint(
+      {
+          avatar: this.orgAddress
+          , globalConstraint: this.constraintToAddInfo.address
+          , globalConstraintParametersHash: globalConstraintConfigHash
+          , votingMachineHash: contrainRemovalVotingMachineInfoHash
+      });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.constraintToAddInfo.name}`, tx.tx));
+
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
@@ -48,7 +53,11 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
     try {
       const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
 
-      let tx = await scheme.proposeToRemoveGC(this.orgAddress, this.constraintToRemoveInfo.address);
+      let tx = await scheme.proposeToRemoveGlobalConstraint(
+      {
+          avatar: this.orgAddress
+          , globalConstraint: this.constraintToRemoveInfo.address
+      });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`, tx.tx));

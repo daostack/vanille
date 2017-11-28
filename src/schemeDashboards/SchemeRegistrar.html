@@ -30,22 +30,23 @@
             exclude-registered.bind="true"
             exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
             schemes.bind="addableSchemes"
+            include-non-arc-item.bind="true"
           >
             <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
             <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.name : 'Select Scheme Type to Add'}</span></span>
           </arc-schemes-dropdown>
 
-          <div show.bind="currentSchemeSelection" class="form-group" style="padding-top:.5rem">
+          <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
             <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
           </div>
 
-          <div ref="addressControl"  class="form-group">
+          <div show.bind="currentSchemeSelection" ref="addressControl"  class="form-group">
             <label for="schemeToAddAddress">Scheme Address</label>
             <input  id="schemeToAddAddress" type="text" class="form-control" value.bind="schemeToAddAddress"/>
             <!-- <span class="bmd-help">Scheme address</span> -->
           </div>
           
-          <div if.bind="currentSchemeSelection">
+          <div if.bind="currentSchemeSelection && !isNonArcScheme">
             <div class="scheme-config">
               <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.key}" model.bind="newSchemeConfiguration"></compose>
             </div>

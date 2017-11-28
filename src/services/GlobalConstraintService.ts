@@ -22,8 +22,8 @@ constructor(
   public defaultConstraint: GlobalConstraintInfo;
 
   public async getGlobalConstraintConfigHash(
-    orgAddress: string,
-    globalConstraintInfo: GlobalConstraintInfo // Knows how to compute the hash
+    orgAddress: string
+    , globalConstraintInfo: GlobalConstraintInfo 
     , globalConstraintConfig: GlobalConstraintConfig // Knows how to compute the hash
   ) {
       

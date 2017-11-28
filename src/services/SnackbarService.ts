@@ -63,11 +63,16 @@ export class SnackbarService {
   private serveSnack(config: EventConfig | string, defaults: any = {}) {
     let completeConfig = this.completeConfig(config,defaults);
 
-    let $snackbar = (<any>$).snackbar(this.getSnackbarConfig(completeConfig));
+    /**
+     * duration < 0 suppresses the snack
+     */
+    if (completeConfig.duration >= 0) {
+      let $snackbar = (<any>$).snackbar(this.getSnackbarConfig(completeConfig));
 
-    // for actions, but this means you can put binding code in the message too, 
-    // where the config is the bindingContext
-    this.aureliaHelperService.enhanceElement($snackbar[0], completeConfig);
+      // for actions, but this means you can put binding code in the message too, 
+      // where the config is the bindingContext
+      this.aureliaHelperService.enhanceElement($snackbar[0], completeConfig);
+    }
   }
 
   completeConfig(config: EventConfig | string, defaults: any = {} ): EventConfig {

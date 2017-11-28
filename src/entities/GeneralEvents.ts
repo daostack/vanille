@@ -4,9 +4,19 @@ export class EventConfig {
     , type: EventMessageType = EventMessageType.Info
     , lifetime: SnackLifetime = SnackLifetime.transitory
     ) {
-    if (lifetime === SnackLifetime.clickToDismiss) {
-      this.duration = 0;
+    
+    switch (lifetime) {
+      case SnackLifetime.clickToDismiss:
+        this.duration = 0;
+        break;
+      case SnackLifetime.transitory:
+        this.duration = 3000;
+        break;
+      case SnackLifetime.none:
+        this.duration = -1;
+        break;
     }
+
     switch(type) {
       case EventMessageType.Info:
       case EventMessageType.Debug:

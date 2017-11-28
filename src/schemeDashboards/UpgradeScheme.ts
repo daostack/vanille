@@ -14,7 +14,6 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   constructor(
       private schemeService: SchemeService
-    // , private organizationService: OrganizationService
     , private eventAggregator: EventAggregator
     , private arcService: ArcService
   ) {
@@ -24,9 +23,15 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   async proposeController() {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme");
-      let tx = await scheme.proposeUpgrade(this.orgAddress, this.controllerAddress);
+      let tx = await scheme.proposeController(
+        {
+          avatar: this.orgAddress
+          , controller: this.controllerAddress
+        });
+
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted to change controller', tx.tx));
+
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
@@ -34,20 +39,22 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      const upgradeSchemeToBeReplaced = await this.arcService.getContract("UpgradeScheme");
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken("UpgradeScheme", this.upgradingSchemeAddress);
+      const scheme = await this.arcService.getContract("UpgradeScheme");
       const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(this.orgAddress, this.upgradingSchemeAddress);
-      const fee = await this.schemeService.getSchemeFee("UpgradeScheme", this.upgradingSchemeAddress);
 
-      let tx = await upgradeSchemeToBeReplaced.proposeChangeUpgradingScheme(
-        this.orgAddress,
-        this.upgradingSchemeAddress,
-        schemeParametersHash,
-        nativeTokenAddress,
-        fee);
+      let tx = await scheme.proposeUpgradingScheme(
+        {
+          avatar: this.orgAddress
+          , scheme: this.upgradingSchemeAddress
+          , schemeParametersHash: schemeParametersHash
+          // the controller needs to be apprised of how the UpgradeScheme will pay for stuff
+          // , tokenAddress: tokenAddress
+          // , fee: fee
+        });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted to change upgrading scheme', tx.tx));
+
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

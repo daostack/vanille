@@ -8,6 +8,9 @@ import { Permissions } from '../services/ControllerService';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { SchemeConfigurator} from '../schemeConfiguration/schemeConfigurationBase';
 import { EventConfigTransaction } from "../entities/GeneralEvents";
+import { NonArcSchemeItemKey } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
+import { AureliaHelperService } from "../services/AureliaHelperService"
+import { NULL_HASH } from 'services/Web3Service';
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
@@ -21,22 +24,26 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   hasSchemesToAdd: boolean;
   addableSchemes: Array<SchemeInfo> = [];
   addressControl: HTMLElement;
+  NonArcSchemeItemKey = NonArcSchemeItemKey;
 
   constructor(
     private schemeService: SchemeService
     , private arcService: ArcService
     , private organizationService: OrganizationService
     , private eventAggregator: EventAggregator
+    , private aureliaHelperService: AureliaHelperService
 
   ) {
     super();
   }
 
-// activate() {
-//   this.schemeService.getSchemesForDao(this.orgAddress, true).then((schemes) => {
-//       this.hasSchemesToAdd = schemes.filter((s:SchemeInfo) => { return !s.inDao; }).length > 0;
-//     });
-// }
+  attached() {
+    this.aureliaHelperService.createPropertyWatch(this, "currentSchemeSelection", (newValue: SchemeInfo, oldValue: SchemeInfo) =>
+    {
+        this.schemeToAddAddress = undefined;
+        $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
+    });
+  }
 
   useAddress() {
     if (this.currentSchemeSelection)
@@ -46,27 +53,27 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
     }
   }
 
+  @computedFrom("currentSchemeSelection")
+  get isNonArcScheme() {
+    return this.currentSchemeSelection && (this.currentSchemeSelection.key === NonArcSchemeItemKey);
+  }
+
   async modifyScheme() {
   
     try {
-      const scheme = await this.arcService.getContract("SchemeRegistrar");
-      const contractInfo = this.schemeToModify as ContractInfo;
-      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress);
-      const permissions = await this.schemeService.getSchemePermissions(contractInfo.key);
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(contractInfo.key);
-      const fee = await this.schemeService.getSchemeFee(contractInfo.key);
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
-      const tx = await scheme.proposeScheme(
-        this.orgAddress,
-        contractInfo.address,
-        schemeParametersHash,
-        (permissions & Permissions.CanRegisterOtherSchemes) != 0,
-        nativeTokenAddress,
-        fee,
-        true);
+      const tx = await schemeRegistrar.proposeToAddModifyScheme({
+        avatar: this.orgAddress,
+        scheme: this.schemeToModify.address,
+        schemeKey: this.schemeToModify.key,
+        schemeParametersHash: schemeParametersHash
+      });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to modify ${this.schemeToModify.name}`, tx.tx));
+
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }
@@ -75,36 +82,45 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
   async addScheme() {
     try{
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+      let tx;
 
-      const nativeTokenAddress = await this.schemeService.getSchemeNativeToken(this.currentSchemeSelection.key, this.schemeToAddAddress);
-      const fee = await this.schemeService.getSchemeFee(this.currentSchemeSelection.key, this.schemeToAddAddress);
-      const schemeParametersHash = await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress);
-      const permissions = await this.schemeService.getSchemePermissions(this.currentSchemeSelection.key);
-
-      let tx = await schemeRegistrar.proposeScheme(
-        this.orgAddress,
-        this.schemeToAddAddress,
-        schemeParametersHash,
-        (permissions & Permissions.CanRegisterOtherSchemes) != 0,
-        nativeTokenAddress,
-        fee,
-        true);
+      if (this.isNonArcScheme) {
+        tx = await schemeRegistrar.proposeToAddModifyScheme({
+          avatar: this.orgAddress,
+          scheme: this.schemeToAddAddress,
+          schemeKey: null,
+          schemeParametersHash: NULL_HASH
+        });
+      } else {
+        const schemeParametersHash = await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress);
+        tx = await schemeRegistrar.proposeToAddModifyScheme({
+          avatar: this.orgAddress,
+          scheme: this.schemeToAddAddress,
+          schemeKey: this.currentSchemeSelection.key,
+          schemeParametersHash: schemeParametersHash
+        });
+      }
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.currentSchemeSelection.name}`, tx.tx));
 
       this.currentSchemeSelection = this.schemeToAddAddress = null; // reset so everything gets rebound properly
+
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }  
   }
 
   async removeScheme() {
-    const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
-    const scheme = this.schemeToRemove;
 
     try {
-      const tx = await schemeRegistrar.proposeToRemoveScheme(this.orgAddress, scheme.address);
+
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
+
+      let tx = await schemeRegistrar.proposeToRemoveScheme( {
+        avatar: this.orgAddress,
+        scheme: this.schemeToRemove.address
+      });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to remove ${this.schemeToRemove.name}`, tx.tx));

@@ -101,7 +101,7 @@ export class DAODashboard {
     let schemes = await this.schemeService.getSchemesForDao(this.address);
 
     // add a fake non-Arc scheme
-    schemes.push(<SchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
+    // schemes.push(<SchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
 
     this.registeredArcSchemes =   Array.from(schemes).filter((s: SchemeInfo) => s.inArc && s.inDao);
     this.unregisteredArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc && !s.inDao);

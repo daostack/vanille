@@ -7,7 +7,7 @@ import { DAO } from '../entities/DAO';
 import { DaoSchemeInfo } from '../entities/DaoSchemeInfo';
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 import { EventAggregator  } from 'aurelia-event-aggregator';
-import  { EventConfigException } from '../entities/GeneralEvents';
+import  { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';
 
 @autoinject
 export class OrganizationService {
@@ -81,8 +81,11 @@ export class OrganizationService {
         dao = await DAO.fromOrganization(org, this.arcService, this.web3);
 
       } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
-        // this.eventAggregator.publish("handleFailure", `Error loading DAO:${avatarAddress}`);
+
+        // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
+        // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex, undefined, SnackLifetime.none));
+
         return null;
       }
     } else {

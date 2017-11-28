@@ -14,13 +14,15 @@ export class ArcSchemesDropdown {
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeRegistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeUnregistered: boolean = false;
   @bindable( { defaultBindingMode: bindingMode.oneTime }) excludeKeys: Array<string> = [];
+  @bindable( { defaultBindingMode: bindingMode.oneTime }) includeNonArcItem: boolean = false;
+
   /**
    * this is one-way, but in the direction back to the container 
    */
   @bindable({ defaultBindingMode: bindingMode.fromView }) schemes: Array<SchemeInfo>;
 
-  subscription;
-
+  private subscription;
+  
   constructor(
     private schemeService: SchemeService    
     , private organizationService: OrganizationService    
@@ -53,9 +55,22 @@ export class ArcSchemesDropdown {
           ;
         })
         ;
+
+    if (this.includeNonArcItem) {
+      
+      let nonArcSchemeItem = new SchemeInfo();
+      nonArcSchemeItem.name = "Non-Arc Scheme";
+      nonArcSchemeItem.key = NonArcSchemeItemKey;
+      nonArcSchemeItem.isRegistered = false;
+      nonArcSchemeItem.address = null;
+
+      this.schemes.unshift(nonArcSchemeItem);
+    }
   }
 
   onItemClick(scheme) {
     this.scheme = scheme;
   }
 }
+
+export const NonArcSchemeItemKey="__NonArcScheme__";

@@ -36,7 +36,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use.globalResources([
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
-    PLATFORM.moduleName("resources/customElements/ArcSchemesDropdown/arcSchemesDropdown"),
+    PLATFORM.moduleName("resources/customElements/arcSchemesDropdown/arcSchemesDropdown"),
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
@@ -50,6 +50,8 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
     PLATFORM.moduleName("resources/customAttributes/blur-image"),
     PLATFORM.moduleName("resources/valueConverters/toUpper"),
+    PLATFORM.moduleName("resources/valueConverters/number"),
+    PLATFORM.moduleName("resources/valueConverters/round"),
   ]);
 
 

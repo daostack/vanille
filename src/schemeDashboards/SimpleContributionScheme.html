@@ -12,25 +12,25 @@
         <div class="col-3">
           <div class="form-group">
             <label for="nativeTokenReward">Native Token Award</label>
-            <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward" />
+            <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward | number" />
           </div>
         </div>
         <div class="col-3">
           <div class="form-group">
             <label for="reputationTokenReward">Reputation Token Award</label>
-            <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward" />
+            <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward | number" />
           </div>
         </div>
           <div class="col-3">
             <div class="form-group">
-              <label for="ethReward">Eth Reward</label>
-              <input class="form-control" type='number' id="ethReward" value.bind="ethReward" />
+              <label for="ethReward">Ethers Reward (Wei)</label>
+              <input class="form-control" type='number' id="ethReward" value.bind="ethReward | number" />
             </div>
           </div>
           <div class="col-3">
             <div class="form-group">
               <label for="externalTokenReward">External Token Reward</label>
-              <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward" />
+              <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward | number" />
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
   ethReward: Number = 0;
   externalTokenReward: Number = 0;
   reputationTokenReward: Number = 0;
-  externalTokenAddress: string =  null; // null so optional property will always be defined for solidity 
+  externalTokenAddress: string;
   beneficiaryAddress: string;
 
   constructor(
@@ -28,12 +28,12 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
   async proposeContribution() {
     try {
       const scheme = await this.arcService.getContract("SimpleContributionScheme");
-      let tx = await scheme.submitContribution( {
+      let tx = await scheme.proposeContribution( {
           avatar: this.orgAddress,
           description: this.description,
           nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
           reputationReward: this.reputationTokenReward, // amount of contribution to reputation
-          ethReward: this.ethReward, // amount of contribution in ethers
+          ethReward: this.ethReward, // amount of contribution in Wei
           externalToken: this.externalTokenAddress, 
           externalTokenReward: this.externalTokenReward, // amount of contribution in terms of the given external token
           beneficiary: this.beneficiaryAddress
