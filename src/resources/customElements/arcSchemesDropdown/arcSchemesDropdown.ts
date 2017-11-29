@@ -73,4 +73,4 @@ export class ArcSchemesDropdown {
   }
 }
 
-export const NonArcSchemeItemKey="__NonArcScheme__";
+export const NonArcSchemeItemKey="NonArcScheme";

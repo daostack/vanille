@@ -46,7 +46,7 @@
             <!-- <span class="bmd-help">Scheme address</span> -->
           </div>
           
-          <div if.bind="currentSchemeSelection && !isNonArcScheme">
+          <div if.bind="currentSchemeSelection">
             <div class="scheme-config">
               <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.key}" model.bind="newSchemeConfiguration"></compose>
             </div>

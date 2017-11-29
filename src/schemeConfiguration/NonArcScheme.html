@@ -1,0 +1,22 @@
+<template>
+  <div class="form-group">
+    <label for="fee">Fee</label>
+    <input id="fee" type="number" class="form-control" value.bind="model.fee | number"/>
+  </div>
+  <div class="form-group">
+    <label for="tokenAddress">Token Address</label>
+    <input id="tokenAddress" type="text" class="form-control" value.bind="model.tokenAddress"/>
+  </div>
+  <div class="form-group">
+    <label for="schemeParametersHash">Scheme Parameters Hash</label>
+    <input id="schemeParametersHash" type="text" class="form-control" value.bind="model.schemeParametersHash"/>
+  </div>
+  <div class="form-group">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" checked.bind="model.isRegistered">
+        Is a Registering Scheme
+      </label>
+    </div>
+  </div>
+</template>

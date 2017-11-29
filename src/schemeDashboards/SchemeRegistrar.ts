@@ -85,14 +85,20 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
       let tx;
 
       if (this.isNonArcScheme) {
+        let config = this.newSchemeConfiguration as any;
+
         tx = await schemeRegistrar.proposeToAddModifyScheme({
           avatar: this.orgAddress,
           scheme: this.schemeToAddAddress,
           schemeKey: null,
-          schemeParametersHash: NULL_HASH
+          schemeParametersHash: config.schemeParametersHash,
+          fee: config.fee,
+          tokenAddress: config.tokenAddress,
+          isRegistering: config.isRegistered
         });
       } else {
         const schemeParametersHash = await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress);
+
         tx = await schemeRegistrar.proposeToAddModifyScheme({
           avatar: this.orgAddress,
           scheme: this.schemeToAddAddress,

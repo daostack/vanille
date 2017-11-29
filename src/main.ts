@@ -67,6 +67,7 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
+  PLATFORM.moduleName("./schemeConfiguration/NonArcScheme")
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
