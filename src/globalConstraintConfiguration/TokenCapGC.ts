@@ -13,7 +13,10 @@ export class TokenCapGC implements GlobalConstraintConfig   {
   }
 
   public async getHash(globalConstraint: TruffleContract, org: DAO) {
-    return await globalConstraint.getParametersHash(org.token.address, this.model.cap);
+    let hash = await globalConstraint.getParametersHash(org.token.address, this.model.cap);
+    // don't generate hash without being sure it is usable  (TODO: is this needed/desirable/cost money)?
+    await globalConstraint.setParameters(org.token.address, this.model.cap);
+    return hash;
   }
 
 }

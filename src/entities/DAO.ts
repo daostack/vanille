@@ -2,7 +2,6 @@ import { ArcService, Organization, ContractInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
-import { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
 import { Web3Service } from "../services/Web3Service";
 
 export class DAO extends Organization {
@@ -68,7 +67,7 @@ export class DAO extends Organization {
     this.logger.debug(`Finished loading schemes for ${this.name}: ${this.address}`);
   }
   
-  public get allSchemes(): Array<DaoSchemeInfo> {
+  public get allSchemes(): Array<SchemeInfo> {
     // return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
     return Array.from(this.schemesCache.values());
   }
@@ -84,7 +83,7 @@ export class DAO extends Organization {
       let schemeAddress =  eventsArray[i].args._scheme;
       let scheme = this.arcService.contractInfoFromAddress(schemeAddress) as any;
 
-      // use if not in Arc or is one of the schemes we work with (ie, not GenesisScheme nor its ilk)
+      // keep (ie, don't ignore) if not in Arc or is one of the schemes we work with (ie, not GenesisScheme nor its ilk)
       // TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
       let keeper = !scheme || this.arcService.arcSchemes.filter((s) => { return s.address === scheme.address; }).length;
 
@@ -98,10 +97,12 @@ export class DAO extends Organization {
           // then this is a scheme we can work with (ie, not the GenesisScheme)
           //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
+          let schemeInfo = SchemeInfo.fromContractInfo(scheme, adding);
+
           // TODO: get unknown name from Arc
           if (adding) {
             this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
-            this.schemesCache.set(schemeAddress,scheme);
+            this.schemesCache.set(schemeAddress,schemeInfo);
           } else if (this.schemesCache.has(schemeAddress)) {
               this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
               this.schemesCache.delete(schemeAddress);
@@ -110,7 +111,7 @@ export class DAO extends Organization {
           this.publish(DAO.daoSchemeSetChangedEvent, 
           {
             dao: this,
-            scheme:  SchemeInfo.fromContractInfo(scheme, adding)
+            scheme: schemeInfo
           });
         }
       }

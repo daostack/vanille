@@ -67,7 +67,7 @@ export class DAODashboard {
         if (index !== -1) // shouldn't ever be -1
         {
           // in case we're re-adding below, lets move the existing schemeInfo instance, in case that helps retain any information
-          schemeInfo = removeFrom.splice(index,1)[0];
+          removeFrom.splice(index,1)[0];
         }
       }
 

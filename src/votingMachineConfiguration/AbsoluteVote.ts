@@ -17,6 +17,9 @@ export class AbsoluteVote implements VotingMachineConfig  {
     votingMachine: TruffleContract,
     org: DAO) {
       
-    return await votingMachine.getParametersHash(org.reputation.address, this.model.votePrec, this.model.ownerVote);
+    let hash = await votingMachine.getParametersHash(org.reputation.address, this.model.votePrec, this.model.ownerVote);
+    // don't generate hash without being sure it is usable  (TODO: is this needed/desirable/cost money)?
+    await votingMachine.setParameters(org.reputation.address, this.model.votePrec, this.model.ownerVote);
+    return hash;
   }
 }

@@ -30,14 +30,14 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
   async proposeConstraint() {
     try {
       const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
-      const globalConstraintConfigHash = await this.globalConstraintService.getGlobalConstraintConfigHash(this.orgAddress, this.constraintToAddInfo, this.constraintToAddConfig);
+      const globalConstraintParametersHash = await this.globalConstraintService.getGlobalConstraintConfigHash(this.orgAddress, this.constraintToAddInfo, this.constraintToAddConfig);
       const contrainRemovalVotingMachineInfoHash = await this.votingMachineService.getVotingMachineConfigHash(this.orgAddress, this.votingMachineInfo, this.votingMachineConfig );
 
       let tx = await scheme.proposeGlobalConstraint(
       {
           avatar: this.orgAddress
           , globalConstraint: this.constraintToAddInfo.address
-          , globalConstraintParametersHash: globalConstraintConfigHash
+          , globalConstraintParametersHash: globalConstraintParametersHash
           , votingMachineHash: contrainRemovalVotingMachineInfoHash
       });
 
