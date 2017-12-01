@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { SchemeConfigurator} from './schemeConfigurationBase';
-import { VotingMachineService, VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { SchemeService, ContractInfo } from '../services/SchemeService';
+import {  VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
+import { ArcService } from  "../services/ArcService";
 
 @autoinject
 export class SchemeRegistrar implements SchemeConfigurator  {
@@ -10,8 +10,7 @@ export class SchemeRegistrar implements SchemeConfigurator  {
   votingMachineInfo: VotingMachineInfo =null;
 
   constructor(
-    private votingMachineService: VotingMachineService
-    , private schemeService: SchemeService
+    private arcService: ArcService
   ) {
     // super();
   }
@@ -22,12 +21,9 @@ export class SchemeRegistrar implements SchemeConfigurator  {
 
   async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
 
-    const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
-        orgAddress,
-        this.votingMachineInfo,
-        this.votingMachineConfig);
+    const voteParamsHash = await this.votingMachineConfig.getConfigurationHash(orgAddress, this.votingMachineInfo.address);
 
-    return await this.schemeService.setSchemeParameters({
+    return await this.arcService.setContractParameters({
       "voteParametersHash" : voteParamsHash,
       "votingMachine" : this.votingMachineInfo.address
     }, "SchemeRegistrar", schemeAddress);

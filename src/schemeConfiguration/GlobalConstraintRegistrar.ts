@@ -1,18 +1,16 @@
 import { autoinject } from 'aurelia-framework';
 import { SchemeConfigurator} from './schemeConfigurationBase';
-import { VotingMachineService, VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { SchemeService, ContractInfo } from '../services/SchemeService';
+import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
+import { ArcService } from '../services/ArcService';
 
 @autoinject
 export class GlobalConstraintRegistrar implements SchemeConfigurator  {
 
   votingMachineInfo: VotingMachineInfo = null;
-  fee = 0;
   votingMachineConfig: VotingMachineConfig = <any>{};
 
   constructor(
-      private votingMachineService: VotingMachineService
-    , private schemeService: SchemeService
+    private arcService: ArcService
   ) {
     // super();
   }
@@ -26,15 +24,11 @@ export class GlobalConstraintRegistrar implements SchemeConfigurator  {
 
     const votingMachineInfo = this.votingMachineInfo;
 
-    const voteParamsHash = await this.votingMachineService.getVotingMachineConfigHash(
-        orgAddress,
-        votingMachineInfo,
-        this.votingMachineConfig);
+    const voteParamsHash = this.votingMachineConfig.getConfigurationHash(orgAddress, votingMachineInfo.address);
 
-    return await this.schemeService.setSchemeParameters({
+    return await this.arcService.setContractParameters({
       "voteParametersHash" : voteParamsHash,
       "votingMachine" : this.votingMachineInfo.address
-      , "fee" : this.fee
     }, "GlobalConstraintRegistrar", schemeAddress);
   }
 }

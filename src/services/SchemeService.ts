@@ -77,21 +77,6 @@ export class SchemeService {
       }
     }
     
-    /**
-     * Set the parameters on the scheme.  Returns hash.
-     * @param params 
-     */
-    public async setSchemeParameters(params: any, key: string, schemeAddress?: string): Promise<string> {
-      try {
-        const contract = await this.arcService.getContract(key, schemeAddress);
-        return await contract.setParams(params);
-      }
-      catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error setting scheme parameters`, ex));        
-        return null; 
-      }
-    }
-
     public async getSchemeNativeToken(key: string, schemeAddress?: string): Promise<TruffleContract> {
       try {
         const contract = await this.arcService.getContract(key, schemeAddress);

@@ -1,4 +1,4 @@
-// import { autoinject } from "aurelia-framework";
+import { autoinject } from "aurelia-framework";
 import  { 
       Organization
     , ArcDeployedContractKeys
@@ -13,13 +13,15 @@ import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
 import * as Web3 from "web3";
 import { LogManager } from 'aurelia-framework';
+import { EventAggregator  } from 'aurelia-event-aggregator';
+import  { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';
 
-// @autoinject()
+@autoinject
 export class ArcService {
    
   logger = LogManager.getLogger("Alchemy");
 
-  constructor() {
+  constructor(private eventAggregator: EventAggregator) {
     this.contractCache = new Map<string,TruffleContract>();
   }
   /**
@@ -39,10 +41,6 @@ export class ArcService {
   public get defaultAccount(): string { return getDefaultAccount(); }
 
   public async initialize() {
-    /**
-     * Daostack-Arc's dependencies on contract json (artifact) files are manually defined
-     * in webpack.config.vendor.js.  See ModuleDependenciesPlugin therein.
-     */
     let arcSettings = await getDeployedContracts();
     let arcContracts = arcSettings.allContracts;
 
@@ -141,6 +139,24 @@ export class ArcService {
     // uppercase the first character
     return key.replace(/^./, function(str){ return str.toUpperCase(); }) 
   }
+
+    /**
+     * Set the parameters on the contract.  Returns hash.
+     * @param params 
+     */
+    public async setContractParameters(
+      params: any,
+      key: string,
+      contractAddress?: string): Promise<string> {
+      try {
+        const contract = await this.getContract(key, contractAddress);
+        return await contract.setParams(params);
+      }
+      catch(ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error setting contract parameters`, ex, undefined, SnackLifetime.none));
+        throw ex;
+      }
+    }
 }
 
 /**

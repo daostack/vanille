@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
 import {OrganizationService, DAO } from './OrganizationService';
+import { SchemeService } from '../services/SchemeService';
 
 @autoinject
 export class VotingMachineService {
@@ -13,23 +14,12 @@ public votingMachines: Array<VotingMachineInfo>;
 constructor(
   private arcService: ArcService
   , private organizationService: OrganizationService
+  , private schemeService: SchemeService
 ) {
     this.votingMachines = this.arcService.arcVotingMachines;
     // TODO: should come from arcService or daostack-arc
     this.defaultMachine = this.votingMachines.filter((vm) => vm.key === "AbsoluteVote")[0];
   }
-
-  public async getVotingMachineConfigHash(
-    orgAddress: string,
-    votingMachineInfo: VotingMachineInfo,    // ContractInfo
-    votingMachineConfig: VotingMachineConfig // Knows how to compute the hash
-  ) {
-      
-    const org = await this.organizationService.organizationAt(orgAddress);
-    const votingMachine = await this.arcService.getContract(votingMachineInfo.key);
-    return await votingMachineConfig.getHash(votingMachine, org);
-  }
-
   public defaultMachine: VotingMachineInfo;
 }
 
@@ -37,5 +27,5 @@ export class VotingMachineInfo extends ContractInfo {
 }
 
 export interface VotingMachineConfig {
-  getHash(votingMachine: TruffleContract, org: DAO);
+  getConfigurationHash(orgAddress: string, votingMachineAddress?: string);
 }

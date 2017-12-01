@@ -34,21 +34,25 @@ export class Web3Service {
 
     public get isCorrectChain(): boolean { return this._isCorrectChain; }
 
-    public fromWei(res: Number|String, unit?: string): String|Object {
-        return this.web3.fromWei(res, unit);
+    public fromWei(value: Number|String|BigNumber, unit: string = "ether"): BigNumber {
+        return this.toBigNumber(this.web3.fromWei(value, unit));
     }
 
-    public toWei(res: Number|String|BigNumber, unit?: string): String|Object {
-        return this.web3.toWei(res, unit);
+    public toWei(value: Number|String|BigNumber, unit: string = "ether"): BigNumber {
+        return this.toBigNumber(this.web3.toWei(value, unit));
     }
 
-    public getBalance(ethAddress: string): Promise<number> {
+    public toBigNumber(value: Number|String|BigNumber): BigNumber {
+        return this.web3.toBigNumber(value);
+    }
+
+    public getBalance(ethAddress: string): Promise<BigNumber> {
       return new Promise((resolve, reject) => {
         this.web3.eth.getBalance(ethAddress, (error, balance) => {
           if (error) {
             reject(new Error(error));
           }
-          resolve(Number(this.web3.fromWei(balance)));
+          resolve(this.web3.fromWei(balance));
         });
       });
     }
@@ -119,3 +123,4 @@ export class Web3Service {
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const NULL_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
+export {BigNumber}  from "web3";

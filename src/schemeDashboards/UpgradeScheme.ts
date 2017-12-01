@@ -11,6 +11,10 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   controllerAddress: string;
   upgradingSchemeConfig:any = {};
   upgradingSchemeAddress: string;
+  upgradingSchemeTokenAddress: string;
+  upgradingSchemeFee: Number;
+  nonArcScheme: boolean;
+  upgradingSchemeParametersHash: string;
 
   constructor(
       private schemeService: SchemeService
@@ -40,17 +44,26 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   async submitUpgradingScheme() {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme");
-      const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(this.orgAddress, this.upgradingSchemeAddress);
-
-      let tx = await scheme.proposeUpgradingScheme(
-        {
+      let config:any = {
           avatar: this.orgAddress
-          , scheme: this.upgradingSchemeAddress
-          , schemeParametersHash: schemeParametersHash
-          // the controller needs to be apprised of how the UpgradeScheme will pay for stuff
-          // , tokenAddress: tokenAddress
-          // , fee: fee
-        });
+        };
+
+      if (this.nonArcScheme) {
+        config.scheme = this.upgradingSchemeAddress;
+        config.schemeParametersHash = this.upgradingSchemeParametersHash;
+        config.fee = this.upgradingSchemeFee;
+        config.tokenAddress = this.upgradingSchemeTokenAddress;
+      } else {
+        
+        const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
+          this.orgAddress
+          , scheme.address);
+
+        config.scheme = scheme.address;
+        config.schemeParametersHash = schemeParametersHash;
+      }
+
+      let tx = await scheme.proposeUpgradingScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted to change upgrading scheme', tx.tx));

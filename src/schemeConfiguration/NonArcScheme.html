@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
-    <label for="fee">Fee</label>
-    <input id="fee" type="number" class="form-control" value.bind="model.fee | number"/>
+    <label for="fee">Fee (Ether)</label>
+    <input id="fee" type="number" class="form-control" value.bind="model.fee | ethwei"/>
   </div>
   <div class="form-group">
     <label for="tokenAddress">Token Address</label>

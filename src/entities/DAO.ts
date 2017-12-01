@@ -13,6 +13,7 @@ export class DAO extends Organization {
   private unRegisterSchemeEvent;
   public arcService: ArcService;
   private logger = LogManager.getLogger("Alchemy");
+  public omega: Number; // in ether
   /**
    * a Scheme has been added or removed from a DAO.
    */
@@ -38,6 +39,8 @@ export class DAO extends Organization {
     newDAO.arcService = arcService;
     newDAO.address = org.avatar.address;
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
+    newDAO.omega = web3.fromWei(await newDAO.reputation.totalSupply(), "ether");
+
     await newDAO.getSchemes();
     return newDAO;
   }

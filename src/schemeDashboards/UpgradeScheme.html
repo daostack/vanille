@@ -29,12 +29,41 @@
       <instructions>Propose to replace this UpgradeScheme with another that has upgrading scheme permissions.
         After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
       <form>
-        <div class="form-group"> 
-          <label for="upgradingSchemeAddress">New Upgrading Scheme Address</label> 
-          <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/> 
-        </div> 
 
-        <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeConfig"></compose>
+        <div class="checkbox">
+          <label>
+          <input type="checkbox" checked.bind="nonArcScheme">
+            Is Non-Arc Scheme
+          </label>
+        </div>
+
+        <div if.bind="nonArcScheme">
+            <div class="form-group"> 
+              <label for="upgradingSchemeAddress">Upgrading Scheme Address</label> 
+              <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/> 
+            </div> 
+          <div class="form-group fee-input">
+            <label for="fee">Fee (ethers)</label>
+            <input class="form-control" type='number' id="fee" value.bind="upgradingSchemeFee | ethwei"/>
+          </div>
+
+          <div class="form-group">
+            <label for="tokenAddress">Token Address</label>
+            <input class="form-control" type='text' id="tokenAddress" value.bind="upgradingSchemeTokenAddress"/> 
+          </div>
+
+          <div class="form-group">
+            <label for="upgradingSchemeParametersHash">Parameters Hash</label>
+            <input class="form-control" type='text' id="upgradingSchemeParametersHash" value.bind="upgradingSchemeParametersHash"/> 
+          </div>
+
+        </div>
+
+        <div else>
+          <div class="form-group">
+            <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeConfig"></compose>
+          </div>
+        </div>
 
         <button class="btn-submit-proposal" click.delegate="submitUpgradingScheme()">Submit Proposal</button>
       </form>

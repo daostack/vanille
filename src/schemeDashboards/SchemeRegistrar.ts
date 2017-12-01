@@ -10,7 +10,8 @@ import { SchemeConfigurator} from '../schemeConfiguration/schemeConfigurationBas
 import { EventConfigTransaction } from "../entities/GeneralEvents";
 import { NonArcSchemeItemKey } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 import { AureliaHelperService } from "../services/AureliaHelperService"
-import { NULL_HASH } from 'services/Web3Service';
+import { NULL_HASH } from '../services/Web3Service';
+import { EventConfigException } from '../entities/GeneralEvents';
 
 @autoinject
 export class SchemeRegistrar extends DaoSchemeDashboard {
@@ -75,7 +76,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
         `Proposal submitted to modify ${this.schemeToModify.name}`, tx.tx));
 
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error modifying scheme ${this.schemeToModify.name}`, ex));
     }
   }
 
@@ -113,7 +114,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
       this.currentSchemeSelection = this.schemeToAddAddress = null; // reset so everything gets rebound properly
 
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error adding scheme ${this.schemeToAddAddress}`, ex));
     }  
   }
 
@@ -133,7 +134,7 @@ export class SchemeRegistrar extends DaoSchemeDashboard {
 
       this.schemeToRemove = null;
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error removing scheme ${this.schemeToRemove.address}`, ex));
     }
   }
 }

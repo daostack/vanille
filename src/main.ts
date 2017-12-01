@@ -52,6 +52,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/toUpper"),
     PLATFORM.moduleName("resources/valueConverters/number"),
     PLATFORM.moduleName("resources/valueConverters/round"),
+    PLATFORM.moduleName("resources/valueConverters/ethwei"),
   ]);
 
 
@@ -78,34 +79,34 @@ export async function configure(aurelia: Aurelia) {
 
     const web3 = configureDAOstackArc({
       /**
-       * EmergentArc must be initialized prior to 
+       * EmergentArc must be initialized prior to arcService being loaded
        * ETH_ENV is supplied by webpack.
-       * Arc isn't actually using this, but I'm sending it anyways, because I can :-)
+       * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
        */ 
       network : { name: process.env.ETH_ENV }
     });
   
-    // just to initialize it and get it running
-    aurelia.container.get(SnackbarService);
+    // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);
+    aurelia.container.get(SnackbarService);
     
-    const web3Service = new Web3Service();
+    const web3Service = aurelia.container.get(Web3Service);
     await web3Service.initialize(web3);
-    aurelia.container.registerSingleton(Web3Service, () => {
-      return web3Service;
-    });
+    // aurelia.container.registerSingleton(Web3Service, () => {
+    //   return web3Service;
+    // });
 
-    const arcService = new ArcService();
+    const arcService = aurelia.container.get(ArcService);
     await arcService.initialize();
-    aurelia.container.registerSingleton(ArcService, () => {
-      return arcService;
-    });
+    // aurelia.container.registerSingleton(ArcService, () => {
+    //   return arcService;
+    // });
 
     const orgService = aurelia.container.get(OrganizationService);
     await orgService.initialize();
-    aurelia.container.registerSingleton(OrganizationService, () => {
-      return orgService;
-    });
+    // aurelia.container.registerSingleton(OrganizationService, () => {
+    //   return orgService;
+    // });
 
   } catch(ex) {
     console.log(`Error initializing blockchain services: ${ex}`)

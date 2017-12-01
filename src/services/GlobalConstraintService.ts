@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
 import {OrganizationService, DAO } from './OrganizationService';
+import { SchemeService } from '../services/SchemeService';
 
 @autoinject
 export class GlobalConstraintService {
@@ -13,6 +14,7 @@ public globalConstraints: Array<GlobalConstraintInfo>;
 constructor(
   private arcService: ArcService
   , private organizationService: OrganizationService
+  , private schemeService: SchemeService
 ) {
     this.globalConstraints = this.arcService.arcGlobalConstraints;
     // TODO: should come from arcService or daostack-arc
@@ -20,22 +22,12 @@ constructor(
   }
 
   public defaultConstraint: GlobalConstraintInfo;
-
-  public async getGlobalConstraintConfigHash(
-    orgAddress: string
-    , globalConstraintInfo: GlobalConstraintInfo 
-    , globalConstraintConfig: GlobalConstraintConfig // Knows how to compute the hash
-  ) {
-      
-    const org = await this.organizationService.organizationAt(orgAddress);
-    const globalConstraint = await this.arcService.getContract(globalConstraintInfo.key);
-    return await globalConstraintConfig.getHash(globalConstraint, org);
-  }
 }
 
 export class GlobalConstraintInfo extends ContractInfo {
 }
 
 export interface GlobalConstraintConfig {
-  getHash(globalConstraintInfo: GlobalConstraintInfo, org: DAO);
-}
+  getConfigurationHash(orgAddress: string, gcAddress?: string);
+}  
+

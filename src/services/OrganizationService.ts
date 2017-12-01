@@ -55,15 +55,10 @@ export class OrganizationService {
   }
 
   public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
-    try {
       let org = await Organization.new(config);
       let dao = await DAO.fromOrganization(org, this.arcService, this.web3);
       this.daoCache.set(dao.address,dao);
       return dao;
-    } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error birthing DAO: ${config.orgName}`, ex));
-        return null;
-    }
   }
 
   public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {

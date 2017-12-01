@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { Web3Service } from "./Web3Service";
+import { Web3Service, BigNumber } from "./Web3Service";
 import { ArcService, TruffleContract } from './ArcService';
 
 @autoinject
@@ -18,9 +18,9 @@ export class TokenService {
     return await token.name();
   }
 
-  public async getUserTokenBalance(token: TruffleContract): Promise<number> {
+  public async getUserTokenBalance(token: TruffleContract): Promise<BigNumber> {
     let userAddress = this.arcService.defaultAccount;
-    return await Number(this.web3.fromWei(await token.balanceOf(userAddress)));
+    return await this.web3.fromWei(await token.balanceOf(userAddress));
   }
 
     public async getDAOStackMintableToken() {

@@ -2,8 +2,8 @@ import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
-import { GlobalConstraintInfo, GlobalConstraintService } from "../services/GlobalConstraintService";
-import { VotingMachineService, VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
+import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
+import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
 import { EventConfigTransaction } from "../entities/GeneralEvents";
 
 @autoinject
@@ -21,8 +21,6 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
     // , private organizationService: OrganizationService
     private eventAggregator: EventAggregator
     , private arcService: ArcService
-    , private votingMachineService: VotingMachineService
-    , private globalConstraintService: GlobalConstraintService
   ) {
     super();
   }
@@ -30,8 +28,8 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
   async proposeConstraint() {
     try {
       const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
-      const globalConstraintParametersHash = await this.globalConstraintService.getGlobalConstraintConfigHash(this.orgAddress, this.constraintToAddInfo, this.constraintToAddConfig);
-      const contrainRemovalVotingMachineInfoHash = await this.votingMachineService.getVotingMachineConfigHash(this.orgAddress, this.votingMachineInfo, this.votingMachineConfig );
+      const globalConstraintParametersHash = await this.constraintToAddConfig.getConfigurationHash(this.orgAddress, this.constraintToAddInfo.address);
+      const contrainRemovalVotingMachineInfoHash = await this.votingMachineConfig.getConfigurationHash(this.orgAddress, this.votingMachineInfo.address);
 
       let tx = await scheme.proposeGlobalConstraint(
       {

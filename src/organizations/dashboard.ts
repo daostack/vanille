@@ -18,6 +18,7 @@ export class DAODashboard {
   private nonArcSchemes: Array<SchemeInfo>;
   private arcSchemes: Array<SchemeInfo>;
   private subscription;
+  private omega;
 
   constructor(
     private organizationService: OrganizationService
@@ -36,6 +37,7 @@ export class DAODashboard {
     let token = this.org.token;
     this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
+    this.omega = this.org.omega;
 
     await this.loadSchemes();
 

@@ -1,25 +1,36 @@
+import { autoinject } from "aurelia-framework";
 import { VotingMachineConfig } from '../services/VotingMachineService';
-import { TruffleContract } from '../services/ArcService';
-import { DAO } from '../services/OrganizationService';
+import { DAO, OrganizationService } from '../services/OrganizationService';
+import { ArcService } from  "../services/ArcService";
 
+@autoinject
 export class AbsoluteVote implements VotingMachineConfig  {
 
   model: any;
 
+  constructor(
+    private organizationService: OrganizationService
+    , private arcService: ArcService
+  ) {}
+
   activate(model) {
-    model.getHash = this.getHash.bind(this);
+    model.getConfigurationHash = this.getConfigurationHash.bind(this);
     model.votePrec = model.votePrec !== undefined ? model.votePrec : 50;
     model.ownerVote = model.ownerVote !== undefined ? model.ownerVote : true;
     this.model = model;
   }
 
-  public async getHash(
-    votingMachine: TruffleContract,
-    org: DAO) {
+  async getConfigurationHash(orgAddress: string, votingMachineAddress?: string): Promise<any> {
+
+    let dao = await this.organizationService.organizationAt(orgAddress);
       
-    let hash = await votingMachine.getParametersHash(org.reputation.address, this.model.votePrec, this.model.ownerVote);
-    // don't generate hash without being sure it is usable  (TODO: is this needed/desirable/cost money)?
-    await votingMachine.setParameters(org.reputation.address, this.model.votePrec, this.model.ownerVote);
-    return hash;
+    return await this.arcService.setContractParameters(
+      {
+        reputation: dao.reputation.address,
+        votePrec: this.model.votePrec,
+        ownerVote: this.model.ownerVote,
+      },
+      "AbsoluteVote",
+      votingMachineAddress);
   }
 }
