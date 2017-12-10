@@ -1,12 +1,22 @@
 import { DaoSchemeInfo } from './DaoSchemeInfo';
 import { ContractInfo } from '../services/ArcService';
+import { ArcService } from '../services/ArcService';
 /**
  * can be any scheme, in the DAO, not in the DAO, not even in Arc
- * In the DAO: has key, isRegistered is true
- * In Arc but not in the DAO:  has key, isRegistered is true
- * Not in Arc:  has no key, nor a name
+ * In the DAO: has name, isRegistered is true
+ * In Arc but not in the DAO:  has name, isRegistered is true
+ * Not in Arc:  has no name, nor a friendlyName
  */
 export class SchemeInfo extends DaoSchemeInfo {
+
+  public static fromOrganizationSchemeInfo(orgSchemeInfo) {
+    let schemeInfo = new SchemeInfo();
+    schemeInfo.address = orgSchemeInfo.address;
+    schemeInfo.name = orgSchemeInfo.name;
+    schemeInfo.friendlyName = ArcService.convertKeyToFriendlyName(orgSchemeInfo.name);
+    schemeInfo.isRegistered = true;
+    return schemeInfo;
+  }
 
   public static fromDaoSchemeInfo(daoSchemeInfo: DaoSchemeInfo): SchemeInfo {
     let schemeInfo = new SchemeInfo();
@@ -24,5 +34,5 @@ export class SchemeInfo extends DaoSchemeInfo {
 
   public isRegistered: boolean;
   public get inDao() { return this.isRegistered; }
-  public get inArc() { return !!this.key; }
+  public get inArc() { return !!this.name; }
 }

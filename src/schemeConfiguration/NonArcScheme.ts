@@ -15,7 +15,8 @@ model: any;
       model.fee = 0;
       model.tokenAddress = undefined;
       model.schemeParametersHash = undefined;
-      model.isRegistered = false;
+      model.isRegistering = false;
+      model.canBeRegisteringScheme = !!model.canBeRegisteringScheme;
       this.model = model;
   }
 

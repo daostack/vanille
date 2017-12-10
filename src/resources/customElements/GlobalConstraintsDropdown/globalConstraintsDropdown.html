@@ -5,11 +5,11 @@
     id="availableConstraints"
     href="#"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <slot name="buttonText"><span class="font-weight-bold">${constraint ? constraint.name : 'Select a Global Constraint'}</span></slot>
+    <slot name="buttonText"><span class="font-weight-bold">${constraint ? constraint.friendlyName : 'Select a Global Constraint'}</span></slot>
   </a>
 
   <ul class="dropdown-menu" aria-labelledby="globalConstraintsDropdown">
-    <li class="dropdown-item" click.delegate="onItemClick(constraint)" repeat.for="constraint of constraints">${constraint.name}</li>
+    <li class="dropdown-item" click.delegate="onItemClick(constraint)" repeat.for="constraint of constraints">${constraint.friendlyName}</li>
   </ul>
 </div>
 </template>

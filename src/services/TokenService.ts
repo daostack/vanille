@@ -18,9 +18,17 @@ export class TokenService {
     return await token.name();
   }
 
-  public async getUserTokenBalance(token: TruffleContract): Promise<BigNumber> {
+  /**
+   * in Wei by default
+   * @param token 
+   */
+  public async getUserTokenBalance(token: TruffleContract, inEth: boolean = false): Promise<BigNumber> {
     let userAddress = this.arcService.defaultAccount;
-    return await this.web3.fromWei(await token.balanceOf(userAddress));
+    let amount = await token.balanceOf(userAddress);
+    if (inEth) {
+      amount =  this.web3.fromWei(amount);   
+    }
+    return amount;
   }
 
     public async getDAOStackMintableToken() {

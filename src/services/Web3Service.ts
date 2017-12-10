@@ -1,6 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import * as Web3 from "web3";
-import { HttpProvider, Eth, version, BigNumber } from "web3";
+import { HttpProvider, Eth, version } from "web3";
+import * as BigNumber from 'bignumber.js';
 
 @autoinject()
 export class Web3Service {
@@ -34,25 +35,33 @@ export class Web3Service {
 
     public get isCorrectChain(): boolean { return this._isCorrectChain; }
 
-    public fromWei(value: Number|String|BigNumber, unit: string = "ether"): BigNumber {
+    public fromWei(value: Number|String|BigNumber.BigNumber, unit: string = "ether"): BigNumber.BigNumber {
         return this.toBigNumber(this.web3.fromWei(value, unit));
     }
 
-    public toWei(value: Number|String|BigNumber, unit: string = "ether"): BigNumber {
+    public toWei(value: Number|String|BigNumber.BigNumber, unit: string = "ether"): BigNumber.BigNumber {
         return this.toBigNumber(this.web3.toWei(value, unit));
     }
 
-    public toBigNumber(value: Number|String|BigNumber): BigNumber {
+    public toBigNumber(value: Number|String|BigNumber.BigNumber): BigNumber.BigNumber {
         return this.web3.toBigNumber(value);
     }
 
-    public getBalance(ethAddress: string): Promise<BigNumber> {
+    /**
+     * 
+     * @param ethAddress in Wei by default
+     * @param inEth 
+     */
+    public getBalance(ethAddress: string, inEth: boolean = false): Promise<BigNumber.BigNumber> {
       return new Promise((resolve, reject) => {
         this.web3.eth.getBalance(ethAddress, (error, balance) => {
           if (error) {
             reject(new Error(error));
           }
-          resolve(this.web3.fromWei(balance));
+          if (inEth) {
+            balance = this.web3.fromWei(balance)
+          }
+          resolve(balance);
         });
       });
     }
@@ -61,6 +70,12 @@ export class Web3Service {
     // not going to worry about the exact id for testrpc, which is dynamic, unless we absolutely have to
 
     public initialize(web3) : Promise<Web3> {
+
+      /**
+       * so won't throw exceptions and we can use methods like .isNaN().
+       * See: https://mikemcl.github.io/bignumber.js/#errors
+       */
+      BigNumber.config({ ERRORS: false });
 
       const testrpcNetworkId = '0';
       

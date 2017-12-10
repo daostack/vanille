@@ -5,11 +5,11 @@
     id="availableMachines"
     href="#"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <slot name="buttonText"><span class="font-weight-bold">${machine ? machine.name : 'Select a Voting Machine'}</span></slot>
+    <slot name="buttonText"><span class="font-weight-bold">${machine ? machine.friendlyName : 'Select a Voting Machine'}</span></slot>
   </a>
 
   <ul class="dropdown-menu" aria-labelledby="votingMachinesDropdown">
-    <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="machine of machines">${machine.name}</li>
+    <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="machine of machines">${machine.friendlyName}</li>
   </ul>
 </div>
 </template>

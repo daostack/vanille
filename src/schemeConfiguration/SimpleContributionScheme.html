@@ -5,7 +5,7 @@
     <div if.bind="!!votingMachineInfo">
       <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
       <div class="voting-machine-config">
-        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineConfig"></compose>
+        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.name}" model.bind="votingMachineConfig"></compose>
       </div>
     </div>
 

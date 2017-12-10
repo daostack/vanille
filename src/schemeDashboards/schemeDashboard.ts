@@ -13,18 +13,18 @@ export class DaoSchemeDashboard {
     /**
      * Pretty name
      */
-    name: string;
+    friendlyName: string;
     /**
      * short name (used by ArcService.getContract())
      */
-    key: string;
+    name: string;
     org: DAO;
     orgName: string;
     allSchemes: Array<SchemeInfo>;
 
     activate(model) {
+      this.friendlyName = model.friendlyName;
       this.name = model.name;
-      this.key = model.key;
       this.address = model.address;
       this.org = model.org;
       this.orgName = model.orgName;

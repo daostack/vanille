@@ -1,13 +1,13 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
-import { ArcService } from  "../services/ArcService";
+import { ArcService, GlobalConstraintRegistrar } from  "../services/ArcService";
 import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
 import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
 import { EventConfigTransaction } from "../entities/GeneralEvents";
 
 @autoinject
-export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
+export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
 
   constraintToAddInfo: GlobalConstraintInfo;
   constraintToRemoveInfo: GlobalConstraintInfo;
@@ -27,11 +27,11 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
 
   async proposeConstraint() {
     try {
-      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
+      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrar;
       const globalConstraintParametersHash = await this.constraintToAddConfig.getConfigurationHash(this.orgAddress, this.constraintToAddInfo.address);
       const contrainRemovalVotingMachineInfoHash = await this.votingMachineConfig.getConfigurationHash(this.orgAddress, this.votingMachineInfo.address);
 
-      let tx = await scheme.proposeGlobalConstraint(
+      let tx = await scheme.proposeToAddModifyGlobalConstraint(
       {
           avatar: this.orgAddress
           , globalConstraint: this.constraintToAddInfo.address
@@ -40,7 +40,7 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.constraintToAddInfo.name}`, tx.tx));
+        `Proposal submitted to add ${this.constraintToAddInfo.friendlyName}`, tx.tx));
 
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
@@ -49,7 +49,7 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
 
   async unProposeConstraint() {
     try {
-      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar");
+      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrar;
 
       let tx = await scheme.proposeToRemoveGlobalConstraint(
       {
@@ -58,7 +58,7 @@ export class GlobalConstraintRegistrar extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.constraintToRemoveInfo.name}`, tx.tx));
+        `Proposal submitted to remove ${this.constraintToRemoveInfo.friendlyName}`, tx.tx));
     } catch(ex) {
         this.eventAggregator.publish("handleException", ex);
     }

@@ -3,7 +3,7 @@ import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
 import { SchemeService, ContractInfo } from '../services/SchemeService';
-import { EventConfigTransaction } from "../entities/GeneralEvents";
+import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 
 @autoinject
 export class UpgradeScheme extends DaoSchemeDashboard {
@@ -11,10 +11,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   controllerAddress: string;
   upgradingSchemeConfig:any = {};
   upgradingSchemeAddress: string;
-  upgradingSchemeTokenAddress: string;
-  upgradingSchemeFee: Number;
   nonArcScheme: boolean;
-  upgradingSchemeParametersHash: string;
 
   constructor(
       private schemeService: SchemeService
@@ -50,18 +47,12 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
       if (this.nonArcScheme) {
         config.scheme = this.upgradingSchemeAddress;
-        config.schemeParametersHash = this.upgradingSchemeParametersHash;
-        config.fee = this.upgradingSchemeFee;
-        config.tokenAddress = this.upgradingSchemeTokenAddress;
       } else {
-        
-        const schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
-          this.orgAddress
-          , scheme.address);
-
         config.scheme = scheme.address;
-        config.schemeParametersHash = schemeParametersHash;
       }
+      
+      config.schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
+        this.orgAddress, scheme.address);
 
       let tx = await scheme.proposeUpgradingScheme(config);
 
@@ -69,7 +60,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
         'Proposal submitted to change upgrading scheme', tx.tx));
 
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing new upgrade scheme ${this.upgradingSchemeConfig.address}`, ex));
     }
   }
 }

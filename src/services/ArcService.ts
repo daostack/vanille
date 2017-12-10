@@ -1,20 +1,14 @@
 import { autoinject } from "aurelia-framework";
-import  { 
-      Organization
-    , ArcDeployedContractKeys
-    , ArcContractInfo
-    , ArcDeployedContracts
-    , getDefaultAccount
-    , configure as configureArc
-    , getDeployedContracts
-    , getValueFromLogs
-    , requireContract } from 'daostack-arc';
+import * as Arc from 'daostack-arc';
+import { configure as configureArc } from 'daostack-arc';
+
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
 import * as Web3 from "web3";
 import { LogManager } from 'aurelia-framework';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import  { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';
+import { ArcSchemesDropdown } from "resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 
 @autoinject
 export class ArcService {
@@ -27,7 +21,7 @@ export class ArcService {
   /**
    * The schemes managed by Arc
    */
-  public arcContracts: ArcDeployedContractKeys;
+  public arcContracts: Arc.ArcDeployedContractNames;
   public arcSchemes: Array<ContractInfo>;
   public arcVotingMachines: Array<ContractInfo>;
   public arcGlobalConstraints: Array<ContractInfo>;
@@ -38,15 +32,15 @@ export class ArcService {
 
   private contractCache: Map<string,TruffleContract>;
   
-  public get defaultAccount(): string { return getDefaultAccount(); }
+  public get defaultAccount(): string { return Arc.getDefaultAccount(); }
 
   public async initialize() {
-    let arcSettings = await getDeployedContracts();
+    let arcSettings = await Arc.getDeployedContracts();
     let arcContracts = arcSettings.allContracts;
 
     for(let contractName in arcContracts) {
-      arcContracts[contractName].name = this.convertKeyToFriendlyName(contractName);
-      arcContracts[contractName].key = contractName;
+      arcContracts[contractName].friendlyName = ArcService.convertKeyToFriendlyName(contractName);
+      arcContracts[contractName].name = contractName;
     }
 
     this.arcContracts = arcContracts;
@@ -54,8 +48,8 @@ export class ArcService {
     this.arcVotingMachines = (<any>arcSettings.votingMachines) as Array<ContractInfo>;
     this.arcGlobalConstraints = (<any>arcSettings.globalConstraints) as Array<ContractInfo>;
 
-    for(var key in this.arcContracts) {
-      var contract = this.arcContracts[key];
+    for(var name in this.arcContracts) {
+      var contract = this.arcContracts[name];
       this.arcContractMap.set(contract.address, contract);
     }
 
@@ -63,8 +57,8 @@ export class ArcService {
     // each property is a contractInfo
   }
   
-  private contractInfoFromKey(key:string): ContractInfo {
-    return this.arcContracts[key] as ContractInfo;
+  private contractInfoFromName(name:string): ContractInfo {
+    return this.arcContracts[name] as ContractInfo;
   }
 
   public contractInfoFromAddress(address:string): ContractInfo {
@@ -72,7 +66,7 @@ export class ArcService {
   }
 
 
-  public async getContract(key: string, at?: string): Promise<TruffleContract> {
+  public async getContract(name: string, at?: string): Promise<TruffleContract> {
 
     /**
      * The TruffleContract class actually represents multiple stages of the process:
@@ -81,10 +75,11 @@ export class ArcService {
      *  3) .at()
      * 
      * The result of .at() is the only one that appears to be complete, with events and everything.
+     * It will be the Arc javascript wrapper when is an Arc contract.
      * You can call .at() without having called .deployed() if you already have the address.
      * The contracts in arcContracts are all the result of require()
      */
-    let contractInfo = this.contractInfoFromKey(key);
+    let contractInfo = this.contractInfoFromName(name);
     let contract;
     if (contractInfo !== undefined) {
       if (!at) {
@@ -97,7 +92,7 @@ export class ArcService {
         contract = await contractInfo.contract.at(at);
       }
     } else {
-      contract = requireContract(key);
+      contract = Arc.requireContract(name);
       if (!at) {
           contract = await contract.deployed();
           at = contract.address;
@@ -120,7 +115,7 @@ export class ArcService {
    */
   public getValueFromTransactionLog(tx, argName, eventName?, index=0) {
     try {
-      return getValueFromLogs(tx, argName, eventName, index);
+      return Arc.getValueFromLogs(tx, argName, eventName, index);
     } catch(ex) {
       let message = ex.message ? ex.message : ex;
       this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
@@ -130,14 +125,14 @@ export class ArcService {
     }
   }
 
-  public convertKeyToFriendlyName(key: string): string {
-    if (!key) return null;
+  public static convertKeyToFriendlyName(name: string): string {
+    if (!name) return null;
 
     // insert a space before all caps except at beginning.  Ignore consecutive caps alone (Like in TokenCapGC, ignore the 'C').
-    key = key.replace(/(?!^)([a-z]|^)([A-Z])/g, '$1 $2');
+    name = name.replace(/(?!^)([a-z]|^)([A-Z])/g, '$1 $2');
 
     // uppercase the first character
-    return key.replace(/^./, function(str){ return str.toUpperCase(); }) 
+    return name.replace(/^./, function(str){ return str.toUpperCase(); }) 
   }
 
     /**
@@ -146,10 +141,10 @@ export class ArcService {
      */
     public async setContractParameters(
       params: any,
-      key: string,
+      name: string,
       contractAddress?: string): Promise<string> {
       try {
-        const contract = await this.getContract(key, contractAddress);
+        const contract = await this.getContract(name, contractAddress);
         return await contract.setParams(params);
       }
       catch(ex) {
@@ -162,25 +157,34 @@ export class ArcService {
 /**
  * what we get from Arc, plus some
  */
-export class ContractInfo implements ArcContractInfo {
+export class ContractInfo implements Arc.ArcContractInfo {
+    /**
+     * An uninitialized instance of ExtendTruffleContract,
+     * basically the class factory with static methods.
+     */
     contract: any;
+    /**
+     * address of the instance deployed by Arc.
+     * Calling contract.at() (a static method on ExtendTruffleContract) will return a 
+     * the properly initialized instance of ExtendTruffleContract.
+     */
     address: string;
     /**
      * Pretty name
      */
-    name: string;
+    friendlyName: string;
     /**
-     * short name (property name in ArcContracts).
+     * short name (property name in ArcContracts, like "SchemeRegistrar").
      */
-    key: string;
+    name: string;
 }
 
-export { Organization } from 'daostack-arc'; 
+export * from 'daostack-arc'; 
 export { TruffleContract } from 'truffle-contract';
 
 // export {GenesisScheme};
-// export {GlobalConstraintRegistrar};
-// export {SchemeRegistrar};
+// export {GlobalConstraintRegistrar, GlobalConstraintRegistrarParams};
+// export {SchemeRegistrar, ProposeToAddModifySchemeParams, ProposeToRemoveSchemeParams};
 // export {SimpleContributionScheme};
 // export {SimpleICO};
 // export {SimpleVote};

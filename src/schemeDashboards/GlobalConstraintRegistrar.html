@@ -19,13 +19,13 @@
           
         <form>
           <global-constraints-dropdown constraint.bind="constraintToAddInfo">
-          <span slot="buttonText"><span class="font-weight-bold">${constraintToAddInfo ? constraintToAddInfo.name : 'Select Global Constraint'}</span></span>
+          <span slot="buttonText"><span class="font-weight-bold">${constraintToAddInfo ? constraintToAddInfo.friendlyName : 'Select Global Constraint'}</span></span>
         </global-constraints-dropdown>
 
         <div if.bind="!!constraintToAddInfo">
             <etherscanlink address=${constraintToAddInfo.address}>${constraintToAddInfo.address}</etherscanlink>
             <div class="global-constraint-config">
-              <compose view-model="${'../globalConstraintConfiguration/' + constraintToAddInfo.key}" model.bind="constraintToAddConfig"></compose>
+              <compose view-model="${'../globalConstraintConfiguration/' + constraintToAddInfo.name}" model.bind="constraintToAddConfig"></compose>
             </div>
           </div>
 
@@ -35,7 +35,7 @@
           <div if.bind="!!votingMachineInfo">
             <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
             <div class="voting-machine-config">
-              <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineConfig"></compose>
+              <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.name}" model.bind="votingMachineConfig"></compose>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
           After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
         <form>
             <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" >
-              <span slot="buttonText"><span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.name : 'Select Constraint to Remove'}</span></span>
+              <span slot="buttonText"><span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.friendlyName : 'Select Constraint to Remove'}</span></span>
             </global-constraints-dropdown>
 
           <div if.bind="!!constraintToRemoveInfo">

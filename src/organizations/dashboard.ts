@@ -36,7 +36,9 @@ export class DAODashboard {
     this.orgName = this.org.name;
     let token = this.org.token;
     this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
+    // in Wei
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
+    // in Wei
     this.omega = this.org.omega;
 
     await this.loadSchemes();
@@ -116,19 +118,19 @@ export class DAODashboard {
   }
 
   toggleDashboardVisibility(scheme: SchemeInfo) {
-      ($(`#${scheme.key}`) as any).collapse("toggle");
+      ($(`#${scheme.name}`) as any).collapse("toggle");
   }
 
   getDashboardView(scheme: SchemeInfo):string {
-      let key:string;
+      let name:string;
       if (!scheme.inArc) {
-        key = "NonArc";
+        name = "NonArc";
       } else if (!scheme.inDao) {
-        key = "NotRegistered";
+        name = "NotRegistered";
       } else {
-        key = scheme.key;
+        name = scheme.name;
       }
-      return `../schemeDashboards/${key}`;
+      return `../schemeDashboards/${name}`;
   }
 
   schemeDashboardViewModel(scheme: SchemeInfo): any {

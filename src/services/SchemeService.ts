@@ -24,7 +24,7 @@ export class SchemeService {
 
   /**
    * Schemes, both Arc and otherwise, that are in the given DAO.
-   * If not from Arc, then name and key will be empty.
+   * If not from Arc, then name and friendlyName will be empty.
    * @param daoAddress
    */
   private async getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
@@ -66,9 +66,9 @@ export class SchemeService {
     return schemes;
   }
   
-  public async getSchemePermissions(key: string, schemeAddress?: string): Promise<Permissions> {
+  public async getSchemePermissions(name: string, schemeAddress?: string): Promise<Permissions> {
       try {
-        const contract = await this.arcService.getContract(key, schemeAddress);
+        const contract = await this.arcService.getContract(name, schemeAddress);
         const permissions = contract.getDefaultPermissions();
         return ToPermissionsEnum(permissions);
       } catch(ex) {
@@ -77,9 +77,9 @@ export class SchemeService {
       }
     }
     
-    public async getSchemeNativeToken(key: string, schemeAddress?: string): Promise<TruffleContract> {
+    public async getSchemeNativeToken(name: string, schemeAddress?: string): Promise<TruffleContract> {
       try {
-        const contract = await this.arcService.getContract(key, schemeAddress);
+        const contract = await this.arcService.getContract(name, schemeAddress);
         return await contract.nativeToken();
       }
       catch(ex) {
@@ -88,9 +88,9 @@ export class SchemeService {
       }
     }
 
-    public async getSchemeFee(key: string, schemeAddress?: string): Promise<Number> {
+    public async getSchemeFee(name: string, schemeAddress?: string): Promise<Number> {
       try {
-      const contract = await this.arcService.getContract(key, schemeAddress);
+      const contract = await this.arcService.getContract(name, schemeAddress);
       return await contract.fee();
       }
       catch(ex) {

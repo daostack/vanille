@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, Organization, ContractInfo } from './ArcService';
+import { ArcService, TruffleContract, Organization, ContractInfo, OrganizationNewConfig, FounderConfig } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { LogManager } from 'aurelia-framework';
@@ -54,7 +54,7 @@ export class OrganizationService {
     return await this.organizationAt(avatarAddress);
   }
 
-  public async createOrganization(config: OrganizationCreateConfig): Promise<DAO> {
+  public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
       let org = await Organization.new(config);
       let dao = await DAO.fromOrganization(org, this.arcService, this.web3);
       this.daoCache.set(dao.address,dao);
@@ -156,33 +156,6 @@ export class OrganizationService {
       * @param callback The callback to be invoked when when the specified message is published.
       */
       public subscribeOnce(event: string | Function, callback: Function): Subscription  { return null; }
-}
-
-export interface Founder {
-  address: string;
-  tokens: number; // in Wei
-  reputation: number;
-}
-
-export interface OrganizationCreateConfig {
-  orgName: string;
-  tokenName: string;
-  tokenSymbol: string;
-  founders: Array<Founder>;
-  votingMachine: string, // address
-  votePrec: Number,
-  ownerVote: boolean,
-  schemes: Array<{ contract: string, address: string }>
-}
-
-
-/**
- * returned by Organization.schemes()
- */
-interface OrganizationSchemeInfo {
-  contract: string; // is the contract key!!!
-  address: string;
-  permissions: string;
 }
 
 export { DAO } from '../entities/DAO';

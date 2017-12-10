@@ -18,7 +18,7 @@ constructor(
 ) {
     this.globalConstraints = this.arcService.arcGlobalConstraints;
     // TODO: should come from arcService or daostack-arc
-    this.defaultConstraint = this.globalConstraints.filter((vm) => vm.key === "TokenCapGC")[0];
+    this.defaultConstraint = this.globalConstraints.filter((vm) => vm.name === "TokenCapGC")[0];
   }
 
   public defaultConstraint: GlobalConstraintInfo;

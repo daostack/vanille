@@ -8,13 +8,13 @@
       <dt>Controller</dt>
       <dd><etherscanlink address=${org.controller.address}>${org.controller.address}</etherscanlink></dd>
       <dt>Omega</dt>
-      <dd> ${ omega }</dd>
+      <dd> ${ omega | ethwei}</dd>
       <dt>Token</dt>
       <dd><etherscanlink address=${org.token.address}>${org.token.address}</etherscanlink></dd>
       <dt>Token Symbol</dt>
       <dd>${tokenSymbol}</dd>
       <dt>Your Token Balance</dt>
-      <dd> ${ userTokenbalance }</dd>
+      <dd> ${ userTokenbalance | ethwei }</dd>
     </dl>
   </section>
   <section show.bind="registeredArcSchemes.length">
@@ -26,7 +26,7 @@
           <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
             <div class="row">
               <div class="col-11">
-                <div class="scheme-name">${scheme.name ? scheme.name : "Non-Arc Scheme"}</div>
+                <div class="scheme-name">${scheme.friendlyName ? scheme.friendlyName : "Non-Arc Scheme"}</div>
                   <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
                 </div>
               <div class="col-1">
@@ -38,7 +38,7 @@
                   </round-dashboard-button>
               </div>
             </div>
-            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
                   <div class="card-block">
@@ -71,7 +71,7 @@
                   </round-dashboard-button>
               </div>
             </div>
-            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
                   <div class="card-block">
@@ -106,7 +106,7 @@
                   </round-dashboard-button>
               </div>
             </div>
-            <div id.bind="scheme.key" class="scheme-dashboard collapse" data-parent-"#accordian">
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent-"#accordian">
               <hr/>
                 <div class="card">
                   <div class="card-block">

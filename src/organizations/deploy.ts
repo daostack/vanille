@@ -1,8 +1,8 @@
 import { autoinject } from "aurelia-framework";
-import { Web3Service } from "../services/Web3Service";
+import { Web3Service, BigNumber } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
-import { ArcService, ContractInfo } from "../services/ArcService";
-import { OrganizationService, DAO, Founder } from "../services/OrganizationService";
+import { ArcService, ContractInfo, FounderConfig } from "../services/ArcService";
+import { OrganizationService, DAO } from "../services/OrganizationService";
 import { SchemeService } from  "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
@@ -15,8 +15,8 @@ export class DeployGen  {
 
   private userAddress: any;
   private founders: Array<MyFounder>;
-  private ethBalance:number = null;
-  private tknBalance:number = null;
+  private ethBalance:BigNumber = null;
+  private tknBalance:BigNumber = null;
   private controllerAddrss= '';
 
   private orgName:string = '';
@@ -44,7 +44,7 @@ export class DeployGen  {
       this.founders = new Array();
       this.arcSchemes = this.schemeService.availableSchemes;
       for(let scheme of this.arcSchemes) {
-        if (scheme.key !== "SimpleContributionScheme")
+        if (scheme.name !== "SimpleContributionScheme")
         {
           (<DeploySchemeInfo>scheme).required = true;
           this.selectedSchemes.push(scheme);
@@ -70,8 +70,8 @@ export class DeployGen  {
   private async readBalances() {
       const token = await this.tokenService.getDAOStackMintableToken();
 
-      this.tknBalance = (await this.tokenService.getUserTokenBalance(token));
-      this.ethBalance = (await this.web3.getBalance(this.userAddress));
+      this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
+      this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
       // console.log(`token balance: ${this.tknBalance}`);
       // console.log(`eth balance: ${this.ethBalance}`);
   }
@@ -89,7 +89,7 @@ export class DeployGen  {
         , votingMachine: this.votingMachineInfo.address
         , votePrec: this.votingMachineModel.votePrec
         , ownerVote: this.votingMachineModel.ownerVote
-        , schemes: this.selectedSchemes.map((s) => { return { contract: s.key, address: s.address }; } )
+        , schemes: this.selectedSchemes.map((s) => { return { name: s.name, address: s.address }; } )
       });
       this.deployOrgStatus= 'deployed';
       this.addOrgResultMessage= 'org_added';
@@ -141,20 +141,18 @@ interface DeploySchemeInfo extends ContractInfo {
   required: boolean;
 }
 
-class MyFounder implements Founder {
+class MyFounder implements FounderConfig {
 
   web3: Web3Service;
 
-  constructor(web3: Web3Service, address: string, tokensUI: number = 1000, reputation: number = 1000) {
+  constructor(web3: Web3Service, address: string) {
     this.web3 = web3;
     this.address = address;
-    this.tokensUI = tokensUI;
-    this.reputationUI = reputation;
+    this.tokens = this.web3.toWei(1000);
+    this.reputation = this.web3.toWei(1000);
   }
 
   address: string;
-  get tokens(): number { return Number(this.web3.toWei(this.tokensUI)); }
-  get reputation(): number { return Number(this.web3.toWei(this.reputationUI)); }
-  tokensUI: number;
-  reputationUI : number;
+  tokens: BigNumber;
+  reputation : BigNumber;
 }

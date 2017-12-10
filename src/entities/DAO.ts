@@ -1,8 +1,8 @@
-import { ArcService, Organization, ContractInfo } from '../services/ArcService';
+import { ArcService, Organization, ContractInfo, OrganizationSchemeInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
-import { Web3Service } from "../services/Web3Service";
+import { Web3Service, BigNumber } from "../services/Web3Service";
 
 export class DAO extends Organization {
 
@@ -13,7 +13,7 @@ export class DAO extends Organization {
   private unRegisterSchemeEvent;
   public arcService: ArcService;
   private logger = LogManager.getLogger("Alchemy");
-  public omega: Number; // in ether
+  public omega: BigNumber; // in wei
   /**
    * a Scheme has been added or removed from a DAO.
    */
@@ -39,34 +39,19 @@ export class DAO extends Organization {
     newDAO.arcService = arcService;
     newDAO.address = org.avatar.address;
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
-    newDAO.omega = web3.fromWei(await newDAO.reputation.totalSupply(), "ether");
+    newDAO.omega = await newDAO.reputation.totalSupply(), "ether";
 
     await newDAO.getSchemes();
     return newDAO;
   }
 
-  private async getSchemes()
+  private async getSchemes(): Promise<void>
   {
-    /**
-     * this is triggered right away for every scheme in the DAO, and thereafter
-     * whenever a new scheme is registered
-     */
-    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0, toBlock: 'latest'});
+    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0, toBlock: "latest"});
+    this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
 
-    await new Promise((resolve,reject) => {
-      this.registerSchemeEvent.get((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true).then(() => { resolve(); }));
-      this.registerSchemeEvent = this.controller.RegisterScheme({});
-      this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
-    });
-
-    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 'latest'});
-
-    await new Promise((resolve,reject) => {
-      this.unRegisterSchemeEvent.get((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false).then(() => { resolve(); }));
-      this.unRegisterSchemeEvent = this.controller.UnregisterScheme({});
-      this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
-    });
-
+    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 0, toBlock: "latest"});
+    this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
     this.logger.debug(`Finished loading schemes for ${this.name}: ${this.address}`);
   }
   
@@ -86,38 +71,30 @@ export class DAO extends Organization {
       let schemeAddress =  eventsArray[i].args._scheme;
       let scheme = this.arcService.contractInfoFromAddress(schemeAddress) as any;
 
-      // keep (ie, don't ignore) if not in Arc or is one of the schemes we work with (ie, not GenesisScheme nor its ilk)
-      // TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
-      let keeper = !scheme || this.arcService.arcSchemes.filter((s) => { return s.address === scheme.address; }).length;
-
       if (!scheme) {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
         scheme = <any>{ address: schemeAddress };
       } 
       
-      if (keeper) {
-          
-          // then this is a scheme we can work with (ie, not the GenesisScheme)
-          //let permissions = await this.controller.getSchemePermissions(schemeAddress);
+      //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
-          let schemeInfo = SchemeInfo.fromContractInfo(scheme, adding);
+      let schemeInfo = SchemeInfo.fromContractInfo(scheme, adding);
 
-          // TODO: get unknown name from Arc
-          if (adding) {
-            this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
-            this.schemesCache.set(schemeAddress,schemeInfo);
-          } else if (this.schemesCache.has(schemeAddress)) {
-              this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
-              this.schemesCache.delete(schemeAddress);
-          }
-
-          this.publish(DAO.daoSchemeSetChangedEvent, 
-          {
-            dao: this,
-            scheme: schemeInfo
-          });
-        }
+      // TODO: get unknown name from Arc
+      if (adding) {
+        this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+        this.schemesCache.set(schemeAddress,schemeInfo);
+      } else if (this.schemesCache.has(schemeAddress)) {
+          this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+          this.schemesCache.delete(schemeAddress);
       }
+
+      this.publish(DAO.daoSchemeSetChangedEvent, 
+      {
+        dao: this,
+        scheme: schemeInfo
+      });
+    }
   }
   /**
     * Publishes a message.

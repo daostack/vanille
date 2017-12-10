@@ -49,7 +49,7 @@ export class ArcSchemesDropdown {
     this.schemes = (await this.schemeService.getSchemesForDao(this.daoAddress, true))
       .filter((s: SchemeInfo) => {
         return s.inArc 
-          && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(s.key) === -1))
+          && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(s.name) === -1))
           && (!this.excludeRegistered || !s.isRegistered)
           && (!this.excludeUnregistered || s.isRegistered)
           ;
@@ -59,8 +59,8 @@ export class ArcSchemesDropdown {
     if (this.includeNonArcItem) {
       
       let nonArcSchemeItem = new SchemeInfo();
-      nonArcSchemeItem.name = "Non-Arc Scheme";
-      nonArcSchemeItem.key = NonArcSchemeItemKey;
+      nonArcSchemeItem.friendlyName = "Non-Arc Scheme";
+      nonArcSchemeItem.name = NonArcSchemeItemName;
       nonArcSchemeItem.isRegistered = false;
       nonArcSchemeItem.address = null;
 
@@ -73,4 +73,4 @@ export class ArcSchemesDropdown {
   }
 }
 
-export const NonArcSchemeItemKey="NonArcScheme";
+export const NonArcSchemeItemName="NonArcScheme";

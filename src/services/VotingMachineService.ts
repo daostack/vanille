@@ -18,7 +18,7 @@ constructor(
 ) {
     this.votingMachines = this.arcService.arcVotingMachines;
     // TODO: should come from arcService or daostack-arc
-    this.defaultMachine = this.votingMachines.filter((vm) => vm.key === "AbsoluteVote")[0];
+    this.defaultMachine = this.votingMachines.filter((vm) => vm.name === "AbsoluteVote")[0];
   }
   public defaultMachine: VotingMachineInfo;
 }

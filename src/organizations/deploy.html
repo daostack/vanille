@@ -71,7 +71,7 @@
               class="form-control" 
                 style="width:5rem" 
                 type='number'
-                value.bind='founder.tokensUI'
+                value.bind='founder.tokens | ethwei'
                 id.bind="appendIndex('founder_tokens',$index)"
               />
           </div>
@@ -81,7 +81,7 @@
             class="form-control" 
               style="width:5rem" 
               type='number'
-              value.bind='founder.reputationUI'
+              value.bind='founder.reputation | ethwei'
               id.bind="appendIndex('founder_reputation',$index)"
             />
           </div>
@@ -106,7 +106,7 @@
     <div if.bind="!!votingMachineInfo">
       <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
       <div class="voting-machine-config">
-        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.key}" model.bind="votingMachineModel"></compose>
+        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.name}" model.bind="votingMachineModel"></compose>
       </div>
     </div>
   </section>
@@ -123,7 +123,7 @@
   </section>
   
   <div>
-    <instructions>Forging a new organization requires the signing of several transactions at the moment. So please be patient and make sure to sign all of them.  It may take several minutes with long gaps.</instructions>
+    <instructions>Forging a new organization currently requires the signing of several transactions. So please be patient and make sure to sign all of them.  It may take several minutes with long gaps.</instructions>
     <div if.bind="deployOrgStatus != 'deploying'">
       <button type='button' class='btn  btn-primary' click.delegate='deploy()'>
         <i class='fa fa-rocket'></i> Deploy Organization

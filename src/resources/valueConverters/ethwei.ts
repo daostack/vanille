@@ -3,8 +3,9 @@ import {autoinject} from "aurelia-framework";
 import { Web3Service, BigNumber } from "../../services/Web3Service";
 
 /**
- * when a number is retrieved from the element to which it is bound,
- * convert it from a string representing Ether to a number in Wei, and vice-versa.
+ * Convert between Wei (as BigNumber) in viewmodel to eth (as string) in view.
+ * Note that even if the viewmodel supplies a number, modified values are saved back 
+ * to the viewmodel as BigNumber.
  */
 @autoinject
 export class EthweiValueConverter {

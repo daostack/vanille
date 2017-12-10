@@ -1,5 +1,5 @@
 import { autoinject, customElement, bindable, bindingMode, containerless } from "aurelia-framework";
-import { Web3Service } from "../../../services/Web3Service";
+import { Web3Service, BigNumber } from "../../../services/Web3Service";
 import { EthereumTxService } from '../../../services/EthereumTxService';
 
 @autoinject
@@ -11,12 +11,11 @@ export class FaucetButton {
     fillFaucet: boolean = false;
 
     private usrAddrss: string;
-    private ethGot: number = 0;
     private privateKey: Buffer = Buffer.from('e331b6d69882b4cb4ea581d81e0b604039a3de5967688d3dcffdd22a0c0fd109', 'hex');
     private faucetAddrss: string = '0x0C7d5acCF24B1747D5A84780346337BBceD06288';
     private getEthSuccessMessage: string = null;
     private getEthErrorMessage: string = null;
-    private ethBalance: number = null;
+    private ethBalance: BigNumber = null;
 
     constructor(
             private web3: Web3Service,

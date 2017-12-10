@@ -24,7 +24,7 @@
 //   }
 
 // await  async getConfigurationHash(orgAddress: string, address?: string): Promise<any> {
-//      this.schemeService.setSchemeParameters(scheme.key, {
+//      this.schemeService.setSchemeParameters(scheme.name, {
 //       cap: this.cap
 //       , price: this.price
 //       , startBlock: this.startBlock
