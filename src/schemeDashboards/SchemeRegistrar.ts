@@ -1,5 +1,4 @@
-import { PLATFORM } from 'aurelia-pal';
-import { autoinject, computedFrom } from "aurelia-framework";
+import { autoinject, computedFrom, observable } from "aurelia-framework";
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import { OrganizationService } from '../services/OrganizationService';
@@ -19,7 +18,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   schemeToModify: SchemeInfo=null;
   schemeToRemove: SchemeInfo=null;
   newSchemeConfiguration: SchemeConfigurator = <any>{ canBeRegisteringScheme : true };
-  currentSchemeSelection: SchemeInfo=null;
+  @observable currentSchemeSelection: SchemeInfo=null;
   schemeToAddAddress: string;
   hasSchemesToAdd: boolean;
   addableSchemes: Array<SchemeInfo> = [];
@@ -37,14 +36,10 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     super();
   }
 
-  attached() {
-    this.aureliaHelperService.createPropertyWatch(this, "currentSchemeSelection", (newValue: SchemeInfo, oldValue: SchemeInfo) =>
-    {
-        this.schemeToAddAddress = undefined;
-        $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
-    });
+  currentSchemeSelectionChanged() {
+      this.schemeToAddAddress = undefined;
+      $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
   }
-
   useAddress() {
     if (this.currentSchemeSelection)
     {
@@ -56,27 +51,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   @computedFrom("currentSchemeSelection")
   get isNonArcScheme() {
     return this.currentSchemeSelection && (this.currentSchemeSelection.name === NonArcSchemeItemName);
-  }
-
-  async modifyScheme() {
-  
-    try {
-      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
-      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
-
-      const tx = await schemeRegistrar.proposeToAddModifyScheme({
-        avatar: this.orgAddress,
-        scheme: this.schemeToModify.address,
-        schemeName: this.schemeToModify.name,
-        schemeParametersHash: schemeParametersHash
-      });
-
-      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to modify ${this.schemeToModify.friendlyName}`, tx.tx));
-
-    } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error modifying scheme ${this.schemeToModify.friendlyName}`, ex));
-    }
   }
 
   async addScheme() {
@@ -104,6 +78,27 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     } catch(ex) {
         this.eventAggregator.publish("handleException", new EventConfigException(`Error adding scheme ${this.schemeToAddAddress}`, ex));
     }  
+  }
+
+  async modifyScheme() {
+  
+    try {
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
+      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
+
+      const tx = await schemeRegistrar.proposeToAddModifyScheme({
+        avatar: this.orgAddress,
+        scheme: this.schemeToModify.address,
+        schemeName: this.schemeToModify.name,
+        schemeParametersHash: schemeParametersHash
+      });
+
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        `Proposal submitted to modify ${this.schemeToModify.friendlyName}`, tx.tx));
+
+    } catch(ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error modifying scheme ${this.schemeToModify.friendlyName}`, ex));
+    }
   }
 
   async removeScheme() {

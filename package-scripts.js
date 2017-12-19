@@ -71,12 +71,12 @@ module.exports = {
         production: {
           inlineCss: series(
             'nps webpack.build.before',
-            /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc */
+            /* removed -p because UglifyJs barfs on the ES6 code in arc-js */
             "webpack --progress --env.production --env.ETH_ENV=kovan"
           ),
           default: series(
             'nps webpack.build.before',
-            /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc */
+            /* removed -p because UglifyJs barfs on the ES6 code in arc-js */
             "webpack --progress --env.production --env.extractCss --env.ETH_ENV=kovan"
           ),
           serve: series.nps(
@@ -91,6 +91,7 @@ module.exports = {
         hmr: `webpack-dev-server -d --inline --hot --env.server --port 8090`
       },
     },
+    hmr: 'nps webpack.server.hmr',
     serve: 'http-server dist --cors -o -p 8090',
   },
 }

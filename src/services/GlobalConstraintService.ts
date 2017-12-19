@@ -17,7 +17,7 @@ constructor(
   , private schemeService: SchemeService
 ) {
     this.globalConstraints = this.arcService.arcGlobalConstraints;
-    // TODO: should come from arcService or daostack-arc
+    // TODO: should come from arcService or arc-js
     this.defaultConstraint = this.globalConstraints.filter((vm) => vm.name === "TokenCapGC")[0];
   }
 

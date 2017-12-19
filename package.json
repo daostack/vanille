@@ -1,6 +1,6 @@
 {
   "name": "daostack-alchemy",
-  "version": "0.0.1",
+  "version": "0.0.0-alpha.2",
   "description": "Creating DAOs for an Emergent Future",
   "main": "dist/app.bundle.js",
   "repository": {
@@ -106,12 +106,13 @@
     "webpack-dev-server": "2.5.1"
   },
   "dependencies": {
+    "arc-js": "file:..\\arc.js\\arc-js-0.0.0-alpha.2.tgz",
     "arrive": "^2.4.1",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-fetch-client": "^1.1.2",
     "bluebird": "3.5.0",
     "bootstrap-material-design": "^4.0.0-beta.4",
-    "daostack-arc": "file:..\\daostack\\daostack-arc-0.0.0-alpha.15.tgz",
+    "daostack-arc-js": "file:..\\arc.js\\daostack-arc-js-0.0.0-alpha.3.tgz",
     "ethereumjs-tx": "^1.3.3",
     "font-awesome": "4.7.0",
     "isomorphic-fetch": "2.2.1",

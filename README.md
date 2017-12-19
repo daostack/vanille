@@ -11,9 +11,9 @@ Browser-side the application uses TypeScript/ECMAScript 2016+.
 
 At this time there are no web server-side components.
 
-## Arc
+## DaoStack-Arc-Js
 
-Alchemy uses a library of reusable and configurable Ethereum smart contracts called "Arc".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/daostack).
+Alchemy uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc-Js".  You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc-js).
 
 ## See It Live
 You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net).  This deployment of Alchemy assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
@@ -54,7 +54,7 @@ When deploying to production, we avoid grabbing the wrong chain from the dev env
 
 * We use dependency injection where-ever possible, including in the Typescript (client-side).
 
-* Hot Module Reload (HMR) works when built for Development:
+* Hot Module Reload (HMR) works when built for Development.  Build and serve up HMR:
 
   ```shell
     npm start webpack.build.development.serve

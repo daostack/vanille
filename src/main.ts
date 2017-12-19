@@ -5,7 +5,7 @@ import { OrganizationService } from './services/OrganizationService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import  { configure as configureDAOstackArc } from 'daostack-arc';
+import  { configure as configureDAOstackArc } from 'daostack-arc-js';
 import { VotingMachineService } from  "./services/VotingMachineService";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached

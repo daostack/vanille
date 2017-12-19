@@ -1,6 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import * as Arc from 'daostack-arc';
-import { configure as configureArc } from 'daostack-arc';
+import * as Arc from 'arc-js';
 
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
@@ -179,15 +178,5 @@ export class ContractInfo implements Arc.ArcContractInfo {
     name: string;
 }
 
-export * from 'daostack-arc'; 
+export * from 'daostack-arc-js'; 
 export { TruffleContract } from 'truffle-contract';
-
-// export {GenesisScheme};
-// export {GlobalConstraintRegistrar, GlobalConstraintRegistrarParams};
-// export {SchemeRegistrar, ProposeToAddModifySchemeParams, ProposeToRemoveSchemeParams};
-// export {SimpleContributionScheme};
-// export {SimpleICO};
-// export {SimpleVote};
-// export {TokenCapGC};
-// export {UpgradeScheme};
-// export {OrganizationRegister};
