@@ -1,30 +1,18 @@
 <template>
-  <div class="form-group">
-    <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown>
 
-    <div if.bind="!!votingMachineInfo">
-      <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
-      <div class="voting-machine-config">
-        <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.name}" model.bind="votingMachineConfig"></compose>
-      </div>
-    </div>
+  <votingmachineselector
+    voting-machine-info.bind="votingMachineInfo"
+    voting-machine-config.bind="votingMachineConfig">
+  </votingmachineselector>
 
-  <div class="form-group">
-  <div class="row">
-    <div class="col-2">
-      <div class="form-group fee-input">
-        <label for="orgNativeTokenFee">DAO Token Fee</label>
-        <input class="form-control" type='number' id="orgNativeTokenFee" value.bind="orgNativeTokenFee | number"/>
-      </div>
-    </div>
-    <div class="col-2">
-      <div class="form-group fee-input">
-        <label for="schemeNativeTokenFee">Native Token Fee</label>
-        <input class="form-control" type='number' id="schemeNativeTokenFee" value.bind="schemeNativeTokenFee | number"/>
-      </div>
-    </div>
+  <div class="form-group bmd-form-group">
+    <label for="orgNativeTokenFee">DAO Native Token Fee</label>
+    <input class="form-control fee-input" type='number' id="orgNativeTokenFee" value.bind="orgNativeTokenFee | ethwei"/>
+    <span class="bmd-help">Fee for submitting a contribution in the DAO's native token</span>
   </div>
-  </div>
-
+  <div class="form-group bmd-form-group">
+    <label for="schemeNativeTokenFee">Scheme Native Token Fee</label>
+    <input class="form-control fee-input" type='number' id="schemeNativeTokenFee" value.bind="schemeNativeTokenFee | ethwei"/>
+    <span class="bmd-help">Fee for submitting a contribution in the Simple Conribution Scheme's native token</span>
   </div>
 </template>

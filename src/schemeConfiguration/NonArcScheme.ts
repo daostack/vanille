@@ -10,18 +10,19 @@ model: any;
     // super();
   }
 
+  /* schemeParametersHash doesn't go into the model, rather it is obtained
+     by the call to getConfigurationHash */
+  _schemeParametersHash = undefined;
+
   activate(model) {
       model.getConfigurationHash = this.getConfigurationHash.bind(this);
-      model.fee = 0;
-      model.tokenAddress = undefined;
-      model.schemeParametersHash = undefined;
       model.isRegistering = false;
-      model.canBeRegisteringScheme = !!model.canBeRegisteringScheme;
+      model._canBeRegisteringScheme = !!model.canBeRegisteringScheme;
       this.model = model;
   }
 
   async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
-    return this.model.schemeParametersHash;
+    return this._schemeParametersHash;
   }
 
 }

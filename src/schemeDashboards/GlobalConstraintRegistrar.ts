@@ -16,9 +16,6 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
   votingMachineConfig: VotingMachineConfig = <any>{};
 
   constructor(
-    // private schemeService: SchemeService
-    // , private arcService: ArcService
-    // , private organizationService: OrganizationService
     private eventAggregator: EventAggregator
     , private arcService: ArcService
   ) {

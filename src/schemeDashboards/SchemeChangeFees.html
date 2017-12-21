@@ -1,0 +1,12 @@
+<template bindable="model, required">
+  <div class="form-group bmd-form-group">
+    <label for="fee">Proposal Fee</label>
+    <input id="fee" type="number" class="form-control fee-input" value.bind="model.fee | ethwei"/>
+    <span class="bmd-help">Fee when submitting a proposal with this scheme</span>
+  </div>
+  <div class="form-group bmd-form-group">
+    <label for="tokenAddress">Token Address</label>
+    <input id="tokenAddress" type="text" class="form-control" value.bind="model.tokenAddress"/>
+    <span if.bind="!required" class="bmd-help">How to pay the proposal fee. Leave blank to use the Dao's native token.</span>
+  </div>
+</template>

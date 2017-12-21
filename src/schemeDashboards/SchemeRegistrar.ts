@@ -3,13 +3,10 @@ import { DaoSchemeDashboard } from "./schemeDashboard"
 import { SchemeService, SchemeInfo } from  "../services/SchemeService";
 import { OrganizationService } from '../services/OrganizationService';
 import { ArcService, ContractInfo, SchemeRegistrar, ProposeToAddModifySchemeParams, ProposeToRemoveSchemeParams } from  "../services/ArcService";
-import { Permissions } from '../services/ControllerService';
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { SchemeConfigurator} from '../schemeConfiguration/schemeConfigurationBase';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
-import { AureliaHelperService } from "../services/AureliaHelperService"
-import { NULL_HASH } from '../services/Web3Service';
 
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
@@ -24,28 +21,32 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   addableSchemes: Array<SchemeInfo> = [];
   addressControl: HTMLElement;
   NonArcSchemeItemKey = NonArcSchemeItemName;
+  addSchemeFees: any = { fee: 0, tokenAddress: undefined }
+  modifySchemeFees: any = { fee: 0, tokenAddress: undefined }
+  autoRegister: boolean = false;
 
   constructor(
     private schemeService: SchemeService
     , private arcService: ArcService
     , private organizationService: OrganizationService
     , private eventAggregator: EventAggregator
-    , private aureliaHelperService: AureliaHelperService
 
   ) {
     super();
   }
 
   currentSchemeSelectionChanged() {
-      this.schemeToAddAddress = undefined;
-      $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
-  }
-  useAddress() {
-    if (this.currentSchemeSelection)
-    {
-      this.schemeToAddAddress = this.currentSchemeSelection.address;
-      $(this.addressControl).addClass("is-filled"); // annoying thing you have to do for BMD
-    }
+      if (this.currentSchemeSelection)
+      {
+        this.schemeToAddAddress = this.currentSchemeSelection.address;
+      } else {
+        this.schemeToAddAddress = undefined;
+      }
+      if (this.schemeToAddAddress) {
+        $(this.addressControl).addClass("is-filled"); // annoying thing you have to do for BMD
+      } else {
+        $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
+      }
   }
 
   @computedFrom("currentSchemeSelection")
@@ -61,7 +62,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
           avatar: this.orgAddress
           , scheme: this.schemeToAddAddress
           , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
-        }, this.newSchemeConfiguration);
+        }, this.newSchemeConfiguration, this.addSchemeFees, {autoRegister: this. autoRegister });
 
 
       if (!this.isNonArcScheme) {
@@ -72,9 +73,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.currentSchemeSelection.friendlyName}`, tx.tx));
-
-      this.currentSchemeSelection = this.schemeToAddAddress = null; // reset so everything gets rebound properly
-
     } catch(ex) {
         this.eventAggregator.publish("handleException", new EventConfigException(`Error adding scheme ${this.schemeToAddAddress}`, ex));
     }  
@@ -86,12 +84,12 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
       const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
-      const tx = await schemeRegistrar.proposeToAddModifyScheme({
+      const tx = await schemeRegistrar.proposeToAddModifyScheme(Object.assign({
         avatar: this.orgAddress,
         scheme: this.schemeToModify.address,
         schemeName: this.schemeToModify.name,
         schemeParametersHash: schemeParametersHash
-      });
+      }, this.modifySchemeFees));
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to modify ${this.schemeToModify.friendlyName}`, tx.tx));

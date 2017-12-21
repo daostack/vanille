@@ -2,16 +2,49 @@
 <div class="arc-scheme-dashboard">
   <ul class="nav nav-tabs scheme-tabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" href="#ProposeNewController" data-toggle="tab" id="propose-new-controller-tab" role="tab" aria-controls="ProposeNewController" aria-selected="false">Propose New Controller</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#ProposeNewUpgradingScheme" data-toggle="tab" id="propose-new-upgrading-scheme-tab" role="tab" aria-controls="ProposeNewUpgradingScheme" aria-selected="false">Propose New Upgrading Scheme</a>
+        <a class="nav-link active" href="#ProposeNewUpgradingScheme" data-toggle="tab" id="propose-new-upgrading-scheme-tab" role="tab" aria-controls="ProposeNewUpgradingScheme" aria-selected="false">Propose to Change Upgrading Scheme</a>
       </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#ProposeNewController" data-toggle="tab" id="propose-new-controller-tab" role="tab" aria-controls="ProposeNewController" aria-selected="false">Propose New Controller</a>
+    </li>
   </ul>
     
   <div class="tab-content">
+    <div class="tab-pane fade  show active" id="ProposeNewUpgradingScheme" role="tabpanel" aria-labelledby="propose-new-upgrading-scheme-tab">
+      <instructions>Propose to modify this UpgradeScheme or replace it with another.
+        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
+      <form>
 
-    <div class="tab-pane fade show active" id="ProposeNewController" role="tabpanel" aria-labelledby="propose-new-controller-tab">
+        <arc-schemes-dropdown
+          scheme.bind="currentSchemeSelection"
+          dao-address.bind="orgAddress"
+          exclude-keys.bind="schemesExclusiveOfUpgradeScheme"
+          include-non-arc-item.bind="true"
+        >
+          <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
+          <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select UpgradeScheme'}</span></span>
+        </arc-schemes-dropdown>
+
+        <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
+          <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
+        </div> -->
+
+        <div show.bind="currentSchemeSelection" ref="addressControl"  class="form-group">
+          <label for="upgradingSchemeAddress">Scheme Address</label>
+          <input  id="upgradingSchemeAddress" type="text" class="form-control" value.bind="upgradingSchemeAddress"/>
+          <!-- <span class="bmd-help">Scheme address</span> -->
+        </div>
+
+        <div if.bind="currentSchemeSelection">
+          <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="upgradingSchemeConfig"></compose>
+          <schemeChangeFees model.bind="schemeFees" required.bind="isNonArcScheme"></schemeChangeFees>
+        </div>
+
+        <button if.bind="upgradingSchemeAddress" class="btn-submit-proposal" click.delegate="submitUpgradingScheme()">Submit Proposal</button>
+      </form>
+    </div>
+
+    <div class="tab-pane fade" id="ProposeNewController" role="tabpanel" aria-labelledby="propose-new-controller-tab">
          
       <instructions>Propose to add a new controller to <span class='org-name'>${orgName}</span>.
         After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
@@ -21,42 +54,10 @@
           <label for="controllerAddress">Controller Address</label>
           <input class="form-control" type='text' id="controllerAddress" value.bind="controllerAddress"/>
         </div>
-        <button class="btn-submit-proposal" click.delegate="proposeController()">Submit Proposal</button>
+        <button if.bind="controllerAddress" class="btn-submit-proposal" click.delegate="proposeController()">Submit Proposal</button>
       </form>
     </div>  
 
-    <div class="tab-pane fade" id="ProposeNewUpgradingScheme" role="tabpanel" aria-labelledby="propose-new-upgrading-scheme-tab">
-      <instructions>Propose to replace this UpgradeScheme with another that has upgrading scheme permissions.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
-      <form>
-
-        <div class="checkbox">
-          <label>
-          <input type="checkbox" checked.bind="nonArcScheme">
-            Is Non-Arc Scheme
-          </label>
-        </div>
-
-        <div if.bind="nonArcScheme">
-          <div class="form-group"> 
-            <label for="upgradingSchemeAddress">Upgrading Scheme Address</label> 
-            <input class="form-control" type='text' id="upgradingSchemeAddress" value.bind="upgradingSchemeAddress"/> 
-          </div> 
-
-          <div class="form-group">
-            <compose view-model="../schemeConfiguration/NonArcScheme" model.bind="upgradingSchemeConfig"></compose>
-          </div>
-        </div>
-
-        <div else>
-          <div class="form-group">
-            <compose view-model="../schemeConfiguration/UpgradeScheme" model.bind="upgradingSchemeConfig"></compose>
-          </div>
-        </div>
-
-        <button class="btn-submit-proposal" click.delegate="submitUpgradingScheme()">Submit Proposal</button>
-      </form>
-    </div>
   </div>
 </div>
 </template>

@@ -1,17 +1,9 @@
 <template>
-  <div class="form-group">
-    <label for="fee">Fee (Ether)</label>
-    <input id="fee" type="number" class="form-control" value.bind="model.fee | ethwei"/>
-  </div>
-  <div class="form-group">
-    <label for="tokenAddress">Token Address</label>
-    <input id="tokenAddress" type="text" class="form-control" value.bind="model.tokenAddress"/>
-  </div>
-  <div class="form-group">
+  <div class="form-group bmd-form-group ">
     <label for="schemeParametersHash">Scheme Parameters Hash</label>
-    <input id="schemeParametersHash" type="text" class="form-control" value.bind="model.schemeParametersHash"/>
+    <input id="schemeParametersHash" type="text" class="form-control" value.bind="_schemeParametersHash"/>
   </div>
-  <div class="form-group" if.bind="model.canBeRegisteringScheme">
+  <div class="form-group bmd-form-group " if.bind="model.canBeRegisteringScheme">
     <div class="checkbox">
       <label>
         <input type="checkbox" checked.bind="model.isRegistering">

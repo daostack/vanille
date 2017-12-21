@@ -102,6 +102,9 @@ section h4 {
   width: inherit;
 }
 
+form {
+  padding-top: 0 !important;
+}
 
 .instructions {
   margin-bottom: 1.5rem;
@@ -125,7 +128,7 @@ section h4 {
 }
 
 .dropdown {
-  margin-bottom: .75rem;
+  /* margin-bottom: .75rem; */
   display: inline-block;
 }
 

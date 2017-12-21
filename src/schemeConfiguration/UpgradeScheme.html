@@ -1,13 +1,6 @@
 <template>
-    <div class="form-group">
-      <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown>
-
-      <div if.bind="!!votingMachineInfo">
-        <etherscanlink address=${votingMachineInfo.address}>${votingMachineInfo.address}</etherscanlink>
-
-        <div class="voting-machine-config">
-          <compose view-model="${'../votingMachineConfiguration/' + votingMachineInfo.name}" model.bind="votingMachineConfig"></compose>
-        </div>
-      </div>
-    </div>
+    <votingmachineselector
+      voting-machine-info.bind="votingMachineInfo"
+      voting-machine-config.bind="votingMachineConfig">
+    </votingmachineselector>
   </template>

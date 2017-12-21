@@ -36,19 +36,27 @@
             <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select Scheme Type to Add'}</span></span>
           </arc-schemes-dropdown>
 
-          <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
+          <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
             <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
-          </div>
+          </div> -->
 
-          <div show.bind="currentSchemeSelection" ref="addressControl"  class="form-group">
+          <div show.bind="currentSchemeSelection" ref="addressControl"  class="form-group bmd-form-group">
             <label for="schemeToAddAddress">Scheme Address</label>
             <input  id="schemeToAddAddress" type="text" class="form-control" value.bind="schemeToAddAddress"/>
             <!-- <span class="bmd-help">Scheme address</span> -->
           </div>
           
           <div if.bind="currentSchemeSelection">
-            <div class="scheme-config">
-              <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
+            <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
+            <schemeChangeFees model.bind="addSchemeFees"  required.bind="isNonArcScheme"></schemeChangeFees>
+
+            <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" checked.bind="autoRegister">
+                  Automatically register ${orgName} into the added scheme when proposal is approved 
+                </label>
+              </div>
             </div>
           </div>
           
@@ -64,22 +72,24 @@
       
       <form>
         <arc-schemes-dropdown
-          scheme.bind="schemeToModify"
-          dao-address.bind="orgAddress"
-          exclude-unregistered.bind="true"
-          exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-        >
-        <span slot="buttonText"><span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span></span>
-        <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
-      </arc-schemes-dropdown>
-        
+            scheme.bind="schemeToModify"
+            dao-address.bind="orgAddress"
+            exclude-unregistered.bind="true"
+            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
+          >
+          <span slot="buttonText"><span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span></span>
+          <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
+        </arc-schemes-dropdown>
+
         <div if.bind="!!schemeToModify">
-          <etherscanlink address=${schemeToModify.address}>${schemeToModify.address}</etherscanlink>
-          <div class="scheme-config">
-            <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
-            <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
+          <div class="form-group bmd-form-group">         
+            <etherscanlink address=${schemeToModify.address}>${schemeToModify.address}</etherscanlink>
           </div>
+          <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
+          <schemeChangeFees model.bind="modifySchemeFees"></schemeChangeFees>
+          <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
         </div>
+
       </form>
     </div>  
 
