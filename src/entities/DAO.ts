@@ -1,4 +1,4 @@
-import { ArcService, Organization, ContractInfo, OrganizationSchemeInfo } from '../services/ArcService';
+import { ArcService, Organization, ContractInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
@@ -8,7 +8,7 @@ export class DAO extends Organization {
 
   public address: string;
   public name: string;
-  private schemesCache = new Map<string,SchemeInfo>();
+  private schemesCache: Map<string,SchemeInfo>;
   private registerSchemeEvent;
   private unRegisterSchemeEvent;
   public arcService: ArcService;
@@ -41,24 +41,49 @@ export class DAO extends Organization {
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
     newDAO.omega = await newDAO.reputation.totalSupply(), "ether";
 
-    await newDAO.getSchemes();
+    // let existingSchemes = org.schemes();
+
+    // await newDAO.watchSchemes();
     return newDAO;
   }
 
-  private async getSchemes(): Promise<void>
-  {
-    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: 0, toBlock: "latest"});
-    this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
-
-    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: 0, toBlock: "latest"});
-    this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
-    this.logger.debug(`Finished loading schemes for ${this.name}: ${this.address}`);
+  private async _getCurrentSchemes(): Promise<Array<SchemeInfo>> {
+    return (await super.schemes()).map((s) => SchemeInfo.fromOrganizationSchemeInfo(s));
   }
-  
-  public get allSchemes(): Array<SchemeInfo> {
-    // return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
+
+  /**
+   * 
+   * @param contractName returns SchemeInfos for all the schemes in the Dao.
+   * Keeps them cached and always up-to-date.  Do not confuse with super.schemes().
+   */
+  public async allSchemes(): Promise<Array<SchemeInfo>> {
+    if (!this.schemesCache) {
+      this.schemesCache = new Map<string,SchemeInfo>();
+      let schemes = await this._getCurrentSchemes();
+      for(let scheme of schemes)
+      {
+        this.schemesCache.set(scheme.address,scheme);     
+      }
+      this.watchSchemes();
+      this.logger.debug(`Finished loading schemes for ${this.name}: ${this.address}`);
+    }
+
     return Array.from(this.schemesCache.values());
   }
+
+  private watchSchemes(): void
+  {
+    this.registerSchemeEvent = this.controller.RegisterScheme({}, {fromBlock: "latest", toBlock: "latest"});
+    this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
+
+    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, {fromBlock: "latest", toBlock: "latest"});
+    this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
+  }
+  
+  // public getSchemes(): Array<SchemeInfo> {
+  //   // return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
+  //   return Array.from(this.schemesCache.values());
+  // }
 
   private async handleSchemeEvent(err, eventsArray, adding:boolean) : Promise<void>
   {

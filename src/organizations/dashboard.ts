@@ -8,17 +8,19 @@ import { PLATFORM } from 'aurelia-pal';
 @autoinject
 export class DAODashboard {
   
-  private org:DAO;
-  private address:string;
-  private orgName: string;
-  private tokenSymbol: string;
-  private userTokenbalance:Number;
-  private registeredArcSchemes: Array<SchemeInfo>;
-  private unregisteredArcSchemes: Array<SchemeInfo>;
-  private nonArcSchemes: Array<SchemeInfo>;
-  private arcSchemes: Array<SchemeInfo>;
-  private subscription;
-  private omega;
+  org:DAO;
+  address:string;
+  orgName: string;
+  tokenSymbol: string;
+  userTokenbalance:Number;
+  registeredArcSchemes: Array<SchemeInfo>;
+  unregisteredArcSchemes: Array<SchemeInfo>;
+  nonArcSchemes: Array<SchemeInfo>;
+  arcSchemes: Array<SchemeInfo>;
+  subscription;
+  omega;
+  dataLoaded: boolean = false;
+
 
   constructor(
     private organizationService: OrganizationService
@@ -31,6 +33,7 @@ export class DAODashboard {
 
   async activate(options: any) {
 
+    setTimeout(async () => {
     this.address = options.address;
     this.org = await this.organizationService.organizationAt(this.address);
     this.orgName = this.org.name;
@@ -40,8 +43,6 @@ export class DAODashboard {
     this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
     // in Wei
     this.omega = this.org.omega;
-
-    await this.loadSchemes();
 
     this.subscription = this.org.subscribe(DAO.daoSchemeSetChangedEvent, (params: { dao:DAO, scheme: SchemeInfo }) => 
     {
@@ -81,16 +82,26 @@ export class DAODashboard {
           addTo.push(schemeInfo);
         }
       }
+
+      setTimeout(this.polishDom,0);
     });
-  }
+
+    await this.loadSchemes();    
+    this.dataLoaded = true;
+    });
+}
 
   deactivate() {
     this.subscription.dispose();
     this.subscription = null;
   }
 
-  attached() {
-    ($(".scheme-use-button") as any).tooltip();
+  // attached() {
+  //   this.polishDom();
+  // }
+
+  polishDom() {
+      ($(".scheme-use-button") as any).tooltip();
     // workaround for accordian behavior not working.  Check to see if it's fixed when the
     // final version 4 is released
     $('.collapse').on('show.bs.collapse', () =>  {
@@ -134,7 +145,13 @@ export class DAODashboard {
   }
 
   schemeDashboardViewModel(scheme: SchemeInfo): any {
-      return Object.assign({}, { org: this.org, orgName: this.orgName, orgAddress: this.address, tokenSymbol: this.tokenSymbol, allSchemes: this.arcSchemes }, scheme )
+      return Object.assign({}, { 
+        org: this.org, 
+        orgName: this.orgName, 
+        orgAddress: this.address, 
+        tokenSymbol: this.tokenSymbol, 
+        allSchemes: this.arcSchemes }, 
+      scheme )
   }
 
   getSchemeIndexFromAddress(address:string, collection: Array<SchemeInfo>): number {

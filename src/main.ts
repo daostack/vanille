@@ -6,7 +6,7 @@ import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
 import  { configure as configureDAOstackArc } from 'daostack-arc-js';
-import { VotingMachineService } from  "./services/VotingMachineService";
+import { OrganizationsList } from  "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
 import "popper.js";
@@ -47,6 +47,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/round-dashboard-button.html"),
     PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("resources/customElements/instructions.html"),
+    PLATFORM.moduleName("resources/customElements/pageLoading.html"),
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
     PLATFORM.moduleName("resources/customAttributes/blur-image"),
     PLATFORM.moduleName("resources/valueConverters/toUpper"),
@@ -91,6 +92,7 @@ export async function configure(aurelia: Aurelia) {
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);
     aurelia.container.get(SnackbarService);
+    aurelia.container.get(OrganizationsList);
     
     const web3Service = aurelia.container.get(Web3Service);
     await web3Service.initialize(web3);
@@ -105,7 +107,8 @@ export async function configure(aurelia: Aurelia) {
     // });
 
     const orgService = aurelia.container.get(OrganizationService);
-    await orgService.initialize();
+    // don't await here, for faster application GUI load time
+    orgService.initialize();
     // aurelia.container.registerSingleton(OrganizationService, () => {
     //   return orgService;
     // });

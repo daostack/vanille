@@ -1,5 +1,10 @@
 <template>
+    <div if.bind="!dataLoaded">
+      <pageloading>Thanks for waiting while we fetch the data for this DAO...</pageloading>
+    </div>
+    <div else>
     <h2>${orgName}</h2>
+
     <section>
       <h3>Basic Information</h3>
       <dl>
@@ -117,7 +122,6 @@
           </li>
         </ul>
     </div>
-
   </section>
-
+  </div>
 </template>

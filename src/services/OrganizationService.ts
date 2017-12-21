@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, Organization, ContractInfo, OrganizationNewConfig, FounderConfig } from './ArcService';
+import { ArcService, TruffleContract, Organization, ContractInfo, OrganizationNewConfig, FounderConfig, OrganizationSchemeInfo } from './ArcService';
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
 import { LogManager } from 'aurelia-framework';
@@ -20,8 +20,9 @@ export class OrganizationService {
     includeEventsIn(this);
   }
 
-  private daoCache = new Map<string,DAO>();
+  daoCache = new Map<string,DAO>();
   logger = LogManager.getLogger("Alchemy");
+  public promiseToBeLoaded: Promise<any>;
 
   /**
    * a DAO has been added or removed
@@ -30,7 +31,7 @@ export class OrganizationService {
 
   public async initialize()
   {
-    return new Promise(async (resolve,reject) => {
+    return this.promiseToBeLoaded = new Promise(async (resolve,reject) => {
 
       let genesisScheme = await this.arcService.getContract("GenesisScheme");
       let myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
@@ -55,13 +56,23 @@ export class OrganizationService {
   }
 
   public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
+    return this.promiseToBeLoaded.then(async () => {
       let org = await Organization.new(config);
       let dao = await DAO.fromOrganization(org, this.arcService, this.web3);
       this.daoCache.set(dao.address,dao);
       return dao;
+    });
   }
 
   public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
+
+    return this.promiseToBeLoaded.then(async () => {
+      return this._organizationAt(avatarAddress, takeFromCache);
+    });
+  }
+
+  private async _organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
+
     let dao: DAO;
     let cachedDao = this.daoCache.get(avatarAddress);
 
@@ -95,8 +106,10 @@ export class OrganizationService {
     return dao;
   }
 
-  public get allOrganizations(): Array<DAO> {
-    return Array.from(this.daoCache.values());
+  public async allOrganizations(): Promise<Array<DAO>> {
+    return this.promiseToBeLoaded.then(async () => {
+      return Array.from(this.daoCache.values());
+    });
   }
 
   private async handleNewOrg(err, eventsArray) : Promise<void>
@@ -110,7 +123,7 @@ export class OrganizationService {
         let promotedAmount = 0;
         let avatarAddress =  eventsArray[i].args._avatar;
         // this has side-effects of initializing and caching the dao
-        let dao = await this.organizationAt(avatarAddress);
+        let dao = await this._organizationAt(avatarAddress);
         if (dao) {
           this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
           /**
@@ -124,11 +137,6 @@ export class OrganizationService {
           this.publish(OrganizationService.daoAddedEvent, dao);
         }
       }
-  }
-
-  public async getSchemesInOrganization(daoAddress: string): Promise<Array<DaoSchemeInfo>> {
-    let org = await this.organizationAt(daoAddress);
-    return org.allSchemes;
   }
 
   /*****
