@@ -1,0 +1,18 @@
+<template bindable="router">
+<nav class="header navbar fixed-top navbar-expand-lg navbar-dark">
+
+ <a class="navbar-brand" href="#">
+   <img src="../static/dao-icon-light.png" width="30" height="30" class="logo d-inline-block align-top" alt="">DAOstack Alchemy</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li repeat.for="row of router.navigation" class="nav-item ${ row.isActive ? 'active' : '' }">
+        <a class="nav-link" href.bind="row.href">${ row.title }</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+</template>

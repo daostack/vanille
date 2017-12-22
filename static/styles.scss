@@ -11,35 +11,22 @@
 @import "./src/resources/customElements/copyToClipboardButton/copyToClipboardButton";
 @import "./src/services/snackbars";
 
-.bg-warning {
-  background-color: #ff9100 !important; }
 
-a.bg-warning:focus, a.bg-warning:hover {
-  background-color: #ff6d00 !important; }
-
-.text-warning {
-  color: #ff6d00 !important; }
-
-a.text-warning:focus, a.text-warning:hover {
-  color: #ff6d00 !important; }
-
-/** eliminate the nasty 32 pixel margin that BMD adds **/
-.list-group.clean .list-group-item :first-child {
-  margin-right: unset; // override BMD
+.root.container {
+  margin-top: 80px;
+  margin-bottom: 50px;
 }
 
-.list-group.clean .list-group-item .material-icons:last-child {
-  padding-left: unset !important;
+nav.footer {
+  background-color: $gray-300 !important;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-// .form-group .dropdown {
-//   padding-top:1.75rem;  /* to be consistent with .form-group input */
-// }
-
-.tooltip {
-  z-index: 1000000;
+nav.header {
+  background-color: $gray-800 !important;
 }
 
-.inline {
-  display: inline-block;
+nav.header .logo {
+  margin-right:.5rem;
 }

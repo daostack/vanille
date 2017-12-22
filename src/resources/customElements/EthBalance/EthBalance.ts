@@ -14,11 +14,13 @@ export class EthBalance {
     this.ethAddress = this.web3.defaultAccount;
   }
 
-  async attached() {
+  attached() {
+    // console.log("EthBalance: attaching");
     this.readBalance();    
   }
 
   detached() {
+    // console.log("EthBalance: detaching");
     if (this.filter) {
       this.filter.stopWatching();
       this.filter = null;
@@ -27,9 +29,6 @@ export class EthBalance {
 
   async readBalance() {
     this.getBalance();
-    /**
-     * Note I changed the first param from {} to latest to get this to work.  Dunno if that is the most efficient  -dkent
-     */
     this.filter = this.web3.eth.filter('latest', async () => {
       this.getBalance();
     });
@@ -37,9 +36,8 @@ export class EthBalance {
 
   async getBalance() {
     try {
-      this.ethBalance = (await this.web3.getBalance(this.ethAddress)).toFixed(2);
+      this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toFixed(2);
     } catch(ex) {
-      console.log("EthBalance: failed to obtain eth balance");
     }
   }
 }

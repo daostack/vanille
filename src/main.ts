@@ -55,7 +55,9 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/round"),
     PLATFORM.moduleName("resources/valueConverters/ethwei"),
     PLATFORM.moduleName("schemeDashboards/SchemeChangeFees.html"),
-    PLATFORM.moduleName("schemeConfiguration/VotingMachineSelector")
+    PLATFORM.moduleName("schemeConfiguration/VotingMachineSelector"),
+    PLATFORM.moduleName("footer.html"),
+    PLATFORM.moduleName("header.html")
   ]);
 
 

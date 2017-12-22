@@ -1,4 +1,4 @@
-import {Aurelia, autoinject} from 'aurelia-framework';
+import {Aurelia, autoinject, LogManager} from 'aurelia-framework';
 import {Router, RouterConfiguration} from 'aurelia-router';
 import {PLATFORM} from 'aurelia-pal';
 import { Web3Service } from "./services/Web3Service";
@@ -9,6 +9,8 @@ import '../static/styles.scss';
 export class App {
   router: Router;
   private isConnected: boolean;
+  private logger = LogManager.getLogger("Alchemy");
+  private healthy: boolean = false;
   
     constructor(
         private web3: Web3Service,
@@ -64,7 +66,7 @@ export class App {
          * not connected and/or couldn't get the daostack addresses, either way treat as not connected
          */
         else if (!haveDAOStack) { 
-            console.log("contracts not found");
+            this.logger.error(`contracts not found`);
             config.map([
             {
                 route: [''],
@@ -76,51 +78,14 @@ export class App {
         }
         else {
             config.map([
-              { route: ['', 'home'],         name: 'home',        moduleId: PLATFORM.moduleName('./home'),        nav: true, title: 'Home' }
-            //   {
-            //     route: ['about' ],
-            //     name: 'about',
-            //     moduleId: PLATFORM.moduleName('../about/about'),
-            //     nav: false,
-            //     title: 'About DAOStack'
-            // }
-            // ,
-            // {
-            //     route: ['faucet' ],
-            //     name: 'faucet',
-            //     moduleId: PLATFORM.moduleName('../faucet/faucet'),
-            //     nav: false,
-            //     title: 'Faucet'
-            // },
-            // {
-            //     route: ['collaborators' ],
-            //     name: 'collaborators',
-            //     moduleId: PLATFORM.moduleName('../collaborators/collaborators'),
-            //     nav: false,
-            //     title: 'Collaborators'
-            // },
-            // {
-            //     route: ['presale' ],
-            //     name: 'presale',
-            //     moduleId: PLATFORM.moduleName('../presale/presale'),
-            //     nav: false,
-            //     title: 'Presale'
-            // }
+              { route: ['', 'home'],         name: 'home',        moduleId: PLATFORM.moduleName('./home'),        nav: false, title: 'Home' }
             , {
                 route: ['organizations' ],
                 name: 'organizations',
                 moduleId: PLATFORM.moduleName('./organizations/list'),
                 nav: true,
-                title: 'Organizations'
+                title: 'DAOs'
             }
-            // , {
-            //     // 'address' will be present in the object passed to the 'activate' method of the viewmodel
-            //     route: ['organization/:address' ],
-            //     name: 'organization',
-            //     moduleId: PLATFORM.moduleName('./organizations/organization/organization'),
-            //     nav: false,
-            //     title: 'Organization'
-            // }
             , {
                 route: ['deployDAO' ],
                 name: 'deployDAO',
@@ -137,6 +102,7 @@ export class App {
               title: 'DAO Dashboard'
           }
       ]);
+      this.healthy = true;
     }
 
     this.router = router; 

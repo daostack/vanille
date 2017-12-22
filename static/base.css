@@ -25,6 +25,10 @@
   cursor: pointer;
 }
 
+.inline {
+  display: inline-block;
+}
+
 /** APPLICATION **/
 
 /* body {
@@ -56,43 +60,6 @@ section h4 {
 .progress {
   height: 1.25rem;
 }
-
-/* I suspect this is required due to a bug in the bootstrap beta v1 required by mdbootstrap */
-/* .progress-bar {
-  height: 1.25rem !important;
-  padding-top: .1rem;
-}
-
-
-.btn-circle {
-  width: 2rem;
-  height: 2rem;
-  text-align: center;
-  padding: .375rem 0;
-  font-size: .75rem;
-  line-height: 1.428571429;
-  border-radius: 1rem;
-}
-.btn-circle.btn-lg {
-  width: 3rem;
-  height: 3rem;
-  padding: 0.625rem 1rem;
-  font-size: 1.1rem;
-  line-height: 1.33;
-  border-radius: 1.5rem;
-}
-.btn-circle.btn-xl {
-  width: 4rem;
-  height: 4rem;
-  padding: 0.625rem 1rem;
-  font-size: 1.5rem;
-  line-height: 1.33;
-  border-radius: 2rem;
-} */
-
-/* .form-group label{
-  font-weight:bold;
-} */
 
 .form-group.address {
   width: 20rem;
@@ -127,9 +94,26 @@ form {
   font-weight: bold;
 }
 
-.dropdown {
-  /* margin-bottom: .75rem; */
-  display: inline-block;
+
+.bg-warning {
+  background-color: #ff9100 !important; }
+
+a.bg-warning:focus, a.bg-warning:hover {
+  background-color: #ff6d00 !important; }
+
+.text-warning {
+  color: #ff6d00 !important; }
+
+a.text-warning:focus, a.text-warning:hover {
+  color: #ff6d00 !important; }
+
+/** eliminate the nasty 32 pixel margin that BMD adds **/
+.list-group.clean .list-group-item :first-child {
+  margin-right: unset; /* override BMD */
+}
+
+.list-group.clean .list-group-item .material-icons:last-child {
+  padding-left: unset !important;
 }
 
 .form-section-header {
@@ -139,6 +123,14 @@ form {
 
 .fee-input {
   width:7rem;
+}
+
+.dropdown {
+  display: inline-block;
+}
+
+.tooltip {
+  z-index: 1000000;
 }
 
 /* animate page transitions */
