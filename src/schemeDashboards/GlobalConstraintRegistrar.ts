@@ -4,7 +4,7 @@ import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService, GlobalConstraintRegistrar } from  "../services/ArcService";
 import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
 import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { EventConfigTransaction } from "../entities/GeneralEvents";
+import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 
 @autoinject
 export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
@@ -37,10 +37,10 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.constraintToAddInfo.friendlyName}`, tx.tx));
+        `Proposal submitted to add ${this.constraintToAddInfo.address}`, tx.tx));
 
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to add/modify constraint ${this.constraintToAddInfo.address}`, ex));
     }
   }
 
@@ -55,9 +55,9 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.constraintToRemoveInfo.friendlyName}`, tx.tx));
+        `Proposal submitted to remove ${this.constraintToRemoveInfo.address}`, tx.tx));
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to remove constraint ${this.constraintToRemoveInfo.address}`, ex));
     }
   }
 }

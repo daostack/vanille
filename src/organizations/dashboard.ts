@@ -88,7 +88,12 @@ export class DAODashboard {
 
     await this.loadSchemes();    
     this.dataLoaded = true;
-    });
+    this.polishDom();
+    }, 0);
+}
+
+attached() {
+  this.polishDom();
 }
 
   deactivate() {

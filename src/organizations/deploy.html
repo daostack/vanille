@@ -71,7 +71,7 @@
               class="form-control" 
                 style="width:5rem" 
                 type='number'
-                value.bind='founder.tokens | ethwei'
+                value.bind="founder.tokens | ethwei & updateTrigger:'blur'"
                 id.bind="appendIndex('founder_tokens',$index)"
               />
           </div>
@@ -81,7 +81,7 @@
             class="form-control" 
               style="width:5rem" 
               type='number'
-              value.bind='founder.reputation | ethwei'
+              value.bind="founder.reputation | ethwei & updateTrigger:'blur'"
               id.bind="appendIndex('founder_reputation',$index)"
             />
           </div>

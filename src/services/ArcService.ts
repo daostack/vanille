@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import * as Arc from 'arc-js';
+import * as Arc from 'daostack-arc-js';
 
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';

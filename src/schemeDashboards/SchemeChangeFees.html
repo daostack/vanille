@@ -1,7 +1,7 @@
 <template bindable="model, required">
   <div class="form-group bmd-form-group">
     <label for="fee">Proposal Fee</label>
-    <input id="fee" type="number" class="form-control fee-input" value.bind="model.fee | ethwei"/>
+    <input id="fee" type="number" class="form-control fee-input" value.bind="model.fee | ethwei & updateTrigger:'blur'"/>
     <span class="bmd-help">Fee when submitting a proposal with this scheme</span>
   </div>
   <div class="form-group bmd-form-group">

@@ -2,7 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator  } from 'aurelia-event-aggregator';
 import { ArcService } from  "../services/ArcService";
-import { EventConfigTransaction } from "../entities/GeneralEvents";
+import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 
 @autoinject
 export class SimpleContributionScheme extends DaoSchemeDashboard {
@@ -45,10 +45,10 @@ export class SimpleContributionScheme extends DaoSchemeDashboard {
       let tx = await scheme.proposeContribution(options);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted for a contribution', tx.tx));
+        'Proposal submitted to make a contribution', tx.tx));
         
     } catch(ex) {
-        this.eventAggregator.publish("handleException", ex);
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));
     }
   }
 }

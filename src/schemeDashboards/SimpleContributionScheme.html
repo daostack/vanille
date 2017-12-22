@@ -12,25 +12,25 @@
         <div class="col-3">
           <div class="form-group">
             <label for="nativeTokenReward">Native Token Award</label>
-            <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward | ethwei" />
+            <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward | ethwei & updateTrigger:'blur'" />
           </div>
         </div>
         <div class="col-3">
           <div class="form-group">
             <label for="reputationTokenReward">Reputation Token Award</label>
-            <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward | ethwei" />
+            <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward | ethwei & updateTrigger:'blur'" />
           </div>
         </div>
           <div class="col-3">
             <div class="form-group">
               <label for="ethReward">Ether Reward</label>
-              <input class="form-control" type='number' id="ethReward" value.bind="ethReward | ethwei" />
+              <input class="form-control" type='number' id="ethReward" value.bind="ethReward | ethwei & updateTrigger:'blur'" />
             </div>
           </div>
           <div class="col-3">
             <div class="form-group">
               <label for="externalTokenReward">External Token Reward</label>
-              <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward  | ethwei" />
+              <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward  | ethwei & updateTrigger:'blur'" />
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   NonArcSchemeItemKey = NonArcSchemeItemName;
   addSchemeFees: any = { fee: 0, tokenAddress: undefined }
   modifySchemeFees: any = { fee: 0, tokenAddress: undefined }
-  autoRegister: boolean = false;
+  autoRegister: boolean = true;
 
   constructor(
     private schemeService: SchemeService
@@ -72,9 +72,9 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       let tx = await schemeRegistrar.proposeToAddModifyScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.currentSchemeSelection.friendlyName}`, tx.tx));
+        `Proposal submitted to add ${this.schemeToAddAddress}`, tx.tx));
     } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error adding scheme ${this.schemeToAddAddress}`, ex));
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to add scheme ${this.schemeToAddAddress}`, ex));
     }  
   }
 
@@ -92,10 +92,10 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       }, this.modifySchemeFees));
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to modify ${this.schemeToModify.friendlyName}`, tx.tx));
+        `Proposal submitted to modify ${this.schemeToModify.address}`, tx.tx));
 
     } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error modifying scheme ${this.schemeToModify.friendlyName}`, ex));
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to modify scheme ${this.schemeToModify.address}`, ex));
     }
   }
 
@@ -111,11 +111,9 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.schemeToRemove.friendlyName}`, tx.tx));
-
-      this.schemeToRemove = null;
+        `Proposal submitted to remove ${this.schemeToRemove.address}`, tx.tx));
     } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error removing scheme ${this.schemeToRemove.address}`, ex));
+        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to remove scheme ${this.schemeToRemove.address}`, ex));
     }
   }
 }

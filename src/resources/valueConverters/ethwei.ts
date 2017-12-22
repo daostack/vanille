@@ -20,31 +20,30 @@ export class EthweiValueConverter {
      * When the string cannot be converted to a number, this will return the original string.
      * This helps the user see the original mistake.  Validation will need to make sure that the
      * incorrect value is not persisted.
-     * @param value
+     * @param ethValue
      */
-    fromView(value: string) : BigNumber {
-        if ((value == undefined) || (value == null)) {
-          return value;
+    fromView(ethValue: string) : BigNumber {
+        if ((ethValue == undefined) || (ethValue == null)) {
+          return ethValue;
         }
 
-        // allow exceptions here so that corrupt data is let likely to make it into
-        // a model
-        return this.web3.toBigNumber(this.web3.toWei(value, "ether"));
+        // allow exceptions here so that corrupt data is less likely to make it into a model
+        return this.web3.toBigNumber(this.web3.toWei(ethValue, "ether"));
     }
 
     /**
      *  Wei BigNumber|number to Eth string
-     * @param value
+     * @param weiValue
      */
-    toView(value: number|BigNumber, base:number= 10) : string {
+    toView(weiValue: number|BigNumber, base:number= 10) : string {
       try {
-        if ((value == undefined) || (value == null)) {
+        if ((weiValue == undefined) || (weiValue == null)) {
           return "";
         }
 
-        return this.web3.fromWei(value, "ether").toString(base);
+        return this.web3.fromWei(weiValue, "ether").toString(base);
       } catch(ex) {
-        return value.toString();
+        return weiValue.toString();
       }
     }
 }

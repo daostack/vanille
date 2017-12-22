@@ -106,7 +106,6 @@
     "webpack-dev-server": "2.5.1"
   },
   "dependencies": {
-    "arc-js": "file:..\\arc.js\\arc-js-0.0.0-alpha.2.tgz",
     "arrive": "^2.4.1",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-fetch-client": "^1.1.2",
