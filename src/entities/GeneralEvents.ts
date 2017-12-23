@@ -7,13 +7,14 @@ export class EventConfig {
     
     switch (lifetime) {
       case SnackLifetime.clickToDismiss:
+      case SnackLifetime.closeButton:
         this.duration = 0;
         break;
       case SnackLifetime.transitory:
         this.duration = 3000;
         break;
       case SnackLifetime.none:
-        this.duration = -1;
+        this.duration = -1; // means no snack
         break;
     }
 
@@ -62,7 +63,7 @@ export class EventConfigException extends EventConfig {
     message:string = "An error occurred"
     , public exception: any
     , type: EventMessageType = EventMessageType.Exception
-    , lifetime: SnackLifetime = SnackLifetime.clickToDismiss
+    , lifetime: SnackLifetime = SnackLifetime.closeButton
     ) {
     super(message, type, lifetime);
     this.message = `${this.message}: ${exception}`;
@@ -137,7 +138,8 @@ export enum ActionType {
 export enum SnackLifetime {
   none = 0,
   transitory = 1,
-  clickToDismiss = 2
+  clickToDismiss = 2,
+  closeButton = 3
 }
 
 export enum EventMessageType {

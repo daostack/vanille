@@ -16,12 +16,14 @@
   padding:.25rem;
   padding-top: 0px;
   padding-bottom: 0px;
-  margin-left: .5rem;  
+  margin-left: .5rem;
+  text-transform:uppercase;
 }
 
 .snackbar-action-wrapper > a {
   color: $gray-800;
   margin-left: .5rem;  
+  text-transform:uppercase;  
 }
 
 .snackbar-action-wrapper button:hover {

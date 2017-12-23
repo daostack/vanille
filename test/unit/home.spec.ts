@@ -20,8 +20,9 @@ describe('Home Page', () => {
   }
 
   it('should render heading', () => {
-    const headerElement = document.querySelector('h2') as HTMLElement;
-    expect(headerElement.innerHTML).toBe('Creating DAOs for an Emergent Future');
+    const headerElement = document.querySelector('h1') as HTMLElement;
+    expect(headerElement).not.toBeFalsy();
+    expect(headerElement.innerHTML).toBe('DAOs for an Emergent Future');
   });
 
   // it('should render first name', () => {

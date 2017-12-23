@@ -7,10 +7,8 @@ module.exports = {
     test: {
       default: 'nps test.jest',
       jest: {
-        default: series(
-          rimraf('test/coverage-jest'),
-          'jest'
-        ),
+        default:'jest',
+        coverage: rimraf('test/coverage-jest'),
         accept: 'jest -u',
         watch: 'jest --watch',
       },
