@@ -50,14 +50,14 @@
             <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
             <schemeChangeFees model.bind="addSchemeFees"  required.bind="isNonArcScheme"></schemeChangeFees>
 
-            <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
+            <!-- <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
               <div class="checkbox">
                 <label>
                   <input type="checkbox" checked.bind="autoRegister">
                   Automatically register ${orgName} into the added scheme when proposal is approved 
                 </label>
               </div>
-            </div>
+            </div> -->
           </div>
           
           <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>

@@ -29,6 +29,9 @@ export class EthBalance {
 
   async readBalance() {
     this.getBalance();
+    /**
+     * this is supposed to fire whenever a new block is created
+     */
     this.filter = this.web3.eth.filter('latest', async () => {
       this.getBalance();
     });

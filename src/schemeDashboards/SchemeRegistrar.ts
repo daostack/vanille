@@ -23,7 +23,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   NonArcSchemeItemKey = NonArcSchemeItemName;
   addSchemeFees: any = { fee: 0, tokenAddress: undefined }
   modifySchemeFees: any = { fee: 0, tokenAddress: undefined }
-  autoRegister: boolean = true;
+  // autoRegister: boolean = true;
 
   constructor(
     private schemeService: SchemeService
@@ -62,7 +62,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
           avatar: this.orgAddress
           , scheme: this.schemeToAddAddress
           , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
-        }, this.newSchemeConfiguration, this.addSchemeFees, {autoRegister: this. autoRegister });
+        }, this.newSchemeConfiguration, this.addSchemeFees /*, {autoRegister: this. autoRegister }*/);
 
 
       if (!this.isNonArcScheme) {

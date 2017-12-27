@@ -36,6 +36,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use.globalResources([
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
+    PLATFORM.moduleName("resources/customElements/UsersAddress/UsersAddress"),
     PLATFORM.moduleName("resources/customElements/arcSchemesDropdown/arcSchemesDropdown"),
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
@@ -66,10 +67,10 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeDashboards/NonArc")
   PLATFORM.moduleName("./schemeDashboards/NotRegistered")
   PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
-  PLATFORM.moduleName("./schemeDashboards/SimpleContributionScheme")
+  PLATFORM.moduleName("./schemeDashboards/ContributionReward")
   PLATFORM.moduleName("./schemeDashboards/UpgradeScheme")
 
-  PLATFORM.moduleName("./schemeConfiguration/SimpleContributionScheme")
+  PLATFORM.moduleName("./schemeConfiguration/ContributionReward")
   PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
@@ -116,7 +117,8 @@ export async function configure(aurelia: Aurelia) {
     // });
 
   } catch(ex) {
-    console.log(`Error initializing blockchain services: ${ex}`)
+    console.log(`Error initializing blockchain services: ${ex}`);
+    alert(`Error initializing blockchain services: ${ex}`);
   }
 
   await aurelia.setRoot(PLATFORM.moduleName('app'));

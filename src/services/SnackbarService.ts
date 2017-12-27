@@ -18,7 +18,7 @@ export class SnackbarService {
 
   // probably doesn't really need to be a disposable collection since this is a singleton service
   subscriptions: DisposableCollection = new DisposableCollection();
-  snackQueue: Subject<SnackBarConfig>; 
+  snackQueue: Subject<EventConfig>; 
 
   constructor(
     eventAggregator: EventAggregator
@@ -30,18 +30,19 @@ export class SnackbarService {
     this.subscriptions.push(eventAggregator.subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
     this.subscriptions.push(eventAggregator.subscribe("showMessage", (config: EventConfig | string) => this.showMessage(config)));
 
-    this.snackQueue = new Subject();
+    this.snackQueue = new Subject<EventConfig>();
     /**
      * snack configs added to the snackQueue will show up here, generating a new queue
      * of observables whose values don't resolve until they are observed (hah! Schrodinger observables!)
      */
     let that = this;
-    this.snackQueue.concatMap((config: SnackBarConfig) => {
+    this.snackQueue.concatMap((config: EventConfig) => {
           return Observable.fromPromise(new Promise(function(resolve, reject) {
             // with timeout, give a cleaner buffer in between consecutive snacks
             setTimeout(() => {
-              config.onClose = resolve;
-              let $snackbar = (<any>$).snackbar(config);
+              const snackbarConfig = that.getSnackbarConfig(config);
+              snackbarConfig.onClose = resolve;
+              let $snackbar = (<any>$).snackbar(snackbarConfig);
               // for actions, but this means you can put binding code in the message too, 
               // where the config is the bindingContext
               that.aureliaHelperService.enhanceElement($snackbar[0], config);
@@ -94,7 +95,7 @@ export class SnackbarService {
      * duration < 0 suppresses the snack
      */
     if (completeConfig.duration >= 0) {
-      this.snackQueue.next(this.getSnackbarConfig(completeConfig));
+      this.snackQueue.next(completeConfig);
     }
   }
 
@@ -112,7 +113,13 @@ export class SnackbarService {
       style: config.style,
       timeout: config.duration,
       htmlAllowed: true
-    }
+    };
+    // return Object.assign(config, {
+    //   content: this.formatContent(config),
+    //   style: config.style,
+    //   timeout: config.duration,
+    //   htmlAllowed: true
+    // });
   }
   
   formatContent(config: EventConfig) {

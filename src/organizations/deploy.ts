@@ -44,7 +44,7 @@ export class DeployGen  {
       this.founders = new Array();
       this.arcSchemes = this.schemeService.availableSchemes;
       for(let scheme of this.arcSchemes) {
-        if (scheme.name !== "SimpleContributionScheme")
+        if (scheme.name !== "ContributionReward")
         {
           (<DeploySchemeInfo>scheme).required = true;
           this.selectedSchemes.push(scheme);
