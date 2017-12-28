@@ -8,11 +8,11 @@
   <div class="form-group bmd-form-group">
     <label for="orgNativeTokenFee">DAO Native Token Fee</label>
     <input class="form-control fee-input" type='number' id="orgNativeTokenFee" value.bind="orgNativeTokenFee | ethwei & updateTrigger:'blur'"/>
-    <span class="bmd-help">Fee for submitting a contribution in the DAO's native token</span>
+    <span class="bmd-help">Fee for proposing a contribution reward in the DAO's native token</span>
   </div>
   <div class="form-group bmd-form-group">
     <label for="schemeNativeTokenFee">Scheme Native Token Fee</label>
     <input class="form-control fee-input" type='number' id="schemeNativeTokenFee" value.bind="schemeNativeTokenFee | ethwei & updateTrigger:'blur'"/>
-    <span class="bmd-help">Fee for submitting a contribution in the Simple Conribution Scheme's native token</span>
+    <span class="bmd-help">Fee for proposing a contribution reward in the Contribution Reward's native token</span>
   </div>
 </template>
