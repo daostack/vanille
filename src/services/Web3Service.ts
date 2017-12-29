@@ -116,7 +116,7 @@ export class Web3Service {
               console.log(`Targetted network: ${Web3Service.Network}`)
               let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
-              console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId})`);
+              console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId}`);
               this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === testrpcNetworkId);
               if (!this._isCorrectChain) {
                 reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
