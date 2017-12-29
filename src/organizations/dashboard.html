@@ -3,10 +3,13 @@
       <pageloading>Thanks for waiting while we fetch the data for this DAO...</pageloading>
     </div>
     <div else>
-    <h2>${orgName}</h2>
+      <section class="dashboard-header">
+        <h2 class="dao-name"><img src="../../static/dao-icon-black.png"/>${orgName}</h2>
+      </section>
+    </div>
 
-    <section>
-      <h3>Basic Information</h3>
+  <section>
+    <h3>Basic Information</h3>
       <dl>
       <dt>Avatar</dt>
       <dd><etherscanlink address=${address}>${address}</etherscanlink></dd>
@@ -22,6 +25,7 @@
       <dd> ${ userTokenbalance | ethwei }</dd>
     </dl>
   </section>
+
   <section show.bind="registeredArcSchemes.length">
       <h3>Arc Schemes</h3>
     </div>
