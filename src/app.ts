@@ -84,14 +84,14 @@ export class App {
                 name: 'organizations',
                 moduleId: PLATFORM.moduleName('./organizations/list'),
                 nav: true,
-                title: 'DAOs'
+                title: 'DAOstack Ecosystem'
             }
             , {
                 route: ['deployDAO' ],
                 name: 'deployDAO',
                 moduleId: PLATFORM.moduleName('./organizations/deploy'),
                 nav: true,
-                title: 'Birth a New DAO'
+                title: 'Birth a DAO'
             }
             , {
               // 'address' will be present in the object passed to the 'activate' method of the viewmodel

@@ -58,8 +58,17 @@ export class OrganizationService {
   public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
     return this.promiseToBeLoaded.then(async () => {
       let org = await Organization.new(config);
-      let dao = await DAO.fromOrganization(org, this.arcService, this.web3);
-      this.daoCache.set(dao.address,dao);
+      /**
+       * Note at this point the NewOrg event may already have been received for this org
+       * TODO:  Arc should eventually fix that and then we may want to revisit this
+       */
+      let dao = this.daoCache.get(org.avatar.address);
+
+      if (!dao) {
+        dao = await DAO.fromOrganization(org, this.arcService, this.web3);
+        this.daoCache.set(dao.address,dao);
+      }
+
       return dao;
     });
   }
@@ -122,16 +131,15 @@ export class OrganizationService {
     for (let i = 0; i < count; i++) {
         let promotedAmount = 0;
         let avatarAddress =  eventsArray[i].args._avatar;
-        // this has side-effects of initializing and caching the dao
+        // this has the side-effects of initializing and caching a DAO instance
         let dao = await this._organizationAt(avatarAddress);
         if (dao) {
           this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
           /**
            * NOTE: At the time we receive this for a newly-added dao, Arc will likely
-           * not yet have added the schemes for the dao.  We will get the notifications
-           * when they are, but the delay could be disconcerting for the user.
+           * not yet have added the schemes for the dao, a quirk I'm trying to get fixed in Arc.
            * Further, there can be a gap between initially querying for the schemes and 
-           * setting up the watch during which a scheme coud be added to the Dao without 
+           * setting up the watch during which a scheme could be added to the Dao without 
            * us being aware. (see https://github.com/daostack/daostack/issues/132)
            */
           this.publish(OrganizationService.daoAddedEvent, dao);
