@@ -37,15 +37,15 @@ module.exports = {
        *
        * Before you do anything, just for the first time, run "npm start arc-js.initialize".
        */
-      testrpc: {
+      ganache: {
         run: series(
           `cd ${pathArcJs}`,
-          "npm start test.testrpc.run",
+          "npm start test.ganache.run",
           `cd ${alchemyRoot}`
         ),
         runAsync: series(
           `cd ${pathArcJs}`,
-          "npm start test.testrpc.runAsync",
+          "npm start test.ganache.runAsync",
           `cd ${alchemyRoot}`
         )
       },
@@ -54,12 +54,24 @@ module.exports = {
        *
        * Before you do anything, just for the first time:
        *
-       *  npm start arc-js.initialize
+       *    npm start arc-js.initialize
        *
-       * Typical workflow you want to migrate contracts to testrpc:
+       * Then fire up ganache (testrpc) in a separate window.
        *
-       *  npm start arc-js.testrpc.runAsync
-       *  npm start arc-js.migrateContracts
+       *    npm start arc-js.ganache.runAsync
+       *
+       * If the window didn't fire up in your OS, then run this
+       * in a separate window of your own creation:
+       *
+       *    npm start test.ganache.run
+       *
+       * Then run the migrations:
+       *
+       *    npm start arc-js.migrateContracts
+       *
+       * Now build and run the application:
+       *
+       *    npm start build.production.andServe
        *
        * If you want to migrate to another network, kovan for example:
        *
@@ -139,7 +151,16 @@ module.exports = {
         "nps e2e.protractor"
       )
     },
-    build: "nps webpack.build",
+    build: {
+      production: {
+        default: "nps webpack.build.production",
+        andServe: "nps webpack.build.production.serve"
+      },
+      development: {
+        default: "nps webpack.build.development",
+        andServe: "nps webpack.build.development.serve"
+      }
+    },
     webpack: {
       default: "nps webpack.server",
       build: {
