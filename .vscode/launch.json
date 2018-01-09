@@ -12,7 +12,8 @@
       "webRoot": "${workspaceRoot}/src",
       "userDataDir": "${workspaceRoot}/.chrome",
       // "trace": true,
-      "sourceMaps": true,
+      // "sourceMaps": true,
+      "smartStep": true,
       "sourceMapPathOverrides": {
         "webpack:///*": "${webRoot}/*"
       },
@@ -20,7 +21,8 @@
         "--disable-session-crashed-bubble",
         "--disable-infobars"
       ],
-      "breakOnLoad": true
+      //"breakOnLoad": true,
+      "internalConsoleOptions": "openOnSessionStart"
     }
   ]
 }

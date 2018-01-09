@@ -106,28 +106,89 @@ module.exports = {
           `npm start arc-js.migrateContracts`
         )
       },
-      test: {
-        default: "nps test.jest",
-        jest: {
-          default: "jest",
-          coverage: rimraf("test/coverage-jest"),
-          accept: "jest -u",
-          watch: "jest --watch"
-        },
-        karma: {
-          default: series(
-            rimraf("test/coverage-karma"),
-            "karma start test/karma.conf.js"
-          ),
-          watch: "karma start test/karma.conf.js --auto-watch --no-single-run",
-          debug:
-            "karma start test/karma.conf.js --auto-watch --no-single-run --debug"
-        },
-        all: concurrent({
-          browser: series.nps("test.karma", "e2e"),
-          jest: "nps test.jest"
-        })
+      ganacheDb: {
+        /**
+         * ganacheDb scripts are handy for doing development against ganache, enabling you to
+         * take a snapshot (the database of the chain at any point, such as right after migration,
+         * and easily reuse it.
+         *
+         * Follow these steps to set up the database:
+         *
+         * This can take a long time as there may be thousands of files to delete:
+         *
+         *    npm start arc-js.ganacheDb.clean
+         *
+         * The following will open a window with ganache running in it:
+         *
+         *    npm start arc-js.ganacheDb.runAsync
+         *
+         * This will migrate the contracts and pull them into the project where they need to be:
+         *
+         *    npm start arc-js.migrateContracts.andFetch
+         *
+         * Now zip database for later reuse.
+         * But first you must close the window in which ganache is running.
+         * (You must do this yourself, in your OS.)
+         *
+         *    npm start arc-js.ganacheDb.zip
+         *
+         * Now you can restart ganache against the new database:
+         *
+         *    npm start arc-js.ganacheDb.runAsync
+         */
+        run: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.run`,
+          `cd ${alchemyRoot}`
+        ),
+        runAsync: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.runAsync`,
+          `cd ${alchemyRoot}`
+        ),
+        clean: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.clean`,
+          `cd ${alchemyRoot}`
+        ),
+        zip: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.zip`,
+          `cd ${alchemyRoot}`
+        ),
+        unzip: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.unzip`,
+          `cd ${alchemyRoot}`
+        ),
+        restoreFromZip: series(
+          `cd ${pathArcJs}`,
+          `npm start test.ganacheDb.restoreFromZip`,
+          `cd ${alchemyRoot}`
+        )
       }
+    },
+    test: {
+      default: "nps test.jest",
+      jest: {
+        default: "jest",
+        coverage: rimraf("test/coverage-jest"),
+        accept: "jest -u",
+        watch: "jest --watch"
+      },
+      karma: {
+        default: series(
+          rimraf("test/coverage-karma"),
+          "karma start test/karma.conf.js"
+        ),
+        watch: "karma start test/karma.conf.js --auto-watch --no-single-run",
+        debug:
+          "karma start test/karma.conf.js --auto-watch --no-single-run --debug"
+      },
+      all: concurrent({
+        browser: series.nps("test.karma", "e2e"),
+        jest: "nps test.jest"
+      })
     },
     e2e: {
       default:

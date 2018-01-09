@@ -20,9 +20,9 @@ Alchemy uses a library of reusable and configurable Ethereum smart contracts cal
 
 You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Alchemy assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
 
-## Building The Code
+## Build and Run
 
-To build the code, follow these steps.
+The file package-scripts.js contains a number of scripts to help you build, run and debug the application.  To build the code, follow these steps:
 
 1. Ensure that [NodeJS](http://nodejs.org/), v8.0.0 or greater, is installed.
 2. From the project folder, install the packages:
@@ -65,7 +65,7 @@ npm start arc-js.migrateContracts
 
    Browse to: http://localhost:8090/
 
-   If you are using Chrome with Metamask, point MetaMask at your local ganache at http://127.0.0.1:8584.
+   If you are using Chrome with Metamask, you will need to disable MetaMask.
 
 ## Build and run for production, against kovan:
 
@@ -80,6 +80,20 @@ npm start arc-js.migrateContracts
 The variable is only used when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
 When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.
+
+## Run against a ganache database
+
+It can be very handy to run against a ganache database that persists the state of the chain across instances of ganache.  The file package-scripts.js contains a number of scripts to help you manage this process.  Most simply, follow ths steps above for building and running the application, except when you bring up ganache, use this script:
+
+ ```shell
+npm start arc-js.ganacheDb.runAsync
+```
+
+    If the window didn't fire up in your OS, then run this in a separate window of your own creation:
+
+```shell
+npm start arc-js.ganacheDb.run
+```
 
 ## Miscellaneous Notes
 

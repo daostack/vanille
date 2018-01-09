@@ -1,4 +1,4 @@
-<template>    
+<template>
   <h2>Birth a DAO</h2>
 
   <div style="padding-left:20px;">
@@ -7,11 +7,12 @@
         <br />
         <h5>Looks like you don't have enough ETH to pay for all the transaction fees to launch your organization.</h5>
         <br />
-        <a route-href='route: faucet' class='btn btn-primary' >Get some ETH from our faucet</a>
+        <a route-href='route: faucet' class='btn btn-primary'>Get some ETH from our faucet</a>
       </div>
       <div if.bind="tknBalance < 5">
         <br />
-        <h5>The price to launch an organization on DAOStack is 5 STK. Head over to the DAOStack ICO and contribute some ETH in return for some Stacks.</h5>
+        <h5>The price to launch an organization on DAOStack is 5 STK. Head over to the DAOStack ICO and contribute some ETH in
+          return for some Stacks.</h5>
         <br />
         <a class='btn  btn-primary' href='organization/${controllerAddrss}/ico'>Go get some Stacks!</a>
       </div>
@@ -19,116 +20,89 @@
 
     <section>
       <h4>Basic Information</h4>
-      <div class="form-group"  style="width:30rem">
+      <div class="form-group" style="width:30rem">
         <label for='orgName'>DAO Name</label>
         <input class="form-control" type='text' id='orgName' value.bind='orgName' />
       </div>
-      <div class="form-group" style="width:20rem" >
+      <div class="form-group" style="width:20rem">
         <label for='tokenName'>Token Name</label>
         <input class="form-control" type='text' id='tokenName' value.bind='tokenName' />
-    </div>
-    <div class="form-group"  style="width:8rem">
+      </div>
+      <div class="form-group" style="width:8rem">
         <label for='tokenSymbol'>Token Symbol</label>
-        <input class="form-control"type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
+        <input class="form-control" type='text' id='tokenSymbol' value.bind='tokenSymbol | toUpper' />
       </div>
     </section>
-    
+
     <section id="founders">
-    <h4>Founders</h4>
+      <h4>Founders</h4>
 
-<div style="position:relative">
-    <div class="add-founder">
-      <round-add-button 
-        class="founder-add-button" 
-        css="btn-success"
-        click.delegate='addFounderInput()'
-        data-container="#founders"
-        data-toggle="tooltip"
-        data-trigger="hover"
-        data-placement="right"
-        title="Add a founder"></round-add-button>
-    </div>
-</div>
+      <div style="position:relative">
+        <div class="add-founder">
+          <round-add-button class="founder-add-button" css="btn-success" click.delegate='addFounderInput()' data-container="#founders"
+            data-toggle="tooltip" data-trigger="hover" data-placement="right" title="Add a founder"></round-add-button>
+        </div>
+      </div>
 
-    <ul class="list-group clean founders">
-      <li class="list-group-item"  repeat.for='founder of founders'>
-        <form class="form-inline">
-          <div class="form-group">
-            <label for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }</label>
-            <input
-              class="form-control" 
-              style="width:25rem"
-              type='text'
-              value.bind='founder.address'
-              id.bind="appendIndex('founder_address',$index)"
+      <ul class="list-group clean founders">
+        <li class="list-group-item" repeat.for='founder of founders'>
+          <form class="form-inline">
+            <div class="form-group">
+              <label for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }
+                <span style="padding-left:.25rem" if.bind="founder.address === web3.defaultAccount">(You)</span>
+              </label>
+              <input class="form-control" style="width:25rem" type='text' value.bind='founder.address' id.bind="appendIndex('founder_address',$index)"
               />
               <!-- show is to workaround BMD bug -->
-              <span class="bmd-help" show.bind="!founder.address" >Enter a wallet address</span>
+              <span class="bmd-help" show.bind="!founder.address">Enter a wallet address</span>
+            </div>
+            <div class="form-group">
+              <label for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
+              <input class="form-control" style="width:5rem" type='number' value.bind="founder.tokens | ethwei & updateTrigger:'blur'"
+                id.bind="appendIndex('founder_tokens',$index)" />
+            </div>
+            <div class="form-group">
+              <label for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
+              <input class="form-control" style="width:5rem" type='number' value.bind="founder.reputation | ethwei & updateTrigger:'blur'"
+                id.bind="appendIndex('founder_reputation',$index)" />
+            </div>
+          </form>
+          <div if.bind='founders.length > 1' class="delete-founder">
+            <round-trash-button class="founder-delete-button" css="btn-success" click.delegate='removeFounder($index)' data-toggle="tooltip"
+              data-placement="right" data-trigger="hover" title="Delete this founder"></round-trash-button>
           </div>
-          <div class="form-group">
-            <label for.bind="appendIndex('founder_tokens',$index)">Tokens</label>
-            <input
-              class="form-control" 
-                style="width:5rem" 
-                type='number'
-                value.bind="founder.tokens | ethwei & updateTrigger:'blur'"
-                id.bind="appendIndex('founder_tokens',$index)"
-              />
-          </div>
-          <div class="form-group">
-            <label for.bind="appendIndex('founder_reputation',$index)">Reputation</label>
-            <input 
-            class="form-control" 
-              style="width:5rem" 
-              type='number'
-              value.bind="founder.reputation | ethwei & updateTrigger:'blur'"
-              id.bind="appendIndex('founder_reputation',$index)"
-            />
-          </div>
-        </form>
-        <div if.bind='founders.length > 1' class="delete-founder">
-            <round-trash-button
-              class="founder-delete-button"
-              css="btn-success"
-              click.delegate='removeFounder($index)'
-              data-toggle="tooltip"
-              data-placement="right"
-              data-trigger="hover"
-              title="Delete this founder"></round-trash-button>
-        </div>
-      </li>
-    </ul>
-  </section>
+        </li>
+      </ul>
+    </section>
 
-  <section>
-    <h4>Voting Machine</h4>
-    <votingmachineselector
-      voting-machine-info.bind="votingMachineInfo"
-      voting-machine-config.bind="votingMachineModel">
-    </votingmachineselector>
-  </section>
-  <section>
-    <h4>Schemes</h4>
-    <div repeat.for="scheme of arcSchemes">
-      <div class="checkbox">
-        <label>
-          <input disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes">
-          ${scheme.friendlyName}
-        </label>
+    <section>
+      <h4>Voting Machine</h4>
+      <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineModel">
+      </votingmachineselector>
+    </section>
+    <section>
+      <h4>Schemes</h4>
+      <div repeat.for="scheme of arcSchemes">
+        <div class="checkbox">
+          <label>
+            <input disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"> ${scheme.friendlyName}
+          </label>
+        </div>
       </div>
-    </div>
-  </section>
-  
-  <div>
-    <instructions>Forging a new organization currently requires the signing of several transactions. So please be patient and make sure to sign all of them.  It may take several minutes with long gaps.</instructions>
-    <div if.bind="deployOrgStatus != 'deploying'">
-      <button type='button' class='btn  btn-primary' click.delegate='deploy()'>
-        <i class='fa fa-rocket'></i> Deploy Organization
-      </button>
-    </div>
-    
-    <div if.bind="deployOrgStatus === 'deploying'">
-      <div class="progress">
+    </section>
+
+    <div>
+      <instructions>Forging a new organization currently requires the signing of several transactions. So please be patient and make sure
+        to sign all of them. It may take several minutes with long gaps.</instructions>
+      <instructions>Founder 1 will pay the token fees for registering schemes into the new DAO. By default this is you.</instructions>
+      <div if.bind="deployOrgStatus != 'deploying'">
+        <button type='button' class='btn  btn-primary' click.delegate='deploy()'>
+          <i class='fa fa-rocket'></i> Deploy Organization
+        </button>
+      </div>
+
+      <div if.bind="deployOrgStatus === 'deploying'">
+        <div class="progress">
           <div if.bind="addOrgResultMessage === 'adding_org'" class="progress-bar progress-bar-striped progress-bar-animated" style='width:100%'>
             Deploying ${orgName}...
           </div>
@@ -138,15 +112,15 @@
           <div if.bind="addOrgResultMessage === 'org_error'" class="progress-bar progress-bar-error" style='width:100%'>
             An Error Occurred Deplying ${orgName}
           </div> -->
+        </div>
       </div>
-    </div>
-    <!-- <div if.bind="deployOrgStatus === 'deployed'">
+      <!-- <div if.bind="deployOrgStatus === 'deployed'">
       <h4>Congratulations! ${orgName} has been successfully deployed! Check it out in the <a route-href='route: organizations' >Organization Index</a>.</h4>
     </div> -->
-    <!-- <div if.bind="deployOrgStatus === 'error'">
+      <!-- <div if.bind="deployOrgStatus === 'error'">
       <h4>Sorry! An error occurred adding ${orgName}: ${addOrgResultMessage}.</h4>
     </div> -->
-  </div>
+    </div>
   </div>
 
 </template>
