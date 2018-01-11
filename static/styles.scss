@@ -19,12 +19,29 @@
 
 nav.footer {
   background-color: $gray-300 !important;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+nav.footer .addresses {
+  text-align:right;
+  width:100%
+}
+
+nav.footer .addresses .userBalance {
+  margin-left: 1.0rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+nav.footer .addresses .userAddress {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 nav.header {
   background-color: $gray-800 !important;
+  z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
 }
 
 nav.header .logo {
