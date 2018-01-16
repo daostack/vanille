@@ -34,7 +34,7 @@ The file package-scripts.js contains a number of scripts to help you build, run 
 3. Configure arc-js. You only need ever do this once to prepare arc-js to run ganache and migrate contracts to it:
 
 ```shell
-npm start arc-js.initialize
+npm start arc-js.migrateContracts.initialize
 ```
 
 4. Fire up ganache (testrpc) in a separate window:

@@ -21,8 +21,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   addableSchemes: Array<SchemeInfo> = [];
   addressControl: HTMLElement;
   NonArcSchemeItemKey = NonArcSchemeItemName;
-  addSchemeFees: any = { fee: 0, tokenAddress: undefined }
-  modifySchemeFees: any = { fee: 0, tokenAddress: undefined }
   // autoRegister: boolean = true;
 
   constructor(
@@ -61,7 +59,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
         avatar: this.orgAddress
         , scheme: this.schemeToAddAddress
         , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
-      }, this.newSchemeConfiguration, this.addSchemeFees /*, {autoRegister: this. autoRegister }*/);
+      }, this.newSchemeConfiguration);
 
 
       if (!this.isNonArcScheme) {
@@ -86,12 +84,12 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
       const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
-      const tx = await schemeRegistrar.proposeToAddModifyScheme(Object.assign({
+      const tx = await schemeRegistrar.proposeToAddModifyScheme({
         avatar: this.orgAddress,
         scheme: this.schemeToModify.address,
         schemeName: this.schemeToModify.name,
         schemeParametersHash: schemeParametersHash
-      }, this.modifySchemeFees));
+      });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to modify ${this.schemeToModify.address}`, tx.tx));

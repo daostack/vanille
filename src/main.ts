@@ -5,8 +5,8 @@ import { OrganizationService } from './services/OrganizationService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import  { configure as configureDAOstackArc } from 'daostack-arc-js';
-import { OrganizationsList } from  "./organizations/list";
+import { config as arcJsConfigSet, getWeb3 } from 'daostack-arc-js';
+import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
 import "popper.js";
@@ -23,7 +23,7 @@ export async function configure(aurelia: Aurelia) {
     .standardConfiguration();
 
   // for now, always on for trouble-shooting:  if (process.env.ENV == "development") {
-      aurelia.use.developmentLogging();
+  aurelia.use.developmentLogging();
   // }
 
   // Uncomment the line below to enable animation.
@@ -55,14 +55,14 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/number"),
     PLATFORM.moduleName("resources/valueConverters/round"),
     PLATFORM.moduleName("resources/valueConverters/ethwei"),
-    PLATFORM.moduleName("schemeDashboards/SchemeChangeFees.html"),
+    // PLATFORM.moduleName("schemeDashboards/SchemeChangeFees.html"),
     PLATFORM.moduleName("schemeConfiguration/VotingMachineSelector"),
     PLATFORM.moduleName("footer.html"),
     PLATFORM.moduleName("header.html")
   ]);
 
 
-    
+
   PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeDashboards/NonArc")
   PLATFORM.moduleName("./schemeDashboards/NotRegistered")
@@ -78,25 +78,25 @@ export async function configure(aurelia: Aurelia) {
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
-    
+
   await aurelia.start();
 
   try {
 
-    const web3 = configureDAOstackArc({
-      /**
-       * EmergentArc must be initialized prior to arcService being loaded
-       * ETH_ENV is supplied by webpack.
-       * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
-       */ 
-      network : { name: process.env.ETH_ENV }
-    });
-  
+    /**
+     * EmergentArc must be initialized prior to arcService being loaded
+     * ETH_ENV is supplied by webpack.
+     * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
+     */
+    const web3 = await getWeb3();
+
+    arcJsConfigSet("network", process.env.ETH_ENV);
+
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);
     aurelia.container.get(SnackbarService);
     aurelia.container.get(OrganizationsList);
-    
+
     const web3Service = aurelia.container.get(Web3Service);
     await web3Service.initialize(web3);
     // aurelia.container.registerSingleton(Web3Service, () => {
@@ -116,7 +116,7 @@ export async function configure(aurelia: Aurelia) {
     //   return orgService;
     // });
 
-  } catch(ex) {
+  } catch (ex) {
     console.log(`Error initializing blockchain services: ${ex}`);
     // alert(`Error initializing blockchain services: ${ex}`);
   }

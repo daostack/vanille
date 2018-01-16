@@ -16,7 +16,6 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   NonArcSchemeItemKey = NonArcSchemeItemName;
   schemesExclusiveOfUpgradeScheme: Array<string>;
   addressControl: HTMLElement;
-  schemeFees: any = { fee: 0, tokenAddress: undefined }
 
   constructor(
     private schemeService: SchemeService

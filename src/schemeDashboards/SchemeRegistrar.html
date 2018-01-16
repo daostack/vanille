@@ -1,56 +1,53 @@
 <template>
   <div class="arc-scheme-dashboard">
-  <ul class="nav nav-tabs scheme-tabs" role="tablist">
-    <li class="nav-item">
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
         <a class="nav-link active" href="#AddScheme" data-toggle="tab" id="add-tab" role="tab" aria-controls="AddScheme" aria-selected="false">Propose to Add Scheme</a>
-    </li>
-    <li class="nav-item">
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="#ModifyScheme" data-toggle="tab" id="modify-tab" role="tab" aria-controls="ModifyScheme" aria-selected="false">Propose to Modify Scheme</a>
-    </li>
-    <li class="nav-item">
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="#removeScheme" data-toggle="tab" id="remove-tab" role="tab" aria-controls="RemoveScheme" aria-selected="false">Propose to Remove Scheme</a>
       </li>
-  </ul>
-    
-  <div class="tab-content">
+    </ul>
 
-    <div class="tab-pane fade show active" id="AddScheme" role="tabpanel" aria-labelledby="add-tab">
-         
-      <instructions>Propose to add a scheme to <span class='org-name'>${orgName}</span>.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
-      
-      <form>
-        <p show.bind="!addableSchemes.length"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</p>
+    <div class="tab-content">
 
-        <div show.bind="addableSchemes.length">
-            
-          <arc-schemes-dropdown
-            scheme.bind="currentSchemeSelection"
-            dao-address.bind="orgAddress"
-            exclude-registered.bind="true"
-            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-            schemes.bind="addableSchemes"
-            include-non-arc-item.bind="true"
-          >
-            <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
-            <span slot="buttonText"><span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select Scheme Type to Add'}</span></span>
-          </arc-schemes-dropdown>
+      <div class="tab-pane fade show active" id="AddScheme" role="tabpanel" aria-labelledby="add-tab">
 
-          <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
+        <instructions>Propose to add a scheme to
+          <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
+          machine.</instructions>
+
+        <form>
+          <p show.bind="!addableSchemes.length">
+            <span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</p>
+
+          <div show.bind="addableSchemes.length">
+
+            <arc-schemes-dropdown scheme.bind="currentSchemeSelection" dao-address.bind="orgAddress" exclude-registered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
+              schemes.bind="addableSchemes" include-non-arc-item.bind="true">
+              <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
+              <span slot="buttonText">
+                <span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select Scheme Type to Add'}</span>
+              </span>
+            </arc-schemes-dropdown>
+
+            <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
             <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
           </div> -->
 
-          <div show.bind="currentSchemeSelection" ref="addressControl"  class="form-group bmd-form-group">
-            <label for="schemeToAddAddress">Scheme Address</label>
-            <input  id="schemeToAddAddress" type="text" class="form-control" value.bind="schemeToAddAddress"/>
-            <!-- <span class="bmd-help">Scheme address</span> -->
-          </div>
-          
-          <div if.bind="currentSchemeSelection">
-            <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
-            <schemeChangeFees model.bind="addSchemeFees"  required.bind="isNonArcScheme"></schemeChangeFees>
+            <div show.bind="currentSchemeSelection" ref="addressControl" class="form-group bmd-form-group">
+              <label for="schemeToAddAddress">Scheme Address</label>
+              <input id="schemeToAddAddress" type="text" class="form-control" value.bind="schemeToAddAddress" />
+              <!-- <span class="bmd-help">Scheme address</span> -->
+            </div>
 
-            <!-- <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
+            <div if.bind="currentSchemeSelection">
+              <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
+
+              <!-- <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
               <div class="checkbox">
                 <label>
                   <input type="checkbox" checked.bind="autoRegister">
@@ -58,62 +55,61 @@
                 </label>
               </div>
             </div> -->
+            </div>
+
+            <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
           </div>
-          
-          <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
-        </div>
-      </form>
-    </div>  
+        </form>
+      </div>
 
-    <div class="tab-pane fade" id="ModifyScheme" role="tabpanel" aria-labelledby="modify-tab">
-         
-      <instructions>Propose to update the parameters of a scheme in <span class='org-name'>${orgName}</span>.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
-      
-      <form>
-        <arc-schemes-dropdown
-            scheme.bind="schemeToModify"
-            dao-address.bind="orgAddress"
-            exclude-unregistered.bind="true"
-            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-          >
-          <span slot="buttonText"><span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span></span>
-          <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
-        </arc-schemes-dropdown>
+      <div class="tab-pane fade" id="ModifyScheme" role="tabpanel" aria-labelledby="modify-tab">
 
-        <div if.bind="!!schemeToModify">
-          <div class="form-group bmd-form-group">         
-            <etherscanlink address=${schemeToModify.address}>${schemeToModify.address}</etherscanlink>
-          </div>
-          <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
-          <schemeChangeFees model.bind="modifySchemeFees"></schemeChangeFees>
-          <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
-        </div>
+        <instructions>Propose to update the parameters of a scheme in
+          <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
+          machine.</instructions>
 
-      </form>
-    </div>  
-
-    <div class="tab-pane fade" id="removeScheme" role="tabpanel" aria-labelledby="remove-tab">
-      <instructions>Propose to remove a scheme from <span class='org-name'>${orgName}</span>.
-        After submitting the proposal, a vote will automatically be initiated using this scheme's voting machine.</instructions>
-      <form>
-          <arc-schemes-dropdown
-            scheme.bind="schemeToRemove"
-            dao-address.bind="orgAddress"
-            schemes.bind="allSchemes"
-            exclude-unregistered.bind="true"
-            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-            >
-            <span slot="noSchemes"><span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
-            <span slot="buttonText"><span class="font-weight-bold">${schemeToRemove ? schemeToRemove.friendlyName : 'Select Scheme to Remove'}</span></span>
+        <form>
+          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
+            <span slot="buttonText">
+              <span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span>
+            </span>
+            <span slot="noSchemes">
+              <span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
           </arc-schemes-dropdown>
 
-        <div if.bind="!!schemeToRemove">
+          <div if.bind="!!schemeToModify">
+            <div class="form-group bmd-form-group">
+              <etherscanlink address=${schemeToModify.address}>${schemeToModify.address}</etherscanlink>
+            </div>
+            <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
+            <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="tab-pane fade" id="removeScheme" role="tabpanel" aria-labelledby="remove-tab">
+        <instructions>Propose to remove a scheme from
+          <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
+          machine.</instructions>
+        <form>
+          <arc-schemes-dropdown scheme.bind="schemeToRemove" dao-address.bind="orgAddress" schemes.bind="allSchemes" exclude-unregistered.bind="true"
+            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
+            <span slot="noSchemes">
+              <span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
+            <span slot="buttonText">
+              <span class="font-weight-bold">${schemeToRemove ? schemeToRemove.friendlyName : 'Select Scheme to Remove'}</span>
+            </span>
+          </arc-schemes-dropdown>
+
+          <div if.bind="!!schemeToRemove">
             <etherscanlink address=${schemeToRemove.address}>${schemeToRemove.address}</etherscanlink>
-            <div class="mt-3"><button class="btn-submit-proposal" click.delegate="removeScheme()">Submit Proposal</button></div>
-        </div>
-      </form>
+            <div class="mt-3">
+              <button class="btn-submit-proposal" click.delegate="removeScheme()">Submit Proposal</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 </template>

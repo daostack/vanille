@@ -13,159 +13,31 @@ const cwd = require("cwd")();
 const alchemyRoot = env.alchemyRoot || cwd;
 const pathArcJs =
   env.pathArcJs || joinPath(alchemyRoot, "node_modules/daostack-arc-js");
-// const pathArcJsDaostackArc =
-//   env.pathArcJsDaostackArc || joinPath(pathArcJs, "node_modules/daostack-arc");
 const network = env.ETH_ENV;
 
 module.exports = {
   scripts: {
     default: "nps webpack",
+    /**
+     * Migrate contracts using daostack-arc-js.  For usage, see this readme.md, the 
+     * daostack-arc-js readme.md and its package-scripts.js.
+     */
     "arc-js": {
-      /**
-       * Setup daostack-arc-js for the first time after installing it.
-       *
-       * You must run this before you can run anything else, but you need only do it once.
-       * daostack-arc-js expects to find daostack-arc underneath it in the mode_modules package folder structure.
-       */
-      initialize: series(
-        `cd ${pathArcJs}`,
-        "npm start migrateContracts.initialize",
-        `cd ${alchemyRoot}`
-      ),
-      /**
-       * Run testrpc with parameters given by daostack-arc-js.
-       *
-       * Before you do anything, just for the first time, run "npm start arc-js.initialize".
-       */
       ganache: {
-        run: series(
-          `cd ${pathArcJs}`,
-          "npm start test.ganache.run",
-          `cd ${alchemyRoot}`
-        ),
-        runAsync: series(
-          `cd ${pathArcJs}`,
-          "npm start test.ganache.runAsync",
-          `cd ${alchemyRoot}`
-        )
-      },
-      /**
-       * Migrate contracts using daostack-arc-js.
-       *
-       * Before you do anything, just for the first time:
-       *
-       *    npm start arc-js.initialize
-       *
-       * Then fire up ganache (testrpc) in a separate window.
-       *
-       *    npm start arc-js.ganache.runAsync
-       *
-       * If the window didn't fire up in your OS, then run this
-       * in a separate window of your own creation:
-       *
-       *    npm start test.ganache.run
-       *
-       * Then run the migrations:
-       *
-       *    npm start arc-js.migrateContracts
-       *
-       * Now build and run the application:
-       *
-       *    npm start build.production.andServe
-       *
-       * If you want to migrate to another network, kovan for example:
-       *
-       *  Set the environment variable ETH_ENV to "kovan"
-       *  Start a local network node listening at http://127.0.0.1:8584
-       *  Run:  npm start migrateContracts
-       *
-       * To deploy to the mainnet, Set the environment variable ETH_ENV to "live" and proceed as above.
-       */
-      migrateContracts: {
-        /**
-         * Migrate contracts.
-         * Truffle will merge your migration into whatever previous ones are already present.
-         */
-        default: series(
-          `cd ${pathArcJs}`,
-          `npm start migrateContracts.andFetch`,
-          `cd ${alchemyRoot}`
-        ),
-        /**
-         * Clean, optionally with migration.
-         *
-         * IMPORTANT! Only do this if you aren't worried about losing
-         * previously-performed migrations to other networks.  By cleaning, you'll lose them, starting
-         * from scratch.  Otherwise, truffle will merge your migrations into whatever previous
-         * ones exist.
-         */
-        clean: series(
-          `cd ${pathArcJs}`,
-          `npm start migrateContracts.clean`,
-          `cd ${alchemyRoot}`,
-          `npm start arc-js.migrateContracts`
-        )
+        run: "npm explore daostack-arc-js -- npm start test.ganache.run",
+        runAsync: "npm explore daostack-arc-js -- npm start test.ganache.runAsync"
       },
       ganacheDb: {
-        /**
-         * ganacheDb scripts are handy for doing development against ganache, enabling you to
-         * take a snapshot (the database of the chain at any point, such as right after migration,
-         * and easily reuse it.
-         *
-         * Follow these steps to set up the database:
-         *
-         * This can take a long time as there may be thousands of files to delete:
-         *
-         *    npm start arc-js.ganacheDb.clean
-         *
-         * The following will open a window with ganache running in it:
-         *
-         *    npm start arc-js.ganacheDb.runAsync
-         *
-         * This will migrate the contracts and pull them into the project where they need to be:
-         *
-         *    npm start arc-js.migrateContracts.andFetch
-         *
-         * Now zip database for later reuse.
-         * But first you must close the window in which ganache is running.
-         * (You must do this yourself, in your OS.)
-         *
-         *    npm start arc-js.ganacheDb.zip
-         *
-         * Now you can restart ganache against the new database:
-         *
-         *    npm start arc-js.ganacheDb.runAsync
-         */
-        run: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.run`,
-          `cd ${alchemyRoot}`
-        ),
-        runAsync: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.runAsync`,
-          `cd ${alchemyRoot}`
-        ),
-        clean: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.clean`,
-          `cd ${alchemyRoot}`
-        ),
-        zip: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.zip`,
-          `cd ${alchemyRoot}`
-        ),
-        unzip: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.unzip`,
-          `cd ${alchemyRoot}`
-        ),
-        restoreFromZip: series(
-          `cd ${pathArcJs}`,
-          `npm start test.ganacheDb.restoreFromZip`,
-          `cd ${alchemyRoot}`
-        )
+        run: "npm explore daostack-arc-js -- npm start test.ganacheDb.run",
+        runAsync: "npm explore daostack-arc-js -- npm start test.ganacheDb.runAsync",
+        clean: "npm explore daostack-arc-js -- npm start test.ganacheDb.clean",
+        zip: "npm explore daostack-arc-js -- npm start test.ganacheDb.zip",
+        unzip: "npm explore daostack-arc-js -- npm start test.ganacheDb.unzip",
+        restoreFromZip: "npm explore daostack-arc-js -- npm start test.ganacheDb.restoreFromZip"
+      },
+      migrateContracts: {
+        default: "npm explore daostack-arc-js -- npm start migrateContracts.andFetch",
+        initialize: "npm explore daostack-arc-js -- npm start migrateContracts.initialize",
       }
     },
     test: {

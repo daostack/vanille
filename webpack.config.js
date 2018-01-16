@@ -24,28 +24,28 @@ const cssRules = [
   { loader: 'css-loader' },
   {
     loader: 'postcss-loader',
-    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })]}
+    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })] }
   }
 ]
 
-const scssRules = [...cssRules, 
-  {
-      loader: "sass-loader" // compiles Sass to CSS
-  }];
+const scssRules = [...cssRules,
+{
+  loader: "sass-loader" // compiles Sass to CSS
+}];
 
 /**
  * @return {webpack.Configuration}
  */
-module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
+module.exports = ({ production, server, extractCss, coverage, ETH_ENV } = {}) => {
 
   let ENV = production ? 'production' : 'development';
-  
+
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
   ETH_ENV = ETH_ENV || process.env.ETH_ENV || 'testrpc';
-    
+
   console.log(`ENV: ${ENV}`);
   console.log(`ETH_ENV: ${ETH_ENV}`);
-    
+
   return {
 
     resolve: {
@@ -55,21 +55,21 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         // prepend '~' to import path in order to use this alias
         // "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
         // "mdbootstrap-sass": path.resolve(nodeModulesDir,"mdbootstrap/sass/mdb/free/"),
-        "bootstrap": path.resolve(nodeModulesDir,"bootstrap/"),
-        "BMD": path.resolve(nodeModulesDir,"bootstrap-material-design/scss/"),
-        "static": path.resolve(__dirname,"static"),
+        "bootstrap": path.resolve(nodeModulesDir, "bootstrap/"),
+        "BMD": path.resolve(nodeModulesDir, "bootstrap-material-design/scss/"),
+        "static": path.resolve(__dirname, "static"),
       }
-      },
+    },
 
     devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
     entry: {
       app: ['aurelia-bootstrapper'],
       vendor: [
-        'bluebird', 
+        'bluebird',
         'daostack-arc-js',
         'ethereumjs-tx',
         'truffle-contract'
-        ],
+      ],
     },
     output: {
       path: outDir,
@@ -82,6 +82,13 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
       contentBase: outDir,
       // serve index.html for all 404 (required for push-state)
       historyApiFallback: true,
+    },
+    // to avoid errors when arc-js pulls in nconf
+    // target: 'node',
+    // to avoid errors when arc-js pulls in nconf
+    node: {
+      fs: "empty"
+      , child_process: "empty"
     },
     module: {
       rules: [
@@ -140,12 +147,12 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-        ENV: JSON.stringify(ENV),
-        ETH_ENV: JSON.stringify(ETH_ENV),
+          ENV: JSON.stringify(ENV),
+          ETH_ENV: JSON.stringify(ETH_ENV),
         },
-    }),
-    new AureliaPlugin(),
-    new ProvidePlugin({
+      }),
+      new AureliaPlugin(),
+      new ProvidePlugin({
         Promise: 'bluebird',
         $: 'jquery',
         jQuery: 'jquery',
@@ -167,11 +174,11 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         },
       }),
       new CopyWebpackPlugin([
-        { from: 'static/favicon.ico' },    
+        { from: 'static/favicon.ico' },
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
-        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
-        { from: 'node_modules/snackbarjs/dist/snackbar.min.css'},
-        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css'},
+        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css' },
+        { from: 'node_modules/snackbarjs/dist/snackbar.min.css' },
+        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css' },
         // for the spash page
         { from: 'static/base.css' },
       ]),
@@ -183,14 +190,14 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         new webpack.SourceMapDevToolPlugin({
           filename: '[file].map', // Remove this line if you prefer inline source maps
           moduleFilenameTemplate: path.relative(outDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
-      }),
+        }),
       ]),
       ...when(production, [
         new CommonsChunkPlugin({
           name: 'common'
-          })
-        ])
-        // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
+        })
+      ])
+      // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
     ],
   }
 }
