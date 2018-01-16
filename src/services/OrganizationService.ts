@@ -16,6 +16,7 @@ import { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
+import { Observable } from 'rxjs/Observable';
 
 @autoinject
 export class OrganizationService {
@@ -27,9 +28,16 @@ export class OrganizationService {
     includeEventsIn(this);
   }
 
-  daoCache = new Map<string, DAO>();
-  logger = LogManager.getLogger("Alchemy");
+  private daoCache = new Map<string, DAO>();
+  private logger = LogManager.getLogger("Alchemy");
   public promiseToBeLoaded: Promise<any>;
+  private _daoStack: DAO;
+  private resolvePromiseForDaoStack;
+  public promiseForDaoStack: Promise<any> = new Promise((resolve) => { this.resolvePromiseForDaoStack = resolve; });
+
+  public async GetDaostack(): Promise<DAO> {
+    return this.promiseForDaoStack;
+  }
 
   /**
    * a DAO has been added or removed
@@ -53,18 +61,6 @@ export class OrganizationService {
       myEvent = genesisScheme.NewOrg({});
       myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
     }));
-  }
-
-  public async getDAOStackAddress() {
-    const schemeRegistrar = await this.arcService.getContract(
-      "SchemeRegistrar"
-    );
-    return await schemeRegistrar.beneficiary();
-  }
-
-  public async getDAOStackOrganization() {
-    const avatarAddress = await this.getDAOStackAddress();
-    return await this.organizationAt(avatarAddress);
   }
 
   public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
@@ -142,6 +138,8 @@ export class OrganizationService {
     });
   }
 
+  private firstOrg = true;
+
   private async handleNewOrg(err, eventsArray): Promise<void> {
     let newOrganizationArray = [];
     if (!(eventsArray instanceof Array)) {
@@ -155,6 +153,10 @@ export class OrganizationService {
       let dao = await this._organizationAt(avatarAddress);
       if (dao) {
         this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
+        if (this.firstOrg) {
+          this._daoStack = this.resolvePromiseForDaoStack(dao);
+          this.firstOrg = false;
+        }
         /**
          * NOTE: At the time we receive this for a newly-added dao, Arc will likely
          * not yet have added the schemes for the dao, a quirk I'm trying to get fixed in Arc.

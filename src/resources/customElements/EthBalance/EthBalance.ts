@@ -9,14 +9,14 @@ export class EthBalance {
   private ethBalance: string = '';
   private ethAddress: string;
   private filter: any;
-  
+
   constructor(private web3: Web3Service) {
     this.ethAddress = this.web3.defaultAccount;
   }
 
   attached() {
     // console.log("EthBalance: attaching");
-    this.readBalance();    
+    this.readBalance();
   }
 
   detached() {
@@ -32,7 +32,7 @@ export class EthBalance {
     /**
      * this is supposed to fire whenever a new block is created
      */
-    this.filter = this.web3.eth.filter('latest', async () => {
+    this.filter = this.web3.eth.filter('latest', () => {
       this.getBalance();
     });
   }
@@ -40,7 +40,7 @@ export class EthBalance {
   async getBalance() {
     try {
       this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toFixed(2);
-    } catch(ex) {
+    } catch (ex) {
     }
   }
 }

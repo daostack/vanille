@@ -1,24 +1,24 @@
 import { autoinject } from "aurelia-framework";
-import { EventAggregator  } from 'aurelia-event-aggregator';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
 // import { LogManager } from 'aurelia-framework';
 import { AureliaHelperService } from "./AureliaHelperService";
 import { EventConfig, EventConfigException, ActionType } from "../entities/GeneralEvents";
 import 'snackbarjs';
-import { Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/observable/fromPromise';
 
-  /**
-   * TODO:  Ability to queue up simultaneous messages so they are shown sequentially (per Material Design spec)
-   */
+/**
+ * TODO:  Ability to queue up simultaneous messages so they are shown sequentially (per Material Design spec)
+ */
 @autoinject
 export class SnackbarService {
 
   // probably doesn't really need to be a disposable collection since this is a singleton service
   subscriptions: DisposableCollection = new DisposableCollection();
-  snackQueue: Subject<EventConfig>; 
+  snackQueue: Subject<EventConfig>;
 
   constructor(
     eventAggregator: EventAggregator
@@ -37,21 +37,21 @@ export class SnackbarService {
      */
     let that = this;
     this.snackQueue.concatMap((config: EventConfig) => {
-          return Observable.fromPromise(new Promise(function(resolve, reject) {
-            // with timeout, give a cleaner buffer in between consecutive snacks
-            setTimeout(() => {
-              const snackbarConfig = that.getSnackbarConfig(config);
-              snackbarConfig.onClose = resolve;
-              let $snackbar = (<any>$).snackbar(snackbarConfig);
-              // for actions, but this means you can put binding code in the message too, 
-              // where the config is the bindingContext
-              that.aureliaHelperService.enhanceElement($snackbar[0], config);
-            },200);
-          }));
-        })
-        // this will initiate the execution of the promises
-        // resolved promises will not appear in the subscriber's queue until they are in fact resolved.
-        .subscribe(); 
+      return Observable.fromPromise(new Promise(function (resolve, reject) {
+        // with timeout, give a cleaner buffer in between consecutive snacks
+        setTimeout(() => {
+          const snackbarConfig = that.getSnackbarConfig(config);
+          snackbarConfig.onClose = resolve;
+          let $snackbar = (<any>$).snackbar(snackbarConfig);
+          // for actions, but this means you can put binding code in the message too, 
+          // where the config is the bindingContext
+          that.aureliaHelperService.enhanceElement($snackbar[0], config);
+        }, 200);
+      }));
+    })
+      // this will initiate the execution of the promises
+      // each promise is executed after the previous one has resolved
+      .subscribe();
   }
 
   /* shouldn't actually ever happen */
@@ -89,7 +89,7 @@ export class SnackbarService {
   }
 
   private serveSnack(config: EventConfig | string, defaults: any = {}) {
-    let completeConfig = this.completeConfig(config,defaults);
+    let completeConfig = this.completeConfig(config, defaults);
 
     /**
      * duration < 0 suppresses the snack
@@ -99,12 +99,12 @@ export class SnackbarService {
     }
   }
 
-  completeConfig(config: EventConfig | string, defaults: any = {} ): EventConfig {
-      if (typeof(config) == "string") {
-        config = { message: config as string } as EventConfig;
-      }
+  completeConfig(config: EventConfig | string, defaults: any = {}): EventConfig {
+    if (typeof (config) == "string") {
+      config = { message: config as string } as EventConfig;
+    }
 
-      return Object.assign({ style: "snack-info", duration: 3000, actionType: ActionType.none }, defaults, config);
+    return Object.assign({ style: "snack-info", duration: 3000, actionType: ActionType.none }, defaults, config);
   }
 
   getSnackbarConfig(config: EventConfig): SnackBarConfig {
@@ -121,26 +121,26 @@ export class SnackbarService {
     //   htmlAllowed: true
     // });
   }
-  
+
   formatContent(config: EventConfig) {
     let templateMessage = `<span class="snackbar-message-text">${config.message}</span>`;
-    let templateAction="";
+    let templateAction = "";
     switch (config.actionType) {
       case ActionType.address:
         templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.address}" type="${config.addressType || 'address'}">${config.actionText || config.address}</etherscanlink></span>`;
-      break;
+        break;
       case ActionType.button:
         templateAction = `<span class="snackbar-action-wrapper"><button type="button" class="btn" click.delegate='action()'>${config.actionText}</button></span>`;
-      break;
+        break;
     }
     return `${templateMessage}${templateAction}`;
   }
 }
 
 interface SnackBarConfig {
-    content: string;
-    style: string;
-    timeout: Number;
-    htmlAllowed: boolean;
-    onClose?: () => void
+  content: string;
+  style: string;
+  timeout: Number;
+  htmlAllowed: boolean;
+  onClose?: () => void
 }

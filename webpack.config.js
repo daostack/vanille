@@ -36,15 +36,15 @@ const scssRules = [...cssRules,
 /**
  * @return {webpack.Configuration}
  */
-module.exports = ({ production, server, extractCss, coverage, ETH_ENV } = {}) => {
+module.exports = ({ production, server, extractCss, coverage, network } = {}) => {
 
-  let ENV = production ? 'production' : 'development';
+  let env = production ? 'production' : 'development';
 
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
-  ETH_ENV = ETH_ENV || process.env.ETH_ENV || 'testrpc';
+  network = network || process.env.network || 'ganache';
 
-  console.log(`ENV: ${ENV}`);
-  console.log(`ETH_ENV: ${ETH_ENV}`);
+  console.log(`env: ${env}`);
+  console.log(`network: ${network}`);
 
   return {
 
@@ -147,8 +147,8 @@ module.exports = ({ production, server, extractCss, coverage, ETH_ENV } = {}) =>
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          ENV: JSON.stringify(ENV),
-          ETH_ENV: JSON.stringify(ETH_ENV),
+          env: JSON.stringify(env),
+          network: JSON.stringify(network),
         },
       }),
       new AureliaPlugin(),

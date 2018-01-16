@@ -1,39 +1,54 @@
 import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
-import { TokenService } from  "../../../services/TokenService";
+import { TokenService } from "../../../services/TokenService";
 
 @autoinject
 @containerless
 @customElement("tokenticker")
 export class TokenTicker {
 
-    private tknSymbol:string = '';
-    private balance:Number;
+  private tknSymbol: string = '';
+  private balance: Number;
 
-    constructor(
-      private tokenService: TokenService
-    ) {
+  constructor(
+    private tokenService: TokenService
+  ) {
+  }
+
+  private events;
+
+  attached() {
+    this.readBalance();
+  }
+
+  detached() {
+    if (this.events) {
+      this.events.stopWatching();
+      this.events = null;
     }
-
-  bind () {
-      this.readBalance();
   }
 
   async readBalance() {
 
-    const token = await this.tokenService.getDAOStackMintableToken();
-    
+    const token = await this.tokenService.getDAOStackNativeToken();
+
     this.tknSymbol = await this.tokenService.getTokenSymbol(token);
+
+    this.getBalance(token);
 
     // console.log('symbol: '+ this.tknSymbol);
 
-    const myEvent = token.allEvents({ fromBlock: 'latest' });
+    this.events = token.allEvents({ fromBlock: 'latest' });
 
-    myEvent.watch(async () => {
-      this.balance = await this.tokenService.getUserTokenBalance(token);
+    this.events.watch(() => {
+      this.getBalance(token);
     });
 
-    this.balance = await this.tokenService.getUserTokenBalance(token);
-    
     // console.log('balance: '+ (await token.balanceOf(this.usrAddrss)).valueOf());
+  }
+  async getBalance(token) {
+    try {
+      this.balance = (await this.tokenService.getUserTokenBalance(token, true)).toFixed(2);
+    } catch (ex) {
+    }
   }
 }

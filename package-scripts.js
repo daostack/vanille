@@ -13,7 +13,7 @@ const cwd = require("cwd")();
 const alchemyRoot = env.alchemyRoot || cwd;
 const pathArcJs =
   env.pathArcJs || joinPath(alchemyRoot, "node_modules/daostack-arc-js");
-const network = env.ETH_ENV;
+const network = env.network;
 
 module.exports = {
   scripts: {
@@ -111,12 +111,12 @@ module.exports = {
           inlineCss: series(
             "nps webpack.build.before",
             /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc-js */
-            "webpack --progress --env.production --env.ETH_ENV=kovan"
+            "webpack --progress --env.production --env.network=kovan"
           ),
           default: series(
             "nps webpack.build.before",
             /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc-js */
-            "webpack --progress --env.production --env.extractCss --env.ETH_ENV=kovan"
+            "webpack --progress --env.production --env.extractCss --env.network=kovan"
           ),
           serve: series.nps("webpack.build.production", "serve")
         }

@@ -3,32 +3,32 @@ import { Web3Service, BigNumber } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractInfo, FounderConfig } from "../services/ArcService";
 import { OrganizationService, DAO } from "../services/OrganizationService";
-import { SchemeService } from  "../services/SchemeService";
+import { SchemeService } from "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
-import { EventAggregator  } from 'aurelia-event-aggregator';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { Router } from 'aurelia-router';
 import { EventConfigAction } from "../entities/GeneralEvents";
 
 @autoinject
-export class DeployGen  {
+export class DeployGen {
 
   private userAddress: any;
   private founders: Array<MyFounder>;
-  private ethBalance:BigNumber = null;
-  private tknBalance:BigNumber = null;
-  private controllerAddrss= '';
+  private ethBalance: BigNumber = null;
+  private tknBalance: BigNumber = null;
+  private controllerAddrss = '';
 
-  private orgName:string = '';
-  private tokenName:string = '';
-  private tokenSymbol:string = '';
+  private orgName: string = '';
+  private tokenName: string = '';
+  private tokenSymbol: string = '';
 
-  private addOrgResultMessage: string= '';
-  private deployOrgStatus:string = null;
+  private addOrgResultMessage: string = '';
+  private deployOrgStatus: string = null;
   private arcSchemes: Array<ContractInfo>;
   private selectedSchemes: Array<ContractInfo> = [];
   private votingMachineInfo: VotingMachineInfo = null;
-  private votingMachineModel:any = {};
+  private votingMachineModel: any = {};
   private myView: any;
 
   constructor(
@@ -40,18 +40,17 @@ export class DeployGen  {
     , private eventAggregator: EventAggregator
     , private router: Router
   ) {
-      this.userAddress = arcService.defaultAccount;
-      this.founders = new Array();
-      this.arcSchemes = this.schemeService.availableSchemes;
-      for(let scheme of this.arcSchemes) {
-        if (scheme.name !== "ContributionReward")
-        {
-          (<DeploySchemeInfo>scheme).required = true;
-          this.selectedSchemes.push(scheme);
-        }
+    this.userAddress = arcService.defaultAccount;
+    this.founders = new Array();
+    this.arcSchemes = this.schemeService.availableSchemes;
+    for (let scheme of this.arcSchemes) {
+      if (scheme.name !== "ContributionReward") {
+        (<DeploySchemeInfo>scheme).required = true;
+        this.selectedSchemes.push(scheme);
       }
-
     }
+
+  }
 
   async activate() {
     /**
@@ -68,17 +67,17 @@ export class DeployGen  {
   }
 
   private async readBalances() {
-      const token = await this.tokenService.getDAOStackMintableToken();
+    const token = await this.tokenService.getDAOStackNativeToken();
 
-      this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
-      this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
-      // console.log(`token balance: ${this.tknBalance}`);
-      // console.log(`eth balance: ${this.ethBalance}`);
+    this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
+    this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
+    // console.log(`token balance: ${this.tknBalance}`);
+    // console.log(`eth balance: ${this.ethBalance}`);
   }
 
   async deploy() {
     this.deployOrgStatus = 'deploying';
-    this.addOrgResultMessage= 'adding_org';
+    this.addOrgResultMessage = 'adding_org';
     try {
 
       const organization = await this.organizationService.createOrganization({
@@ -89,15 +88,15 @@ export class DeployGen  {
         , votingMachine: this.votingMachineInfo.address
         , votePrec: this.votingMachineModel.votePrec
         , ownerVote: this.votingMachineModel.ownerVote
-        , schemes: this.selectedSchemes.map((s) => { return { name: s.name, address: s.address }; } )
+        , schemes: this.selectedSchemes.map((s) => { return { name: s.name, address: s.address }; })
       });
-      this.deployOrgStatus= 'deployed';
-      this.addOrgResultMessage= 'org_added';
+      this.deployOrgStatus = 'deployed';
+      this.addOrgResultMessage = 'org_added';
       this.eventAggregator.publish("handleSuccess", new EventConfigAction(
-          `${this.orgName} has been successfully deployed!`
-          , "See The New DAO"
-          , () => { this.router.navigateToRoute("daoDashboard", {address: organization.address}); }
-        ));
+        `${this.orgName} has been successfully deployed!`
+        , "See The New DAO"
+        , () => { this.router.navigateToRoute("daoDashboard", { address: organization.address }); }
+      ));
 
       // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
       // const avatarAddress = organization.avatar.address;
@@ -110,10 +109,10 @@ export class DeployGen  {
       // console.log(`org: ${organization.avatar.address}, cached testOrg: ${testOrg.avatar.address}`)
 
     }
-    catch(ex) {
-      this.deployOrgStatus= 'error';    
-      this.addOrgResultMessage= ex;
-       this.eventAggregator.publish("handleException", ex);
+    catch (ex) {
+      this.deployOrgStatus = 'error';
+      this.addOrgResultMessage = ex;
+      this.eventAggregator.publish("handleException", ex);
     }
   }
 
@@ -124,16 +123,16 @@ export class DeployGen  {
     ($(".founder-delete-button") as any).tooltip("dispose");
   }
 
-  addFounderInput(founder:MyFounder) {
-      this.founders.push(founder || new MyFounder(this.web3, null));
-      setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
-      // setTimeout(() => { 
-      //   (<any>$(".founders")).bootstrapMaterialDesign();
-      //  },200);
-    }
+  addFounderInput(founder: MyFounder) {
+    this.founders.push(founder || new MyFounder(this.web3, null));
+    setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
+    // setTimeout(() => { 
+    //   (<any>$(".founders")).bootstrapMaterialDesign();
+    //  },200);
+  }
 
-  appendIndex(str:string, ndx:number):string {
-    return str+ndx;
+  appendIndex(str: string, ndx: number): string {
+    return str + ndx;
   }
 }
 
@@ -154,5 +153,5 @@ class MyFounder implements FounderConfig {
 
   address: string;
   tokens: BigNumber;
-  reputation : BigNumber;
+  reputation: BigNumber;
 }

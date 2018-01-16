@@ -22,7 +22,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration();
 
-  // for now, always on for trouble-shooting:  if (process.env.ENV == "development") {
+  // for now, always on for trouble-shooting:  if (process.env.env == "development") {
   aurelia.use.developmentLogging();
   // }
 
@@ -85,12 +85,12 @@ export async function configure(aurelia: Aurelia) {
 
     /**
      * EmergentArc must be initialized prior to arcService being loaded
-     * ETH_ENV is supplied by webpack.
+     * network is supplied by webpack.
      * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
      */
     const web3 = await getWeb3();
 
-    arcJsConfigSet("network", process.env.ETH_ENV);
+    arcJsConfigSet.set("network", process.env.network);
 
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);

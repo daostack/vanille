@@ -67,7 +67,7 @@ export class Web3Service {
     });
   }
 
-  public static Network = process.env.ETH_ENV;
+  public static Network = process.env.network;
   // not going to worry about the exact id for ganache, which is dynamic, unless we absolutely have to
 
   public initialize(web3): Promise<Web3> {
@@ -78,7 +78,7 @@ export class Web3Service {
      */
     BigNumber.config({ ERRORS: false });
 
-    const testrpcNetworkId = '0';
+    const ganacheNetworkId = '0';
 
     let getIdFromNetwork = (network) => {
 
@@ -89,10 +89,10 @@ export class Web3Service {
           return '42';
         case 'livenet':
           return '1';
-        case 'testrpc':
+        case 'ganache':
         default:
-          // for testrpc, would be something like: Object.keys(GenesisScheme.networks).pop();
-          return testrpcNetworkId;
+          // for ganache, would be something like: Object.keys(GenesisScheme.networks).pop();
+          return ganacheNetworkId;
       }
     };
 
@@ -105,7 +105,7 @@ export class Web3Service {
         case undefined:
         case '0':
           return 'unknown';
-        default: return 'probably testrpc'
+        default: return 'probably ganache'
       }
     };
 
@@ -117,7 +117,7 @@ export class Web3Service {
             let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
             console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId}`);
-            this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === testrpcNetworkId);
+            this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === ganacheNetworkId);
             if (!this._isCorrectChain) {
               reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
             } else {

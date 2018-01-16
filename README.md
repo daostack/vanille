@@ -75,7 +75,7 @@ npm start arc-js.migrateContracts
 
 ## Defining Which Chain to Run Against
 
-[deprecated -- to be revised soon] The ETH_ENV environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
+[deprecated -- to be revised soon] The "network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
 
 The variable is only used when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 

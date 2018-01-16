@@ -1,10 +1,12 @@
 <template>
-      <div if.bind="currentChain !== 'testrpc'">
-        <h3>Good job connecting to Ethereum!</h3>
-        <p>Now all you have to do is switch to the <strong>${currentChain}</strong> network and you should be good to go :)</p>
-      </div>
+  <div if.bind="currentChain !== 'ganache'">
+    <h3>Good job connecting to Ethereum!</h3>
+    <p>Now all you have to do is switch to the
+      <strong>${currentChain}</strong> network and you should be good to go :)</p>
+  </div>
 
-      <div if.bind="currentChain === 'testrpc'">
-        <h3>Ensure that testrpc is running with up-to-date contracts, turn off MetaMask or switch it to port 8545 :)</i></h3>
-      </div>
+  <div if.bind="currentChain === 'ganache'">
+    <h3>Ensure that ganache is running with up-to-date contracts, turn off MetaMask or switch it to port 8545 :)</i>
+    </h3>
+  </div>
 </template>
