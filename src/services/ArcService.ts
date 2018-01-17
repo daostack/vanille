@@ -34,6 +34,8 @@ export class ArcService {
   public get defaultAccount(): string { return Arc.getDefaultAccount(); }
 
   public async initialize() {
+    Arc.config.set("network", process.env.network);
+
     let arcSettings = await Arc.getDeployedContracts();
     let arcContracts = arcSettings.allContracts;
 

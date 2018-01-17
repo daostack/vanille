@@ -5,7 +5,7 @@ import { OrganizationService } from './services/OrganizationService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { config as arcJsConfigSet, getWeb3 } from 'daostack-arc-js';
+import { getWeb3 } from 'daostack-arc-js';
 import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -89,8 +89,6 @@ export async function configure(aurelia: Aurelia) {
      * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
      */
     const web3 = await getWeb3();
-
-    arcJsConfigSet.set("network", process.env.network);
 
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);

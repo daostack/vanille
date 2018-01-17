@@ -12,6 +12,10 @@
 @import "./src/services/snackbars";
 
 
+.text-yellow {
+  color: $yellow-300 !important;
+}
+
 .root.container {
   margin-top: 80px;
   margin-bottom: 50px;

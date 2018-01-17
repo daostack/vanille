@@ -1,20 +1,26 @@
-<template bindable="router">
-<nav class="header navbar fixed-top navbar-expand-lg navbar-dark">
+<template bindable="router, network">
+  <nav class="header navbar fixed-top navbar-expand-lg navbar-dark">
 
- <a class="navbar-brand" href="#">
-   <img src="../static/daostack-icon.svg" class="logo d-inline-block align-top" alt=""><div class="company-name">DAOstack Alchemy</div>
-  </a>
+    <a class="navbar-brand" href="#">
+      <img src="../static/daostack-icon.svg" class="logo d-inline-block align-top" alt="">
+      <div class="company-name">DAOstack Alchemy</div>
+    </a>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li repeat.for="row of router.navigation" class="nav-item ${ row.isActive ? 'active' : '' }">
-        <a class="nav-link" href.bind="row.href">${ row.title }</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li repeat.for="row of router.navigation" class="nav-item ${ row.isActive ? 'active' : '' }">
+          <a class="nav-link" href.bind="row.href">${ row.title }</a>
+        </li>
+      </ul>
+    </div>
+    <div if.bind="network !== 'live'" class="navbar-text ml-auto text-danger">
+      Testing (${network})
+    </div>
+    <div else class="navbar-text ml-auto text-yellow">Live</div>
+  </nav>
 </template>

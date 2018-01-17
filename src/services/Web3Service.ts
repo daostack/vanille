@@ -87,7 +87,7 @@ export class Web3Service {
           return '3';
         case 'kovan':
           return '42';
-        case 'livenet':
+        case 'live':
           return '1';
         case 'ganache':
         default:
@@ -100,7 +100,7 @@ export class Web3Service {
       switch (id) {
         case '3': return 'ropsten';
         case '42': return 'kovan';
-        case '1': return 'livenet';
+        case '1': return 'live';
         case null:
         case undefined:
         case '0':
