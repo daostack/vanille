@@ -35,10 +35,7 @@ module.exports = {
         unzip: "npm explore daostack-arc-js -- npm start test.ganacheDb.unzip",
         restoreFromZip: "npm explore daostack-arc-js -- npm start test.ganacheDb.restoreFromZip"
       },
-      migrateContracts: {
-        default: "npm explore daostack-arc-js -- npm start migrateContracts",
-        initialize: "npm explore daostack-arc-js -- npm start migrateContracts.initialize",
-      }
+      migrateContracts: "npm explore daostack-arc-js -- npm start migrateContracts"
     },
     test: {
       default: "nps test.jest",

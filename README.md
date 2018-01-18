@@ -31,13 +31,7 @@ The file package-scripts.js contains a number of scripts to help you build, run 
   npm install
 ```
 
-3. Configure arc-js. You only need ever do this once to prepare arc-js to run ganache and migrate contracts to it:
-
-```shell
-npm start arc-js.migrateContracts.initialize
-```
-
-4. Fire up ganache (testrpc) in a separate window:
+3. Fire up ganache (testrpc) in a separate window:
 
 ```shell
 npm start arc-js.ganache.runAsync
@@ -49,19 +43,19 @@ npm start arc-js.ganache.runAsync
 npm start arc-js.ganache.run
 ```
 
-5. Migrate contracts to ganache:
+4. Migrate contracts to ganache:
 
 ```shell
 npm start arc-js.migrateContracts
 ```
 
-6. build and serve Alchemy:
+5. build and serve Alchemy:
 
 ```shell
   npm start build.development.andServe
 ```
 
-7. Run Alchemy:
+6. Run Alchemy:
 
    Browse to: http://localhost:8090/
 
