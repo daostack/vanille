@@ -77,7 +77,7 @@ npm start arc-js.migrateContracts
 
 The "network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
 
-The variable is only used when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
+This environment variable is used when migrating contracts from arc-js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
 When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.
 
