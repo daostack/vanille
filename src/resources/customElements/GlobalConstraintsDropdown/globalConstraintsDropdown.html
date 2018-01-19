@@ -1,15 +1,21 @@
 <template>
 
-  <div class="dropdown">
-  <a class="dropdown-toggle global-constraints-dropdown-button" 
-    id="availableConstraints"
-    href="#"
-    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <slot name="buttonText"><span class="font-weight-bold">${constraint ? constraint.friendlyName : 'Select a Global Constraint'}</span></slot>
-  </a>
+  <div show.bind="constraints.length" class="dropdown">
+    <a class="dropdown-toggle global-constraints-dropdown-button" id="availableConstraints" href="#" data-toggle="dropdown" aria-haspopup="true"
+      aria-expanded="false">
+      <slot name="buttonText">
+        <span class="font-weight-bold">${constraint ? constraint.friendlyName : 'Select a Global Constraint'}</span>
+      </slot>
+    </a>
 
-  <ul class="dropdown-menu" aria-labelledby="globalConstraintsDropdown">
-    <li class="dropdown-item" click.delegate="onItemClick(constraint)" repeat.for="constraint of constraints">${constraint.friendlyName}</li>
-  </ul>
-</div>
+    <ul class="dropdown-menu" aria-labelledby="globalConstraintsDropdown">
+      <li class="dropdown-item" click.delegate="onItemClick(constraint)" repeat.for="constraint of constraints">${constraint.friendlyName}</li>
+    </ul>
+  </div>
+
+
+  <div show.bind="!constraints.length">
+    <slot name="noConstraints"></slot>
+  </div>
+
 </template>

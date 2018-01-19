@@ -21,7 +21,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   addableSchemes: Array<SchemeInfo> = [];
   addressControl: HTMLElement;
   NonArcSchemeItemKey = NonArcSchemeItemName;
-  // autoRegister: boolean = true;
 
   constructor(
     private schemeService: SchemeService

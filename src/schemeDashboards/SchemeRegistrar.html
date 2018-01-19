@@ -18,7 +18,8 @@
 
         <instructions>Propose to add a scheme to
           <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
-          machine.</instructions>
+          machine.
+        </instructions>
 
         <form>
           <p show.bind="!addableSchemes.length">
@@ -35,8 +36,8 @@
             </arc-schemes-dropdown>
 
             <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
-            <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
-          </div> -->
+              <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
+            </div> -->
 
             <div show.bind="currentSchemeSelection" ref="addressControl" class="form-group bmd-form-group">
               <label for="schemeToAddAddress">Scheme Address</label>
@@ -46,15 +47,6 @@
 
             <div if.bind="currentSchemeSelection">
               <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
-
-              <!-- <div if.bind="!isNonArcScheme" class="form-group bmd-form-group">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" checked.bind="autoRegister">
-                  Automatically register ${orgName} into the added scheme when proposal is approved 
-                </label>
-              </div>
-            </div> -->
             </div>
 
             <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
@@ -66,7 +58,8 @@
 
         <instructions>Propose to update the parameters of a scheme in
           <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
-          machine.</instructions>
+          machine.
+        </instructions>
 
         <form>
           <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
@@ -91,7 +84,8 @@
       <div class="tab-pane fade" id="removeScheme" role="tabpanel" aria-labelledby="remove-tab">
         <instructions>Propose to remove a scheme from
           <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
-          machine.</instructions>
+          machine.
+        </instructions>
         <form>
           <arc-schemes-dropdown scheme.bind="schemeToRemove" dao-address.bind="orgAddress" schemes.bind="allSchemes" exclude-unregistered.bind="true"
             exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
