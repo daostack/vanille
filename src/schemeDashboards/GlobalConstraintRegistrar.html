@@ -21,21 +21,28 @@
             voting machine.</instructions>
 
           <form>
-            <global-constraints-dropdown constraint.bind="constraintToAddInfo">
+            <global-constraints-dropdown constraint.bind="currentGCSelection" dao-address.bind="orgAddress" include-non-arc-item.bind="true">
               <span slot="buttonText">
                 <span class="font-weight-bold">${constraintToAddInfo ? constraintToAddInfo.friendlyName : 'Select Global Constraint'}</span>
               </span>
             </global-constraints-dropdown>
 
-            <div if.bind="!!constraintToAddInfo">
-              <etherscanlink address=${constraintToAddInfo.address}></etherscanlink>
-              <compose view-model="${'../globalConstraintConfiguration/' + constraintToAddInfo.name}" model.bind="constraintToAddConfig"></compose>
+            <div show.bind="currentGCSelection">
+              <div ref="addressControl" class="form-group bmd-form-group">
+                <label for="constraintToAddAddress">Global Constraint Address</label>
+                <input id="constraintToAddAddress" type="text" class="form-control" value.bind="constraintToAddAddress" />
+                <!-- <span class="bmd-help">Scheme address</span> -->
+              </div>
+
+              <div if.bind="currentGCSelection">
+                <compose view-model="${'../globalConstraintConfiguration/' + currentGCSelection.name}" model.bind="constraintToAddConfig"></compose>
+              </div>
+
+              <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
+              </votingmachineselector>
+
+              <button if.bind="!!votingMachineConfig" class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
             </div>
-
-            <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
-            </votingmachineselector>
-
-            <button if.bind="!!votingMachineConfig" class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
           </form>
         </div>
 
@@ -44,16 +51,18 @@
             <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's
             voting machine.</instructions>
           <form>
-            <global-constraints-dropdown constraint.bind="constraintToRemoveInfo">
+            <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" dao-address.bind="orgAddress" exclude-unregistered.bind="true">
               <span slot="buttonText">
                 <span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.friendlyName : 'Select Constraint to Remove'}</span>
               </span>
+              <span slot="noConstraints">
+                <span class="org-name">${orgName}</span> has no global constraints that can be removed.</span>
             </global-constraints-dropdown>
 
-            <div if.bind="!!constraintToRemoveInfo">
-              <etherscanlink address=${constraintToRemoveInfo.address}></etherscanlink>
+            <div if.bind="constraintToRemoveInfo">
+              <etherscanlink address=${constraintToRemoveInfo.address}>${constraintToRemoveInfo.address}</etherscanlink>
               <div class="mt-3">
-                <button class="btn-submit-proposal" click.delegate="unProposeConstraint()">Submit Proposal</button>
+                <button class="btn-submit-proposal" click.delegate="proposeRemoveConstraint()">Submit Proposal</button>
               </div>
             </div>
           </form>

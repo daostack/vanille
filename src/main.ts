@@ -76,7 +76,9 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeConfiguration/NonArcScheme")
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
+
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
+  PLATFORM.moduleName("./globalConstraintConfiguration/NonArcConstraint")
 
   await aurelia.start();
 
