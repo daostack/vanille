@@ -14,15 +14,24 @@
         <dd>
           <etherscanlink address=${address}></etherscanlink>
         </dd>
+        <dd>
+          <etherscanlink address=${address}>${address}</etherscanlink>
+        </dd>
         <dt>Controller</dt>
         <dd>
           <etherscanlink address=${org.controller.address}></etherscanlink>
+        </dd>
+        <dd>
+          <etherscanlink address=${org.controller.address}>${org.controller.address}</etherscanlink>
         </dd>
         <dt>Omega</dt>
         <dd> ${ omega | ethwei}</dd>
         <dt>Token</dt>
         <dd>
           <etherscanlink address=${org.token.address}></etherscanlink>
+        </dd>
+        <dd>
+          <etherscanlink address=${org.token.address}>${org.token.address}</etherscanlink>
         </dd>
         <dt>Token Symbol</dt>
         <dd>${tokenSymbol}</dd>
@@ -33,95 +42,92 @@
 
     <section show.bind="registeredArcSchemes.length">
       <h3>Arc Schemes</h3>
-  </div>
 
-  <div id="accordion" role="tablist">
-    <ul class="list-group clean dashboard-schemes">
-      <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
-        <div class="row">
-          <div class="col-11">
-            <div class="scheme-name">${scheme.friendlyName}</div>
-            <etherscanlink address=${scheme.address}></etherscanlink>
-          </div>
-          <div class="col-1">
-            <round-dashboard-button class="scheme-use-button" css="btn-success" data-toggle="tooltip" data-placement="top" data-trigger="hover"
-              title="Work with this scheme" click.delegate="useScheme(scheme)">
-            </round-dashboard-button>
-          </div>
-        </div>
-        <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent- "#accordian">
-          <hr/>
-          <div class="card">
-            <div class="card-block">
-              <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  </section>
-  <section show.bind="nonArcSchemes.length">
-    <h3>Non-Arc Schemes</h3>
-    </div>
-
-    <div id="accordion" role="tablist">
-      <ul class="list-group clean dashboard-schemes">
-        <li class="list-group-item" repeat.for="scheme of nonArcSchemes">
-          <div class="row">
-            <div class="col-11" style="padding-top:.5rem">
-              <etherscanlink address=${scheme.address}></etherscanlink>
-            </div>
-            <div class="col-1">
-              <round-dashboard-button class="scheme-use-button" css="btn-secondary" data-toggle="tooltip" data-placement="top" data-trigger="hover"
-                title="Work with this scheme" click.delegate="useScheme(scheme)">
-              </round-dashboard-button>
-            </div>
-          </div>
-          <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent- "#accordian">
-            <hr/>
-            <div class="card">
-              <div class="card-block">
-                <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+      <div id="accordion" role="tablist">
+        <ul class="list-group clean dashboard-schemes">
+          <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
+            <div class="row">
+              <div class="col-11">
+                <div class="scheme-name">${scheme.friendlyName}</div>
+                <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+              </div>
+              <div class="col-1">
+                <round-dashboard-button class="scheme-use-button" css="btn-success" data-toggle="tooltip" data-placement="top" data-trigger="hover"
+                  title="Work with this scheme" click.delegate="useScheme(scheme)">
+                </round-dashboard-button>
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-  </section>
-
-  <section show.bind="unregisteredArcSchemes.length">
-    <h3>Unused Arc Schemes</h3>
-    </div>
-
-    <div id="accordion" role="tablist">
-      <ul class="list-group clean dashboard-schemes">
-        <li class="list-group-item" repeat.for="scheme of unregisteredArcSchemes">
-          <div class="row">
-            <div class="col-11">
-              <div class="scheme-name">${scheme.friendlyName}</div>
-              <etherscanlink address=${scheme.address}></etherscanlink>
-            </div>
-            <div class="col-1">
-              <round-dashboard-button class="scheme-use-button" css="btn-primary" data-toggle="tooltip" data-placement="top" data-trigger="hover"
-                title="Work with this scheme" click.delegate="useScheme(scheme)">
-              </round-dashboard-button>
-            </div>
-          </div>
-          <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent- "#accordian">
-            <hr/>
-            <div class="card">
-              <div class="card-block">
-                <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
+              <hr/>
+              <div class="card">
+                <div class="card-block">
+                  <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                </div>
               </div>
             </div>
-          </div>
-        </li>
-      </ul>
-    </div>
+          </li>
+        </ul>
+      </div>
+
+    </section>
+    <section show.bind="nonArcSchemes.length">
+      <h3>Non-Arc Schemes</h3>
+
+      <div id="accordion" role="tablist">
+        <ul class="list-group clean dashboard-schemes">
+          <li class="list-group-item" repeat.for="scheme of nonArcSchemes">
+            <div class="row">
+              <div class="col-11" style="padding-top:.5rem">
+                <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+              </div>
+              <div class="col-1">
+                <round-dashboard-button class="scheme-use-button" css="btn-secondary" data-toggle="tooltip" data-placement="top" data-trigger="hover"
+                  title="Work with this scheme" click.delegate="useScheme(scheme)">
+                </round-dashboard-button>
+              </div>
+            </div>
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
+              <hr/>
+              <div class="card">
+                <div class="card-block">
+                  <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
   </section>
+
+    <section show.bind="unregisteredArcSchemes.length">
+      <h3>Unused Arc Schemes</h3>
+
+      <div id="accordion" role="tablist">
+        <ul class="list-group clean dashboard-schemes">
+          <li class="list-group-item" repeat.for="scheme of unregisteredArcSchemes">
+            <div class="row">
+              <div class="col-11">
+                <div class="scheme-name">${scheme.friendlyName}</div>
+                <etherscanlink address=${scheme.address}>${scheme.address}</etherscanlink>
+              </div>
+              <div class="col-1">
+                <round-dashboard-button class="scheme-use-button" css="btn-primary" data-toggle="tooltip" data-placement="top" data-trigger="hover"
+                  title="Work with this scheme" click.delegate="useScheme(scheme)">
+                </round-dashboard-button>
+              </div>
+            </div>
+            <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
+              <hr/>
+              <div class="card">
+                <div class="card-block">
+                  <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
   </div>
 </template>
