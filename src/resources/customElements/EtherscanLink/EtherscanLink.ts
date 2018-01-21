@@ -5,21 +5,23 @@ import { Web3Service } from '../../../services/Web3Service';
 @autoinject
 @customElement("etherscanlink")
 export class EtherscanLink {
-    
-    targetedNetwork: any;
 
-    @bindable
-    address: string;
+  targetedNetwork: any;
+  isGanache: boolean;
 
-    @bindable
-    type: string;
+  @bindable
+  address: string;
 
-    clipbutton: HTMLElement;
+  @bindable
+  type: string;
 
-    // @bindable
-    // children:any;
+  clipbutton: HTMLElement;
 
-    constructor() {
-        this.targetedNetwork = Web3Service.Network;
-    }
+  // @bindable
+  // children:any;
+
+  constructor() {
+    this.targetedNetwork = Web3Service.Network;
+    this.isGanache = this.targetedNetwork === "ganache";
+  }
 }

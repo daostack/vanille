@@ -67,7 +67,7 @@ export class Web3Service {
     });
   }
 
-  public static Network = process.env.network;
+  public static Network = process.env.network.toLowerCase();
   // not going to worry about the exact id for ganache, which is dynamic, unless we absolutely have to
 
   public initialize(web3): Promise<Web3> {
@@ -90,7 +90,6 @@ export class Web3Service {
         case 'live':
           return '1';
         case 'ganache':
-        case 'testrpc':
         default:
           // for ganache, would be something like: Object.keys(GenesisScheme.networks).pop();
           return ganacheNetworkId;
