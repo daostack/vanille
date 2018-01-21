@@ -35,15 +35,11 @@ export class TokenTicker {
 
     this.getBalance(token);
 
-    // console.log('symbol: '+ this.tknSymbol);
-
     this.events = token.allEvents({ fromBlock: 'latest' });
 
     this.events.watch(() => {
       this.getBalance(token);
     });
-
-    // console.log('balance: '+ (await token.balanceOf(this.usrAddrss)).valueOf());
   }
   async getBalance(token) {
     try {

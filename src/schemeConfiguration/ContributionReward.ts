@@ -13,7 +13,6 @@ export class ContributionReward implements SchemeConfigurator {
   constructor(
     private arcService: ArcService
   ) {
-    // super();
   }
 
   activate(model) {

@@ -53,9 +53,6 @@ export class ArcService {
       var contract = this.arcContracts[name];
       this.arcContractMap.set(contract.address, contract);
     }
-
-    // console.log(this.arcContracts);
-    // each property is a contractInfo
   }
 
   private contractInfoFromName(name: string): ContractInfo {
@@ -130,8 +127,6 @@ export class ArcService {
       let message = ex.message ? ex.message : ex;
       this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
       return "[not found]";
-      // console.log(`${ex.message}\n{$ex.stack}`);
-      // console.log(tx);
     }
   }
 

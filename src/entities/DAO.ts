@@ -78,11 +78,6 @@ export class DAO extends Organization {
     this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
   }
 
-  // public getSchemes(): Array<SchemeInfo> {
-  //   // return Array.from(this.schemesCache.values()).filter((s) => { return s.isInDao; }).map((s) => { return s.scheme; } );
-  //   return Array.from(this.schemesCache.values());
-  // }
-
   private async handleSchemeEvent(err, eventsArray, adding: boolean): Promise<void> {
     let newSchemesArray = [];
     if (!(eventsArray instanceof Array)) {
@@ -97,8 +92,6 @@ export class DAO extends Organization {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
         scheme = <any>{ address: schemeAddress };
       }
-
-      //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
       let schemeInfo = SchemeInfo.fromContractInfo(scheme, adding);
       let changed = false;

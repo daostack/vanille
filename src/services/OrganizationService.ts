@@ -130,7 +130,6 @@ export class OrganizationService {
     }
 
     if (!cachedDao) {
-      // this.logger.debug(`caching dao: ${dao.name ? `${dao.name}: ` : ""}${dao.address}`);
       this.daoCache.set(dao.address, dao);
     }
 

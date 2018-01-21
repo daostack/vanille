@@ -14,13 +14,13 @@ export class EthBalance {
     this.ethAddress = this.web3.defaultAccount;
   }
 
+  text: string;
+
   attached() {
-    // console.log("EthBalance: attaching");
     this.readBalance();
   }
 
   detached() {
-    // console.log("EthBalance: detaching");
     if (this.filter) {
       this.filter.stopWatching();
       this.filter = null;
@@ -40,6 +40,7 @@ export class EthBalance {
   async getBalance() {
     try {
       this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toFixed(2);
+      this.text = `${this.ethBalance} ETH`;
     } catch (ex) {
     }
   }

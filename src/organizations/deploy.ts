@@ -71,8 +71,6 @@ export class DeployGen {
 
     this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
     this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
-    // console.log(`token balance: ${this.tknBalance}`);
-    // console.log(`eth balance: ${this.ethBalance}`);
   }
 
   async deploy() {
@@ -98,16 +96,6 @@ export class DeployGen {
         , () => { this.router.navigateToRoute("daoDashboard", { address: organization.address }); }
       ));
 
-      // console.log('permissions: ' + await organization.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
-      // const avatarAddress = organization.avatar.address;
-      // let testOrg = await this.organizationService.organizationAt(avatarAddress, false);
-      // console.log(`org: ${organization.avatar.address}, testOrg: ${testOrg.avatar.address}`)
-      // console.log('testOrg permissions: ' + await testOrg.controller.getSchemePermissions(this.arcService.arcContracts.GlobalConstraintRegistrar.address));
-      // let schemes = await testOrg.schemes("GlobalConstraintRegistrar");
-      // console.log('testOrg from scheme() permissions: ' + schemes.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
-      // testOrg = await this.organizationService.organizationAt(avatarAddress, true);
-      // console.log(`org: ${organization.avatar.address}, cached testOrg: ${testOrg.avatar.address}`)
-
     }
     catch (ex) {
       this.deployOrgStatus = 'error';
@@ -126,9 +114,6 @@ export class DeployGen {
   addFounderInput(founder: MyFounder) {
     this.founders.push(founder || new MyFounder(this.web3, null));
     setTimeout(() => { ($(".founder-delete-button") as any).tooltip(); });
-    // setTimeout(() => { 
-    //   (<any>$(".founders")).bootstrapMaterialDesign();
-    //  },200);
   }
 
   appendIndex(str: string, ndx: number): string {

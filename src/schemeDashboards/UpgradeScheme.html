@@ -25,10 +25,6 @@
             </span>
           </arc-schemes-dropdown>
 
-          <!-- <div show.bind="currentSchemeSelection && !isNonArcScheme" class="form-group" style="padding-top:.5rem">
-          <a href="#" click.delegate="useAddress()">Use Default Address <i class="fa fa-arrow-down"></i></a>
-        </div> -->
-
           <div show.bind="currentSchemeSelection" ref="addressControl" class="form-group">
             <label for="upgradingSchemeAddress">Scheme Address</label>
             <input id="upgradingSchemeAddress" type="text" class="form-control" value.bind="upgradingSchemeAddress" />
@@ -47,7 +43,8 @@
 
         <instructions>Propose to add a new controller to
           <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
-          machine.</instructions>
+          machine.
+        </instructions>
 
         <form>
           <div class="form-group">

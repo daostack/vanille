@@ -31,7 +31,6 @@ export class SchemeService {
   private async _getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
     let dao = await this.organizationService.organizationAt(daoAddress);
     let schemes = await dao.allSchemes()
-    // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
     return schemes;
   }
 

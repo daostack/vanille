@@ -1,7 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
-// import { LogManager } from 'aurelia-framework';
 import { AureliaHelperService } from "./AureliaHelperService";
 import { EventConfig, EventConfigException, ActionType } from "../entities/GeneralEvents";
 import 'snackbarjs';
@@ -114,12 +113,6 @@ export class SnackbarService {
       timeout: config.duration,
       htmlAllowed: true
     };
-    // return Object.assign(config, {
-    //   content: this.formatContent(config),
-    //   style: config.style,
-    //   timeout: config.duration,
-    //   htmlAllowed: true
-    // });
   }
 
   formatContent(config: EventConfig) {
@@ -127,7 +120,8 @@ export class SnackbarService {
     let templateAction = "";
     switch (config.actionType) {
       case ActionType.address:
-        templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.address}" type="${config.addressType || 'address'}">${config.actionText || config.address}</etherscanlink></span>`;
+        let text = config.actionText || config.address;
+        templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.address}" text="${text}" type="${config.addressType || 'address'}"></etherscanlink></span>`;
         break;
       case ActionType.button:
         templateAction = `<span class="snackbar-action-wrapper"><button type="button" class="btn" click.delegate='action()'>${config.actionText}</button></span>`;

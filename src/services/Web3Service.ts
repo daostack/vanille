@@ -1,7 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import * as Web3 from "web3";
 import { HttpProvider, Eth, version } from "web3";
-// import * as BigNumber from 'bignumber.js';
 import { BigNumber } from 'bignumber.js'
 
 @autoinject()
@@ -11,7 +10,6 @@ export class Web3Service {
   private _web3: Web3;
 
   constructor(
-    // private contractService: TruffleContractService
   ) {
   }
 
