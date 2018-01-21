@@ -97,26 +97,17 @@ export async function configure(aurelia: Aurelia) {
 
     const web3Service = aurelia.container.get(Web3Service);
     await web3Service.initialize(web3);
-    // aurelia.container.registerSingleton(Web3Service, () => {
-    //   return web3Service;
-    // });
 
     const arcService = aurelia.container.get(ArcService);
     await arcService.initialize();
-    // aurelia.container.registerSingleton(ArcService, () => {
-    //   return arcService;
-    // });
 
     const orgService = aurelia.container.get(OrganizationService);
     // don't await here, for faster application GUI load time
     orgService.initialize();
-    // aurelia.container.registerSingleton(OrganizationService, () => {
-    //   return orgService;
-    // });
 
   } catch (ex) {
     console.log(`Error initializing blockchain services: ${ex}`);
-    // alert(`Error initializing blockchain services: ${ex}`);
+    alert(`Error initializing blockchain services: ${ex}`);
   }
 
   await aurelia.setRoot(PLATFORM.moduleName('app'));

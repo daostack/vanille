@@ -46,20 +46,25 @@ export class OrganizationService {
 
   public async initialize() {
     return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
-      let genesisScheme = await this.arcService.getContract("GenesisScheme");
-      let myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: 0 });
-      /**
-       * get():  fires once for all the DAOs in the system; resolve() will be called properly.
-       * watch(): fires whenever a new DAO is created thereafter
-       */
-      myEvent.get((err, eventsArray) =>
-        this.handleNewOrg(err, eventsArray).then(() => {
-          this.logger.debug("Finished loading daos");
-          resolve();
-        })
-      );
-      myEvent = genesisScheme.NewOrg({});
-      myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
+      try {
+        let genesisScheme = await this.arcService.getContract("GenesisScheme");
+        let myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: 0 });
+        /**
+         * get():  fires once for all the DAOs in the system; resolve() will be called properly.
+         * watch(): fires whenever a new DAO is created thereafter
+         */
+        myEvent.get((err, eventsArray) =>
+          this.handleNewOrg(err, eventsArray).then(() => {
+            this.logger.debug("Finished loading daos");
+            myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: "latest" });
+            myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
+            resolve();
+          })
+        );
+      } catch (ex) {
+        alert(`Error obtaining DAO ecosystem: ${ex}`);
+        reject(ex);
+      }
     }));
   }
 

@@ -1,5 +1,4 @@
 declare module 'system' {
-  import fetch = require('isomorphic-fetch');
   import * as Aurelia from 'aurelia-framework';
 
   /*
@@ -8,7 +7,6 @@ declare module 'system' {
   interface System {
     import(name: string): Promise<any>;
     import(name: 'aurelia-framework'): Promise<typeof Aurelia>;
-    import(name: 'isomorphic-fetch'): Promise<typeof fetch>;
   }
 
   global {

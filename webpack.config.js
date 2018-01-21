@@ -3,9 +3,11 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyPlugin = require('uglifyjs-webpack-plugin');
 const { AureliaPlugin } = require('aurelia-webpack-plugin');
 const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack');
 const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
+// see TODO.  const CompressionPlugin = require("compression-webpack-plugin")
 // var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // config helpers:
@@ -76,19 +78,12 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       publicPath: baseUrl,
       filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
-      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js',
+      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
     },
     devServer: {
       contentBase: outDir,
       // serve index.html for all 404 (required for push-state)
       historyApiFallback: true,
-    },
-    // to avoid errors when arc-js pulls in nconf
-    // target: 'node',
-    // to avoid errors when arc-js pulls in nconf
-    node: {
-      fs: "empty"
-      , child_process: "empty"
     },
     module: {
       rules: [
@@ -148,7 +143,8 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       new webpack.DefinePlugin({
         'process.env': {
           env: JSON.stringify(env),
-          network: JSON.stringify(network),
+          network: JSON.stringify(network)
+          //"process.env.NODE_ENV": JSON.stringify("production")
         },
       }),
       new AureliaPlugin(),
@@ -196,6 +192,20 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
         new CommonsChunkPlugin({
           name: 'common'
         })
+        , new UglifyPlugin({
+          test: /\.js($|\?)/i,
+          sourceMap: true,
+          extractComments: true,
+          parallel: true,
+          uglifyOptions: {
+            ecma: 6
+          }
+        }),
+        // TODO: Azure isn't using the resulting .gz files, and isn't doing nearly as good a
+        // job of compression as this plugin does.  Figure out how to improve that story. 
+        // new CompressionPlugin({
+        //   test: /\.js($|\?)/i
+        // })
       ])
       // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
     ],

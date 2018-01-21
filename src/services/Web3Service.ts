@@ -90,6 +90,7 @@ export class Web3Service {
         case 'live':
           return '1';
         case 'ganache':
+        case 'testrpc':
         default:
           // for ganache, would be something like: Object.keys(GenesisScheme.networks).pop();
           return ganacheNetworkId;
@@ -103,9 +104,8 @@ export class Web3Service {
         case '1': return 'live';
         case null:
         case undefined:
-        case '0':
-          return 'unknown';
-        default: return 'probably ganache'
+        case '0': return 'unknown';
+        default: return 'unknown (ganache?)'
       }
     };
 
@@ -117,6 +117,9 @@ export class Web3Service {
             let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
             console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId}`);
+            // if you're targeting ganache then it'll accept any network id.  Otherwise,
+            // they have to match.
+            // TODO:  Other networks besides kovan and ropsten?  Take  ID instead of name for network?
             this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === ganacheNetworkId);
             if (!this._isCorrectChain) {
               reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));

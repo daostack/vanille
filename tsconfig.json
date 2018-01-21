@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "esnext",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -9,11 +9,16 @@
     "allowJs": true,
     "baseUrl": "src",
     "lib": [
-      "es2017", "dom"
+      "es2017",
+      "dom"
     ]
-  }
-  , "include": [ "./src/**/*", "./node_modules/@types/webpack/index.d.ts", "./custom_typings/**/*"]
-  , "exclude": [
+  },
+  "include": [
+    "./src/**/*",
+    "./node_modules/@types/webpack/index.d.ts",
+    "./custom_typings/**/*"
+  ],
+  "exclude": [
     "node_modules",
     "dist",
     "static"

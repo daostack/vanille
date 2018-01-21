@@ -84,47 +84,43 @@ module.exports = {
     build: {
       production: {
         default: "nps webpack.build.production",
-        andServe: "nps webpack.build.production.serve"
+        andServe: "nps webpack.build.production.andServe"
       },
       development: {
         default: "nps webpack.build.development",
-        andServe: "nps webpack.build.development.serve"
+        andServe: "nps webpack.build.development.andServe"
       }
     },
     webpack: {
-      default: "nps webpack.server",
       build: {
         before: rimraf("dist"),
         default: "nps webpack.build.production",
         development: {
-          default: series("nps webpack.build.before", "webpack --progress -d"),
+          default: series(
+            "nps webpack.build.before",
+            "webpack --progress -d"),
           extractCss: series(
             "nps webpack.build.before",
             "webpack --progress -d --env.extractCss"
           ),
-          serve: series.nps("webpack.build.development", "webpack.server.hmr")
+          // doesn't use the dist folder
+          andServe: `webpack-dev-server -d --inline --hot --env.server --port 8090`
         },
         production: {
-          inlineCss: series(
-            "nps webpack.build.before",
-            /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc-js */
-            "webpack --progress --env.production --env.network=kovan"
-          ),
           default: series(
             "nps webpack.build.before",
-            /* removed -p because UglifyJs barfs on the ES6 code in daostack-arc-js */
             "webpack --progress --env.production --env.extractCss --env.network=kovan"
           ),
-          serve: series.nps("webpack.build.production", "serve")
+          inlineCss: series(
+            "nps webpack.build.before",
+            "webpack --progress --env.production --env.network=kovan"
+          ),
+          andServe: series(
+            "nps webpack.build.production",
+            "http-server dist --cors -o -p 8090")
         }
-      },
-      server: {
-        default: `webpack-dev-server -d --inline --env.server --port 8090`,
-        extractCss: `webpack-dev-server -d --inline --env.server --env.extractCss --port 8090`,
-        hmr: `webpack-dev-server -d --inline --hot --env.server --port 8090`
       }
     },
-    hmr: "nps webpack.server.hmr",
-    serve: "http-server dist --cors -o -p 8090"
+    hmr: "nps build.development.andServe"
   }
 };

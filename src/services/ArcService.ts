@@ -90,7 +90,10 @@ export class ArcService {
       if (cachedContract) {
         return cachedContract;
       } else {
-        contract = await contractInfo.contract.at(at);
+        // the only way to catch errors is with .then
+        await contractInfo.contract.at(at).then((result) => {
+          contract = result;
+        });
       }
     } else {
       contract = Arc.requireContract(name);
@@ -103,7 +106,13 @@ export class ArcService {
           return cachedContract;
         }
       }
-      contract = await contract.at(at);
+      // the only way to catch errors is with .then
+      await contract.at(at).then((result) => {
+        contract = result;
+      });
+    }
+    if (!contract) {
+      throw new Error(`contract not found at: ${at}`);
     }
     this.contractCache.set(at, contract);
     return contract;
