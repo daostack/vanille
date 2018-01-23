@@ -17,7 +17,12 @@ const network = env.network;
 
 module.exports = {
   scripts: {
-    default: "nps webpack",
+    default: series(
+      "nps arc-js.ganache.runAsync",
+      "nps arc-js.migrateContracts",
+      "nps build.development",
+      "nps browse"
+    ),
     /**
      * Migrate contracts using daostack-arc-js.  For usage, see this readme.md, the 
      * daostack-arc-js readme.md and its package-scripts.js.
@@ -43,7 +48,8 @@ module.exports = {
         default: "jest",
         coverage: rimraf("test/coverage-jest"),
         accept: "jest -u",
-        watch: "jest --watch"
+        watch: "jest --watch",
+        updateSnapshots: "jest --updateSnapshot"
       },
       karma: {
         default: series(
@@ -117,10 +123,11 @@ module.exports = {
           ),
           andServe: series(
             "nps webpack.build.production",
-            "http-server dist --cors -o -p 8090")
+            "nps browse")
         }
       }
     },
-    hmr: "nps build.development.andServe"
+    hmr: "nps build.development.andServe",
+    browse: "http-server dist --cors -o -p 8090"
   }
 };

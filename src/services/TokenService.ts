@@ -33,7 +33,7 @@ export class TokenService {
     return amount;
   }
 
-  public async getDAOStackNativeToken() {
+  public async getDAOstackNativeToken() {
     const daoStack = await this.organizationService.GetDaostack();
     const daoTokenAddress = await daoStack.controller.nativeToken();
     return await this.arcService.getContract("DAOToken", daoTokenAddress);

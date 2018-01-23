@@ -67,7 +67,7 @@ export class DeployGen {
   }
 
   private async readBalances() {
-    const token = await this.tokenService.getDAOStackNativeToken();
+    const token = await this.tokenService.getDAOstackNativeToken();
 
     this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
     this.ethBalance = (await this.web3.getBalance(this.userAddress, true));

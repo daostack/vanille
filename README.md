@@ -1,8 +1,8 @@
-# DAOStack Alchemy - Creating DAOs for an Emergent Future
+# DAOstack Alchemy - Creating DAOs for an Emergent Future
 
 ## What is Alchemy?
 
-DAOStack Alchemy is a browser application that enables anyone with an account on the Ethereum blockchain, and STK tokens to spend, to easily create and work with DAOs on Ethereum that run on predefined, configurable smart contracts in a network of organizations, collaborators and investors that collaborate on the blockchain.
+DAOstack Alchemy is a browser application that enables anyone with an account on the Ethereum blockchain, and STK tokens to spend, to easily create and work with DAOs on Ethereum that run on predefined, configurable smart contracts in a network of organizations, collaborators and investors that collaborate on the blockchain.
 
 ## Implementation
 
@@ -20,48 +20,63 @@ Alchemy uses a library of reusable and configurable Ethereum smart contracts cal
 
 You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Alchemy assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
 
-## Build and Run
+## Getting Started
 
-The file package-scripts.js contains a number of scripts to help you build, run and debug the application.  To build the code, follow these steps:
+First, ensure that [NodeJS](http://nodejs.org/), v8.0.0 or greater, is installed.
 
-1. Ensure that [NodeJS](http://nodejs.org/), v8.0.0 or greater, is installed.
-2. From the project folder, install the packages:
+Now run the following scripts.  These will install the required packages and run several scripts that bring up ganache in a separate window,
+migrate Arc contracts to it, build the application and bring it up in your default browser:
 
 ```shell
-  npm install
+npm install
+npm start
 ```
 
-3. Fire up ganache (testrpc) in a separate window:
+If `npm start` doesn't work for you, and for more information about the scripts involved, see the following section "Build and Run".
+
+## Build and Run
+
+The file package-scripts.js contains a number of scripts to help you build, run and debug the application.  
+
+### Fire up ganache (testrpc) in a separate window
 
 ```shell
 npm start arc-js.ganache.runAsync
 ```
 
-    If the window didn't fire up in your OS, then run this in a separate window of your own creation:
+Note: If the window didn't fire up in your OS, then run this in a separate window of your own creation:
 
 ```shell
 npm start arc-js.ganache.run
 ```
 
-4. Migrate contracts to ganache:
+### Migrate contracts to ganache
 
 ```shell
 npm start arc-js.migrateContracts
 ```
 
-5. build and serve Alchemy:
+The "network" environment variable defines which network you are deploying to.  Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
+
+### Build and Serve Alchemy
 
 ```shell
   npm start build.development.andServe
 ```
 
-6. Run Alchemy:
+### Run Alchemy
 
-   Browse to: http://localhost:8090/
+```shell
+  npm start browse
+```
 
-   If you are using Chrome with Metamask, you will need to disable MetaMask.
+or manually browse to: http://localhost:8090/
 
-## Build and run for production, against kovan:
+Note: If you are using Chrome with Metamask, you will need to disable MetaMask.
+
+## Build and Run for Production:
+
+The production build runs against kovan. See "Defining Which Chain to Run Against".
 
 ```shell
   npm start build.production.andServe
@@ -73,9 +88,9 @@ The "network" environment variable, defined in the developer's OS environment or
 
 This environment variable is used when migrating contracts from arc-js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
-When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.
+When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.  But when migrating, you must set the network environment variable.
 
-## Run against a ganache database
+## Run against a Ganache Database
 
 It can be very handy to run against a ganache database that persists the state of the chain across instances of ganache.  The file package-scripts.js contains a number of scripts to help you manage this process.  Most simply, follow ths steps above for building and running the application, except when you bring up ganache, use this script:
 

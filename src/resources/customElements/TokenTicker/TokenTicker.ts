@@ -29,7 +29,7 @@ export class TokenTicker {
 
   async readBalance() {
 
-    const token = await this.tokenService.getDAOStackNativeToken();
+    const token = await this.tokenService.getDAOstackNativeToken();
 
     this.tknSymbol = await this.tokenService.getTokenSymbol(token);
 

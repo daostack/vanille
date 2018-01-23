@@ -7,10 +7,10 @@
     "url": "git+ssh://git@github.com/daostack/Alchemy-Aurelia.git",
     "type": "git"
   },
-  "author": "DAOStack",
+  "author": "DAOstack",
   "license": "CC0-1.0",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 9.0.0"
   },
   "scripts": {
     "start": "nps",
@@ -27,8 +27,13 @@
       "ts"
     ],
     "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js",
+      "^.+\\.(js|jsx)$": "babel-jest",
+      "^.+\\.scss": "jest-css-modules"
     },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(daostack-arc-js)/)"
+    ],
     "testRegex": "\\.spec\\.(ts|js)x?$",
     "setupFiles": [
       "<rootDir>/test/jest-pretest.ts"
@@ -67,6 +72,8 @@
     "aurelia-webpack-plugin": "2.0.0-rc.2",
     "autoprefixer": "7.1.2",
     "awesome-typescript-loader": "^3.2.3",
+    "babel-jest": "^21.0.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
     "bootstrap": "^4.0.0-beta.2",
     "compression-webpack-plugin": "^1.1.3",
     "copy-webpack-plugin": "4.0.1",
@@ -83,6 +90,7 @@
     "jasmine-core": "2.6.4",
     "jest": "20.0.4",
     "jest-cli": "20.0.4",
+    "jest-css-modules": "^1.1.0",
     "json-loader": "0.5.4",
     "karma": "1.7.0",
     "karma-chrome-launcher": "2.2.0",

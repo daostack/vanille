@@ -29,12 +29,12 @@ export class App {
     /**
      * can be connected 
      */
-    const haveDAOStack = !!this.arcService.arcContracts;
+    const haveDAOstack = !!this.arcService.arcContracts;
     const isConnected = this.web3.isConnected;
     const isCorrectChain = this.web3.isCorrectChain;
     const noAccount = !this.web3.defaultAccount;
 
-    this.isConnected = isConnected && isCorrectChain && haveDAOStack;
+    this.isConnected = isConnected && isCorrectChain && haveDAOstack;
 
     /**
      * first set the landing page.
@@ -63,7 +63,7 @@ export class App {
     /**
      * not connected and/or couldn't get the daostack addresses, either way treat as not connected
      */
-    else if (!haveDAOStack) {
+    else if (!haveDAOstack) {
       this.logger.error(`contracts not found`);
       config.map([
         {

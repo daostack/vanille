@@ -1,8 +1,8 @@
-import {PageObject_Home} from './home.po';
-import {browser, element, by, By, $, $$, ExpectedConditions} from 'aurelia-protractor-plugin/protractor';
-import {config} from '../protractor.conf';
+import { PageObject_Home } from './home.po';
+import { browser, element, by, By, $, $$, ExpectedConditions } from 'aurelia-protractor-plugin/protractor';
+import { config } from '../protractor.conf';
 
-describe('DAOStack Alchemy app', function() {
+describe('DAOstack Alchemy app', function () {
   let poHome: PageObject_Home;
 
   beforeEach(async () => {
@@ -12,7 +12,7 @@ describe('DAOStack Alchemy app', function() {
   });
 
   it('should load the page and display the initial page title', async () => {
-    await expect(poHome.getCurrentPageTitle()).toBe('Home | DAOStack Alchemy');
+    await expect(poHome.getCurrentPageTitle()).toBe('Home | DAOstack Alchemy');
   });
 
   it('should display greeting', async () => {
