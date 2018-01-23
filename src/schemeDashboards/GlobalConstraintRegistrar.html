@@ -60,9 +60,9 @@
             </global-constraints-dropdown>
 
             <div if.bind="constraintToRemoveInfo">
-              <etherscanlink address=${constraintToRemoveInfo.address}>${constraintToRemoveInfo.address}</etherscanlink>
-              <div class="mt-3">
-                <button class="btn-submit-proposal" click.delegate="proposeRemoveConstraint()">Submit Proposal</button>
+              <etherscanlink address="${constraintToRemoveInfo.address}"></etherscanlink>
+              <div class="mt-3 ">
+                <button class="btn-submit-proposal " click.delegate="proposeRemoveConstraint() ">Submit Proposal</button>
               </div>
             </div>
           </form>
