@@ -1,7 +1,7 @@
 {
   "name": "daostack-alchemy",
   "version": "0.0.0-alpha.3",
-  "description": "Creating DAOs for an Emergent Future",
+  "description": "Creating DAOs for a Collective Intelligence",
   "main": "dist/app.bundle.js",
   "repository": {
     "url": "git+ssh://git@github.com/daostack/Alchemy-Aurelia.git",

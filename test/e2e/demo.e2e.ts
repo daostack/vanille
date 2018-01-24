@@ -16,7 +16,7 @@ describe('DAOstack Alchemy app', function () {
   });
 
   it('should display greeting', async () => {
-    await expect(poHome.getGreeting()).toBe('Creating DAOs for an Emergent Future');
+    await expect(poHome.getGreeting()).toBe('Creating DAOs for a Collective Intelligence');
   });
 
   // it('should automatically write down the fullname', async () => {

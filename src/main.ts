@@ -82,11 +82,6 @@ export async function configure(aurelia: Aurelia) {
 
   try {
 
-    /**
-     * EmergentArc must be initialized prior to arcService being loaded
-     * network is supplied by webpack.
-     * Arc isn't actually using 'network', but I'm sending it anyways, because I can :-)
-     */
     const web3 = await getWeb3();
 
     // just to initialize them and get them running

@@ -1,4 +1,4 @@
-# DAOstack Alchemy - Creating DAOs for an Emergent Future
+# DAOstack Alchemy - Creating DAOs for a Collective Intelligence
 
 ## What is Alchemy?
 
