@@ -1,49 +1,49 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyPlugin = require('uglifyjs-webpack-plugin');
-const { AureliaPlugin } = require('aurelia-webpack-plugin');
-const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack');
-const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const UglifyPlugin = require("uglifyjs-webpack-plugin");
+const { AureliaPlugin } = require("aurelia-webpack-plugin");
+const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require("webpack");
+const { TsConfigPathsPlugin, CheckerPlugin } = require("awesome-typescript-loader");
 // see TODO.  const CompressionPlugin = require("compression-webpack-plugin")
 // var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // config helpers:
-const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || []
+const ensureArray = (config) => config && (Array.isArray(config) ? config : [config]) || [];
 const when = (condition, config, negativeConfig) =>
-  condition ? ensureArray(config) : ensureArray(negativeConfig)
+  condition ? ensureArray(config) : ensureArray(negativeConfig);
 
 // primary config:
-const title = 'DAOstack Alchemy';
-const outDir = path.resolve(__dirname, 'dist');
-const srcDir = path.resolve(__dirname, 'src');
-const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-const baseUrl = '/';
+const title = "DAOstack Alchemy";
+const outDir = path.resolve(__dirname, "dist");
+const srcDir = path.resolve(__dirname, "src");
+const nodeModulesDir = path.resolve(__dirname, "node_modules");
+const baseUrl = "/";
 
 const cssRules = [
-  { loader: 'css-loader' },
+  { loader: "css-loader" },
   {
-    loader: 'postcss-loader',
-    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })] }
+    loader: "postcss-loader",
+    options: { plugins: () => [require("autoprefixer")({ browsers: ["last 2 versions"] })] }
   }
-]
+];
 
 const scssRules = [...cssRules,
-{
-  loader: "sass-loader" // compiles Sass to CSS
-}];
+  {
+    loader: "sass-loader" // compiles Sass to CSS
+  }];
 
 /**
- * @return {webpack.Configuration}
+{webpack.Configuration}
  */
 module.exports = ({ production, server, extractCss, coverage, network } = {}) => {
 
-  let env = production ? 'production' : 'development';
+  const env = production ? "production" : "development";
 
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
-  network = network || process.env.network || 'ganache';
+  network = network || process.env.network || "ganache";
 
   console.log(`env: ${env}`);
   console.log(`network: ${network}`);
@@ -51,8 +51,8 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
   return {
 
     resolve: {
-      extensions: ['.ts', '.js'],
-      modules: [srcDir, 'node_modules'],
+      extensions: [".ts", ".js"],
+      modules: [srcDir, "node_modules"],
       alias: {
         // prepend '~' to import path in order to use this alias
         // "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
@@ -63,22 +63,22 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       }
     },
 
-    devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool: production ? "source-map" : "cheap-module-eval-source-map",
     entry: {
-      app: ['aurelia-bootstrapper'],
+      app: ["aurelia-bootstrapper"],
       vendor: [
-        'bluebird',
-        'daostack-arc-js',
-        'ethereumjs-tx',
-        'truffle-contract'
+        "bluebird",
+        "daostack-arc-js",
+        "ethereumjs-tx",
+        "truffle-contract"
       ],
     },
     output: {
       path: outDir,
       publicPath: baseUrl,
-      filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
-      sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
-      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
+      filename: production ? "[name].[chunkhash].bundle.js" : "[name].[hash].bundle.js",
+      sourceMapFilename: production ? "[name].[chunkhash].bundle.map" : "[name].[hash].bundle.map",
+      chunkFilename: production ? "[name].[chunkhash].chunk.js" : "[name].[hash].chunk.js"
     },
     devServer: {
       contentBase: outDir,
@@ -93,9 +93,9 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
           test: /\.scss$/i,
           issuer: [{ not: [{ test: /\.html$/i }] }],
           use: extractCss ? ExtractTextPlugin.extract({
-            fallback: 'style-loader',
+            fallback: "style-loader",
             use: scssRules,
-          }) : ['style-loader', ...scssRules],
+          }) : ["style-loader", ...scssRules],
         },
         {
           test: /\.scss$/i,
@@ -108,9 +108,9 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
           test: /\.css$/i,
           issuer: [{ not: [{ test: /\.html$/i }] }],
           use: extractCss ? ExtractTextPlugin.extract({
-            fallback: 'style-loader',
+            fallback: "style-loader",
             use: cssRules,
-          }) : ['style-loader', ...cssRules],
+          }) : ["style-loader", ...cssRules],
         },
         {
           test: /\.css$/i,
@@ -119,29 +119,29 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
           // because Aurelia would try to require it again in runtime
           use: cssRules,
         },
-        { test: /\.html$/i, loader: 'html-loader' },
-        { test: /\.ts$/i, loader: 'awesome-typescript-loader', exclude: nodeModulesDir },
-        { test: /\.json$/i, loader: 'json-loader' },
+        { test: /\.html$/i, loader: "html-loader" },
+        { test: /\.ts$/i, loader: "awesome-typescript-loader", exclude: nodeModulesDir },
+        { test: /\.json$/i, loader: "json-loader" },
         // use Bluebird as the global Promise implementation:
-        { test: /[\/\\]node_modules[\/\\]bluebird[\/\\].+\.js$/, loader: 'expose-loader?Promise' },
+        { test: /[\/\\]node_modules[\/\\]bluebird[\/\\].+\.js$/, loader: "expose-loader?Promise" },
         // exposes jQuery globally as $ and as jQuery:
-        { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' },
+        { test: require.resolve("jquery"), loader: "expose-loader?$!expose-loader?jQuery" },
         // embed small images and fonts as Data Urls and larger ones as files:
-        { test: /\.(png|gif|jpg|cur)$/i, loader: 'url-loader', options: { limit: 8192 } },
-        { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff2' } },
-        { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'url-loader', options: { limit: 10000, mimetype: 'application/font-woff' } },
+        { test: /\.(png|gif|jpg|cur)$/i, loader: "url-loader", options: { limit: 8192 } },
+        { test: /\.woff2(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: "url-loader", options: { limit: 10000, mimetype: "application/font-woff2" } },
+        { test: /\.woff(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: "url-loader", options: { limit: 10000, mimetype: "application/font-woff" } },
         // load these fonts normally, as files:
-        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: 'file-loader' },
+        { test: /\.(ttf|eot|svg|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i, loader: "file-loader" },
         ...when(coverage, {
-          test: /\.[jt]s$/i, loader: 'istanbul-instrumenter-loader',
+          test: /\.[jt]s$/i, loader: "istanbul-instrumenter-loader",
           include: srcDir, exclude: [/\.{spec,test}\.[jt]s$/i],
-          enforce: 'post', options: { esModules: true },
+          enforce: "post", options: { esModules: true },
         })
       ]
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
+        "process.env": {
           env: JSON.stringify(env),
           network: JSON.stringify(network)
           //"process.env.NODE_ENV": JSON.stringify("production")
@@ -149,17 +149,17 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       }),
       new AureliaPlugin(),
       new ProvidePlugin({
-        Promise: 'bluebird',
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery',
-        Popper: ['popper.js', 'default'],
-        Waves: 'node-waves'
+        Promise: "bluebird",
+        $: "jquery",
+        jQuery: "jquery",
+        "window.jQuery": "jquery",
+        Popper: ["popper.js", "default"],
+        Waves: "node-waves"
       }),
       new TsConfigPathsPlugin(),
       new CheckerPlugin(),
       new HtmlWebpackPlugin({
-        template: 'index.ejs',
+        template: "index.ejs",
         minify: production ? {
           removeComments: true,
           collapseWhitespace: true
@@ -170,27 +170,27 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
         },
       }),
       new CopyWebpackPlugin([
-        { from: 'static/favicon.ico' },
-        { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
-        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css' },
-        { from: 'node_modules/snackbarjs/dist/snackbar.min.css' },
-        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css' },
+        { from: "static/favicon.ico" },
+        { from: "node_modules/font-awesome/fonts", to: "fonts" },
+        { from: "node_modules/font-awesome/css/font-awesome.min.css", to: "font-awesome.min.css" },
+        { from: "node_modules/snackbarjs/dist/snackbar.min.css" },
+        { from: "node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css" },
         // for the spash page
-        { from: 'static/base.css' },
+        { from: "static/base.css" },
       ]),
       ...when(extractCss, new ExtractTextPlugin({
-        filename: production ? '[contenthash].css' : '[id].css',
+        filename: production ? "[contenthash].css" : "[id].css",
         allChunks: true,
       })),
       ...when(!production, [
         new webpack.SourceMapDevToolPlugin({
-          filename: '[file].map', // Remove this line if you prefer inline source maps
-          moduleFilenameTemplate: path.relative(outDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
+          filename: "[file].map", // Remove this line if you prefer inline source maps
+          moduleFilenameTemplate: path.relative(outDir, "[resourcePath]")  // Point sourcemap entries to the original file locations on disk
         }),
       ]),
       ...when(production, [
         new CommonsChunkPlugin({
-          name: 'common'
+          name: "common"
         })
         , new UglifyPlugin({
           test: /\.js($|\?)/i,
@@ -202,12 +202,12 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
           }
         }),
         // TODO: Azure isn't using the resulting .gz files, and isn't doing nearly as good a
-        // job of compression as this plugin does.  Figure out how to improve that story. 
+        // job of compression as this plugin does.  Figure out how to improve that story.
         // new CompressionPlugin({
         //   test: /\.js($|\?)/i
         // })
       ])
       // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
     ],
-  }
-}
+  };
+};

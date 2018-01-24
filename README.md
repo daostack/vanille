@@ -22,7 +22,7 @@ You can browse to the latest release at [http://daostack.azurewebsites.net](http
 
 ## Getting Started
 
-First, ensure that [NodeJS](http://nodejs.org/), v8.0.0 or greater, is installed.
+First, ensure that [NodeJS](http://nodejs.org/), v9.4.0 or greater, is installed.
 
 Now run the following scripts.  These will install the required packages and run several scripts that bring up ganache in a separate window,
 migrate Arc contracts to it, build the application and bring it up in your default browser:
@@ -84,9 +84,9 @@ The production build runs against kovan. See "Defining Which Chain to Run Agains
 
 ## Defining Which Chain to Run Against
 
-The "network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
+The "network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.  For safety Arc-Js assumes a different port for each network. Can be "live" (the mainnet), "kovan", "ropsten", "rinkeby" or "ganache".  The default is "ganache".
 
-This environment variable is used when migrating contracts from arc-js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
+This environment variable is used when migrating contracts from arc-js (see above) and also when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
 When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.  But when migrating, you must set the network environment variable.
 

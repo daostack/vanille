@@ -23,8 +23,12 @@ module.exports = {
       "nps build.development",
       "nps browse"
     ),
+    lint: {
+      default: "eslint .",
+      fix: 'nps "lint --fix ."'
+    },
     /**
-     * Migrate contracts using daostack-arc-js.  For usage, see this readme.md, the 
+     * Migrate contracts using daostack-arc-js.  For usage, see this readme.md, the
      * daostack-arc-js readme.md and its package-scripts.js.
      */
     "arc-js": {
@@ -110,7 +114,7 @@ module.exports = {
             "webpack --progress -d --env.extractCss"
           ),
           // doesn't use the dist folder
-          andServe: `webpack-dev-server -d --inline --hot --env.server --port 8090`
+          andServe: "webpack-dev-server -d --inline --hot --env.server --port 8090"
         },
         production: {
           default: series(

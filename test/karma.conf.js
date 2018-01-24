@@ -1,5 +1,5 @@
-'use strict';
-const path = require('path');
+"use strict";
+const path = require("path");
 
 module.exports = function (config) {
   config.set({
@@ -13,14 +13,14 @@ module.exports = function (config) {
      *
      * available frameworks: https://npmjs.org/browse/keyword/karma-adapter
      */
-    frameworks: [ 'jasmine' ],
+    frameworks: [ "jasmine" ],
 
     /**
      * list of files / patterns to load in the browser
      * we are building the test environment in ./spec-bundle.js
      */
     files: [
-      { pattern: 'test/karma-bundle.js', watched: false }
+      { pattern: "test/karma-bundle.js", watched: false }
     ],
 
     /*
@@ -28,10 +28,10 @@ module.exports = function (config) {
      * available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
      */
     preprocessors: {
-      'test/karma-bundle.js': [ 'webpack' ]
+      "test/karma-bundle.js": [ "webpack" ]
     },
 
-    webpack: require('../webpack.config')({ coverage: true }),
+    webpack: require("../webpack.config")({ coverage: true }),
 
     /*
      * test results reporter to use
@@ -39,11 +39,11 @@ module.exports = function (config) {
      * possible values: 'dots', 'progress'
      * available reporters: https://npmjs.org/browse/keyword/karma-reporter
      */
-    reporters: [ 'mocha', 'progress', 'coverage-istanbul' ],
+    reporters: [ "mocha", "progress", "coverage-istanbul" ],
 
     coverageIstanbulReporter: {
-      reports: [ 'html', 'lcovonly', 'text-summary' ],
-      dir: path.resolve(__dirname, 'coverage-karma'),
+      reports: [ "html", "lcovonly", "text-summary" ],
+      dir: path.resolve(__dirname, "coverage-karma"),
       fixWebpackSourcePaths: true,
     },
 
@@ -70,7 +70,7 @@ module.exports = function (config) {
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
     browsers: [
-      'Chrome',
+      "Chrome",
     ],
 
     /*
@@ -78,5 +78,5 @@ module.exports = function (config) {
      * if true, Karma captures browsers, runs the tests and exits
      */
     singleRun: true
-  })
-}
+  });
+};
