@@ -32,6 +32,8 @@ npm install
 npm start
 ```
 
+If running linux and `npm install` fails with "Error: not found: make", then you need to run `sudo apt-get install build-essential`.
+
 If `npm start` doesn't work for you, and for more information about the scripts involved, see the following section "Build and Run".
 
 ## Build and Run
@@ -63,6 +65,8 @@ The "network" environment variable defines which network you are deploying to.  
 ```shell
   npm start build.development.andServe
 ```
+
+If you receive a message relating to sass-loader like "no such file or directory" "node-sass/vendor", run `npm rebuild node-sass`.
 
 ### Run Alchemy
 

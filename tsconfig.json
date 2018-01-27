@@ -6,21 +6,19 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "sourceRoot": "src",
-    "allowJs": true,
-    "baseUrl": "src",
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+    "baseUrl": "src"
   },
   "include": [
-    "./src/**/*",
-    "./node_modules/@types/webpack/index.d.ts",
-    "./custom_typings/**/*"
+    "./src/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "static"
+  ],
+  "typeRoots": [
+    "node_modules/@types",
+    "node_modules/web3-typescript-typings",
+    "custom_typings"
   ]
 }
