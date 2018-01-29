@@ -12,7 +12,7 @@ export class DAO extends Organization {
   private registerSchemeEvent;
   private unRegisterSchemeEvent;
   public arcService: ArcService;
-  private logger = LogManager.getLogger("Alchemy");
+  private logger = LogManager.getLogger("Vanille");
   public omega: BigNumber; // in wei
   /**
    * a Scheme has been added or removed from a DAO.

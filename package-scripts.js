@@ -10,9 +10,9 @@ const env = require("env-variable")();
 const joinPath = require("path.join");
 const cwd = require("cwd")();
 
-const alchemyRoot = env.alchemyRoot || cwd;
+const vanilleRoot = env.vanilleRoot || cwd;
 const pathArcJs =
-  env.pathArcJs || joinPath(alchemyRoot, "node_modules/daostack-arc-js");
+  env.pathArcJs || joinPath(vanilleRoot, "node_modules/daostack-arc-js");
 const network = env.network;
 
 module.exports = {

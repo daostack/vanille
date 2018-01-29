@@ -12,7 +12,7 @@ import { ArcSchemesDropdown } from "resources/customElements/arcSchemesDropdown/
 @autoinject
 export class ArcService {
 
-  logger = LogManager.getLogger("Alchemy");
+  logger = LogManager.getLogger("Vanille");
 
   constructor(private eventAggregator: EventAggregator) {
     this.contractCache = new Map<string, TruffleContract>();

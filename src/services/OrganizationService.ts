@@ -29,7 +29,7 @@ export class OrganizationService {
   }
 
   private daoCache = new Map<string, DAO>();
-  private logger = LogManager.getLogger("Alchemy");
+  private logger = LogManager.getLogger("Vanille");
   public promiseToBeLoaded: Promise<any>;
   private _daoStack: DAO;
   private resolvePromiseForDaoStack;

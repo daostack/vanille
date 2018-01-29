@@ -9,7 +9,7 @@ import '../static/styles.scss';
 export class App {
   router: Router;
   private isConnected: boolean;
-  private logger = LogManager.getLogger("Alchemy");
+  private logger = LogManager.getLogger("Vanille");
   private healthy: boolean = false;
   private network = Web3Service.Network;
 
@@ -25,7 +25,7 @@ export class App {
 
   configureRouter(config: RouterConfiguration, router: Router) {
 
-    config.title = 'DAOstack Alchemy';
+    config.title = 'DAOstack Vanille';
     /**
      * can be connected 
      */

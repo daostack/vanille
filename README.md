@@ -1,8 +1,8 @@
-# DAOstack Alchemy - Creating DAOs for a Collective Intelligence
+# DAOstack Vanille - Creating DAOs for a Collective Intelligence
 
-## What is Alchemy?
+## What is Vanille?
 
-DAOstack Alchemy is a browser application that enables anyone with an account on the Ethereum blockchain, and STK tokens to spend, to easily create and work with DAOs on Ethereum that run on predefined, configurable smart contracts in a network of organizations, collaborators and investors that collaborate on the blockchain.
+DAOstack Vanille is a browser application that enables anyone with an account on the Ethereum blockchain, and GEN tokens to spend, to easily create and work with DAOs that run on predefined, configurable smart contracts in a network of organizations, collaborators and investors all collaborating on the blockchain.
 
 ## Implementation
 
@@ -14,11 +14,11 @@ At this time there are no web server-side components.
 
 ## DaoStack-Arc-Js
 
-Alchemy uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc-Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc-js).
+Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc-Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc-js).
 
 ## See It Live
 
-You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Alchemy assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
+You can browse to the latest release at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Vanille assumes you are either running a Kovan chain locally (listening on localhost:8485), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
 
 ## Getting Started
 
@@ -78,7 +78,7 @@ npm start arc-js.migrateContracts
 
 The "network" environment variable defines which network you are deploying to.  Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
 
-### Build and Serve Alchemy
+### Build and Serve Vanille
 
 ```shell
   npm start build.development.andServe
@@ -86,7 +86,7 @@ The "network" environment variable defines which network you are deploying to.  
 
 If you receive a message relating to sass-loader like "no such file or directory" "node-sass/vendor", run `npm rebuild node-sass`.
 
-### Run Alchemy
+### Run Vanille
 
 ```shell
   npm start browse
