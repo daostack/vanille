@@ -12,9 +12,9 @@ Browser-side the application uses TypeScript/ECMAScript 2016+.
 
 At this time there are no web server-side components.
 
-## DaoStack-Arc-Js
+## DaoStack-Arc.Js
 
-Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc-Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc-js).
+Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc.Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc.js).
 
 ## See It Live
 
@@ -108,7 +108,7 @@ The production build runs against kovan. See "Defining Which Chain to Run Agains
 
 The "network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
 
-This environment variable is used when migrating contracts from arc-js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
+This environment variable is used when migrating contracts from Arc.js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
 When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.  But when migrating, you must set the network environment variable.
 

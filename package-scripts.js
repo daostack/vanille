@@ -24,8 +24,8 @@ module.exports = {
       "nps browse"
     ),
     /**
-     * Migrate contracts using daostack-arc-js.  For usage, see this readme.md, the 
-     * daostack-arc-js readme.md and its package-scripts.js.
+     * Migrate contracts using daostack-arc.js.  For usage, see this readme.md, the 
+     * daostack-arc.js readme.md and its package-scripts.js.
      */
     "arc-js": {
       ganache: {
