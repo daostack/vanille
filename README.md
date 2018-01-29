@@ -22,19 +22,37 @@ You can browse to the latest release at [http://daostack.azurewebsites.net](http
 
 ## Getting Started
 
-First, ensure that [NodeJS](http://nodejs.org/), v8.0.0 or greater, is installed.
+First, ensure that [NodeJS](http://nodejs.org/), v9.0.0 or greater, is installed.
 
-Now run the following scripts.  These will install the required packages and run several scripts that bring up ganache in a separate window,
-migrate Arc contracts to it, build the application and bring it up in your default browser:
+Install all the dependencies:
+
+```shell
+npm install
+```
+
+Run the following scripts to bring up ganache in a separate window,
+migrate Arc contracts to it, build the application, and bring it up in your default browser:
+
+
+On Windows and MacOS:
 
 ```shell
 npm install
 npm start
 ```
 
-If running linux and `npm install` fails with "Error: not found: make", then you need to run `sudo apt-get install build-essential`.
+On Linux and others [until `npm start` is fixed for Linux]:
 
-If `npm start` doesn't work for you, and for more information about the scripts involved, see the following section "Build and Run".
+```shell
+npm start arc-js.ganache.run
+npm start arc-js.migrateContracts
+npm start build.development
+npm start browse
+```
+
+If running Linux and `npm install` fails with "Error: not found: make", then you need to run `sudo apt-get install build-essential`.
+
+For more information about the scripts involved, see the following section "Build and Run".
 
 ## Build and Run
 
