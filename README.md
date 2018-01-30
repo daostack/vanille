@@ -4,6 +4,8 @@
 
 DAOstack Vanille is a browser application that enables anyone with an account on the Ethereum blockchain, and GEN tokens to spend, to easily create and work with DAOs that run on predefined, configurable smart contracts in a network of organizations, collaborators and investors all collaborating on the blockchain.
 
+You can see all of the source code for Vanille and even contribute to the project [here](https://github.com/daostack/vanille).
+
 ## Implementation
 
 The application uses the standards-compliant and highly modular browser-side framework [Aurelia](http://aurelia.io).
@@ -14,7 +16,11 @@ At this time there are no web server-side components.
 
 ## DaoStack-Arc.Js
 
-Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc.Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc).
+Vanille uses a javascript library from DAOstack called "DAOStack-Arc.Js" to work with the reusable and configurable Ethereum smart contracts from [DAOstack Arc](https://github.com/daostack/arc).
+
+
+You can see all of the source code for Arc.js and even contribute to the project [here](https://github.com/daostack/arc.js).
+
 
 ## See It Live
 
@@ -137,5 +143,5 @@ npm start arc-js.ganacheDb.run
 * Hot Module Reload (HMR) works when built for Development. Build and serve up HMR:
 
   ```shell
-    npm start webpack.build.development.serve
+    npm start webpack.hmr
   ```
