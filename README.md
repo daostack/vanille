@@ -14,7 +14,7 @@ At this time there are no web server-side components.
 
 ## DaoStack-Arc.Js
 
-Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc.Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc.js).
+Vanille uses a library of reusable and configurable Ethereum smart contracts called "DaoStack-Arc.Js". You can see all of the source code for those contracts and even contribute to the project [here](https://github.com/daostack/arc).
 
 ## See It Live
 
