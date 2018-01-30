@@ -8,7 +8,7 @@ DAOstack Vanille is a browser application that enables anyone with an account on
 
 The application uses the standards-compliant and highly modular browser-side framework [Aurelia](http://aurelia.io).
 
-Browser-side the application uses TypeScript/ECMAScript 2016+.
+Browser-side the application uses TypeScript/ECMAScript 2015 (ES6).
 
 At this time there are no web server-side components.
 
