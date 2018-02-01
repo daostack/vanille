@@ -1,13 +1,13 @@
-import {bootstrap} from 'aurelia-bootstrapper';
-import {StageComponent} from 'aurelia-testing';
-import {PLATFORM} from 'aurelia-pal';
+import { bootstrap } from 'aurelia-bootstrapper';
+import { StageComponent } from 'aurelia-testing';
+import { PLATFORM } from 'aurelia-pal';
 
 describe('Home Page', () => {
   let component;
 
   beforeEach(async () => {
     component = StageComponent
-      .withResources(PLATFORM.moduleName('home'))
+      .withResources('home')
       .inView('<home></home>');
     await component.create(bootstrap);
   });
@@ -22,13 +22,8 @@ describe('Home Page', () => {
   it('should render heading', () => {
     const headerElement = document.querySelector('h1') as HTMLElement;
     expect(headerElement).not.toBeFalsy();
-    expect(headerElement.innerHTML).toBe('DAOs for an Emergent Future');
+    expect(headerElement.innerHTML).toBe('Creating DAOs for a Collective Intelligence');
   });
-
-  // it('should render first name', () => {
-  //   const nameElement = document.querySelector('#fn') as HTMLInputElement;
-  //   expect(nameElement.value).toBe('John');
-  // });
 
   afterEach(() => {
     component.dispose();

@@ -1,58 +1,71 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, Organization, ContractInfo, OrganizationNewConfig, FounderConfig, OrganizationSchemeInfo } from './ArcService';
+import {
+  ArcService,
+  TruffleContract,
+  Organization,
+  ContractInfo,
+  OrganizationNewConfig,
+  FounderConfig,
+  OrganizationSchemeInfo
+} from "./ArcService";
 import { Web3Service } from "../services/Web3Service";
-import { includeEventsIn, Subscription  } from 'aurelia-event-aggregator';
-import { LogManager } from 'aurelia-framework';
-import { DAO } from '../entities/DAO';
-import { DaoSchemeInfo } from '../entities/DaoSchemeInfo';
+import { includeEventsIn, Subscription } from "aurelia-event-aggregator";
+import { LogManager } from "aurelia-framework";
+import { DAO } from "../entities/DAO";
+import { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
-import { EventAggregator  } from 'aurelia-event-aggregator';
-import  { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';
+import { EventAggregator } from "aurelia-event-aggregator";
+import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
+import { Observable } from 'rxjs/Observable';
 
 @autoinject
 export class OrganizationService {
-
   constructor(
-    private arcService: ArcService
-    , private web3: Web3Service
-    , private eventAggregator: EventAggregator
+    private arcService: ArcService,
+    private web3: Web3Service,
+    private eventAggregator: EventAggregator
   ) {
     includeEventsIn(this);
   }
 
-  daoCache = new Map<string,DAO>();
-  logger = LogManager.getLogger("Alchemy");
+  private daoCache = new Map<string, DAO>();
+  private logger = LogManager.getLogger("Vanille");
   public promiseToBeLoaded: Promise<any>;
+  private _daoStack: DAO;
+  private resolvePromiseForDaoStack;
+  public promiseForDaoStack: Promise<any> = new Promise((resolve) => { this.resolvePromiseForDaoStack = resolve; });
+
+  public async GetDaostack(): Promise<DAO> {
+    return this.promiseForDaoStack;
+  }
 
   /**
    * a DAO has been added or removed
    */
-  public static daoAddedEvent:string = "daoSetChanged";
+  public static daoAddedEvent: string = "daoSetChanged";
 
-  public async initialize()
-  {
-    return this.promiseToBeLoaded = new Promise(async (resolve,reject) => {
-
-      let genesisScheme = await this.arcService.getContract("GenesisScheme");
-      let myEvent = genesisScheme.NewOrg({}, { fromBlock: 0 });
-      /**
-       * get():  fires once for all the DAOs in the system; resolve() will be called properly.
-       * watch(): fires whenever a new DAO is created thereafter
-       */
-      myEvent.get((err, eventsArray) => this.handleNewOrg(err, eventsArray).then(() => { this.logger.debug("Finished loading daos"); resolve(); }));
-      myEvent = genesisScheme.NewOrg({});
-      myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
-    });
-  }
-
-  public async getDAOStackAddress() {
-    const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar");
-    return await schemeRegistrar.beneficiary();
-  }
-
-  public async getDAOStackOrganization() {
-    const avatarAddress = await this.getDAOStackAddress();
-    return await this.organizationAt(avatarAddress);
+  public async initialize() {
+    return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
+      try {
+        let genesisScheme = await this.arcService.getContract("GenesisScheme");
+        let myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: 0 });
+        /**
+         * get():  fires once for all the DAOs in the system; resolve() will be called properly.
+         * watch(): fires whenever a new DAO is created thereafter
+         */
+        myEvent.get((err, eventsArray) =>
+          this.handleNewOrg(err, eventsArray).then(() => {
+            this.logger.debug("Finished loading daos");
+            myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: "latest" });
+            myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
+            resolve();
+          })
+        );
+      } catch (ex) {
+        alert(`Error obtaining DAO ecosystem: ${ex}`);
+        reject(ex);
+      }
+    }));
   }
 
   public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
@@ -66,40 +79,49 @@ export class OrganizationService {
 
       if (!dao) {
         dao = await DAO.fromOrganization(org, this.arcService, this.web3);
-        this.daoCache.set(dao.address,dao);
+        this.daoCache.set(dao.address, dao);
       }
 
       return dao;
     });
   }
 
-  public async organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
-
+  public async organizationAt(
+    avatarAddress: string,
+    takeFromCache: boolean = true
+  ): Promise<DAO> {
     return this.promiseToBeLoaded.then(async () => {
       return this._organizationAt(avatarAddress, takeFromCache);
     });
   }
 
-  private async _organizationAt(avatarAddress: string, takeFromCache: boolean = true): Promise<DAO> {
-
+  private async _organizationAt(
+    avatarAddress: string,
+    takeFromCache: boolean = true
+  ): Promise<DAO> {
     let dao: DAO;
     let cachedDao = this.daoCache.get(avatarAddress);
 
     if (!takeFromCache || !cachedDao) {
       try {
-
         let org = await Organization.at(avatarAddress);
 
         // if (!org || !org.avatar) {
         //   throw new Error(`DAO at ${avatarAddress} was not found`);
         // }
         dao = await DAO.fromOrganization(org, this.arcService, this.web3);
-
-      } catch(ex) {
-
+      } catch (ex) {
         // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
         // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex, undefined, SnackLifetime.none));
+        this.eventAggregator.publish(
+          "handleException",
+          new EventConfigException(
+            `Error loading DAO: ${avatarAddress}`,
+            ex,
+            undefined,
+            SnackLifetime.none
+          )
+        );
 
         return null;
       }
@@ -108,8 +130,7 @@ export class OrganizationService {
     }
 
     if (!cachedDao) {
-      // this.logger.debug(`caching dao: ${dao.name ? `${dao.name}: ` : ""}${dao.address}`);
-      this.daoCache.set(dao.address,dao);
+      this.daoCache.set(dao.address, dao);
     }
 
     return dao;
@@ -121,30 +142,35 @@ export class OrganizationService {
     });
   }
 
-  private async handleNewOrg(err, eventsArray) : Promise<void>
-  {
+  private firstOrg = true;
+
+  private async handleNewOrg(err, eventsArray): Promise<void> {
     let newOrganizationArray = [];
     if (!(eventsArray instanceof Array)) {
       eventsArray = [eventsArray];
     }
     let count = eventsArray.length;
     for (let i = 0; i < count; i++) {
-        let promotedAmount = 0;
-        let avatarAddress =  eventsArray[i].args._avatar;
-        // this has the side-effects of initializing and caching a DAO instance
-        let dao = await this._organizationAt(avatarAddress);
-        if (dao) {
-          this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
-          /**
-           * NOTE: At the time we receive this for a newly-added dao, Arc will likely
-           * not yet have added the schemes for the dao, a quirk I'm trying to get fixed in Arc.
-           * Further, there can be a gap between initially querying for the schemes and 
-           * setting up the watch during which a scheme could be added to the Dao without 
-           * us being aware. (see https://github.com/daostack/daostack/issues/132)
-           */
-          this.publish(OrganizationService.daoAddedEvent, dao);
+      let promotedAmount = 0;
+      let avatarAddress = eventsArray[i].args._avatar;
+      // this has the side-effects of initializing and caching a DAO instance
+      let dao = await this._organizationAt(avatarAddress);
+      if (dao) {
+        this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
+        if (this.firstOrg) {
+          this._daoStack = this.resolvePromiseForDaoStack(dao);
+          this.firstOrg = false;
         }
+        /**
+         * NOTE: At the time we receive this for a newly-added dao, Arc will likely
+         * not yet have added the schemes for the dao, a quirk I'm trying to get fixed in Arc.
+         * Further, there can be a gap between initially querying for the schemes and
+         * setting up the watch during which a scheme could be added to the Dao without
+         * us being aware. (see https://github.com/daostack/daostack/issues/132)
+         */
+        this.publish(OrganizationService.daoAddedEvent, dao);
       }
+    }
   }
 
   /*****
@@ -153,26 +179,33 @@ export class OrganizationService {
    */
 
   /**
-    * Publishes a message.
-    * @param event The event or channel to publish to.
-    * @param data The data to publish on the channel.
-    */
-    public publish(event: string | any, data?: any): void {}
-    
-    /**
-      * Subscribes to a message channel or message type.
-      * @param event The event channel or event data type.
-      * @param callback The callback to be invoked when when the specified message is published.
-      */
-      public subscribe(event: string | Function, callback: Function): Subscription  { return null; }
-    
-    /**
-      * Subscribes to a message channel or message type, then disposes the subscription automatically after the first message is received.
-      * @param event The event channel or event data type.
-      * @param callback The callback to be invoked when when the specified message is published.
-      */
-      public subscribeOnce(event: string | Function, callback: Function): Subscription  { return null; }
+   * Publishes a message.
+   * @param event The event or channel to publish to.
+   * @param data The data to publish on the channel.
+   */
+  public publish(event: string | any, data?: any): void { }
+
+  /**
+   * Subscribes to a message channel or message type.
+   * @param event The event channel or event data type.
+   * @param callback The callback to be invoked when when the specified message is published.
+   */
+  public subscribe(event: string | Function, callback: Function): Subscription {
+    return null;
+  }
+
+  /**
+   * Subscribes to a message channel or message type, then disposes the subscription automatically after the first message is received.
+   * @param event The event channel or event data type.
+   * @param callback The callback to be invoked when when the specified message is published.
+   */
+  public subscribeOnce(
+    event: string | Function,
+    callback: Function
+  ): Subscription {
+    return null;
+  }
 }
 
-export { DAO } from '../entities/DAO';
-export { DaoSchemeInfo } from '../entities/DaoSchemeInfo';
+export { DAO } from "../entities/DAO";
+export { DaoSchemeInfo } from "../entities/DaoSchemeInfo";

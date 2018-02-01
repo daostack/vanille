@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { EventAggregator  } from 'aurelia-event-aggregator';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { DisposableCollection } from "./DisposableCollection";
 import { LogManager } from 'aurelia-framework';
 import { EventConfig, EventConfigException } from "../entities/GeneralEvents";
@@ -9,7 +9,7 @@ export class ConsoleLogService {
 
   // probably doesn't really need to be a disposable collection since this is a singleton service
   subscriptions: DisposableCollection = new DisposableCollection();
-  logger = LogManager.getLogger("Alchemy");
+  logger = LogManager.getLogger("Vanille");
 
   constructor(
     eventAggregator: EventAggregator
@@ -18,7 +18,6 @@ export class ConsoleLogService {
     this.subscriptions.push(eventAggregator.subscribe("handleSuccess", (config: EventConfig | string) => this.handleSuccess(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleWarning", (config: EventConfig | string) => this.handleWarning(config)));
     this.subscriptions.push(eventAggregator.subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
-    // this.subscriptions.push(eventAggregator.subscribe("showMessage", (config: EventConfig | string) => this.showMessage(config)));
   }
 
   /* shouldn't actually ever happen */
@@ -58,6 +57,6 @@ export class ConsoleLogService {
   }
 
   private getMessage(config: EventConfig | string): string {
-      return (typeof(config) == "string") ? config : config.message;
+    return (typeof (config) == "string") ? config : config.message;
   }
 }

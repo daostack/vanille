@@ -1,10 +1,10 @@
 export class EventConfig {
-  constructor (
+  constructor(
     public message: string
     , type: EventMessageType = EventMessageType.Info
     , lifetime: SnackLifetime = SnackLifetime.transitory
-    ) {
-    
+  ) {
+
     switch (lifetime) {
       case SnackLifetime.clickToDismiss:
       case SnackLifetime.closeButton:
@@ -18,23 +18,22 @@ export class EventConfig {
         break;
     }
 
-    switch(type) {
+    switch (type) {
       case EventMessageType.Info:
       case EventMessageType.Debug:
       default:
         this.style = "snack-info";
-      break;
+        break;
       case EventMessageType.Warning:
         this.style = "snack-warning";
-      break;
+        break;
       case EventMessageType.Failure:
       case EventMessageType.Exception:
         this.style = "snack-failure";
-      break;
+        break;
     }
   }
 
-  // public message: string;
   public style: string = "snack-info";
   /**
    * in milliseconds, default 3000, 0 for never
@@ -42,7 +41,7 @@ export class EventConfig {
   public duration: Number = 3000;
   public actionType: ActionType = ActionType.none;
 
-  public action: () => void ;
+  public action: () => void;
   public actionText: string;
   /**
    * for when ActionType is address.
@@ -59,20 +58,20 @@ export class EventConfig {
 }
 
 export class EventConfigException extends EventConfig {
-  constructor (
-    message:string = "An error occurred"
+  constructor(
+    message: string = "An error occurred"
     , public exception: any
     , type: EventMessageType = EventMessageType.Exception
     , lifetime: SnackLifetime = SnackLifetime.closeButton
-    ) {
+  ) {
     super(message, type, lifetime);
     this.message = `${this.message}: ${exception}`;
   }
 }
 
 export class EventConfigAction extends EventConfig {
-  constructor (
-    message:string
+  constructor(
+    message: string
     /**
      * text for control
      */
@@ -80,26 +79,26 @@ export class EventConfigAction extends EventConfig {
     /**
      * called when control is clicked
      */
-    , public action:() => void
+    , public action: () => void
     , type: EventMessageType = EventMessageType.Info
     , lifetime: SnackLifetime = SnackLifetime.clickToDismiss
-    ) {
+  ) {
     super(message, type, lifetime);
     this.actionType = ActionType.button;
   }
 }
 
 export class EventConfigAddress extends EventConfig {
-  constructor (
-    message:string
-    , public address:string
+  constructor(
+    message: string
+    , public address: string
     /**
      * text to display instead of address
      */
     , public actionText: string
     , type: EventMessageType = EventMessageType.Info
     , lifetime: SnackLifetime = SnackLifetime.clickToDismiss
-    ) {
+  ) {
     super(message, type, lifetime);
     this.actionType = ActionType.address;
     this.addressType = "address";
@@ -107,16 +106,16 @@ export class EventConfigAddress extends EventConfig {
 }
 
 export class EventConfigTransaction extends EventConfigAddress {
-  constructor (
-    message:string
-    , public address:string
+  constructor(
+    message: string
+    , public address: string
     /**
      * text to display instead of address
      */
-    , public actionText:string = "See Transaction"
+    , public actionText: string = "See Transaction"
     , type: EventMessageType = EventMessageType.Info
     , lifetime: SnackLifetime = SnackLifetime.clickToDismiss
-    ) {
+  ) {
     super(message, address, actionText, type, lifetime);
     this.actionType = ActionType.address;
     this.addressType = "tx";
@@ -150,20 +149,3 @@ export enum EventMessageType {
   Info = 3,
   Debug = 4
 }
-
-// export interface EventConfig {
-//   message: string;
-//   actionType: ActionType;
-//   action: () => void;
-//   actionText: string;
-//   /**
-//    * for when ActionType is address.
-//    */
-//   address: string;
-//   /**
-//    * "tx" or "address", when actionType is address.  Default is "address"
-//    */
-//   addressType: string;
-//   style: string;
-//   duration: Number; // in milliseconds, default 3000, 0 for never
-// }

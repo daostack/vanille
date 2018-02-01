@@ -3,9 +3,11 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const UglifyPlugin = require('uglifyjs-webpack-plugin');
 const { AureliaPlugin } = require('aurelia-webpack-plugin');
 const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack');
 const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
+// see TODO.  const CompressionPlugin = require("compression-webpack-plugin")
 // var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // config helpers:
@@ -14,7 +16,7 @@ const when = (condition, config, negativeConfig) =>
   condition ? ensureArray(config) : ensureArray(negativeConfig)
 
 // primary config:
-const title = 'DAOStack Alchemy';
+const title = 'DAOstack Vanille';
 const outDir = path.resolve(__dirname, 'dist');
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
@@ -24,28 +26,28 @@ const cssRules = [
   { loader: 'css-loader' },
   {
     loader: 'postcss-loader',
-    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })]}
+    options: { plugins: () => [require('autoprefixer')({ browsers: ['last 2 versions'] })] }
   }
 ]
 
-const scssRules = [...cssRules, 
-  {
-      loader: "sass-loader" // compiles Sass to CSS
-  }];
+const scssRules = [...cssRules,
+{
+  loader: "sass-loader" // compiles Sass to CSS
+}];
 
 /**
  * @return {webpack.Configuration}
  */
-module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
+module.exports = ({ production, server, extractCss, coverage, network } = {}) => {
 
-  let ENV = production ? 'production' : 'development';
-  
+  let env = production ? 'production' : 'development';
+
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
-  ETH_ENV = ETH_ENV || process.env.ETH_ENV || 'testrpc';
-    
-  console.log(`ENV: ${ENV}`);
-  console.log(`ETH_ENV: ${ETH_ENV}`);
-    
+  network = network || process.env.network || 'ganache';
+
+  console.log(`env: ${env}`);
+  console.log(`network: ${network}`);
+
   return {
 
     resolve: {
@@ -55,28 +57,28 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         // prepend '~' to import path in order to use this alias
         // "bootstrap-sass": path.resolve(nodeModulesDir,"bootstrap/scss/"),
         // "mdbootstrap-sass": path.resolve(nodeModulesDir,"mdbootstrap/sass/mdb/free/"),
-        "bootstrap": path.resolve(nodeModulesDir,"bootstrap/"),
-        "BMD": path.resolve(nodeModulesDir,"bootstrap-material-design/scss/"),
-        "static": path.resolve(__dirname,"static"),
+        "bootstrap": path.resolve(nodeModulesDir, "bootstrap/"),
+        "BMD": path.resolve(nodeModulesDir, "bootstrap-material-design/scss/"),
+        "static": path.resolve(__dirname, "static"),
       }
-      },
+    },
 
     devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
     entry: {
       app: ['aurelia-bootstrapper'],
       vendor: [
-        'bluebird', 
+        'bluebird',
         'daostack-arc-js',
         'ethereumjs-tx',
         'truffle-contract'
-        ],
+      ],
     },
     output: {
       path: outDir,
       publicPath: baseUrl,
       filename: production ? '[name].[chunkhash].bundle.js' : '[name].[hash].bundle.js',
       sourceMapFilename: production ? '[name].[chunkhash].bundle.map' : '[name].[hash].bundle.map',
-      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js',
+      chunkFilename: production ? '[name].[chunkhash].chunk.js' : '[name].[hash].chunk.js'
     },
     devServer: {
       contentBase: outDir,
@@ -140,12 +142,13 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-        ENV: JSON.stringify(ENV),
-        ETH_ENV: JSON.stringify(ETH_ENV),
+          env: JSON.stringify(env),
+          network: JSON.stringify(network)
+          //"process.env.NODE_ENV": JSON.stringify("production")
         },
-    }),
-    new AureliaPlugin(),
-    new ProvidePlugin({
+      }),
+      new AureliaPlugin(),
+      new ProvidePlugin({
         Promise: 'bluebird',
         $: 'jquery',
         jQuery: 'jquery',
@@ -167,11 +170,11 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         },
       }),
       new CopyWebpackPlugin([
-        { from: 'static/favicon.ico' },    
+        { from: 'static/favicon.ico' },
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
-        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css'},
-        { from: 'node_modules/snackbarjs/dist/snackbar.min.css'},
-        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css'},
+        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css' },
+        { from: 'node_modules/snackbarjs/dist/snackbar.min.css' },
+        { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css' },
         // for the spash page
         { from: 'static/base.css' },
       ]),
@@ -183,14 +186,28 @@ module.exports = ({production, server, extractCss, coverage, ETH_ENV} = {}) => {
         new webpack.SourceMapDevToolPlugin({
           filename: '[file].map', // Remove this line if you prefer inline source maps
           moduleFilenameTemplate: path.relative(outDir, '[resourcePath]')  // Point sourcemap entries to the original file locations on disk
-      }),
+        }),
       ]),
       ...when(production, [
         new CommonsChunkPlugin({
           name: 'common'
-          })
-        ])
-        // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
+        })
+        , new UglifyPlugin({
+          test: /\.js($|\?)/i,
+          sourceMap: true,
+          extractComments: true,
+          parallel: true,
+          uglifyOptions: {
+            ecma: 6
+          }
+        }),
+        // TODO: Azure isn't using the resulting .gz files, and isn't doing nearly as good a
+        // job of compression as this plugin does.  Figure out how to improve that story. 
+        // new CompressionPlugin({
+        //   test: /\.js($|\?)/i
+        // })
+      ])
+      // , new BundleAnalyzerPlugin({ analyzerMode: 'static' })
     ],
   }
 }

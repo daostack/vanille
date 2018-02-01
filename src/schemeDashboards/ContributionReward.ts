@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
-import { EventAggregator  } from 'aurelia-event-aggregator';
-import { ArcService } from  "../services/ArcService";
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { ArcService } from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 
 @autoinject
@@ -16,9 +16,6 @@ export class ContributionReward extends DaoSchemeDashboard {
   beneficiaryAddress: string;
 
   constructor(
-    // private schemeService: SchemeService
-    // , private arcService: ArcService
-    // , private organizationService: OrganizationService
     private eventAggregator: EventAggregator
     , private arcService: ArcService
   ) {
@@ -28,14 +25,14 @@ export class ContributionReward extends DaoSchemeDashboard {
   async proposeContributionReward() {
     try {
       const scheme = await this.arcService.getContract("ContributionReward");
-      let options:any = {
-          avatar: this.orgAddress,
-          description: this.description,
-          nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
-          reputationReward: this.reputationTokenReward, // amount of contribution to reputation
-          ethReward: this.ethReward, // amount of contribution in Wei
-          beneficiary: this.beneficiaryAddress
-        };
+      let options: any = {
+        avatar: this.orgAddress,
+        description: this.description,
+        nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
+        reputationReward: this.reputationTokenReward, // amount of contribution to reputation
+        ethReward: this.ethReward, // amount of contribution in Wei
+        beneficiary: this.beneficiaryAddress
+      };
 
       if (this.externalTokenReward) {
         options.externalToken = this.externalTokenAddress;
@@ -46,9 +43,9 @@ export class ContributionReward extends DaoSchemeDashboard {
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         'Proposal submitted to make a contribution', tx.tx));
-        
-    } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));
+
+    } catch (ex) {
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));
     }
   }
 }

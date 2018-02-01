@@ -1,25 +1,31 @@
 ﻿import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
 import { Web3Service } from '../../../services/Web3Service';
+import { config as ArcConfig } from '../../../services/ArcService';
 
 @containerless
 @autoinject
 @customElement("etherscanlink")
 export class EtherscanLink {
-    
-    targetedNetwork: any;
 
-    @bindable
-    address: string;
+  @bindable
+  address: string;
 
-    @bindable
-    type: string;
+  @bindable
+  text?: string;
 
-    clipbutton: HTMLElement;
+  @bindable
+  type: string;
 
-    // @bindable
-    // children:any;
+  isGanache: boolean;
 
-    constructor() {
-        this.targetedNetwork = Web3Service.Network;
-    }
+
+  clipbutton: HTMLElement;
+
+  networkExplorerUri: string;
+
+  constructor() {
+    const targetedNetwork = Web3Service.Network;
+    this.isGanache = targetedNetwork === "ganache";
+    this.networkExplorerUri = `http://${targetedNetwork}.etherscan.io`;
+  }
 }

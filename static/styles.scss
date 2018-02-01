@@ -1,7 +1,3 @@
-// @import "~static/bootstrap";
-// @import "~mdbootstrap-sass/data/colors";
-// @import "~bootstrap-sass/utilities/text";
-// @import "~bootstrap-sass/buttons";
 @import "~BMD/core"; 
 @import "~static/base";
 @import "./src/organizations/list";
@@ -12,6 +8,10 @@
 @import "./src/services/snackbars";
 
 
+.text-yellow {
+  color: $yellow-300 !important;
+}
+
 .root.container {
   margin-top: 80px;
   margin-bottom: 50px;
@@ -19,12 +19,29 @@
 
 nav.footer {
   background-color: $gray-300 !important;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+nav.footer .addresses {
+  text-align:right;
+  width:100%
+}
+
+nav.footer .addresses .userBalance {
+  margin-left: 1.0rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+nav.footer .addresses .userAddress {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 nav.header {
   background-color: $gray-800 !important;
+  z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
 }
 
 nav.header .logo {

@@ -4,7 +4,6 @@ npm-debug.log*
 yarn-error.log
 /dist
 /demo
-/test/*coverage
 /test/coverage*
 /.chrome
-test/user/__snapshots__*
+/.vscode

@@ -3,12 +3,12 @@ import { ArcService, ContractInfo, TruffleContract, OrganizationSchemeInfo } fro
 import { OrganizationService, DaoSchemeInfo } from '../services/OrganizationService';
 import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 import { SchemeInfo } from "../entities/SchemeInfo";
-import { EventAggregator  } from 'aurelia-event-aggregator';
-import  { EventConfigException } from '../entities/GeneralEvents';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventConfigException } from '../entities/GeneralEvents';
 
 @autoinject
 export class SchemeService {
-   
+
   /**
    * The Arc scheme contracts that we make available to the user
    */
@@ -19,8 +19,8 @@ export class SchemeService {
     , private organizationService: OrganizationService
     , private eventAggregator: EventAggregator
   ) {
-      this.availableSchemes = this.arcService.arcSchemes;
-    }
+    this.availableSchemes = this.arcService.arcSchemes;
+  }
 
   /**
    * Schemes in the given DAO, as SchemeInfos.
@@ -31,7 +31,6 @@ export class SchemeService {
   private async _getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
     let dao = await this.organizationService.organizationAt(daoAddress);
     let schemes = await dao.allSchemes()
-    // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
     return schemes;
   }
 
@@ -44,14 +43,14 @@ export class SchemeService {
    * @param daoAddress
    * @param excludeNonArcSchemes Default is false
    */
-  public async getSchemesForDao(daoAddress: string, excludeNonArcSchemes:boolean = false): Promise<Array<SchemeInfo>> {
+  public async getSchemesForDao(daoAddress: string, excludeNonArcSchemes: boolean = false): Promise<Array<SchemeInfo>> {
 
     let schemes = (await this._getSchemesInDao(daoAddress)).filter((s) => !excludeNonArcSchemes || s.inArc);
 
-    let schemesMap = new Map<string,SchemeInfo>();
+    let schemesMap = new Map<string, SchemeInfo>();
 
     for (let scheme of schemes) {
-        schemesMap.set(scheme.address, scheme);
+      schemesMap.set(scheme.address, scheme);
     }
 
     /**
@@ -68,39 +67,17 @@ export class SchemeService {
 
     return schemes;
   }
-  
-  public async getSchemePermissions(name: string, schemeAddress?: string): Promise<Permissions> {
-      try {
-        const contract = await this.arcService.getContract(name, schemeAddress);
-        const permissions = contract.getDefaultPermissions();
-        return ToPermissionsEnum(permissions);
-      } catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error getting scheme permissions`, ex));
-        return null; 
-      }
-    }
-    
-    public async getSchemeNativeToken(name: string, schemeAddress?: string): Promise<TruffleContract> {
-      try {
-        const contract = await this.arcService.getContract(name, schemeAddress);
-        return await contract.nativeToken();
-      }
-      catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error getting scheme native token`, ex));        
-        return null; 
-      }
-    }
 
-    public async getSchemeFee(name: string, schemeAddress?: string): Promise<Number> {
-      try {
+  public async getSchemePermissions(name: string, schemeAddress?: string): Promise<Permissions> {
+    try {
       const contract = await this.arcService.getContract(name, schemeAddress);
-      return await contract.fee();
-      }
-      catch(ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error getting scheme fee`, ex));        
-        return null; 
-      }
+      const permissions = contract.getDefaultPermissions();
+      return ToPermissionsEnum(permissions);
+    } catch (ex) {
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error getting scheme permissions`, ex));
+      return null;
     }
+  }
 }
 
 export { ContractInfo } from "./ArcService";

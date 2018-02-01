@@ -1,13 +1,12 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigurator} from './schemeConfigurationBase';
+import { SchemeConfigurator } from './schemeConfigurationBase';
 
-export class NonArcScheme implements SchemeConfigurator  {
+export class NonArcScheme implements SchemeConfigurator {
 
-model: any;
+  model: any;
 
   constructor(
   ) {
-    // super();
   }
 
   /* schemeParametersHash doesn't go into the model, rather it is obtained
@@ -15,10 +14,10 @@ model: any;
   _schemeParametersHash = undefined;
 
   activate(model) {
-      model.getConfigurationHash = this.getConfigurationHash.bind(this);
-      model.isRegistering = false;
-      model._canBeRegisteringScheme = !!model.canBeRegisteringScheme;
-      this.model = model;
+    model.getConfigurationHash = this.getConfigurationHash.bind(this);
+    model.isRegistering = false;
+    model._canBeRegisteringScheme = !!model.canBeRegisteringScheme;
+    this.model = model;
   }
 
   async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {

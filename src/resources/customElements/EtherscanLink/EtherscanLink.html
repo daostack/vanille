@@ -1,4 +1,10 @@
 <template>
-    <a href='https://${targetedNetwork}.etherscan.io/${type === "tx" ? "tx" : "address" }/${address}' target='_blank'><slot></slot></a>
-    <copy-to-clipboard-button text-to-copy.bind="address" message="Address has been copied to the clipboard"></copy-to-clipboard-button>
+  <span if.bind="isGanache">
+    ${text || address}
+  </span>
+
+  <a else href='${networkExplorerUri}/${type === "tx" ? "tx" : "address" }/${address}' target='_blank'>
+    ${text || address}
+  </a>
+  <copy-to-clipboard-button text-to-copy.bind="address" message="Address has been copied to the clipboard"></copy-to-clipboard-button>
 </template>

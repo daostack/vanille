@@ -3,12 +3,13 @@
 exports[`Home Page should render correctly 1`] = `
 "<body><div><home class=\\"au-target\\" au-target-id=\\"1\\">
   <!-- <require from=\\"./resources/customAttributes/blur-image\\"></require> -->
-  
+
   <div class=\\"home\\">
     <div style=\\"margin-bottom: 2rem\\">
-      <h1>DAOs for an Emergent Future</h1>
-      <h4>Welcome to DAOStack, the world's first open ecosystem of Decentralized Autonomous Organizations!</h4>
-      <p>DAOStack is an open source framework for a DAO management platform and network of organizations, collaborators and investors that collaborate on the blockchain.</p>
+      <h1>Creating DAOs for a Collective Intelligence</h1>
+      <h4>Welcome to DAOstack, the world's first open ecosystem of Decentralized Autonomous Organizations!</h4>
+      <p>DAOstack is an open source framework for a DAO management platform and ecosystem of organizations, collaborators and
+        investors that collaborate on the blockchain.</p>
       <p>Let's get started!</p>
     </div>
 
@@ -19,19 +20,19 @@ exports[`Home Page should render correctly 1`] = `
             <div class=\\"card-image\\">
               <img class=\\"big-button-image\\" src=\\"../static/Tree-of-Life_Flower-of-Life_Stage.svg\\">
             </div>
-            <h4 class=\\"card-title\\">Browse the DAOStack Ecosystem</h4>
+            <h4 class=\\"card-title\\">Browse the DAOstack Ecosystem</h4>
           </div>
         </div>
       </div>
       <div class=\\"col col-sm-12 col-md-6\\">
-          <div class=\\"card hoverable hot text-center\\" click-to-route=\\"deployDAO\\">
+        <div class=\\"card hoverable hot text-center\\" click-to-route=\\"deployDAO\\">
           <div class=\\"card-block\\">
             <div class=\\"card-image\\">
               <img class=\\"big-button-image text-center\\" src=\\"../static/mandala-02-black.svg\\">
             </div>
             <h4 class=\\"card-title\\">Birth a New DAO</h4>
           </div>
-      </div>
+        </div>
       </div>
     </div>
   </div>
