@@ -1,0 +1,57 @@
+import { App } from '../../src/app';
+import { PLATFORM } from 'aurelia-pal';
+
+class RouterStub {
+  routes;
+
+  configure(handler) {
+    handler(this);
+  }
+
+  map(routes) {
+    this.routes = routes;
+  }
+}
+
+describe('the App module', () => {
+  let app: App;
+  let mockedRouter: any;
+
+  beforeEach(() => {
+    mockedRouter = new RouterStub();
+
+    let fakeWeb3Service = {
+      isConnected: true,
+      isCorrectChain: true,
+      defaultAccount: {}
+    };
+
+    let fakeArcService = {
+      arcContracts: []
+    };
+
+    app = new App(fakeWeb3Service as any, fakeArcService as any);
+    app.configureRouter(mockedRouter, mockedRouter);
+  });
+
+  it('contains a router property', () => {
+    expect(app.router).toBeDefined();
+  });
+
+  // commented-out until Aurelia fixes its d.ts to reference title:
+  // it('configures the router title', () => {
+  //   expect(app.router.title).toEqual('DAOstack Alchemy');
+  // });
+
+  it('should have a home route', () => {
+    expect(app.router.routes).toContainEqual({ route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' });
+  });
+
+  it('should have a deploy route', () => {
+    expect(app.router.routes).toContainEqual({ route: ['deployDAO'], name: 'deployDAO', moduleId: PLATFORM.moduleName('./organizations/deploy'), nav: true, title: 'Birth a DAO' });
+  });
+
+  it('should have an organizations route', () => {
+    expect(app.router.routes).toContainEqual({ route: ['organizations'], name: 'organizations', moduleId: PLATFORM.moduleName('./organizations/list'), nav: true, title: 'DAOstack Ecosystem' });
+  });
+});

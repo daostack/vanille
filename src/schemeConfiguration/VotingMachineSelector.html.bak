@@ -2,7 +2,7 @@
   <div>
     <voting-machines-dropdown machine.bind="votingMachineInfo"></voting-machines-dropdown>
     <span class="ml-3">
-      <etherscanlink if.bind="!!votingMachineInfo" address="${votingMachineInfo.address}"></etherscanlink>
+      <etherscanlink if.bind="!!votingMachineInfo" address=${votingMachineInfo.address}></etherscanlink>
     </span>
   </div>
   <div if.bind="!!votingMachineInfo">

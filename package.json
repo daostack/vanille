@@ -1,6 +1,6 @@
 {
   "name": "daostack-vanille",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "description": "Creating DAOs for a Collective Intelligence",
   "main": "dist/app.bundle.js",
   "repository": {
@@ -8,13 +8,16 @@
     "type": "git"
   },
   "author": "DAOstack",
-  "license": "CC0-1.0",
+  "license": "GPL-3.0",
   "engines": {
-    "node": ">= 9.0.0"
+    "node": ">= 9.4.0"
   },
   "scripts": {
     "start": "nps",
     "test": "nps test"
+  },
+  "bugs": {
+    "url": "https://github.com/daostack/vanille/issues"
   },
   "jest": {
     "modulePaths": [
@@ -62,7 +65,6 @@
     "@types/bootstrap": "^3.3.36",
     "@types/jest": "20.0.4",
     "@types/jquery": "^3.2.13",
-    "@types/lodash": "4.14.69",
     "@types/node": "8.0.14",
     "@types/webpack": "3.0.4",
     "aurelia-loader-nodejs": "1.0.1",
@@ -81,6 +83,7 @@
     "css-loader": "0.28.4",
     "cwd": "^0.10.0",
     "env-variable": "0.0.3",
+    "eslint": "^4.16.0",
     "expose-loader": "0.7.3",
     "extract-text-webpack-plugin": "3.0.0",
     "file-loader": "0.11.2",
@@ -108,7 +111,8 @@
     "style-loader": "0.18.2",
     "ts-jest": "20.0.7",
     "ts-node": "3.2.0",
-    "typescript": "2.4.1",
+    "typescript": "^2.6.2",
+    "typescript-eslint-parser": "^12.0.0",
     "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "0.5.9",
     "wait-on": "2.0.2",

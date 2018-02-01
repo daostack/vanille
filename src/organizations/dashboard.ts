@@ -56,11 +56,6 @@ export class DAODashboard {
     this.subscription = null;
   }
 
-  attached() {
-    this.polishDom();
-  }
-
-
   async loadSchemes() {
     /**
      * Get all schemes associated with the DAO.  These can include non-Arc schemes.
@@ -74,15 +69,18 @@ export class DAODashboard {
     this.unregisteredArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc && !s.inDao);
     this.nonArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => !s.inArc);
     this.arcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc);
+    this.polishDom();
   }
 
   polishDom() {
-    ($(".scheme-use-button") as any).tooltip();
-    // workaround for accordian behavior not working.  Check to see if it's fixed when the
-    // final version 4 is released
-    $('.collapse').on('show.bs.collapse', () => {
-      ($('.collapse') as any).collapse("hide");
-    });
+    setTimeout(() => {
+      ($(".scheme-use-button") as any).tooltip();
+      // workaround for accordian behavior not working.  Check to see if it's fixed when the
+      // final version 4 is released
+      $('.collapse').on('show.bs.collapse', () => {
+        ($('.collapse') as any).collapse("hide");
+      });
+    }, 0);
   }
 
   private handleSchemeSetChanged(params: { dao: DAO, scheme: SchemeInfo }) {
@@ -123,7 +121,7 @@ export class DAODashboard {
       }
     }
 
-    setTimeout(this.polishDom, 0);
+    this.polishDom();
   }
 
   useScheme(scheme: SchemeInfo) {
