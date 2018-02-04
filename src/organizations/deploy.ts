@@ -2,7 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { Web3Service, BigNumber } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractInfo, FounderConfig } from "../services/ArcService";
-import { OrganizationService, DAO } from "../services/OrganizationService";
+import { DaoService, DAO } from "../services/DaoService";
 import { SchemeService } from "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
@@ -34,7 +34,7 @@ export class DeployGen {
   constructor(
     private web3: Web3Service
     , private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
     , private tokenService: TokenService
     , private schemeService: SchemeService
     , private eventAggregator: EventAggregator
@@ -78,7 +78,7 @@ export class DeployGen {
     this.addOrgResultMessage = 'adding_org';
     try {
 
-      const organization = await this.organizationService.createOrganization({
+      const organization = await this.daoService.createOrganization({
         orgName: this.orgName,
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
@@ -93,7 +93,7 @@ export class DeployGen {
       this.eventAggregator.publish("handleSuccess", new EventConfigAction(
         `${this.orgName} has been successfully deployed!`
         , "See The New DAO"
-        , () => { this.router.navigateToRoute("daoDashboard", { address: organization.address }); }
+        , () => { this.router.navigateToRoute("daoDashboard", { address: organization.avatar.address }); }
       ));
 
     }

@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { OrganizationService, DAO } from './OrganizationService';
+import { DaoService, DAO } from './DaoService';
 import { SchemeService } from '../services/SchemeService';
 
 @autoinject
@@ -13,7 +13,7 @@ export class VotingMachineService {
 
   constructor(
     private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
     , private schemeService: SchemeService
   ) {
     this.votingMachines = this.arcService.arcVotingMachines;

@@ -1,17 +1,17 @@
 import { autoinject } from "aurelia-framework";
 import { VotingMachineConfig } from '../services/VotingMachineService';
-import { DAO, OrganizationService } from '../services/OrganizationService';
-import { ArcService } from  "../services/ArcService";
+import { DAO, DaoService } from '../services/DaoService';
+import { ArcService } from "../services/ArcService";
 
 @autoinject
-export class AbsoluteVote implements VotingMachineConfig  {
+export class AbsoluteVote implements VotingMachineConfig {
 
   model: any;
 
   constructor(
-    private organizationService: OrganizationService
+    private daoService: DaoService
     , private arcService: ArcService
-  ) {}
+  ) { }
 
   activate(model) {
     model.getConfigurationHash = this.getConfigurationHash.bind(this);
@@ -22,8 +22,8 @@ export class AbsoluteVote implements VotingMachineConfig  {
 
   async getConfigurationHash(orgAddress: string, votingMachineAddress?: string): Promise<any> {
 
-    let dao = await this.organizationService.organizationAt(orgAddress);
-      
+    let dao = await this.daoService.daoAt(orgAddress);
+
     return await this.arcService.setContractParameters(
       {
         reputation: dao.reputation.address,

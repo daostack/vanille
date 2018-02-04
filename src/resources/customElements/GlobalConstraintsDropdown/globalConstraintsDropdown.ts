@@ -1,6 +1,6 @@
 import { autoinject, bindable, bindingMode, containerless } from "aurelia-framework";
 import { GlobalConstraintService, GlobalConstraintInfo } from "../../../services/GlobalConstraintService";
-import { OrganizationService, DAO } from "../../../services/OrganizationService";
+import { DaoService, DAO } from "../../../services/DaoService";
 
 /**
  * Dropdown for Arc schemes in a given Dao.  Note we don't handle Non-Arc schemes here.
@@ -26,13 +26,13 @@ export class GlobalConstraintsDropdown {
 
   constructor(
     private globalConstraintsService: GlobalConstraintService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
   ) {
   }
 
   async attached() {
 
-    let dao = await this.organizationService.organizationAt(this.daoAddress);
+    let dao = await this.daoService.daoAt(this.daoAddress);
 
     this.loadConstraints();
 

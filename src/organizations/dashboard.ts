@@ -1,5 +1,5 @@
 import { autoinject, computedFrom } from "aurelia-framework";
-import { OrganizationService, DAO } from "../services/OrganizationService";
+import { DaoService, DAO } from "../services/DaoService";
 import { TokenService } from "../services/TokenService";
 import { ArcService } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
@@ -23,7 +23,7 @@ export class DAODashboard {
 
 
   constructor(
-    private organizationService: OrganizationService
+    private daoService: DaoService
     , private tokenService: TokenService
     , private arcService: ArcService
     , private schemeService: SchemeService
@@ -35,7 +35,7 @@ export class DAODashboard {
 
     setTimeout(async () => {
       this.address = options.address;
-      this.org = await this.organizationService.organizationAt(this.address);
+      this.org = await this.daoService.daoAt(this.address);
       this.orgName = this.org.name;
       let token = this.org.token;
       this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);

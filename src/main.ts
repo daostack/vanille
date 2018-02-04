@@ -1,7 +1,7 @@
 ﻿import { ArcService } from './services/ArcService';
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 import { Aurelia } from 'aurelia-framework';
-import { OrganizationService } from './services/OrganizationService';
+import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
@@ -95,7 +95,7 @@ export async function configure(aurelia: Aurelia) {
     const arcService = aurelia.container.get(ArcService);
     await arcService.initialize();
 
-    const orgService = aurelia.container.get(OrganizationService);
+    const orgService = aurelia.container.get(DaoService);
     // don't await here, for faster application GUI load time
     orgService.initialize();
 

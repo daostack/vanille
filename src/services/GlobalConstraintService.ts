@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { OrganizationService, DAO } from './OrganizationService';
+import { DaoService, DAO } from './DaoService';
 import { SchemeService } from '../services/SchemeService';
 import { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
 
@@ -14,7 +14,7 @@ export class GlobalConstraintService {
 
   constructor(
     private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
     , private schemeService: SchemeService
   ) {
     this.availableConstraints = this.arcService.arcGlobalConstraints;
@@ -27,7 +27,7 @@ export class GlobalConstraintService {
    * @param daoAddress
    */
   private async _getGlobalConstraintsInDao(daoAddress: string): Promise<Array<GlobalConstraintInfo>> {
-    let dao = await this.organizationService.organizationAt(daoAddress);
+    let dao = await this.daoService.daoAt(daoAddress);
     let constraints = await dao.allGlobalConstraints()
     // console.log('getSchemesInDao from scheme() permissions: ' + arcSchemeInfos.filter((s) => s.contract === "GlobalConstraintRegistrar")[0].permissions);
     return constraints;

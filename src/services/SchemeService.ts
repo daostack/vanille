@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService, ContractInfo, TruffleContract, OrganizationSchemeInfo } from './ArcService';
-import { OrganizationService, DaoSchemeInfo } from '../services/OrganizationService';
+import { DaoService, DaoSchemeInfo } from '../services/DaoService';
 import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { EventAggregator } from 'aurelia-event-aggregator';
@@ -16,7 +16,7 @@ export class SchemeService {
 
   constructor(
     private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
     , private eventAggregator: EventAggregator
   ) {
     this.availableSchemes = this.arcService.arcSchemes;
@@ -29,7 +29,7 @@ export class SchemeService {
    * @param daoAddress
    */
   private async _getSchemesInDao(daoAddress: string): Promise<Array<SchemeInfo>> {
-    let dao = await this.organizationService.organizationAt(daoAddress);
+    let dao = await this.daoService.daoAt(daoAddress);
     let schemes = await dao.allSchemes()
     return schemes;
   }

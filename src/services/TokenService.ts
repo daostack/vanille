@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service, BigNumber } from "./Web3Service";
 import { ArcService, TruffleContract } from './ArcService';
-import { OrganizationService } from "./OrganizationService";
+import { DaoService } from "./DaoService";
 
 @autoinject
 export class TokenService {
@@ -9,7 +9,7 @@ export class TokenService {
   constructor(
     private web3: Web3Service
     , private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
   ) { }
 
   public async getTokenSymbol(token: TruffleContract): Promise<string> {
@@ -34,7 +34,7 @@ export class TokenService {
   }
 
   public async getDAOstackNativeToken() {
-    const daoStack = await this.organizationService.GetDaostack();
+    const daoStack = await this.daoService.GetDaostack();
     const daoTokenAddress = await daoStack.controller.nativeToken();
     return await this.arcService.getContract("DAOToken", daoTokenAddress);
   }
