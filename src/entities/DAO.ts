@@ -15,7 +15,7 @@ export class DAO extends Organization {
   private addConstraintEvent;
   private removeConstraintEvent;
   public arcService: ArcService;
-  private logger = LogManager.getLogger("Alchemy");
+  private logger = LogManager.getLogger("Vanille");
   public omega: BigNumber; // in wei
   /**
    * a Scheme has been added or removed from a DAO.
