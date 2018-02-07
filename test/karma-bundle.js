@@ -1,6 +1,6 @@
-import "aurelia-polyfills";
-import "aurelia-loader-webpack";
-import {install as installJasmineAsync} from "jest-jasmine2/jasmine-async";
+import 'aurelia-polyfills';
+import 'aurelia-loader-webpack';
+import { install as installJasmineAsync } from 'jest-jasmine2/jasmine-async';
 
 // enable running Promise-returning tests:
 installJasmineAsync(global);
@@ -19,7 +19,7 @@ runTests(testModuleContexts);
 function loadTestModules() {
   const srcContext = require.context(
     // directory:
-    "../src",
+    '../src',
     // recursive:
     true,
     // tests in /src folder regex:
@@ -28,7 +28,7 @@ function loadTestModules() {
 
   const testContext = require.context(
     // directory:
-    "./unit",
+    './unit',
     // recursive:
     true,
     // tests in ./unit folder regex:
@@ -51,7 +51,7 @@ function requireAllInContext(requireContext) {
  * See https://github.com/facebook/jest/blob/master/packages/jest-jasmine2/src/jest-expect.js
  */
 function installJestExpect() {
-  const expect = require("jest-matchers");
+  const expect = require('jest-matchers');
   global.expect = expect;
 
   const jasmine = global.jasmine;
@@ -63,13 +63,13 @@ function installJestExpect() {
   jasmine.addMatchers = (jasmineMatchersObject) => {
     const jestMatchersObject = Object.create(null);
     Object.keys(jasmineMatchersObject).forEach(name => {
-      jestMatchersObject[name] = function() {
+      jestMatchersObject[name] = function () {
         const result = jasmineMatchersObject[name](jasmine.matchersUtil, null);
         // if there is no 'negativeCompare', both should be handled by `compare`
         const negativeCompare = result.negativeCompare || result.compare;
 
         return this.isNot
-          ? negativeCompare(...arguments)
+          ? negativeCompare.apply(null, arguments)
           : result.compare.apply(null, arguments);
       };
     });
