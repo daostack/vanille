@@ -3,14 +3,17 @@ import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { Web3Service, BigNumber } from "../services/Web3Service";
-
+import { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
 export class DAO extends Organization {
 
   public address: string;
   public name: string;
   private schemesCache: Map<string, SchemeInfo>;
+  private constraintsCache: Map<string, GlobalConstraintInfo>;
   private registerSchemeEvent;
   private unRegisterSchemeEvent;
+  private addConstraintEvent;
+  private removeConstraintEvent;
   public arcService: ArcService;
   private logger = LogManager.getLogger("Vanille");
   public omega: BigNumber; // in wei
@@ -18,6 +21,7 @@ export class DAO extends Organization {
    * a Scheme has been added or removed from a DAO.
    */
   public static daoSchemeSetChangedEvent: string = "daoSchemeSetChanged";
+  public static daoConstraintSetChangedEvent: string = "daoConstraintSetChanged";
 
   /* this is not meant to be instantiated here, only in Arc */
   private constructor() {
@@ -40,10 +44,6 @@ export class DAO extends Organization {
     newDAO.address = org.avatar.address;
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
     newDAO.omega = await newDAO.reputation.totalSupply(), "ether";
-
-    // let existingSchemes = org.schemes();
-
-    // await newDAO.watchSchemes();
     return newDAO;
   }
 
@@ -52,8 +52,7 @@ export class DAO extends Organization {
   }
 
   /**
-   * 
-   * @param contractName returns SchemeInfos for all the schemes in the Dao.
+   * returns all the schemes in the Dao.
    * Keeps them cached and always up-to-date.  Do not confuse with super.schemes().
    */
   public async allSchemes(): Promise<Array<SchemeInfo>> {
@@ -86,23 +85,23 @@ export class DAO extends Organization {
     let count = eventsArray.length;
     for (let i = 0; i < count; i++) {
       let schemeAddress = eventsArray[i].args._scheme;
-      let scheme = this.arcService.contractInfoFromAddress(schemeAddress) as any;
+      let contractInfo = this.arcService.contractInfoFromAddress(schemeAddress) as any;
 
-      if (!scheme) {
+      if (!contractInfo) {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
-        scheme = <any>{ address: schemeAddress };
+        contractInfo = <any>{ address: schemeAddress };
       }
 
-      let schemeInfo = SchemeInfo.fromContractInfo(scheme, adding);
+      let schemeInfo = SchemeInfo.fromContractInfo(contractInfo, adding);
       let changed = false;
       // TODO: get unknown name from Arc
       if (adding && !this.schemesCache.has(schemeAddress)) {
         changed = true;
-        this.logger.debug(`caching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+        this.logger.debug(`caching scheme: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
         this.schemesCache.set(schemeAddress, schemeInfo);
       } else if (!adding && this.schemesCache.has(schemeAddress)) {
         changed = true;
-        this.logger.debug(`uncaching scheme: ${scheme.name ? scheme.name : "[unknown]"}: ${scheme.address}`);
+        this.logger.debug(`uncaching scheme: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
         this.schemesCache.delete(schemeAddress);
       }
 
@@ -115,6 +114,78 @@ export class DAO extends Organization {
       }
     }
   }
+
+  private async _getCurrentConstraints(): Promise<Array<SchemeInfo>> {
+    return (await super.globalConstraints()).map((s) => GlobalConstraintInfo.fromOrganizationGlobalConstraintInfo(s));
+  }
+
+  /**
+   * returns all global constraints in this DAO
+   */
+  public async allGlobalConstraints(): Promise<Array<GlobalConstraintInfo>> {
+    if (!this.constraintsCache) {
+      this.constraintsCache = new Map<string, GlobalConstraintInfo>();
+      let constraints = await this._getCurrentConstraints();
+      for (let gc of constraints) {
+        this.constraintsCache.set(gc.address, gc);
+      }
+      this.watchConstraints();
+      this.logger.debug(`Finished loading global constraints for ${this.name}: ${this.address}`);
+    }
+
+    return Array.from(this.constraintsCache.values());
+  }
+
+  private watchConstraints(): void {
+    this.addConstraintEvent = this.controller.AddGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.addConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, true));
+
+    this.removeConstraintEvent = this.controller.RemoveGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.removeConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, false));
+  }
+
+  private async handleConstraintEvent(err, eventsArray, adding: boolean): Promise<void> {
+    let newConstraintsArray = [];
+    if (!(eventsArray instanceof Array)) {
+      eventsArray = [eventsArray];
+    }
+    let count = eventsArray.length;
+    for (let i = 0; i < count; i++) {
+      // work-around: https://github.com/daostack/daostack/issues/263
+      let constraintAddress = eventsArray[i].args._globalconstraint || eventsArray[i].args._globalConstraint;
+      let constraintParamsHash = eventsArray[i].args._params;
+      let contractInfo = this.arcService.contractInfoFromAddress(constraintAddress) as any;
+
+      if (!contractInfo) {
+        // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
+        contractInfo = <any>{ address: constraintAddress };
+      }
+
+      //let permissions = await this.controller.getSchemePermissions(schemeAddress);
+
+      let constraintInfo = GlobalConstraintInfo.fromContractInfo(contractInfo, adding);
+      let changed = false;
+      // TODO: get unknown name from Arc
+      if (adding && !this.constraintsCache.has(constraintAddress)) {
+        changed = true;
+        this.logger.debug(`caching gc: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.constraintsCache.set(constraintAddress, constraintInfo);
+      } else if (!adding && this.constraintsCache.has(constraintAddress)) {
+        changed = true;
+        this.logger.debug(`uncaching gc: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.constraintsCache.delete(constraintAddress);
+      }
+
+      if (changed) {
+        this.publish(DAO.daoConstraintSetChangedEvent,
+          {
+            dao: this,
+            gc: constraintInfo
+          });
+      }
+    }
+  }
+
   /**
     * Publishes a message.
     * @param event The event or channel to publish to.

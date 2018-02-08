@@ -68,7 +68,7 @@
 
           <div if.bind="!!schemeToModify">
             <div class="form-group bmd-form-group">
-              <etherscanlink address=${schemeToModify.address}></etherscanlink>
+              <etherscanlink address="${schemeToModify.address}"></etherscanlink>
             </div>
             <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
             <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
@@ -93,7 +93,7 @@
           </arc-schemes-dropdown>
 
           <div if.bind="!!schemeToRemove">
-            <etherscanlink address=${schemeToRemove.address}></etherscanlink>
+            <etherscanlink address="${schemeToRemove.address}"></etherscanlink>
             <div class="mt-3">
               <button class="btn-submit-proposal" click.delegate="removeScheme()">Submit Proposal</button>
             </div>

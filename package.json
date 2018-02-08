@@ -1,6 +1,6 @@
 {
   "name": "daostack-vanille",
-  "version": "0.0.0-alpha.3",
+  "version": "0.0.0-alpha.4",
   "description": "Creating DAOs for a Collective Intelligence",
   "main": "dist/app.bundle.js",
   "repository": {
@@ -8,13 +8,16 @@
     "type": "git"
   },
   "author": "DAOstack",
-  "license": "CC0-1.0",
+  "license": "GPL-3.0",
   "engines": {
-    "node": ">= 9.0.0"
+    "node": ">= 9.4.0"
   },
   "scripts": {
     "start": "nps",
     "test": "nps test"
+  },
+  "bugs": {
+    "url": "https://github.com/daostack/vanille/issues"
   },
   "jest": {
     "modulePaths": [
@@ -108,7 +111,7 @@
     "style-loader": "0.18.2",
     "ts-jest": "20.0.7",
     "ts-node": "3.2.0",
-    "typescript": "2.4.1",
+    "typescript": "2.6.2",
     "uglifyjs-webpack-plugin": "^1.1.6",
     "url-loader": "0.5.9",
     "wait-on": "2.0.2",

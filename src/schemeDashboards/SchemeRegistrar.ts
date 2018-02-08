@@ -1,7 +1,7 @@
 import { autoinject, computedFrom, observable } from "aurelia-framework";
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
-import { OrganizationService } from '../services/OrganizationService';
+import { DaoService } from '../services/DaoService';
 import { ArcService, ContractInfo, SchemeRegistrar, ProposeToAddModifySchemeParams, ProposeToRemoveSchemeParams } from "../services/ArcService";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { SchemeConfigurator } from '../schemeConfiguration/schemeConfigurationBase';
@@ -25,7 +25,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   constructor(
     private schemeService: SchemeService
     , private arcService: ArcService
-    , private organizationService: OrganizationService
+    , private daoService: DaoService
     , private eventAggregator: EventAggregator
 
   ) {

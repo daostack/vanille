@@ -1,20 +1,20 @@
 import { autoinject } from "aurelia-framework";
 import { GlobalConstraintConfig } from "../services/GlobalConstraintService";
 import { TruffleContract } from '../services/ArcService';
-import { DAO, OrganizationService } from '../services/OrganizationService';
-import { ArcService } from  "../services/ArcService";
+import { DAO, DaoService } from '../services/DaoService';
+import { ArcService } from "../services/ArcService";
 
 @autoinject
-export class TokenCapGC implements GlobalConstraintConfig   {
+export class TokenCapGC implements GlobalConstraintConfig {
 
   model: any;
 
   constructor(
-    private organizationService: OrganizationService
+    private daoService: DaoService
     , private arcService: ArcService
-  ) {}
+  ) { }
 
-  activate(model:any) {
+  activate(model: any) {
     model.getConfigurationHash = this.getConfigurationHash.bind(this);
     model.cap = (model.cap !== undefined) ? model.cap : 0;
     this.model = model;
@@ -29,8 +29,8 @@ export class TokenCapGC implements GlobalConstraintConfig   {
 
   async getConfigurationHash(orgAddress: string, gcAddress?: string): Promise<any> {
 
-    let dao = await this.organizationService.organizationAt(orgAddress);
-      
+    let dao = await this.daoService.daoAt(orgAddress);
+
     return await this.arcService.setContractParameters(
       {
         token: dao.token.address,

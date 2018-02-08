@@ -19,7 +19,7 @@ import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
 import { Observable } from 'rxjs/Observable';
 
 @autoinject
-export class OrganizationService {
+export class DaoService {
   constructor(
     private arcService: ArcService,
     private web3: Web3Service,
@@ -54,10 +54,10 @@ export class OrganizationService {
          * watch(): fires whenever a new DAO is created thereafter
          */
         myEvent.get((err, eventsArray) =>
-          this.handleNewOrg(err, eventsArray).then(() => {
+          this.handleNewDao(err, eventsArray).then(() => {
             this.logger.debug("Finished loading daos");
             myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: "latest" });
-            myEvent.watch((err, eventsArray) => this.handleNewOrg(err, eventsArray));
+            myEvent.watch((err, eventsArray) => this.handleNewDao(err, eventsArray));
             resolve();
           })
         );
@@ -68,34 +68,22 @@ export class OrganizationService {
     }));
   }
 
-  public async createOrganization(config: OrganizationNewConfig): Promise<DAO> {
+  public async createOrganization(config: OrganizationNewConfig): Promise<Organization> {
     return this.promiseToBeLoaded.then(async () => {
-      let org = await Organization.new(config);
-      /**
-       * Note at this point the NewOrg event may already have been received for this org
-       * TODO:  Arc should eventually fix that and then we may want to revisit this
-       */
-      let dao = this.daoCache.get(org.avatar.address);
-
-      if (!dao) {
-        dao = await DAO.fromOrganization(org, this.arcService, this.web3);
-        this.daoCache.set(dao.address, dao);
-      }
-
-      return dao;
+      return Organization.new(config);
     });
   }
 
-  public async organizationAt(
+  public async daoAt(
     avatarAddress: string,
     takeFromCache: boolean = true
   ): Promise<DAO> {
     return this.promiseToBeLoaded.then(async () => {
-      return this._organizationAt(avatarAddress, takeFromCache);
+      return this._daoAt(avatarAddress, takeFromCache);
     });
   }
 
-  private async _organizationAt(
+  private async _daoAt(
     avatarAddress: string,
     takeFromCache: boolean = true
   ): Promise<DAO> {
@@ -113,15 +101,8 @@ export class OrganizationService {
       } catch (ex) {
         // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
         // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
-        this.eventAggregator.publish(
-          "handleException",
-          new EventConfigException(
-            `Error loading DAO: ${avatarAddress}`,
-            ex,
-            undefined,
-            SnackLifetime.none
-          )
-        );
+        this.eventAggregator.publish("handleException",
+          new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex, undefined, SnackLifetime.none));
 
         return null;
       }
@@ -136,7 +117,7 @@ export class OrganizationService {
     return dao;
   }
 
-  public async allOrganizations(): Promise<Array<DAO>> {
+  public async allDAOs(): Promise<Array<DAO>> {
     return this.promiseToBeLoaded.then(async () => {
       return Array.from(this.daoCache.values());
     });
@@ -144,7 +125,7 @@ export class OrganizationService {
 
   private firstOrg = true;
 
-  private async handleNewOrg(err, eventsArray): Promise<void> {
+  private async handleNewDao(err, eventsArray): Promise<void> {
     let newOrganizationArray = [];
     if (!(eventsArray instanceof Array)) {
       eventsArray = [eventsArray];
@@ -153,29 +134,30 @@ export class OrganizationService {
     for (let i = 0; i < count; i++) {
       let promotedAmount = 0;
       let avatarAddress = eventsArray[i].args._avatar;
-      // this has the side-effects of initializing and caching a DAO instance
-      let dao = await this._organizationAt(avatarAddress);
-      if (dao) {
-        this.logger.debug(`loaded org ${dao.name}: ${dao.address}`);
-        if (this.firstOrg) {
-          this._daoStack = this.resolvePromiseForDaoStack(dao);
-          this.firstOrg = false;
+
+      /**
+       * particularly in ganache, we could end up seeing the same org twice.
+       * this is because our two calls to the event, get and watch, may hit
+       * the same latest block twice
+       */
+      let alreadyCached = !!this.daoCache.get(avatarAddress);
+      if (!alreadyCached) {
+        let dao = await this._daoAt(avatarAddress);
+        if (dao) {
+          this.logger.debug(`loaded dao ${dao.name}: ${dao.address}`);
+          if (this.firstOrg) {
+            this._daoStack = this.resolvePromiseForDaoStack(dao);
+            this.firstOrg = false;
+          }
+          this.publish(DaoService.daoAddedEvent, dao);
         }
-        /**
-         * NOTE: At the time we receive this for a newly-added dao, Arc will likely
-         * not yet have added the schemes for the dao, a quirk I'm trying to get fixed in Arc.
-         * Further, there can be a gap between initially querying for the schemes and
-         * setting up the watch during which a scheme could be added to the Dao without
-         * us being aware. (see https://github.com/daostack/daostack/issues/132)
-         */
-        this.publish(OrganizationService.daoAddedEvent, dao);
       }
     }
   }
 
   /*****
    * The following three event methods will be replaced by the event aggregator.
-   * See OrganizationService.daoAddedEvent
+   * See DaoService.daoAddedEvent
    */
 
   /**
