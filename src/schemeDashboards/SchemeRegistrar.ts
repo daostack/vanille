@@ -56,6 +56,11 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     return this.currentSchemeSelection && (this.currentSchemeSelection.name === NonArcSchemeItemName);
   }
 
+  @computedFrom("currentSchemeSelection")
+  get isUnknownArcScheme() {
+    return this.currentSchemeSelection && !App.hasDashboard(this.currentSchemeSelection.name);
+  }
+
   async addScheme() {
     try {
 
@@ -86,7 +91,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   private getAddSchemeConfigView() {
     let name = this.currentSchemeSelection.name;
 
-    if (!App.hasDashboard(name)) {
+    if (this.isUnknownArcScheme) {
       name = "UnknownArc";
     }
 

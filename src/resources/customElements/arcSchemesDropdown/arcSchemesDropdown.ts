@@ -1,6 +1,7 @@
 import { autoinject, bindable, bindingMode, containerless } from "aurelia-framework";
 import { SchemeService, SchemeInfo } from "../../../services/SchemeService";
 import { DaoService, DAO } from "../../../services/DaoService";
+import { App } from '../../../app';
 
 /**
  * Dropdown for Arc schemes in a given Dao.  Note we don't handle Non-Arc schemes here.
@@ -15,6 +16,7 @@ export class ArcSchemesDropdown {
   @bindable({ defaultBindingMode: bindingMode.oneTime }) excludeUnregistered: boolean = false;
   @bindable({ defaultBindingMode: bindingMode.oneTime }) excludeKeys: Array<string> = [];
   @bindable({ defaultBindingMode: bindingMode.oneTime }) includeNonArcItem: boolean = false;
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) excludeUnknownArc: boolean = false;
 
   /**
    * this is one-way, but in the direction back to the container 
@@ -51,6 +53,7 @@ export class ArcSchemesDropdown {
         return s.inArc
           && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(s.name) === -1))
           && (!this.excludeRegistered || !s.isRegistered)
+          && (!this.excludeUnknownArc || App.hasDashboard(s.name))
           && (!this.excludeUnregistered || s.isRegistered)
           ;
       })

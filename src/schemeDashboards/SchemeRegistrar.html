@@ -21,6 +21,10 @@
           machine.
         </instructions>
 
+        <instructions show.bind="isUnknownArcScheme">This scheme is an Arc scheme, but it does not yet have a proper configuration dashboard in Vanille. Thus for now
+          you need to compute the scheme parameters hash yourself.</instructions>
+        <hr/>
+
         <form>
           <p show.bind="!addableSchemes.length">
             <span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</p>
@@ -56,9 +60,11 @@
           <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's voting
           machine.
         </instructions>
+        <hr/>
 
         <form>
-          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
+          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
+            exclude-unknown-arc.bind="true">
             <span slot="buttonText">
               <span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span>
             </span>
