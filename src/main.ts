@@ -64,19 +64,19 @@ export async function configure(aurelia: Aurelia) {
 
 
   PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
-  PLATFORM.moduleName("./schemeDashboards/NonArc")
-  PLATFORM.moduleName("./schemeDashboards/UnknownArc")
-  PLATFORM.moduleName("./schemeDashboards/NotRegistered")
   PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
   PLATFORM.moduleName("./schemeDashboards/ContributionReward")
   PLATFORM.moduleName("./schemeDashboards/UpgradeScheme")
+  PLATFORM.moduleName("./schemeDashboards/NonArc")
+  PLATFORM.moduleName("./schemeDashboards/UnknownArc")
+  PLATFORM.moduleName("./schemeDashboards/NotRegistered")
 
-  PLATFORM.moduleName("./schemeConfiguration/ContributionReward")
   PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
-  PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
-  PLATFORM.moduleName("./schemeConfiguration/NonArcScheme")
-  PLATFORM.moduleName("./schemeConfiguration/UnknownArcScheme")
+  PLATFORM.moduleName("./schemeConfiguration/ContributionReward")
+  PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
+  PLATFORM.moduleName("./schemeConfiguration/NonArc")
+  PLATFORM.moduleName("./schemeConfiguration/UnknownArc")
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")

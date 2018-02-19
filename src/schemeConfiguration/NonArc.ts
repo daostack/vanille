@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { SchemeConfigurator } from './schemeConfigurationBase';
 
-export class NonArcScheme implements SchemeConfigurator {
+export class NonArc implements SchemeConfigurator {
 
   model: any;
 

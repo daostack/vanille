@@ -98,117 +98,22 @@ export class App {
           moduleId: PLATFORM.moduleName('./organizations/dashboard'),
           nav: false,
           title: 'DAO Dashboard'
-        },
-        /**
-         * Scheme dashboards.  Currently used just to track what we have implements.  They aren't used
-         * when composing.
-         */
-        , {
-          route: ['SchemeRegistrar'],
-          name: 'SchemeRegistrar',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/SchemeRegistrar'),
-          nav: false,
-          title: 'SchemeRegistrar Dashboard'
-        }
-        , {
-          route: ['ContributionReward'],
-          name: 'ContributionReward',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/ContributionReward'),
-          nav: false,
-          title: 'ContributionReward Dashboard'
-        }
-        , {
-          route: ['UpgradeScheme'],
-          name: 'UpgradeScheme',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/UpgradeScheme'),
-          nav: false,
-          title: 'UpgradeScheme Dashboard'
-        }
-        , {
-          route: ['GlobalConstraintRegistrar'],
-          name: 'GlobalConstraintRegistrar',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/GlobalConstraintRegistrar'),
-          nav: false,
-          title: 'GlobalConstraintRegistrar Dashboard'
-        }
-        , {
-          route: ['UnknownArc'],
-          name: 'UnknownArc',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/UnknownArc'),
-          nav: false,
-          title: 'UnknownArc Dashboard'
-        }
-        , {
-          route: ['NotRegistered'],
-          name: 'NotRegistered',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/NotRegistered'),
-          nav: false,
-          title: 'NotRegistered Dashboard'
-        }
-        , {
-          route: ['NonArc'],
-          name: 'NonArc',
-          moduleId: PLATFORM.moduleName('./schemeDashboards/NonArc'),
-          nav: false,
-          title: 'NonArc Dashboard'
-        },
-        /**
-         * Scheme configuration dashboards.  Currently used just to track what we have implements.  They aren't used
-         * when composing.
-         */
-        , {
-          route: ['SchemeRegistrar'],
-          name: 'SchemeRegistrar',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/SchemeRegistrar'),
-          nav: false,
-          title: 'SchemeRegistrar Dashboard'
-        }
-        , {
-          route: ['ContributionReward'],
-          name: 'ContributionReward',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/ContributionReward'),
-          nav: false,
-          title: 'ContributionReward Configuration'
-        }
-        , {
-          route: ['UpgradeScheme'],
-          name: 'UpgradeScheme',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/UpgradeScheme'),
-          nav: false,
-          title: 'UpgradeScheme Configuration'
-        }
-        , {
-          route: ['GlobalConstraintRegistrar'],
-          name: 'GlobalConstraintRegistrar',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/GlobalConstraintRegistrar'),
-          nav: false,
-          title: 'GlobalConstraintRegistrar Configuration'
-        }
-        , {
-          route: ['UnknownArcScheme'],
-          name: 'UnknownArcScheme',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/UnknownArcScheme'),
-          nav: false,
-          title: 'UnknownArcScheme Configuration'
-        }
-        , {
-          route: ['VotingMachineSelector'],
-          name: 'VotingMachineSelector',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/VotingMachineSelector'),
-          nav: false,
-          title: 'VotingMachineSelector Configuration'
-        }
-        , {
-          route: ['NonArcScheme'],
-          name: 'NonArcScheme',
-          moduleId: PLATFORM.moduleName('./schemeConfiguration/NonArcScheme'),
-          nav: false,
-          title: 'NonArcScheme Configuration'
         }
       ]);
       this.healthy = true;
     }
 
     this.router = router;
+  }
+  static SchemeDashboards = [
+    "GlobalConstraintRegistrar",
+    "SchemeRegistrar",
+    "ContributionReward",
+    "UpgradeScheme",
+    "NonArc"
+  ];
+
+  public static hasDashboard(schemeName: string): boolean {
+    return App.SchemeDashboards.indexOf(schemeName) !== -1;
   }
 }

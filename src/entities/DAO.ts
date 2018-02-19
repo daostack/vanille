@@ -137,10 +137,10 @@ export class DAO extends ArcJsDAO {
   }
 
   private watchConstraints(): void {
-    this.addConstraintEvent = this.controller.AddGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.addConstraintEvent = this.controller.AddGlobalConstraint({}, { fromBlock: "latest", toBlock: "latest" });
     this.addConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, true));
 
-    this.removeConstraintEvent = this.controller.RemoveGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.removeConstraintEvent = this.controller.RemoveGlobalConstraint({}, { fromBlock: "latest", toBlock: "latest" });
     this.removeConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, false));
   }
 

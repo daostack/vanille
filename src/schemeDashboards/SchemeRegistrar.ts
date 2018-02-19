@@ -2,12 +2,18 @@ import { autoinject, computedFrom, observable } from "aurelia-framework";
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { DaoService } from '../services/DaoService';
-import { ArcService, ContractInfo, SchemeRegistrar, ProposeToAddModifySchemeParams, ProposeToRemoveSchemeParams } from "../services/ArcService";
+import {
+  ArcService
+  , ContractInfo
+  , SchemeRegistrar
+  , ProposeToAddModifySchemeParams
+  , ProposeToRemoveSchemeParams
+} from "../services/ArcService";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { SchemeConfigurator } from '../schemeConfiguration/schemeConfigurationBase';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
-import { Router } from 'aurelia-router';
+import { App } from '../app';
 
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
@@ -28,7 +34,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     , private arcService: ArcService
     , private daoService: DaoService
     , private eventAggregator: EventAggregator
-    , private router: Router
   ) {
     super();
   }
@@ -81,8 +86,8 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   private getAddSchemeConfigView() {
     let name = this.currentSchemeSelection.name;
 
-    if (!this.router.hasRoute(name)) {
-      name = "UnknownArcScheme";
+    if (!App.hasDashboard(name)) {
+      name = "UnknownArc";
     }
 
     return '../schemeConfiguration/' + name;

@@ -1,13 +1,13 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService } from "../services/ArcService";
+import { ArcService, UpgradeScheme, ProposeUpgradingSchemeParams } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from '../services/SchemeService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 
 @autoinject
-export class UpgradeScheme extends DaoSchemeDashboard {
+export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
 
   controllerAddress: string;
   upgradingSchemeConfig: any = {};
@@ -48,7 +48,7 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async proposeController() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme");
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
       let result = await scheme.proposeController(
         {
           avatar: this.orgAddress
@@ -65,15 +65,13 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme");
-      let config: any = {
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
+      let config: ProposeUpgradingSchemeParams = {
         avatar: this.orgAddress
+        , scheme: this.upgradingSchemeAddress
+        , schemeParametersHash: await this.upgradingSchemeConfig.getConfigurationHash(
+          this.orgAddress, scheme.contract.address)
       };
-
-      config.scheme = this.upgradingSchemeAddress;
-
-      config.schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
-        this.orgAddress, scheme.address);
 
       let result = await scheme.proposeUpgradingScheme(config);
 

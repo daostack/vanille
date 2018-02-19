@@ -150,7 +150,7 @@ export class ArcService {
     contractAddress?: string): Promise<string> {
     try {
       const contract = await this.getContract(name, contractAddress);
-      return await contract.setParams(params);
+      return (await contract.setParams(params)).result;
     }
     catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error setting contract parameters`, ex, undefined, SnackLifetime.none));

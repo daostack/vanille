@@ -1,7 +1,11 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService, GlobalConstraintRegistrar } from "../services/ArcService";
+import {
+  ArcService
+  , GlobalConstraintRegistrar
+  , ProposeToAddModifyGlobalConstraintParams
+} from "../services/ArcService";
 import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
 import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
@@ -49,7 +53,7 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
       const globalConstraintParametersHash = await this.constraintToAddConfig.getConfigurationHash(this.orgAddress, this.currentGCSelection.address);
       const constraintRemovalVotingMachineInfoHash = await this.votingMachineConfig.getConfigurationHash(this.orgAddress, this.votingMachineInfo.address);
 
-      const config = {
+      const config: ProposeToAddModifyGlobalConstraintParams = {
         avatar: this.orgAddress
         , globalConstraint: this.constraintToAddAddress
         , globalConstraintParametersHash: globalConstraintParametersHash
