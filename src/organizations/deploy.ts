@@ -9,6 +9,7 @@ import { VotingMachineInfo } from "../services/VotingMachineService";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { Router } from 'aurelia-router';
 import { EventConfigAction } from "../entities/GeneralEvents";
+import { SortService } from "../services/SortService";
 
 @autoinject
 export class DeployGen {
@@ -42,9 +43,11 @@ export class DeployGen {
   ) {
     this.userAddress = arcService.defaultAccount;
     this.founders = new Array();
-    this.arcSchemes = this.schemeService.availableSchemes;
+    this.arcSchemes = this.schemeService.availableSchemes.sort(
+      (a, b) => { return SortService.evaluateString(a.name, b.name); }
+    );
     for (let scheme of this.arcSchemes) {
-      if (scheme.name !== "ContributionReward") {
+      if (["SchemeRegistrar", "UpgradeScheme", "GlobalConstraintRegistrar"].indexOf(scheme.name) !== -1) {
         (<DeploySchemeInfo>scheme).required = true;
         this.selectedSchemes.push(scheme);
       }
@@ -79,13 +82,16 @@ export class DeployGen {
     try {
 
       const organization = await this.daoService.createOrganization({
-        orgName: this.orgName,
+        name: this.orgName,
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
-        founders: this.founders
-        , votingMachine: this.votingMachineInfo.address
-        , votePrec: this.votingMachineModel.votePrec
-        , ownerVote: this.votingMachineModel.ownerVote
+        founders: this.founders,
+        votingMachineParams: {
+          votingMachineName: this.votingMachineInfo.name
+          , votingMachine: this.votingMachineInfo.address
+          , votePerc: this.votingMachineModel.votePerc
+          , ownerVote: this.votingMachineModel.ownerVote
+        }
         , schemes: this.selectedSchemes.map((s) => { return { name: s.name, address: s.address }; })
       });
       this.deployOrgStatus = 'deployed';

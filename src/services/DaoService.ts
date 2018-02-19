@@ -1,18 +1,15 @@
 import { autoinject } from "aurelia-framework";
 import {
   ArcService,
-  TruffleContract,
-  Organization,
-  ContractInfo,
-  OrganizationNewConfig,
-  FounderConfig,
-  OrganizationSchemeInfo
+  DAO as ArcJsDAO,
+  NewDaoConfig,
+  SchemesConfig
 } from "./ArcService";
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription } from "aurelia-event-aggregator";
 import { LogManager } from "aurelia-framework";
 import { DAO } from "../entities/DAO";
-import { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
+import { DaoContractInfo } from "../entities/DaoSchemeInfo";
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
@@ -47,7 +44,7 @@ export class DaoService {
   public async initialize() {
     return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
       try {
-        let genesisScheme = await this.arcService.getContract("GenesisScheme");
+        let genesisScheme = await this.arcService.getContract("DaoCreator");
         let myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: 0 });
         /**
          * get():  fires once for all the DAOs in the system; resolve() will be called properly.
@@ -68,9 +65,9 @@ export class DaoService {
     }));
   }
 
-  public async createOrganization(config: OrganizationNewConfig): Promise<Organization> {
+  public async createOrganization(config: NewDaoConfig & SchemesConfig): Promise<ArcJsDAO> {
     return this.promiseToBeLoaded.then(async () => {
-      return Organization.new(config);
+      return ArcJsDAO.new(config);
     });
   }
 
@@ -92,7 +89,7 @@ export class DaoService {
 
     if (!takeFromCache || !cachedDao) {
       try {
-        let org = await Organization.at(avatarAddress);
+        let org = await ArcJsDAO.at(avatarAddress);
 
         // if (!org || !org.avatar) {
         //   throw new Error(`DAO at ${avatarAddress} was not found`);
@@ -190,4 +187,4 @@ export class DaoService {
 }
 
 export { DAO } from "../entities/DAO";
-export { DaoSchemeInfo } from "../entities/DaoSchemeInfo";
+export { DaoContractInfo } from "../entities/DaoSchemeInfo";

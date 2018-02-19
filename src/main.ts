@@ -5,7 +5,7 @@ import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { getWeb3 } from 'daostack-arc-js';
+import { Utils } from '@daostack/arc.js';
 import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -34,6 +34,7 @@ export async function configure(aurelia: Aurelia) {
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-html-import-template-loader'));
 
   aurelia.use.globalResources([
+    PLATFORM.moduleName("resources/bindingBehaviors/async"),
     PLATFORM.moduleName("resources/customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
     PLATFORM.moduleName("resources/customElements/UsersAddress/UsersAddress"),
@@ -64,6 +65,7 @@ export async function configure(aurelia: Aurelia) {
 
   PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeDashboards/NonArc")
+  PLATFORM.moduleName("./schemeDashboards/UnknownArc")
   PLATFORM.moduleName("./schemeDashboards/NotRegistered")
   PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
   PLATFORM.moduleName("./schemeDashboards/ContributionReward")
@@ -74,6 +76,7 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/NonArcScheme")
+  PLATFORM.moduleName("./schemeConfiguration/UnknownArcScheme")
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
@@ -82,7 +85,7 @@ export async function configure(aurelia: Aurelia) {
 
   try {
 
-    const web3 = await getWeb3();
+    const web3 = await Utils.getWeb3();
 
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);

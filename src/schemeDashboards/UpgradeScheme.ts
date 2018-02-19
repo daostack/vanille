@@ -49,14 +49,14 @@ export class UpgradeScheme extends DaoSchemeDashboard {
   async proposeController() {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme");
-      let tx = await scheme.proposeController(
+      let result = await scheme.proposeController(
         {
           avatar: this.orgAddress
           , controller: this.controllerAddress
         });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change controller ${this.controllerAddress}', tx.tx));
+        'Proposal submitted to change controller ${this.controllerAddress}', result.tx.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing new controller ${this.controllerAddress}`, ex));
@@ -75,10 +75,10 @@ export class UpgradeScheme extends DaoSchemeDashboard {
       config.schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
         this.orgAddress, scheme.address);
 
-      let tx = await scheme.proposeUpgradingScheme(config);
+      let result = await scheme.proposeUpgradingScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', tx.tx));
+        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', result.tx.tx));
 
       this.currentSchemeSelection = null;
 

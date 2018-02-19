@@ -68,7 +68,7 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       app: ['aurelia-bootstrapper'],
       vendor: [
         'bluebird',
-        'daostack-arc-js',
+        '@daostack/arc.js',
         'ethereumjs-tx',
         'truffle-contract'
       ],

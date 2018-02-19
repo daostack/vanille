@@ -3,15 +3,18 @@
     <div class="col-2">
       <div class="form-group bmd-form-group">
         <label for="AbsVotePerc">Winning Percentage</label>
-        <input class="form-control" type='number' id="AbsVotePerc" value.bind="model.votePrec | number"/>
+        <input class="form-control" type='number' id="AbsVotePerc" value.bind="model.votePerc | number" />
       </div>
     </div>
     <div class="col-2">
       <div class="form-group bmd-form-group">
-      <div class="checkbox">
-        <label><input type="checkbox" checked.bind="model.ownerVote"><span style="white-space: nowrap">Automatically Cast Your Vote For</span></label>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" checked.bind="model.ownerVote">
+            <span style="white-space: nowrap">Automatically Cast Your Vote For</span>
+          </label>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 </template>

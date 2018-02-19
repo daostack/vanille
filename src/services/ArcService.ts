@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import * as Arc from 'daostack-arc-js';
+import * as Arc from '@daostack/arc.js';
 
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
@@ -31,12 +31,12 @@ export class ArcService {
 
   private contractCache: Map<string, TruffleContract>;
 
-  public get defaultAccount(): string { return Arc.getDefaultAccount(); }
+  public get defaultAccount(): string { return Arc.Utils.getDefaultAccount(); }
 
   public async initialize() {
-    Arc.config.set("network", process.env.network);
+    Arc.Config.set("network", process.env.network);
 
-    let arcSettings = await Arc.getDeployedContracts();
+    let arcSettings = await Arc.Contracts.getDeployedContracts();
     let arcContracts = arcSettings.allContracts;
 
     for (let contractName in arcContracts) {
@@ -45,9 +45,9 @@ export class ArcService {
     }
 
     this.arcContracts = arcContracts;
-    this.arcSchemes = (<any>arcSettings.schemes) as Array<ContractInfo>;
-    this.arcVotingMachines = (<any>arcSettings.votingMachines) as Array<ContractInfo>;
-    this.arcGlobalConstraints = (<any>arcSettings.globalConstraints) as Array<ContractInfo>;
+    this.arcSchemes = arcSettings.schemes as Array<ContractInfo>;
+    this.arcVotingMachines = arcSettings.votingMachines as Array<ContractInfo>;
+    this.arcGlobalConstraints = arcSettings.globalConstraints as Array<ContractInfo>;
 
     for (var name in this.arcContracts) {
       var contract = this.arcContracts[name];
@@ -93,7 +93,7 @@ export class ArcService {
         });
       }
     } else {
-      contract = Arc.requireContract(name);
+      contract = Arc.Utils.requireContract(name);
       if (!at) {
         contract = await contract.deployed();
         at = contract.address;
@@ -122,7 +122,7 @@ export class ArcService {
    */
   public getValueFromTransactionLog(tx, argName, eventName?, index = 0) {
     try {
-      return Arc.getValueFromLogs(tx, argName, eventName, index);
+      return Arc.Utils.getValueFromLogs(tx, argName, eventName, index);
     } catch (ex) {
       let message = ex.message ? ex.message : ex;
       this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
@@ -184,5 +184,5 @@ export class ContractInfo implements Arc.ArcContractInfo {
   name: string;
 }
 
-export * from 'daostack-arc-js';
+export * from '@daostack/arc.js';
 export { TruffleContract } from 'truffle-contract';

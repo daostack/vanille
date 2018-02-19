@@ -42,7 +42,7 @@
             </div>
 
             <div if.bind="currentSchemeSelection">
-              <compose view-model="${'../schemeConfiguration/' + currentSchemeSelection.name}" model.bind="newSchemeConfiguration"></compose>
+              <compose view-model.bind="getAddSchemeConfigView()" model.bind="newSchemeConfiguration"></compose>
             </div>
 
             <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>

@@ -7,6 +7,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { SchemeConfigurator } from '../schemeConfiguration/schemeConfigurationBase';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
+import { Router } from 'aurelia-router';
 
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
@@ -27,7 +28,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     , private arcService: ArcService
     , private daoService: DaoService
     , private eventAggregator: EventAggregator
-
+    , private router: Router
   ) {
     super();
   }
@@ -65,10 +66,10 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
         config.schemeName = this.currentSchemeSelection.name;
       }
 
-      let tx = await schemeRegistrar.proposeToAddModifyScheme(config);
+      let result = await schemeRegistrar.proposeToAddModifyScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.schemeToAddAddress}`, tx.tx));
+        `Proposal submitted to add ${this.schemeToAddAddress}`, result.tx.tx));
 
       this.currentSchemeSelection = null;
 
@@ -77,13 +78,22 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     }
   }
 
+  private getAddSchemeConfigView() {
+    let name = this.currentSchemeSelection.name;
+
+    if (!this.router.hasRoute(name)) {
+      name = "UnknownArcScheme";
+    }
+
+    return '../schemeConfiguration/' + name;
+  }
   async modifyScheme() {
 
     try {
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
       const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
-      const tx = await schemeRegistrar.proposeToAddModifyScheme({
+      const result = await schemeRegistrar.proposeToAddModifyScheme({
         avatar: this.orgAddress,
         scheme: this.schemeToModify.address,
         schemeName: this.schemeToModify.name,
@@ -91,7 +101,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to modify ${this.schemeToModify.address}`, tx.tx));
+        `Proposal submitted to modify ${this.schemeToModify.address}`, result.tx.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to modify scheme ${this.schemeToModify.address}`, ex));
@@ -104,13 +114,13 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
 
-      let tx = await schemeRegistrar.proposeToRemoveScheme({
+      let result = await schemeRegistrar.proposeToRemoveScheme({
         avatar: this.orgAddress,
         scheme: this.schemeToRemove.address
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.schemeToRemove.address}`, tx.tx));
+        `Proposal submitted to remove ${this.schemeToRemove.address}`, result.tx.tx));
 
       this.schemeToRemove = null;
 

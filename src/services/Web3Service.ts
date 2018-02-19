@@ -89,7 +89,7 @@ export class Web3Service {
           return '1';
         case 'ganache':
         default:
-          // for ganache, would be something like: Object.keys(GenesisScheme.networks).pop();
+          // for ganache, would be something like: Object.keys(DaoCreator.networks).pop();
           return ganacheNetworkId;
       }
     };
