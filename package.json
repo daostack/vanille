@@ -120,7 +120,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
-    "@daostack/arc.js": "file:../arc.js/daostack-arc.js-0.0.0-alpha.25.tgz",
+    "@daostack/arc.js": "file:../arc.js/daostack-arc.js-0.0.0-alpha.26.tgz",
     "arrive": "^2.4.1",
     "aurelia-bootstrapper": "^2.1.1",
     "bignumber.js": "^5.0.0",

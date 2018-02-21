@@ -3,7 +3,10 @@ import {
   ArcService,
   DAO as ArcJsDAO,
   NewDaoConfig,
-  SchemesConfig
+  SchemesConfig,
+  DaoCreator,
+  InitialSchemesSetEventResult,
+  DecodedLogEntryEvent
 } from "./ArcService";
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription } from "aurelia-event-aggregator";
@@ -44,8 +47,8 @@ export class DaoService {
   public async initialize() {
     return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
       try {
-        let genesisScheme = await this.arcService.getContract("DaoCreator");
-        let myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: 0 });
+        let daoCreator = (await this.arcService.getContract("DaoCreator")) as DaoCreator;
+        let myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: 0 });
         /**
          * get():  fires once for all the DAOs in the system; resolve() will be called properly.
          * watch(): fires whenever a new DAO is created thereafter
@@ -53,7 +56,7 @@ export class DaoService {
         myEvent.get((err, eventsArray) =>
           this.handleNewDao(err, eventsArray).then(() => {
             this.logger.debug("Finished loading daos");
-            myEvent = genesisScheme.InitialSchemesSet({}, { fromBlock: "latest" });
+            myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: "latest" });
             myEvent.watch((err, eventsArray) => this.handleNewDao(err, eventsArray));
             resolve();
           })
@@ -122,15 +125,11 @@ export class DaoService {
 
   private firstOrg = true;
 
-  private async handleNewDao(err, eventsArray): Promise<void> {
+  private async handleNewDao(err, eventsArray: Array<DecodedLogEntryEvent<InitialSchemesSetEventResult>>): Promise<void> {
     let newOrganizationArray = [];
-    if (!(eventsArray instanceof Array)) {
-      eventsArray = [eventsArray];
-    }
-    let count = eventsArray.length;
-    for (let i = 0; i < count; i++) {
+    for (const event of eventsArray) {
       let promotedAmount = 0;
-      let avatarAddress = eventsArray[i].args._avatar;
+      let avatarAddress = event.args._avatar;
 
       /**
        * particularly in ganache, we could end up seeing the same org twice.
