@@ -107,6 +107,7 @@
     "path.join": "^1.0.0",
     "postcss-loader": "2.0.6",
     "protractor": "5.1.2",
+    "run-with-ganache": "^0.1.1",
     "sass-loader": "^6.0.6",
     "style-loader": "0.18.2",
     "ts-jest": "20.0.7",
@@ -120,7 +121,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
-    "@daostack/arc.js": "file:../arc.js/daostack-arc.js-0.0.0-alpha.26.tgz",
+    "@daostack/arc.js": "0.0.0-alpha.28",
     "arrive": "^2.4.1",
     "aurelia-bootstrapper": "^2.1.1",
     "bignumber.js": "^5.0.0",
