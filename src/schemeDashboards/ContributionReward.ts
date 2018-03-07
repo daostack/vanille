@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService, ContributionReward, ProposeContributionParams } from "../services/ArcService";
+import { ArcService, ContributionReward, ProposeContributionRewardParams } from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { BigNumber } from '../services/Web3Service';
 
@@ -28,7 +28,7 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
   async proposeContributionReward() {
     try {
       const scheme = await this.arcService.getContract("ContributionReward") as ContributionReward;
-      let options: ProposeContributionParams = {
+      let options: ProposeContributionRewardParams = {
         avatar: this.orgAddress,
         description: this.description,
         nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
