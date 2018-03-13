@@ -1,10 +1,10 @@
-import { ArcService, Organization, ContractInfo } from '../services/ArcService';
+import { ArcService, DAO as ArcJsDAO, ContractInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { Web3Service, BigNumber } from "../services/Web3Service";
 import { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
-export class DAO extends Organization {
+export class DAO extends ArcJsDAO {
 
   public address: string;
   public name: string;
@@ -35,7 +35,7 @@ export class DAO extends Organization {
   }
 
   public static async fromOrganization(
-    org: Organization
+    org: ArcJsDAO
     , arcService: ArcService
     , web3: Web3Service): Promise<DAO> {
 
@@ -48,7 +48,7 @@ export class DAO extends Organization {
   }
 
   private async _getCurrentSchemes(): Promise<Array<SchemeInfo>> {
-    return (await super.schemes()).map((s) => SchemeInfo.fromOrganizationSchemeInfo(s));
+    return (await super.getSchemes()).map((s) => SchemeInfo.fromOrganizationSchemeInfo(s));
   }
 
   /**
@@ -116,7 +116,7 @@ export class DAO extends Organization {
   }
 
   private async _getCurrentConstraints(): Promise<Array<SchemeInfo>> {
-    return (await super.globalConstraints()).map((s) => GlobalConstraintInfo.fromOrganizationGlobalConstraintInfo(s));
+    return (await super.getGlobalConstraints()).map((s) => GlobalConstraintInfo.fromOrganizationGlobalConstraintInfo(s));
   }
 
   /**
@@ -137,10 +137,10 @@ export class DAO extends Organization {
   }
 
   private watchConstraints(): void {
-    this.addConstraintEvent = this.controller.AddGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.addConstraintEvent = this.controller.AddGlobalConstraint({}, { fromBlock: "latest", toBlock: "latest" });
     this.addConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, true));
 
-    this.removeConstraintEvent = this.controller.RemoveGlobalConstraint({}, { fromBlock: 0, toBlock: "latest" });
+    this.removeConstraintEvent = this.controller.RemoveGlobalConstraint({}, { fromBlock: "latest", toBlock: "latest" });
     this.removeConstraintEvent.watch((err, eventsArray) => this.handleConstraintEvent(err, eventsArray, false));
   }
 

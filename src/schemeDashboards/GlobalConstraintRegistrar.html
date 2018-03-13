@@ -19,7 +19,7 @@
           <instructions>Propose to add or update global constraints in
             <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's
             voting machine.</instructions>
-
+          <hr/>
           <form>
             <global-constraints-dropdown constraint.bind="currentGCSelection" dao-address.bind="orgAddress" include-non-arc-item.bind="true">
               <span slot="buttonText">
@@ -50,6 +50,7 @@
           <instructions>Remove global constraints from
             <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's
             voting machine.</instructions>
+          <hr/>
           <form>
             <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" dao-address.bind="orgAddress" exclude-unregistered.bind="true">
               <span slot="buttonText">

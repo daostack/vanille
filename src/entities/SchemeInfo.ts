@@ -1,4 +1,4 @@
-import { DaoSchemeInfo } from './DaoSchemeInfo';
+import { DaoContractInfo } from './DaoSchemeInfo';
 import { ContractInfo } from '../services/ArcService';
 import { ArcService } from '../services/ArcService';
 /**
@@ -7,7 +7,7 @@ import { ArcService } from '../services/ArcService';
  * In Arc but not in the DAO:  has name, isRegistered is true
  * Not in Arc:  has no name, nor a friendlyName
  */
-export class SchemeInfo extends DaoSchemeInfo {
+export class SchemeInfo extends DaoContractInfo {
 
   public static fromOrganizationSchemeInfo(orgSchemeInfo) {
     let schemeInfo = new SchemeInfo();
@@ -18,7 +18,7 @@ export class SchemeInfo extends DaoSchemeInfo {
     return schemeInfo;
   }
 
-  public static fromDaoSchemeInfo(daoSchemeInfo: DaoSchemeInfo): SchemeInfo {
+  public static fromDaoSchemeInfo(daoSchemeInfo: DaoContractInfo): SchemeInfo {
     let schemeInfo = new SchemeInfo();
     Object.assign(schemeInfo, daoSchemeInfo);
     schemeInfo.isRegistered = true;

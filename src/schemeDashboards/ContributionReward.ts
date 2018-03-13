@@ -1,19 +1,22 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService } from "../services/ArcService";
+import { ArcService, ContributionReward, ProposeContributionRewardParams } from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
+import { BigNumber } from '../services/Web3Service';
 
 @autoinject
-export class ContributionReward extends DaoSchemeDashboard {
+export class ContributionRewardDashboard extends DaoSchemeDashboard {
 
-  nativeTokenReward: Number = 0;
+  nativeTokenReward: BigNumber = 0;
   description: string;
-  ethReward: Number = 0;
-  externalTokenReward: Number = 0;
-  reputationTokenReward: Number = 0;
+  ethReward: BigNumber = 0;
+  externalTokenReward: BigNumber = 0;
+  reputationTokenReward: BigNumber = 0;
   externalTokenAddress: string;
   beneficiaryAddress: string;
+  periodLength: number = 1;
+  numberOfPeriods: number = 1;
 
   constructor(
     private eventAggregator: EventAggregator
@@ -24,14 +27,16 @@ export class ContributionReward extends DaoSchemeDashboard {
 
   async proposeContributionReward() {
     try {
-      const scheme = await this.arcService.getContract("ContributionReward");
-      let options: any = {
+      const scheme = await this.arcService.getContract("ContributionReward") as ContributionReward;
+      let options: ProposeContributionRewardParams = {
         avatar: this.orgAddress,
         description: this.description,
         nativeTokenReward: this.nativeTokenReward, // amount of contribution in native tokens
-        reputationReward: this.reputationTokenReward, // amount of contribution to reputation
+        reputationChange: this.reputationTokenReward, // amount of contribution to reputation
         ethReward: this.ethReward, // amount of contribution in Wei
-        beneficiary: this.beneficiaryAddress
+        beneficiary: this.beneficiaryAddress,
+        periodLength: 1,
+        numberOfPeriods: 1
       };
 
       if (this.externalTokenReward) {
@@ -39,10 +44,10 @@ export class ContributionReward extends DaoSchemeDashboard {
         options.externalTokenReward = this.externalTokenReward; // amount of contribution in terms of the given external token
       }
 
-      let tx = await scheme.proposeContributionReward(options);
+      let result = await scheme.proposeContributionReward(options);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to make a contribution', tx.tx));
+        'Proposal submitted to make a contribution', result.tx.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));

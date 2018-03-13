@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "esnext",
+    "module": "commonjs",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "sourceRoot": "src",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "importHelpers": true
   },
   "include": [
     "./src/**/*"

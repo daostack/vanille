@@ -15,7 +15,7 @@ export class AbsoluteVote implements VotingMachineConfig {
 
   activate(model) {
     model.getConfigurationHash = this.getConfigurationHash.bind(this);
-    model.votePrec = model.votePrec !== undefined ? model.votePrec : 50;
+    model.votePerc = model.votePerc !== undefined ? model.votePerc : 50;
     model.ownerVote = model.ownerVote !== undefined ? model.ownerVote : true;
     this.model = model;
   }
@@ -27,7 +27,7 @@ export class AbsoluteVote implements VotingMachineConfig {
     return await this.arcService.setContractParameters(
       {
         reputation: dao.reputation.address,
-        votePrec: this.model.votePrec,
+        votePerc: this.model.votePerc,
         ownerVote: this.model.ownerVote,
       },
       "AbsoluteVote",

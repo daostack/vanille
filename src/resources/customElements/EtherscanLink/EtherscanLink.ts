@@ -1,6 +1,6 @@
 ﻿import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
 import { Web3Service } from '../../../services/Web3Service';
-import { config as ArcConfig } from '../../../services/ArcService';
+import { Config as ArcConfig } from '../../../services/ArcService';
 
 @containerless
 @autoinject

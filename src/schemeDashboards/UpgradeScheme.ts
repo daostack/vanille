@@ -1,13 +1,13 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService } from "../services/ArcService";
+import { ArcService, UpgradeScheme, ProposeUpgradingSchemeParams } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from '../services/SchemeService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 
 @autoinject
-export class UpgradeScheme extends DaoSchemeDashboard {
+export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
 
   controllerAddress: string;
   upgradingSchemeConfig: any = {};
@@ -48,15 +48,15 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async proposeController() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme");
-      let tx = await scheme.proposeController(
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
+      let result = await scheme.proposeController(
         {
           avatar: this.orgAddress
           , controller: this.controllerAddress
         });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change controller ${this.controllerAddress}', tx.tx));
+        'Proposal submitted to change controller ${this.controllerAddress}', result.tx.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing new controller ${this.controllerAddress}`, ex));
@@ -65,20 +65,18 @@ export class UpgradeScheme extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme");
-      let config: any = {
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
+      let config: ProposeUpgradingSchemeParams = {
         avatar: this.orgAddress
+        , scheme: this.upgradingSchemeAddress
+        , schemeParametersHash: await this.upgradingSchemeConfig.getConfigurationHash(
+          this.orgAddress, scheme.contract.address)
       };
 
-      config.scheme = this.upgradingSchemeAddress;
-
-      config.schemeParametersHash = await this.upgradingSchemeConfig.getConfigurationHash(
-        this.orgAddress, scheme.address);
-
-      let tx = await scheme.proposeUpgradingScheme(config);
+      let result = await scheme.proposeUpgradingScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', tx.tx));
+        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', result.tx.tx));
 
       this.currentSchemeSelection = null;
 

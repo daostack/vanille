@@ -17,7 +17,7 @@ export class VotingMachineService {
     , private schemeService: SchemeService
   ) {
     this.votingMachines = this.arcService.arcVotingMachines;
-    // TODO: should come from arcService or daostack-arc.js
+    // TODO: this should be in a application settings service or some such?
     this.defaultMachine = this.votingMachines.filter((vm) => vm.name === "AbsoluteVote")[0];
   }
   public defaultMachine: VotingMachineInfo;

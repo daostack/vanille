@@ -48,7 +48,8 @@ export class GlobalConstraintsDropdown {
 
   async loadConstraints() {
     // need to check whether this.scheme exists in list?
-    this.constraints = (await this.globalConstraintsService.getGlobalConstraintsForDao(this.daoAddress, true))
+    this.constraints = 
+      (await this.globalConstraintsService.getGlobalConstraintsForDao(this.daoAddress, true))
       .filter((gc: GlobalConstraintInfo) => {
         return gc.inArc
           && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(gc.name) === -1))

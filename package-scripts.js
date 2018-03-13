@@ -12,7 +12,7 @@ const cwd = require("cwd")();
 
 const vanilleRoot = env.vanilleRoot || cwd;
 const pathArcJs =
-  env.pathArcJs || joinPath(vanilleRoot, "node_modules/daostack-arc-js");
+  env.pathArcJs || joinPath(vanilleRoot, "node_modules/@daostack/arc.js");
 const network = env.network;
 
 module.exports = {
@@ -29,18 +29,18 @@ module.exports = {
      */
     "arc-js": {
       ganache: {
-        run: "npm explore daostack-arc-js -- npm start test.ganache.run",
-        runAsync: "npm explore daostack-arc-js -- npm start test.ganache.runAsync"
+        run: "npm explore @daostack/arc.js -- npm start test.ganache.run",
+        runAsync: "npm explore @daostack/arc.js -- npm start test.ganache.runAsync"
       },
       ganacheDb: {
-        run: "npm explore daostack-arc-js -- npm start test.ganacheDb.run",
-        runAsync: "npm explore daostack-arc-js -- npm start test.ganacheDb.runAsync",
-        clean: "npm explore daostack-arc-js -- npm start test.ganacheDb.clean",
-        zip: "npm explore daostack-arc-js -- npm start test.ganacheDb.zip",
-        unzip: "npm explore daostack-arc-js -- npm start test.ganacheDb.unzip",
-        restoreFromZip: "npm explore daostack-arc-js -- npm start test.ganacheDb.restoreFromZip"
+        run: "npm explore @daostack/arc.js -- npm start test.ganacheDb.run",
+        runAsync: "npm explore @daostack/arc.js -- npm start test.ganacheDb.runAsync",
+        clean: "npm explore @daostack/arc.js -- npm start test.ganacheDb.clean",
+        zip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.zip",
+        unzip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.unzip",
+        restoreFromZip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.restoreFromZip"
       },
-      migrateContracts: "npm explore daostack-arc-js -- npm start migrateContracts"
+      migrateContracts: "npm explore @daostack/arc.js -- npm start migrateContracts"
     },
     test: {
       default: "nps test.jest",

@@ -4,6 +4,8 @@ import { TokenService } from "../services/TokenService";
 import { ArcService } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { PLATFORM } from 'aurelia-pal';
+import { AureliaHelperService } from "../services/AureliaHelperService";
+import { App } from '../app';
 
 @autoinject
 export class DAODashboard {
@@ -27,6 +29,7 @@ export class DAODashboard {
     , private tokenService: TokenService
     , private arcService: ArcService
     , private schemeService: SchemeService
+    , private aureliaHelperService: AureliaHelperService
 
   ) {
   }
@@ -134,12 +137,18 @@ export class DAODashboard {
 
   getDashboardView(scheme: SchemeInfo): string {
     let name: string;
+    let isArcScheme = false;
     if (!scheme.inArc) {
       name = "NonArc";
     } else if (!scheme.inDao) {
       name = "NotRegistered";
     } else {
       name = scheme.name;
+      isArcScheme = true;
+    }
+
+    if (isArcScheme && !App.hasDashboard(name)) {
+      name = "UnknownArc";
     }
     return `../schemeDashboards/${name}`;
   }

@@ -105,4 +105,15 @@ export class App {
 
     this.router = router;
   }
+  static SchemeDashboards = [
+    "GlobalConstraintRegistrar",
+    "SchemeRegistrar",
+    "ContributionReward",
+    "UpgradeScheme",
+    "NonArc"
+  ];
+
+  public static hasDashboard(schemeName: string): boolean {
+    return App.SchemeDashboards.indexOf(schemeName) !== -1;
+  }
 }
