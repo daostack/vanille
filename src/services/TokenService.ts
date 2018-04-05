@@ -25,7 +25,7 @@ export class TokenService {
    * @param token 
    */
   public async getUserTokenBalance(token: TruffleContract, inEth: boolean = false): Promise<BigNumber> {
-    let userAddress = this.arcService.defaultAccount;
+    let userAddress = this.web3.defaultAccount;
     let amount = await token.balanceOf(userAddress);
     if (inEth) {
       amount = this.web3.fromWei(amount);
@@ -35,7 +35,7 @@ export class TokenService {
 
   public async getDAOstackNativeToken() {
     const daoStack = await this.daoService.GetDaostack();
-    const daoTokenAddress = await daoStack.controller.nativeToken();
+    const daoTokenAddress = await daoStack.token.address;
     return await this.arcService.getContract("DAOToken", daoTokenAddress);
   }
 }

@@ -10,16 +10,7 @@
     "importHelpers": true
   },
   "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "static"
-  ],
-  "typeRoots": [
-    "node_modules/@types",
-    "node_modules/web3-typescript-typings",
+    "./src/**/*",
     "custom_typings"
   ]
 }

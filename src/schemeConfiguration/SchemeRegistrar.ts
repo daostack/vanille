@@ -14,8 +14,8 @@ export class SchemeRegistrar implements SchemeConfigurator {
   ) {
   }
 
-  activate(model) {
-    model.getConfigurationHash = this.getConfigurationHash.bind(this);
+  async activate(model) {
+    model.getConfigurationHash = await this.getConfigurationHash.bind(this);
   }
 
   async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
@@ -24,7 +24,7 @@ export class SchemeRegistrar implements SchemeConfigurator {
 
     return await this.arcService.setContractParameters({
       "voteParametersHash": voteParamsHash,
-      "votingMachine": this.votingMachineInfo.address
+      "votingMachineAddress": this.votingMachineInfo.address
     }, "SchemeRegistrar", schemeAddress);
   }
 

@@ -3,7 +3,7 @@ import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   ArcService
-  , GlobalConstraintRegistrar
+  , GlobalConstraintRegistrarWrapper
   , ProposeToAddModifyGlobalConstraintParams
 } from "../services/ArcService";
 import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
@@ -49,7 +49,7 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
 
   async proposeConstraint() {
     try {
-      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrar;
+      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrarWrapper;
       const globalConstraintParametersHash = await this.constraintToAddConfig.getConfigurationHash(this.orgAddress, this.currentGCSelection.address);
       const constraintRemovalVotingMachineInfoHash = await this.votingMachineConfig.getConfigurationHash(this.orgAddress, this.votingMachineInfo.address);
 
@@ -74,7 +74,7 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
 
   async proposeRemoveConstraint() {
     try {
-      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrar;
+      const scheme = await this.arcService.getContract("GlobalConstraintRegistrar") as GlobalConstraintRegistrarWrapper;
 
       let result = await scheme.proposeToRemoveGlobalConstraint(
         {

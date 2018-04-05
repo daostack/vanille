@@ -1,6 +1,6 @@
 import { autoinject, bindable, bindingMode, containerless } from "aurelia-framework";
 import { GlobalConstraintService, GlobalConstraintInfo } from "../../../services/GlobalConstraintService";
-import { DaoService, DAO } from "../../../services/DaoService";
+import { DaoService, VanilleDAO } from "../../../services/DaoService";
 
 /**
  * Dropdown for Arc schemes in a given Dao.  Note we don't handle Non-Arc schemes here.
@@ -36,8 +36,8 @@ export class GlobalConstraintsDropdown {
 
     this.loadConstraints();
 
-    this.subscription = dao.subscribe(DAO.daoConstraintSetChangedEvent,
-      (params: { dao: DAO, constraint: GlobalConstraintInfo }) => {
+    this.subscription = dao.subscribe(VanilleDAO.daoConstraintSetChangedEvent,
+      (params: { dao: VanilleDAO, constraint: GlobalConstraintInfo }) => {
         this.loadConstraints();
       });
   }
@@ -48,15 +48,15 @@ export class GlobalConstraintsDropdown {
 
   async loadConstraints() {
     // need to check whether this.scheme exists in list?
-    this.constraints = 
+    this.constraints =
       (await this.globalConstraintsService.getGlobalConstraintsForDao(this.daoAddress, true))
-      .filter((gc: GlobalConstraintInfo) => {
-        return gc.inArc
-          && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(gc.name) === -1))
-          && (!this.excludeRegistered || !gc.isRegistered)
-          && (!this.excludeUnregistered || gc.isRegistered)
-          ;
-      })
+        .filter((gc: GlobalConstraintInfo) => {
+          return gc.inArc
+            && ((this.excludeKeys.length == 0) || (this.excludeKeys.indexOf(gc.name) === -1))
+            && (!this.excludeRegistered || !gc.isRegistered)
+            && (!this.excludeUnregistered || gc.isRegistered)
+            ;
+        })
       ;
 
     if (this.includeNonArcItem) {

@@ -4,8 +4,7 @@ import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { DaoService } from '../services/DaoService';
 import {
   ArcService
-  , ContractInfo
-  , SchemeRegistrar
+  , SchemeRegistrarWrapper
   , ProposeToAddModifySchemeParams
   , ProposeToRemoveSchemeParams
 } from "../services/ArcService";
@@ -64,10 +63,10 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   async addScheme() {
     try {
 
-      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
       let config: ProposeToAddModifySchemeParams = Object.assign({
         avatar: this.orgAddress
-        , scheme: this.schemeToAddAddress
+        , schemeAddress: this.schemeToAddAddress
         , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
       }, this.newSchemeConfiguration);
 
@@ -100,12 +99,12 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   async modifyScheme() {
 
     try {
-      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
       const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
       const result = await schemeRegistrar.proposeToAddModifyScheme({
         avatar: this.orgAddress,
-        scheme: this.schemeToModify.address,
+        schemeAddress: this.schemeToModify.address,
         schemeName: this.schemeToModify.name,
         schemeParametersHash: schemeParametersHash
       });
@@ -122,11 +121,11 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
     try {
 
-      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrar;
+      const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
 
       let result = await schemeRegistrar.proposeToRemoveScheme({
         avatar: this.orgAddress,
-        scheme: this.schemeToRemove.address
+        schemeAddress: this.schemeToRemove.address
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(

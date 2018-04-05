@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { ArcService } from '../services/ArcService';
-import { DaoService, DAO } from "../services/DaoService";
+import { DaoService, VanilleDAO } from "../services/DaoService";
 import { SchemeInfo } from "../services/SchemeService";
 
 export class DaoSchemeDashboard {
@@ -18,7 +18,7 @@ export class DaoSchemeDashboard {
    * short name (used by ArcService.getContract())
    */
   name: string;
-  org: DAO;
+  org: VanilleDAO;
   orgName: string;
   allSchemes: Array<SchemeInfo>;
 

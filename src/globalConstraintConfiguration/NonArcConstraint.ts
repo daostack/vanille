@@ -14,8 +14,8 @@ export class NonArcConstraint implements GlobalConstraintConfig {
      by the call to getConfigurationHash */
   _constraintParametersHash = undefined;
 
-  activate(model) {
-    model.getConfigurationHash = this.getConfigurationHash.bind(this);
+  async activate(model) {
+    model.getConfigurationHash = await this.getConfigurationHash.bind(this);
     this.model = model;
   }
 

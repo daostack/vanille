@@ -1,18 +1,17 @@
 import { autoinject } from "aurelia-framework";
 import {
   ArcService,
-  DAO as ArcJsDAO,
+  DAO,
   NewDaoConfig,
   SchemesConfig,
-  DaoCreator,
+  DaoCreatorWrapper,
   InitialSchemesSetEventResult,
   DecodedLogEntryEvent
 } from "./ArcService";
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription } from "aurelia-event-aggregator";
 import { LogManager } from "aurelia-framework";
-import { DAO } from "../entities/DAO";
-import { DaoContractInfo } from "../entities/DaoSchemeInfo";
+import { VanilleDAO } from "../entities/DAO";
 import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
@@ -28,14 +27,14 @@ export class DaoService {
     includeEventsIn(this);
   }
 
-  private daoCache = new Map<string, DAO>();
+  private daoCache = new Map<string, VanilleDAO>();
   private logger = LogManager.getLogger("Vanille");
   public promiseToBeLoaded: Promise<any>;
-  private _daoStack: DAO;
+  private _daoStack: VanilleDAO;
   private resolvePromiseForDaoStack;
   public promiseForDaoStack: Promise<any> = new Promise((resolve) => { this.resolvePromiseForDaoStack = resolve; });
 
-  public async GetDaostack(): Promise<DAO> {
+  public async GetDaostack(): Promise<VanilleDAO> {
     return this.promiseForDaoStack;
   }
 
@@ -47,7 +46,7 @@ export class DaoService {
   public async initialize() {
     return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
       try {
-        let daoCreator = (await this.arcService.getContract("DaoCreator")) as DaoCreator;
+        let daoCreator = (await this.arcService.getContract("DaoCreator")) as DaoCreatorWrapper;
         let myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: 0 });
         /**
          * get():  fires once for all the DAOs in the system; resolve() will be called properly.
@@ -68,16 +67,16 @@ export class DaoService {
     }));
   }
 
-  public async createOrganization(config: NewDaoConfig & SchemesConfig): Promise<ArcJsDAO> {
+  public async createDAO(config: NewDaoConfig & SchemesConfig): Promise<DAO> {
     return this.promiseToBeLoaded.then(async () => {
-      return ArcJsDAO.new(config);
+      return DAO.new(config);
     });
   }
 
   public async daoAt(
     avatarAddress: string,
     takeFromCache: boolean = true
-  ): Promise<DAO> {
+  ): Promise<VanilleDAO> {
     return this.promiseToBeLoaded.then(async () => {
       return this._daoAt(avatarAddress, takeFromCache);
     });
@@ -86,18 +85,18 @@ export class DaoService {
   private async _daoAt(
     avatarAddress: string,
     takeFromCache: boolean = true
-  ): Promise<DAO> {
-    let dao: DAO;
+  ): Promise<VanilleDAO> {
+    let dao: VanilleDAO;
     let cachedDao = this.daoCache.get(avatarAddress);
 
     if (!takeFromCache || !cachedDao) {
       try {
-        let org = await ArcJsDAO.at(avatarAddress);
+        let org = await DAO.at(avatarAddress);
 
         // if (!org || !org.avatar) {
         //   throw new Error(`DAO at ${avatarAddress} was not found`);
         // }
-        dao = await DAO.fromOrganization(org, this.arcService, this.web3);
+        dao = await VanilleDAO.fromArcJsDao(org, this.arcService, this.web3);
       } catch (ex) {
         // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
         // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
@@ -117,7 +116,7 @@ export class DaoService {
     return dao;
   }
 
-  public async allDAOs(): Promise<Array<DAO>> {
+  public async allDAOs(): Promise<Array<VanilleDAO>> {
     return this.promiseToBeLoaded.then(async () => {
       return Array.from(this.daoCache.values());
     });
@@ -185,5 +184,4 @@ export class DaoService {
   }
 }
 
-export { DAO } from "../entities/DAO";
-export { DaoContractInfo } from "../entities/DaoSchemeInfo";
+export { VanilleDAO } from "../entities/DAO";

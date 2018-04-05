@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, ContractInfo, TruffleContract } from './ArcService';
-import { DaoService, DaoContractInfo } from '../services/DaoService';
+import { ArcService, ContractWrapperInfo, TruffleContract } from './ArcService';
+import { DaoService } from '../services/DaoService';
 import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { EventAggregator } from 'aurelia-event-aggregator';
@@ -12,7 +12,7 @@ export class SchemeService {
   /**
    * The Arc scheme contracts that we make available to the user
    */
-  public availableSchemes: Array<ContractInfo>;
+  public availableSchemes: Array<ContractWrapperInfo>;
 
   constructor(
     private arcService: ArcService
@@ -61,7 +61,7 @@ export class SchemeService {
     for (let availableScheme of availableSchemes) {
       let isInDao = schemesMap.has(availableScheme.address);
       if (!isInDao) {
-        schemes.push(SchemeInfo.fromContractInfo(availableScheme, false));
+        schemes.push(SchemeInfo.fromContractWrapper(availableScheme, false));
       }
     }
 
@@ -80,5 +80,4 @@ export class SchemeService {
   }
 }
 
-export { ContractInfo } from "./ArcService";
 export { SchemeInfo } from "../entities/SchemeInfo";

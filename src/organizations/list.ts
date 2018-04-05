@@ -2,7 +2,7 @@ import { Subscription } from 'aurelia-event-aggregator';
 import { autoinject, singleton } from "aurelia-framework";
 import { Web3Service } from "../services/Web3Service";
 import { ArcService } from "../services/ArcService";
-import { DaoService, DAO } from "../services/DaoService";
+import { DaoService, VanilleDAO } from "../services/DaoService";
 
 @singleton(false) // meaning true
 @autoinject

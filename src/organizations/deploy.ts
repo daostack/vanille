@@ -1,8 +1,8 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service, BigNumber } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
-import { ArcService, ContractInfo, FounderConfig } from "../services/ArcService";
-import { DaoService, DAO } from "../services/DaoService";
+import { ArcService, ContractWrapperInfo, FounderConfig } from "../services/ArcService";
+import { DaoService, VanilleDAO } from "../services/DaoService";
 import { SchemeService } from "../services/SchemeService";
 import "./deploy.scss";
 import { VotingMachineInfo } from "../services/VotingMachineService";
@@ -26,8 +26,8 @@ export class DeployGen {
 
   private addOrgResultMessage: string = '';
   private deployOrgStatus: string = null;
-  private arcSchemes: Array<ContractInfo>;
-  private selectedSchemes: Array<ContractInfo> = [];
+  private arcSchemes: Array<ContractWrapperInfo>;
+  private selectedSchemes: Array<ContractWrapperInfo> = [];
   private votingMachineInfo: VotingMachineInfo = null;
   private votingMachineModel: any = {};
   private myView: any;
@@ -41,7 +41,7 @@ export class DeployGen {
     , private eventAggregator: EventAggregator
     , private router: Router
   ) {
-    this.userAddress = arcService.defaultAccount;
+    this.userAddress = this.web3.defaultAccount;
     this.founders = new Array();
     this.arcSchemes = this.schemeService.availableSchemes.sort(
       (a, b) => { return SortService.evaluateString(a.name, b.name); }
@@ -81,14 +81,14 @@ export class DeployGen {
     this.addOrgResultMessage = 'adding_org';
     try {
 
-      const organization = await this.daoService.createOrganization({
+      const organization = await this.daoService.createDAO({
         name: this.orgName,
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
         founders: this.founders,
         votingMachineParams: {
           votingMachineName: this.votingMachineInfo.name
-          , votingMachine: this.votingMachineInfo.address
+          , votingMachineAddress: this.votingMachineInfo.address
           , votePerc: this.votingMachineModel.votePerc
           , ownerVote: this.votingMachineModel.ownerVote
         }
@@ -127,7 +127,7 @@ export class DeployGen {
   }
 }
 
-interface DeploySchemeInfo extends ContractInfo {
+interface DeploySchemeInfo extends ContractWrapperInfo {
   required: boolean;
 }
 

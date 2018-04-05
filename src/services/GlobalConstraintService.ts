@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { DaoService, DAO } from './DaoService';
+import { ArcService, TruffleContract, ContractWrapperInfo } from './ArcService';
+import { DaoService, VanilleDAO } from './DaoService';
 import { SchemeService } from '../services/SchemeService';
 import { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
 
@@ -10,7 +10,7 @@ export class GlobalConstraintService {
   /**
    * The Arc global contraints that we make available to the user
    */
-  public availableConstraints: Array<ContractInfo>;
+  public availableConstraints: Array<ContractWrapperInfo>;
 
   constructor(
     private arcService: ArcService
@@ -60,7 +60,7 @@ export class GlobalConstraintService {
     for (let gc of availableConstraints) {
       let isInDao = constraintsMap.has(gc.address);
       if (!isInDao) {
-        constraints.push(GlobalConstraintInfo.fromContractInfo(gc, false));
+        constraints.push(GlobalConstraintInfo.fromContractWrapper(gc, false));
       }
     }
 

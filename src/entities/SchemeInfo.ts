@@ -1,33 +1,28 @@
-import { DaoContractInfo } from './DaoSchemeInfo';
-import { ContractInfo } from '../services/ArcService';
-import { ArcService } from '../services/ArcService';
+import { ContractWrapperInfo, DaoSchemeInfo } from '../services/ArcService';
 /**
  * can be any scheme, in the DAO, not in the DAO, not even in Arc
- * In the DAO: has name, isRegistered is true
+ * In the DAO: has name/friendlyName, isRegistered is true
  * In Arc but not in the DAO:  has name, isRegistered is true
  * Not in Arc:  has no name, nor a friendlyName
  */
-export class SchemeInfo extends DaoContractInfo {
+export class SchemeInfo extends ContractWrapperInfo {
 
-  public static fromOrganizationSchemeInfo(orgSchemeInfo) {
+  public static fromOrganizationSchemeInfo(orgSchemeInfo: DaoSchemeInfo) {
     let schemeInfo = new SchemeInfo();
     schemeInfo.address = orgSchemeInfo.address;
-    schemeInfo.name = orgSchemeInfo.name;
-    schemeInfo.friendlyName = ArcService.convertKeyToFriendlyName(orgSchemeInfo.name);
+    if (orgSchemeInfo.wrapper) {
+      schemeInfo.name = orgSchemeInfo.wrapper.name;
+      schemeInfo.friendlyName = orgSchemeInfo.wrapper.friendlyName;
+    }
     schemeInfo.isRegistered = true;
     return schemeInfo;
   }
 
-  public static fromDaoSchemeInfo(daoSchemeInfo: DaoContractInfo): SchemeInfo {
+  public static fromContractWrapper(wrapper: ContractWrapperInfo, isRegistered: boolean): SchemeInfo {
     let schemeInfo = new SchemeInfo();
-    Object.assign(schemeInfo, daoSchemeInfo);
-    schemeInfo.isRegistered = true;
-    return schemeInfo;
-  }
-
-  public static fromContractInfo(contractInfo: ContractInfo, isRegistered: boolean): SchemeInfo {
-    let schemeInfo = new SchemeInfo();
-    Object.assign(schemeInfo, contractInfo);
+    schemeInfo.address = wrapper.address;
+    schemeInfo.name = wrapper.name;
+    schemeInfo.friendlyName = wrapper.friendlyName;
     schemeInfo.isRegistered = isRegistered;
     return schemeInfo;
   }

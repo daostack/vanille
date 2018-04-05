@@ -1,7 +1,7 @@
 import { autoinject, computedFrom, observable } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService, UpgradeScheme, ProposeUpgradingSchemeParams } from "../services/ArcService";
+import { ArcService, UpgradeSchemeWrapper, ProposeUpgradingSchemeParams } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from '../services/SchemeService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
@@ -48,7 +48,7 @@ export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
 
   async proposeController() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeSchemeWrapper;
       let result = await scheme.proposeController(
         {
           avatar: this.orgAddress
@@ -65,12 +65,12 @@ export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
 
   async submitUpgradingScheme() {
     try {
-      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeScheme;
+      const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeSchemeWrapper;
       let config: ProposeUpgradingSchemeParams = {
         avatar: this.orgAddress
         , scheme: this.upgradingSchemeAddress
         , schemeParametersHash: await this.upgradingSchemeConfig.getConfigurationHash(
-          this.orgAddress, scheme.contract.address)
+          this.orgAddress, scheme.address)
       };
 
       let result = await scheme.proposeUpgradingScheme(config);

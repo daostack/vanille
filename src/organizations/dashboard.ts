@@ -1,5 +1,5 @@
 import { autoinject, computedFrom } from "aurelia-framework";
-import { DaoService, DAO } from "../services/DaoService";
+import { DaoService, VanilleDAO } from "../services/DaoService";
 import { TokenService } from "../services/TokenService";
 import { ArcService } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
@@ -10,7 +10,7 @@ import { App } from '../app';
 @autoinject
 export class DAODashboard {
 
-  org: DAO;
+  org: VanilleDAO;
   address: string;
   orgName: string;
   tokenSymbol: string;
@@ -47,7 +47,7 @@ export class DAODashboard {
       // in Wei
       this.omega = this.org.omega;
 
-      this.subscription = this.org.subscribe(DAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
+      this.subscription = this.org.subscribe(VanilleDAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
 
       await this.loadSchemes();
       this.dataLoaded = true;
@@ -86,7 +86,7 @@ export class DAODashboard {
     }, 0);
   }
 
-  private handleSchemeSetChanged(params: { dao: DAO, scheme: SchemeInfo }) {
+  private handleSchemeSetChanged(params: { dao: VanilleDAO, scheme: SchemeInfo }) {
     let schemeInfo = params.scheme;
     let addTo: Array<SchemeInfo>;
     let removeFrom: Array<SchemeInfo>;

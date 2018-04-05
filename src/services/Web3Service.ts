@@ -1,4 +1,5 @@
 import { autoinject } from "aurelia-framework";
+import { promisify } from "es6-promisify";
 import * as Web3 from "web3";
 import { HttpProvider, Eth, version } from "web3";
 import { BigNumber } from 'bignumber.js'
@@ -17,8 +18,7 @@ export class Web3Service {
 
   public get accounts(): Array<string> { return this.web3 ? this.web3.eth.accounts : []; }
 
-  // TODO:  always same as this.web3.eth.accounts[0]? -dkent
-  public get defaultAccount(): string { return this.web3 ? this.web3.eth.defaultAccount : null; }
+  public defaultAccount: string;
 
   public get currentProvider(): HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
 
@@ -108,7 +108,7 @@ export class Web3Service {
 
     return new Promise<void>((resolve, reject) => {
       try {
-        web3.version.getNetwork((err, chainId) => {
+        web3.version.getNetwork(async (err, chainId) => {
           if (!err) {
             console.log(`Targetted network: ${Web3Service.Network}`)
             let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
@@ -123,6 +123,7 @@ export class Web3Service {
             } else {
               console.log(`Connected to Ethereum (${Web3Service.Network})`);
               this._web3 = web3;
+              this.defaultAccount = await this.getDefaultAccount();
               resolve(this._web3);
             }
           } else {
@@ -132,6 +133,19 @@ export class Web3Service {
       } catch (ex) {
         reject(new Error(`Web3Service.initialize failed: ${ex}`));
       }
+    });
+  }
+
+  private async getDefaultAccount(): Promise<string> {
+
+    return promisify(this.web3.eth.getAccounts)().then((accounts: Array<any>) => {
+      const defaultAccount = this.web3.eth.defaultAccount = accounts[0];
+
+      if (!defaultAccount) {
+        throw new Error("accounts[0] is not set");
+      }
+
+      return defaultAccount;
     });
   }
 }

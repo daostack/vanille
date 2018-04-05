@@ -31,8 +31,8 @@
 
           <div show.bind="addableSchemes.length">
 
-            <arc-schemes-dropdown scheme.bind="currentSchemeSelection" dao-address.bind="orgAddress" exclude-registered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-              schemes.bind="addableSchemes" include-non-arc-item.bind="true">
+            <arc-schemes-dropdown scheme.bind="currentSchemeSelection" dao-address.bind="orgAddress" exclude-registered.bind="true" schemes.bind="addableSchemes"
+              include-non-arc-item.bind="true">
               <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
               <span slot="buttonText">
                 <span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select Scheme Type to Add'}</span>
@@ -63,8 +63,7 @@
         <hr/>
 
         <form>
-          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']"
-            exclude-unknown-arc.bind="true">
+          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-unknown-arc.bind="true">
             <span slot="buttonText">
               <span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span>
             </span>
@@ -89,8 +88,7 @@
           machine.
         </instructions>
         <form>
-          <arc-schemes-dropdown scheme.bind="schemeToRemove" dao-address.bind="orgAddress" schemes.bind="allSchemes" exclude-unregistered.bind="true"
-            exclude-keys.bind="['GlobalConstraintRegistrar', 'UpgradeScheme']">
+          <arc-schemes-dropdown scheme.bind="schemeToRemove" dao-address.bind="orgAddress" schemes.bind="allSchemes" exclude-unregistered.bind="true">
             <span slot="noSchemes">
               <span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
             <span slot="buttonText">

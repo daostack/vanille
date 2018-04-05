@@ -1,10 +1,11 @@
-import { ArcService, DAO as ArcJsDAO, ContractInfo } from '../services/ArcService';
+import { ArcService, DAO, DaoSchemeInfo, DaoGlobalConstraintInfo } from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { Web3Service, BigNumber } from "../services/Web3Service";
 import { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
-export class DAO extends ArcJsDAO {
+
+export class VanilleDAO extends DAO {
 
   public address: string;
   public name: string;
@@ -34,12 +35,12 @@ export class DAO extends ArcJsDAO {
     this.unRegisterSchemeEvent.stopWatching();
   }
 
-  public static async fromOrganization(
-    org: ArcJsDAO
+  public static async fromArcJsDao(
+    org: DAO
     , arcService: ArcService
-    , web3: Web3Service): Promise<DAO> {
+    , web3: Web3Service): Promise<VanilleDAO> {
 
-    let newDAO = Object.assign(new DAO(), org);
+    let newDAO = Object.assign(new VanilleDAO(), org);
     newDAO.arcService = arcService;
     newDAO.address = org.avatar.address;
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
@@ -48,7 +49,7 @@ export class DAO extends ArcJsDAO {
   }
 
   private async _getCurrentSchemes(): Promise<Array<SchemeInfo>> {
-    return (await super.getSchemes()).map((s) => SchemeInfo.fromOrganizationSchemeInfo(s));
+    return (await super.getSchemes()).map((s: DaoSchemeInfo) => SchemeInfo.fromOrganizationSchemeInfo(s));
   }
 
   /**
@@ -85,28 +86,28 @@ export class DAO extends ArcJsDAO {
     let count = eventsArray.length;
     for (let i = 0; i < count; i++) {
       let schemeAddress = eventsArray[i].args._scheme;
-      let contractInfo = this.arcService.contractInfoFromAddress(schemeAddress) as any;
+      let contractWrapper = this.arcService.contractWrapperFromAddress(schemeAddress) as any;
 
-      if (!contractInfo) {
+      if (!contractWrapper) {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
-        contractInfo = <any>{ address: schemeAddress };
+        contractWrapper = <any>{ address: schemeAddress };
       }
 
-      let schemeInfo = SchemeInfo.fromContractInfo(contractInfo, adding);
+      let schemeInfo = SchemeInfo.fromContractWrapper(contractWrapper, adding);
       let changed = false;
       // TODO: get unknown name from Arc
       if (adding && !this.schemesCache.has(schemeAddress)) {
         changed = true;
-        this.logger.debug(`caching scheme: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.logger.debug(`caching scheme: ${contractWrapper.name ? contractWrapper.name : "[unknown]"}: ${contractWrapper.address}`);
         this.schemesCache.set(schemeAddress, schemeInfo);
       } else if (!adding && this.schemesCache.has(schemeAddress)) {
         changed = true;
-        this.logger.debug(`uncaching scheme: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.logger.debug(`uncaching scheme: ${contractWrapper.name ? contractWrapper.name : "[unknown]"}: ${contractWrapper.address}`);
         this.schemesCache.delete(schemeAddress);
       }
 
       if (changed) {
-        this.publish(DAO.daoSchemeSetChangedEvent,
+        this.publish(VanilleDAO.daoSchemeSetChangedEvent,
           {
             dao: this,
             scheme: schemeInfo
@@ -116,7 +117,7 @@ export class DAO extends ArcJsDAO {
   }
 
   private async _getCurrentConstraints(): Promise<Array<SchemeInfo>> {
-    return (await super.getGlobalConstraints()).map((s) => GlobalConstraintInfo.fromOrganizationGlobalConstraintInfo(s));
+    return (await super.getGlobalConstraints()).map((s: DaoGlobalConstraintInfo) => GlobalConstraintInfo.fromOrganizationGlobalConstraintInfo(s));
   }
 
   /**
@@ -154,30 +155,30 @@ export class DAO extends ArcJsDAO {
       // work-around: https://github.com/daostack/daostack/issues/263
       let constraintAddress = eventsArray[i].args._globalconstraint || eventsArray[i].args._globalConstraint;
       let constraintParamsHash = eventsArray[i].args._params;
-      let contractInfo = this.arcService.contractInfoFromAddress(constraintAddress) as any;
+      let contractWrapper = this.arcService.contractWrapperFromAddress(constraintAddress) as any;
 
-      if (!contractInfo) {
+      if (!contractWrapper) {
         // then it is a non-arc scheme or TODO: is an Arc scheme that is older or newer than the one Arc is telling us about
-        contractInfo = <any>{ address: constraintAddress };
+        contractWrapper = <any>{ address: constraintAddress };
       }
 
       //let permissions = await this.controller.getSchemePermissions(schemeAddress);
 
-      let constraintInfo = GlobalConstraintInfo.fromContractInfo(contractInfo, adding);
+      let constraintInfo = GlobalConstraintInfo.fromContractWrapper(contractWrapper, adding);
       let changed = false;
       // TODO: get unknown name from Arc
       if (adding && !this.constraintsCache.has(constraintAddress)) {
         changed = true;
-        this.logger.debug(`caching gc: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.logger.debug(`caching gc: ${contractWrapper.name ? contractWrapper.name : "[unknown]"}: ${contractWrapper.address}`);
         this.constraintsCache.set(constraintAddress, constraintInfo);
       } else if (!adding && this.constraintsCache.has(constraintAddress)) {
         changed = true;
-        this.logger.debug(`uncaching gc: ${contractInfo.name ? contractInfo.name : "[unknown]"}: ${contractInfo.address}`);
+        this.logger.debug(`uncaching gc: ${contractWrapper.name ? contractWrapper.name : "[unknown]"}: ${contractWrapper.address}`);
         this.constraintsCache.delete(constraintAddress);
       }
 
       if (changed) {
-        this.publish(DAO.daoConstraintSetChangedEvent,
+        this.publish(VanilleDAO.daoConstraintSetChangedEvent,
           {
             dao: this,
             gc: constraintInfo

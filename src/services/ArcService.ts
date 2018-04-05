@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import * as Arc from '@daostack/arc.js';
+import * as Arc from "@daostack/arc.js";
 
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
@@ -12,108 +12,81 @@ import { ArcSchemesDropdown } from "resources/customElements/arcSchemesDropdown/
 @autoinject
 export class ArcService {
 
-  logger = LogManager.getLogger("Vanille");
-
   constructor(private eventAggregator: EventAggregator) {
     this.contractCache = new Map<string, TruffleContract>();
   }
+
+  public logger = LogManager.getLogger("Vanille");
+
   /**
    * The schemes managed by Arc
    */
-  public arcContracts: Arc.ArcDeployedContractNames;
-  public arcSchemes: Array<ContractInfo>;
-  public arcVotingMachines: Array<ContractInfo>;
-  public arcGlobalConstraints: Array<ContractInfo>;
+  public arcContracts: Arc.ArcWrappers;
+  public arcSchemes: Array<Arc.ContractWrapperBase>;
+  public arcVotingMachines: Array<Arc.ContractWrapperBase>;
+  public arcGlobalConstraints: Array<Arc.ContractWrapperBase>;
   /**
    * maps address to ContractInfo
    */
-  private arcContractMap: Map<string, ContractInfo> = new Map<string, ContractInfo>();
+  private arcContractMap: Map<string, Arc.ContractWrapperBase>;
 
   private contractCache: Map<string, TruffleContract>;
 
-  public get defaultAccount(): string { return Arc.Utils.getDefaultAccount(); }
-
   public async initialize() {
-    Arc.Config.set("network", process.env.network);
-
-    let arcSettings = await Arc.Contracts.getDeployedContracts();
-    let arcContracts = arcSettings.allContracts;
-
-    for (let contractName in arcContracts) {
-      arcContracts[contractName].friendlyName = ArcService.convertKeyToFriendlyName(contractName);
-      arcContracts[contractName].name = contractName;
-    }
-
-    this.arcContracts = arcContracts;
-    this.arcSchemes = arcSettings.schemes as Array<ContractInfo>;
-    this.arcVotingMachines = arcSettings.votingMachines as Array<ContractInfo>;
-    this.arcGlobalConstraints = arcSettings.globalConstraints as Array<ContractInfo>;
-
-    for (var name in this.arcContracts) {
-      var contract = this.arcContracts[name];
-      this.arcContractMap.set(contract.address, contract);
-    }
-  }
-
-  private contractInfoFromName(name: string): ContractInfo {
-    return this.arcContracts[name] as ContractInfo;
-  }
-
-  public contractInfoFromAddress(address: string): ContractInfo {
-    return this.arcContractMap.get(address) as ContractInfo;
-  }
-
-
-  public async getContract(name: string, at?: string): Promise<TruffleContract> {
-
     /**
-     * The TruffleContract class actually represents multiple stages of the process:
-     *  1) require("artifact.json");
-     *  2) .deployed()
-     *  3) .at()
-     * 
-     * The result of .at() is the only one that appears to be complete, with events and everything.
-     * It will be the Arc javascript wrapper when is an Arc contract.
-     * You can call .at() without having called .deployed() if you already have the address.
-     * The contracts in arcContracts are all the result of require()
+     * TODO: check whether the following line is necessary
      */
-    let contractInfo = this.contractInfoFromName(name);
+    Arc.ConfigService.set("network", process.env.network);
+
+    let wrappersByType = await Arc.WrapperService.wrappersByType;
+    let wrappers = Arc.WrapperService.wrappers;
+
+    this.arcContracts = wrappers;
+    this.arcSchemes = wrappersByType.schemes as Array<Arc.ContractWrapperBase>;
+    this.arcVotingMachines = wrappersByType.votingMachines as Array<Arc.ContractWrapperBase>;
+    this.arcGlobalConstraints = wrappersByType.globalConstraints as Array<Arc.ContractWrapperBase>;
+    this.arcContractMap = Arc.WrapperService.wrappersByAddress;
+  }
+  /**
+   * Returns the wrapper at the given address, undefined if not found.
+   * @param address only returns wrappers for contracts deployed by the running version of Arc.js
+   */
+  public contractWrapperFromAddress(address: string): Arc.ContractWrapperBase {
+    return this.arcContractMap.get(address) as Arc.ContractWrapperBase;
+  }
+  /**
+   * 
+   * @param name Returns a wrapper if possible (only for contracts migrated by the running version or Arc.js), else a TruffleContract
+   * @param at Optional address
+   */
+  public async getContract(name: string, at?: string): Promise<Arc.ContractWrapperBase | TruffleContract> {
+    const wrapper = this.arcContracts[name];
     let contract;
-    if (contractInfo !== undefined) {
-      if (!at) {
-        at = contractInfo.address;
-      }
-      let cachedContract = this.contractCache.get(at);
-      if (cachedContract) {
-        return cachedContract;
-      } else {
-        // the only way to catch errors is with .then
-        await contractInfo.contract.at(at).then((result) => {
-          contract = result;
-        });
-      }
-    } else {
-      contract = Arc.Utils.requireContract(name);
-      if (!at) {
-        contract = await contract.deployed();
-        at = contract.address;
-      } else {
+    if (wrapper && (!at || (at === wrapper.address))) {
+      return wrapper;
+    } else { // no wrapper we can use, so return TruffleContract
+      contract = await Arc.Utils.requireContract(name);
+      if (at) {
         let cachedContract = this.contractCache.get(at);
         if (cachedContract) {
           return cachedContract;
+        } else {
+          // the only way to catch errors is with .then
+          await contract.at(at).then((result) => {
+            contract = result;
+          });
         }
+      } else { // no `at` so we want deployed
+        contract = await contract.deployed();
       }
-      // the only way to catch errors is with .then
-      await contract.at(at).then((result) => {
-        contract = result;
-      });
+      if (!contract) {
+        throw new Error(`contract not found at: ${at}`);
+      }
+      this.contractCache.set(at, contract);
+      return contract;
     }
-    if (!contract) {
-      throw new Error(`contract not found at: ${at}`);
-    }
-    this.contractCache.set(at, contract);
-    return contract;
   }
+
   /**
    * @param tx The transaction
    * @param argName The name of the property whose value we wish to return, from  the args object: tx.logs[index].args[argName]
@@ -130,18 +103,12 @@ export class ArcService {
     }
   }
 
-  public static convertKeyToFriendlyName(name: string): string {
-    if (!name) return null;
-
-    // insert a space before all caps except at beginning.  Ignore consecutive caps alone (Like in TokenCapGC, ignore the 'C').
-    name = name.replace(/(?!^)([a-z]|^)([A-Z])/g, '$1 $2');
-
-    // uppercase the first character
-    return name.replace(/^./, function (str) { return str.toUpperCase(); })
-  }
-
   /**
    * Set the parameters on the contract.  Returns hash.
+   * IMPORTANT:  Ignores contractAddress.  Only works against wrappers of contracts
+   * migrated by the currently-running version of Arc.js.
+   * Otherwise there would be the potential for corrupting incompatible contracts.
+   * TODO: Make dashboards aware of the above!
    * @param params 
    */
   public async setContractParameters(
@@ -149,8 +116,12 @@ export class ArcService {
     name: string,
     contractAddress?: string): Promise<string> {
     try {
-      const contract = await this.getContract(name, contractAddress);
-      return (await contract.setParams(params)).result;
+      const wrapper = this.arcContracts[name];
+
+      if (!wrapper || (wrapper.address !== contractAddress)) {
+        throw new Error("wrapper does not exist with the given name or address");
+      }
+      return (await wrapper.setParameters(params)).result;
     }
     catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error setting contract parameters`, ex, undefined, SnackLifetime.none));
@@ -159,29 +130,10 @@ export class ArcService {
   }
 }
 
-/**
- * what we get from Arc, plus some
- */
-export class ContractInfo implements Arc.ArcContractInfo {
-  /**
-   * An uninitialized instance of ExtendTruffleContract,
-   * basically the class factory with static methods.
-   */
-  contract: any;
-  /**
-   * address of the instance deployed by Arc.
-   * Calling contract.at() (a static method on ExtendTruffleContract) will return a 
-   * the properly initialized instance of ExtendTruffleContract.
-   */
-  address: string;
-  /**
-   * Pretty name
-   */
-  friendlyName: string;
-  /**
-   * short name (property name in ArcContracts, like "SchemeRegistrar").
-   */
-  name: string;
+export class ContractWrapperInfo {
+  public address: string;
+  public friendlyName: string;
+  public name: string;
 }
 
 export * from '@daostack/arc.js';

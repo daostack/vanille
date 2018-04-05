@@ -11,8 +11,8 @@ export class UnknownArcS implements SchemeConfigurator {
      by the call to getConfigurationHash */
   _schemeParametersHash = undefined;
 
-  activate(model) {
-    model.getConfigurationHash = this.getConfigurationHash.bind(this);
+  async activate(model) {
+    model.getConfigurationHash = await this.getConfigurationHash.bind(this);
     model.isRegistering = false;
     model._canBeRegisteringScheme = !!model.canBeRegisteringScheme;
     this.model = model;

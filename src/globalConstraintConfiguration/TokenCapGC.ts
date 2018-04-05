@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { GlobalConstraintConfig } from "../services/GlobalConstraintService";
 import { TruffleContract } from '../services/ArcService';
-import { DAO, DaoService } from '../services/DaoService';
+import { VanilleDAO, DaoService } from '../services/DaoService';
 import { ArcService } from "../services/ArcService";
 
 @autoinject
@@ -14,13 +14,13 @@ export class TokenCapGC implements GlobalConstraintConfig {
     , private arcService: ArcService
   ) { }
 
-  activate(model: any) {
-    model.getConfigurationHash = this.getConfigurationHash.bind(this);
+  async activate(model: any) {
+    model.getConfigurationHash = await this.getConfigurationHash.bind(this);
     model.cap = (model.cap !== undefined) ? model.cap : 0;
     this.model = model;
   }
 
-  public async getHash(globalConstraint: TruffleContract, org: DAO) {
+  public async getHash(globalConstraint: TruffleContract, org: VanilleDAO) {
     let hash = await globalConstraint.getParametersHash(org.token.address, this.model.cap);
     // don't generate hash without being sure it is usable  (TODO: is this needed/desirable/cost money)?
     await globalConstraint.setParameters(org.token.address, this.model.cap);

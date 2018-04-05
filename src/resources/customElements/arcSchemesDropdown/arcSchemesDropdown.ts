@@ -1,6 +1,6 @@
 import { autoinject, bindable, bindingMode, containerless } from "aurelia-framework";
 import { SchemeService, SchemeInfo } from "../../../services/SchemeService";
-import { DaoService, DAO } from "../../../services/DaoService";
+import { DaoService, VanilleDAO } from "../../../services/DaoService";
 import { App } from '../../../app';
 
 /**
@@ -36,8 +36,8 @@ export class ArcSchemesDropdown {
 
     this.loadSchemes();
 
-    this.subscription = dao.subscribe(DAO.daoSchemeSetChangedEvent,
-      (params: { dao: DAO, scheme: SchemeInfo }) => {
+    this.subscription = dao.subscribe(VanilleDAO.daoSchemeSetChangedEvent,
+      (params: { dao: VanilleDAO, scheme: SchemeInfo }) => {
         this.loadSchemes();
       });
   }

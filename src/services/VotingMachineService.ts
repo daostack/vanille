@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, TruffleContract, ContractInfo } from './ArcService';
-import { DaoService, DAO } from './DaoService';
+import { ArcService, TruffleContract, ContractWrapperInfo } from './ArcService';
+import { DaoService, VanilleDAO } from './DaoService';
 import { SchemeService } from '../services/SchemeService';
 
 @autoinject
@@ -23,7 +23,7 @@ export class VotingMachineService {
   public defaultMachine: VotingMachineInfo;
 }
 
-export class VotingMachineInfo extends ContractInfo {
+export class VotingMachineInfo extends ContractWrapperInfo {
 }
 
 export interface VotingMachineConfig {

@@ -5,7 +5,7 @@ import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { Utils } from '@daostack/arc.js';
+import { InitializeArc } from '@daostack/arc.js';
 import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -85,7 +85,7 @@ export async function configure(aurelia: Aurelia) {
 
   try {
 
-    const web3 = await Utils.getWeb3();
+    const web3 = await InitializeArc();
 
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);
