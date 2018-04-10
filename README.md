@@ -16,6 +16,10 @@ Browser-side the application uses TypeScript/ECMAScript 2015 (ES6).
 
 At this time there are no web server-side components.
 
+You will find the compiled and bundled javascript in the `dist` folder.
+
+We use [Webpack](https://webpack.js.org/) for bundling the javascript, html, css and images.
+
 ## Use Vanille Now
 
 The latest live Vanille release is running at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Vanille assumes you are either running a Kovan chain locally (listening on localhost:8547), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
@@ -60,8 +64,16 @@ or manually browse to: http://localhost:8090/
 
 **Note**: If you are using Chrome with Metamask, you will need to disable MetaMask or else point it to your local computer.
 
+<a name="whichChain"></a>
 ## Migrate to a Different Testnet
-The "arcjs_network" OS environment variable defines which network you are migrating to and running from.  Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".  See more about migration, including how to set the right port numbers, in the [Arc.js documentation about migration](https://daostack.github.io/arc.js/Migration/).
+
+The `arcjs_network` environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application. Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
+
+This environment variable is used when migrating contracts from Arc.js and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
+
+When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the [NPM command that builds the production version of the app bundle](README#production).  But when migrating, you must set the network environment variable yourself.
+
+See more about migration, including how to set the right network node url and port numbers, in the [Arc.js documentation about migration](https://daostack.github.io/arc.js/Migration/).
 
 ## Build and Serve Vanille for Debugging with Hot Module Replacement
 
@@ -71,29 +83,17 @@ The "arcjs_network" OS environment variable defines which network you are migrat
 
 **Note**: If you are using Chrome with Metamask, you will need to disable MetaMask or else point it to your local computer.
 
-## Build and Run for Production:
+<a name="production"></a>
+## Build and Run for Production
 
-The production build runs against kovan. See [Defining Which Chain to Run Against](README#whichChain).
+The production build runs against kovan. See [Migrate to a Different Testnet](README#whichChain).
 
 ```shell
   npm start build.production.andServe
 ```
 
-<a name="whichChain"></a>
-### Defining Which Chain to Run Against
+## More Scripts
 
-The "arcjs_network" environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application.
+- All of the Arc.js scripts are available to you. See the [Arc.js documentation](https://daostack.github.io/arc.js/Scripts).
 
-This environment variable is used when migrating contracts from Arc.js (see above) and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 
-When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the NPM command that builds the production version of the app bundle.  But when migrating, you must set the network environment variable.
-
-## Miscellaneous Notes
-
-- All of the Arc.js scriptions are available to you. See the [Arc.js documentation](https://daostack.github.io/arc.js/Scripts).
-
-- You will find the compiled and bundled javascript in the `dist` folder.
-
-- We use [Webpack](https://webpack.js.org/) for bundling the javascript, html, css and images.
-
-- We use dependency injection where-ever possible, including in the Typescript (client-side).
