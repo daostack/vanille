@@ -1,5 +1,4 @@
 [![Build Status](https://api.travis-ci.org/daostack/vanille.svg?branch=master)](https://travis-ci.org/daostack/vanille)
-[![NPM Package](https://img.shields.io/npm/v/@daostack/vanille.svg?style=flat-square)](https://www.npmjs.org/package/@daostack/vanille)
 
 # DAOstack Vanille
 
