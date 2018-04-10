@@ -16,6 +16,7 @@ before_install:
 install:
   - npm install
   - nohup npm start arc-js.ganache.run &
+  - sleep 8
   - npm start arc-js.migrateContracts
   
 script:
