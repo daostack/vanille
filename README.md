@@ -60,11 +60,10 @@ or manually browse to: http://localhost:8090/
 
 **Note**: If you are using Chrome with Metamask, you will need to disable MetaMask or else point it to your local computer.
 
-## Further Notes
-
+## Migrate to a Different Testnet
 The "arcjs_network" OS environment variable defines which network you are migrating to and running from.  Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".  See more about migration, including how to set the right port numbers, in the [Arc.js documentation about migration](https://daostack.github.io/arc.js/Migration/).
 
-### Build and Serve Vanille for Debugging with Hot Module Replacement
+## Build and Serve Vanille for Debugging with Hot Module Replacement
 
 ```shell
   npm start build.development.andServe
@@ -72,7 +71,7 @@ The "arcjs_network" OS environment variable defines which network you are migrat
 
 **Note**: If you are using Chrome with Metamask, you will need to disable MetaMask or else point it to your local computer.
 
-### Build and Run for Production:
+## Build and Run for Production:
 
 The production build runs against kovan. See [Defining Which Chain to Run Against](README#whichChain).
 
