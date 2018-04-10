@@ -1,11 +1,11 @@
 [![Build Status](https://api.travis-ci.org/daostack/vanille.svg?branch=master)](https://travis-ci.org/daostack/vanille)
-[![NPM Package](https://img.shields.io/npm/v/daostack/vanille.svg?style=flat-square)](https://www.npmjs.org/package/@daostack/vanille)
+[![NPM Package](https://img.shields.io/npm/v/@daostack/vanille.svg?style=flat-square)](https://www.npmjs.org/package/@daostack/vanille)
 
-# DAOstack Vanille - Creating DAOs for a Collective Intelligence
+# DAOstack Vanille
 
 ## Introduction
 
-DAOstack Vanille is a browser application that provides a GUI dashboard for all of the "wrapped" [@DAOstack/Arc](https://github.com/daostack/arc.js) contracts in [@DAOStack/Arc.Js](https://github.com/daostack/arc.js), plus the ability to create DAOs in the [DAOstack stack](https://daostack.io).
+[@DAOstack/Vanille](https://github.com/daostack/vanille) is a browser application that provides a GUI dashboard for all of the "wrapped" [@DAOstack/Arc](https://github.com/daostack/arc.js) contracts in [@DAOStack/Arc.Js](https://github.com/daostack/arc.js), plus the ability to create DAOs in the [DAOstack stack](https://daostack.io).
 
 You can see all of the source code for Vanille and even contribute to the project [here](https://github.com/daostack/vanille).
 
@@ -94,6 +94,4 @@ The production build runs against kovan. See [Migrate to a Different Testnet](RE
 
 ## More Scripts
 
-- All of the Arc.js scripts are available to you. See the [Arc.js documentation](https://daostack.github.io/arc.js/Scripts).
-
-
+- All of the Arc.js scripts are available to you. See the [Arc.js documentation](https://daostack.github.io/arc.js/Scripts)
