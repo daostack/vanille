@@ -43,7 +43,7 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
   let env = production ? 'production' : 'development';
 
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
-  network = network || process.env.network || 'ganache';
+  network = network || process.env.arcjs_network || 'ganache';
 
   console.log(`env: ${env}`);
   console.log(`network: ${network}`);

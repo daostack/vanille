@@ -66,7 +66,7 @@ or manually browse to: http://localhost:8090/
 <a name="whichChain"></a>
 ## Migrate to a Different Testnet
 
-The `arcjs_network` environment variable, defined in the developer's OS environment or on the build command line, specifies which blockchain network should be used by the application. Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
+The `arcjs_network` environment variable, defined in the developer's OS environment or as "network" on the build command line, specifies which blockchain network should be used by the application. Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
 
 This environment variable is used when migrating contracts from Arc.js and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
 

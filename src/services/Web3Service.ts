@@ -65,6 +65,7 @@ export class Web3Service {
     });
   }
 
+  // process.env.network is poked-in by webpack
   public static Network = process.env.network.toLowerCase();
   // not going to worry about the exact id for ganache, which is dynamic, unless we absolutely have to
 

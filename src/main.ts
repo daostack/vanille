@@ -5,7 +5,7 @@ import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { InitializeArc } from '@daostack/arc.js';
+import { InitializeArcJs } from '@daostack/arc.js';
 import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -13,6 +13,7 @@ import "popper.js";
 import 'bootstrap-material-design';
 import { SnackbarService } from "./services/SnackbarService";
 import { ConsoleLogService } from "./services/ConsoleLogService";
+import { ConfigService } from "./services/ArcService";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -85,7 +86,10 @@ export async function configure(aurelia: Aurelia) {
 
   try {
 
-    const web3 = await InitializeArc();
+    const web3 = await InitializeArcJs({
+      // process.env.network is poked-in by webpack
+      useNetworkDefaultsFor: process.env.network || "ganache"
+    });
 
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);

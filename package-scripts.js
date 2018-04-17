@@ -13,7 +13,6 @@ const cwd = require("cwd")();
 const vanilleRoot = env.vanilleRoot || cwd;
 const pathArcJs =
   env.pathArcJs || joinPath(vanilleRoot, "node_modules/@daostack/arc.js");
-const network = env.network;
 
 module.exports = {
   scripts: {

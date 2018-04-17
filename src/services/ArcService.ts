@@ -33,11 +33,6 @@ export class ArcService {
   private contractCache: Map<string, TruffleContract>;
 
   public async initialize() {
-    /**
-     * TODO: check whether the following line is necessary
-     */
-    Arc.ConfigService.set("network", process.env.network);
-
     let wrappersByType = await Arc.WrapperService.wrappersByType;
     let wrappers = Arc.WrapperService.wrappers;
 
