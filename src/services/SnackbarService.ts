@@ -118,9 +118,10 @@ export class SnackbarService {
   formatContent(config: EventConfig) {
     let templateMessage = `<span class="snackbar-message-text">${config.message}</span>`;
     let templateAction = "";
+    let text;
     switch (config.actionType) {
       case ActionType.address:
-        let text = config.actionText || config.address;
+        text = config.actionText || config.address;
         templateAction = `<span class="snackbar-action-wrapper"><etherscanlink address="${config.address}" text="${text}" type="${config.addressType || 'address'}"></etherscanlink></span>`;
         break;
       case ActionType.button:

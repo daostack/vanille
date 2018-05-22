@@ -99,6 +99,14 @@ export class App {
           nav: false,
           title: 'DAO Dashboard'
         }
+        , {
+          // 'txHash' will be present in the object passed to the 'activate' method of the viewmodel
+          route: ['txInfo/:txHash'],
+          name: 'txInfo',
+          moduleId: PLATFORM.moduleName('./txInfo/txInfo'),
+          nav: false,
+          title: 'Transaction Information'
+        }
       ]);
       this.healthy = true;
     }

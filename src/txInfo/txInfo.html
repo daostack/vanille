@@ -1,0 +1,64 @@
+<template>
+  <h2>Ganache Transaction Information</h2>
+  <style>
+    .txLabel {
+      white-space: nowrap;
+      font-weight: bold;
+      padding-bottom: 1rem;
+    }
+  </style>
+
+  <div class="container" with.bind="txReceipt">
+    <div class="row">
+      <div class="col-sm-2 txLabel">TxHash:</div>
+      <div class="col-sm-10">${transactionHash}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">TimeStamp:</div>
+      <div class="col-sm-10">${$parent.timestamp}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">From:</div>
+      <div class="col-sm-10">${from}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">To:</div>
+      <div class="col-sm-10">
+        <span if.bind="contractAddress">${contractAddress}</span>
+        <span else>${to}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">Value:</div>
+      <div class="col-sm-10">${value}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">Gas Limit:</div>
+      <div class="col-sm-10">${gas}</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">Gas Used By Txn:</div>
+      <div class="col-sm-10">${gasUsed}</div>
+    </div>
+    <!-- <div class="row">
+      <div class="col-sm-2 txLabel">Gas Price:</div>
+      <div class="col-sm-10">${gasPrice.mul("0.000000000000000001")} Ether (${gasPrice.mul("0.000000001")} Gwei) </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2 txLabel">Actual Tx Cost/Fee:</div>
+      <div class="col-sm-10">${gasPrice.mul(gasUsed)} Ether </div>
+    </div> -->
+    <div class="row">
+      <div class="col-sm-2 txLabel">Nonce | {Position}:</div>
+      <div class="col-sm-10">${nonce} | {${transactionIndex}}</div>
+    </div>
+    <di class="row">
+      <div class="col-sm-2 txLabel">Input Data:</div>
+      <div class="col-sm-10">
+        <span title="The binary data that formed the input to the transaction, either the input data if it was a message call or the contract initialisation if it was a contract creation">
+          <textarea style="width:100%" spellcheck="false" readonly="true" value.bind="input"></textarea>
+        </span>
+      </div>
+  </div>
+  </div>
+</template>

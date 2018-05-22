@@ -20,7 +20,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   modifiedSchemeConfiguration: SchemeConfigurator = <any>{};
   schemeToModify: SchemeInfo = null;
   schemeToRemove: SchemeInfo = null;
-  newSchemeConfiguration: SchemeConfigurator = <any>{ canBeRegisteringScheme: true };
+  newSchemeConfiguration: SchemeConfigurator = <any>{ needsPermissions: true };
   @observable currentSchemeSelection: SchemeInfo = null;
   schemeToAddAddress: string;
   hasSchemesToAdd: boolean;

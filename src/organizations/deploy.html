@@ -83,9 +83,11 @@
     <section>
       <h4>Schemes</h4>
       <div repeat.for="scheme of arcSchemes">
-        <div class="checkbox">
-          <label>
-            <input disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"> ${scheme.friendlyName}
+        <div class="form-check">
+          <input class="form-check-input" disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"
+            id="${scheme.name}">
+          <label class="form-check-label" for="${scheme.name}">
+            ${scheme.friendlyName}
           </label>
         </div>
       </div>

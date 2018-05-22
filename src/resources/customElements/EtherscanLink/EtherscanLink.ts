@@ -15,16 +15,31 @@ export class EtherscanLink {
   @bindable
   type: string;
 
-  isGanache: boolean;
-
-
   clipbutton: HTMLElement;
 
   networkExplorerUri: string;
 
-  constructor() {
+  copyMessage: string;
+
+  internal: boolean = false;
+
+  attached() {
     const targetedNetwork = Web3Service.Network;
-    this.isGanache = targetedNetwork === "ganache";
-    this.networkExplorerUri = `http://${targetedNetwork}.etherscan.io`;
+    const isGanache = targetedNetwork === "ganache";
+    if (this.type == "tx") {
+      this.copyMessage = "Hash has been copied to the clipboard";
+    } else {
+      this.copyMessage = "Address has been copied to the clipboard";
+    }
+
+    if (isGanache) {
+      if (this.type === "tx") {
+        this.internal = true;
+        this.networkExplorerUri = `/#/txInfo/${this.address}`;
+      }
+    } else {
+      // go with etherscan
+      this.networkExplorerUri = `http://${targetedNetwork}.etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
+    }
   }
 }

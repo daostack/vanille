@@ -1,7 +1,17 @@
 import { autoinject } from "aurelia-framework";
-import { promisify } from "es6-promisify";
-import { providers as Web3Providers, Web3, EthApi, VersionApi, Unit } from "web3";
+import {
+  providers as Web3Providers,
+  Web3,
+  EthApi,
+  VersionApi,
+  Unit,
+  TransactionReceipt,
+  Transaction,
+  BlockWithoutTransactionData,
+  BlockWithTransactionData
+} from "web3";
 import { BigNumber } from 'bignumber.js';
+import { Hash, Address } from './ArcService';
 
 @autoinject()
 export class Web3Service {
@@ -17,7 +27,7 @@ export class Web3Service {
 
   public get accounts(): Array<string> { return this.web3 ? this.web3.eth.accounts : []; }
 
-  public defaultAccount: string;
+  public defaultAccount: Address;
 
   public get currentProvider(): Web3Providers.HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
 
@@ -26,6 +36,19 @@ export class Web3Service {
   public get eth(): EthApi { return this.web3 ? this.web3.eth : null; }
 
   public get version(): VersionApi { return this.web3 ? this.web3.version : null; }
+
+  public async getTxReceipt(txHash: Hash): Promise<Transaction & TransactionReceipt> {
+    const receipt = await (<any>Promise).promisify(this.web3.eth.getTransactionReceipt)(txHash)
+      .then((_tx) => _tx);
+    const tx = await (<any>Promise).promisify(this.web3.eth.getTransaction)(txHash)
+      .then((_tx) => _tx);
+    return Object.assign(tx, receipt);
+  }
+
+  public getBlock(blockHash: Hash, withTransactions: boolean = false): Promise<BlockWithoutTransactionData | BlockWithTransactionData> {
+    return (<any>Promise).promisify(this.web3.eth.getBlock)(blockHash, withTransactions)
+      .then((_block) => _block);
+  }
 
   public bytes32ToUtf8(bytes32: string): string {
     return this.web3.toUtf8(bytes32);
@@ -138,7 +161,7 @@ export class Web3Service {
 
   private async getDefaultAccount(): Promise<string> {
 
-    return promisify(this.web3.eth.getAccounts)().then((accounts: Array<any>) => {
+    return (<any>Promise).promisify(this.web3.eth.getAccounts)().then((accounts: Array<any>) => {
       const defaultAccount = this.web3.eth.defaultAccount = accounts[0];
 
       if (!defaultAccount) {

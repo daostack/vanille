@@ -13,7 +13,7 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
   ethReward: BigNumber = new BigNumber(0);
   externalTokenReward: BigNumber = new BigNumber(0);
   reputationTokenReward: BigNumber = new BigNumber(0);
-  externalTokenAddress: string;
+  externalTokenAddress: string = ""; // need a default value for solidity
   beneficiaryAddress: string;
   periodLength: number = 1;
   numberOfPeriods: number = 1;

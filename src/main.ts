@@ -14,6 +14,7 @@ import 'bootstrap-material-design';
 import { SnackbarService } from "./services/SnackbarService";
 import { ConsoleLogService } from "./services/ConsoleLogService";
 import { ConfigService } from "./services/ArcService";
+import { LoggingService, LogLevel } from "./services/ArcService";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -25,6 +26,7 @@ export async function configure(aurelia: Aurelia) {
 
   // for now, always on for trouble-shooting:  if (process.env.env == "development") {
   aurelia.use.developmentLogging();
+  LoggingService.logLevel = LogLevel.all;
   // }
 
   // Uncomment the line below to enable animation.
