@@ -1,5 +1,6 @@
 import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
 import { TokenService } from "../../../services/TokenService";
+import { BigNumber } from '../../../services/Web3Service';
 
 @autoinject
 @containerless
@@ -7,7 +8,7 @@ import { TokenService } from "../../../services/TokenService";
 export class TokenTicker {
 
   private tknSymbol: string = '';
-  private balance: Number;
+  private balance: string;
 
   constructor(
     private tokenService: TokenService

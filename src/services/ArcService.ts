@@ -3,7 +3,6 @@ import * as Arc from "@daostack/arc.js";
 
 import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
-import * as Web3 from "web3";
 import { LogManager } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';

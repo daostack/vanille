@@ -22,7 +22,7 @@ export class EthweiValueConverter {
    */
   fromView(ethValue: string): BigNumber {
     if ((ethValue == undefined) || (ethValue == null)) {
-      return ethValue;
+      return <any>ethValue;
     }
 
     // allow exceptions here so that corrupt data is less likely to make it into a model

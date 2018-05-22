@@ -27,17 +27,13 @@ module.exports = {
      * daostack-arc.js readme.md and its package-scripts.js.
      */
     "arc-js": {
-      ganache: {
-        run: "npm explore @daostack/arc.js -- npm start test.ganache.run",
-        runAsync: "npm explore @daostack/arc.js -- npm start test.ganache.runAsync"
-      },
+      ganache: "npm explore @daostack/arc.js -- npm start ganache",
       ganacheDb: {
-        run: "npm explore @daostack/arc.js -- npm start test.ganacheDb.run",
-        runAsync: "npm explore @daostack/arc.js -- npm start test.ganacheDb.runAsync",
-        clean: "npm explore @daostack/arc.js -- npm start test.ganacheDb.clean",
-        zip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.zip",
-        unzip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.unzip",
-        restoreFromZip: "npm explore @daostack/arc.js -- npm start test.ganacheDb.restoreFromZip"
+        run: "npm explore @daostack/arc.js -- npm start ganacheDb",
+        clean: "npm explore @daostack/arc.js -- npm start ganacheDb.clean",
+        zip: "npm explore @daostack/arc.js -- npm start ganacheDb.zip",
+        unzip: "npm explore @daostack/arc.js -- npm start ganacheDb.unzip",
+        restoreFromZip: "npm explore @daostack/arc.js -- npm start ganacheDb.restoreFromZip"
       },
       migrateContracts: "npm explore @daostack/arc.js -- npm start migrateContracts"
     },
@@ -56,8 +52,7 @@ module.exports = {
           "karma start test/karma.conf.js"
         ),
         watch: "karma start test/karma.conf.js --auto-watch --no-single-run",
-        debug:
-          "karma start test/karma.conf.js --auto-watch --no-single-run --debug"
+        debug: "karma start test/karma.conf.js --auto-watch --no-single-run --debug"
       },
       all: concurrent({
         browser: series.nps("test.karma", "e2e"),

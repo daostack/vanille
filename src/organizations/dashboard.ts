@@ -6,6 +6,7 @@ import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { PLATFORM } from 'aurelia-pal';
 import { AureliaHelperService } from "../services/AureliaHelperService";
 import { App } from '../app';
+import { BigNumber } from '../services/Web3Service';
 
 @autoinject
 export class DAODashboard {
@@ -14,7 +15,7 @@ export class DAODashboard {
   address: string;
   orgName: string;
   tokenSymbol: string;
-  userTokenbalance: Number;
+  userTokenbalance: BigNumber;
   registeredArcSchemes: Array<SchemeInfo>;
   unregisteredArcSchemes: Array<SchemeInfo>;
   nonArcSchemes: Array<SchemeInfo>;

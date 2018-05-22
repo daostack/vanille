@@ -8,11 +8,11 @@ import { BigNumber } from '../services/Web3Service';
 @autoinject
 export class ContributionRewardDashboard extends DaoSchemeDashboard {
 
-  nativeTokenReward: BigNumber = 0;
+  nativeTokenReward: BigNumber = new BigNumber(0);
   description: string;
-  ethReward: BigNumber = 0;
-  externalTokenReward: BigNumber = 0;
-  reputationTokenReward: BigNumber = 0;
+  ethReward: BigNumber = new BigNumber(0);
+  externalTokenReward: BigNumber = new BigNumber(0);
+  reputationTokenReward: BigNumber = new BigNumber(0);
   externalTokenAddress: string;
   beneficiaryAddress: string;
   periodLength: number = 1;

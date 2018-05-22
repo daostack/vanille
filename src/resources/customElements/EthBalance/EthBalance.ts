@@ -32,7 +32,7 @@ export class EthBalance {
     /**
      * this is supposed to fire whenever a new block is created
      */
-    this.filter = this.web3.eth.filter('latest', () => {
+    this.filter = this.web3.eth.filter({ fromBlock: 'latest' }).watch(() => {
       this.getBalance();
     });
   }

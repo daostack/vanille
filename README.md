@@ -38,7 +38,7 @@ npm install
 In a separate shell window, start ganache:
 
 ```script
-npm start arc-js.ganache.run
+npm start arc-js.ganache
 ```
 
 Migrate the Arc contracts to Ganache:

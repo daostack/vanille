@@ -1,8 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { promisify } from "es6-promisify";
-import * as Web3 from "web3";
-import { HttpProvider, Eth, version } from "web3";
-import { BigNumber } from 'bignumber.js'
+import { providers as Web3Providers, Web3, EthApi, VersionApi, Unit } from "web3";
+import { BigNumber } from 'bignumber.js';
 
 @autoinject()
 export class Web3Service {
@@ -20,13 +19,13 @@ export class Web3Service {
 
   public defaultAccount: string;
 
-  public get currentProvider(): HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
+  public get currentProvider(): Web3Providers.HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
 
   public get isConnected(): boolean { return this.web3 && this.web3.isConnected(); }
 
-  public get eth(): Eth { return this.web3 ? this.web3.eth : null; }
+  public get eth(): EthApi { return this.web3 ? this.web3.eth : null; }
 
-  public get version(): version { return this.web3 ? this.web3.version : null; }
+  public get version(): VersionApi { return this.web3 ? this.web3.version : null; }
 
   public bytes32ToUtf8(bytes32: string): string {
     return this.web3.toUtf8(bytes32);
@@ -34,16 +33,16 @@ export class Web3Service {
 
   public get isCorrectChain(): boolean { return this._isCorrectChain; }
 
-  public fromWei(value: Number | String | BigNumber, unit: string = "ether"): BigNumber {
-    return this.toBigNumber(this.web3.fromWei(value, unit));
+  public fromWei(value: Number | String | BigNumber, unit: Unit = "ether"): BigNumber {
+    return this.toBigNumber(this.web3.fromWei(<any>value, unit));
   }
 
-  public toWei(value: Number | String | BigNumber, unit: string = "ether"): BigNumber {
-    return this.toBigNumber(this.web3.toWei(value, unit));
+  public toWei(value: Number | String | BigNumber, unit: Unit = "ether"): BigNumber {
+    return this.toBigNumber(this.web3.toWei(<any>value, unit));
   }
 
   public toBigNumber(value: Number | String | BigNumber): BigNumber {
-    return this.web3.toBigNumber(value);
+    return this.web3.toBigNumber(<any>value);
   }
 
   /**
@@ -53,9 +52,9 @@ export class Web3Service {
    */
   public getBalance(ethAddress: string, inEth: boolean = false): Promise<BigNumber> {
     return new Promise((resolve, reject) => {
-      this.web3.eth.getBalance(ethAddress, (error, balance) => {
+      this.web3.eth.getBalance(ethAddress, (error: Error, balance) => {
         if (error) {
-          reject(new Error(error));
+          reject(error);
         }
         if (inEth) {
           balance = this.web3.fromWei(balance)
@@ -107,7 +106,7 @@ export class Web3Service {
       }
     };
 
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<Web3>((resolve, reject) => {
       try {
         web3.version.getNetwork(async (err, chainId) => {
           if (!err) {
@@ -153,4 +152,4 @@ export class Web3Service {
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const NULL_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
-export { BigNumber } from "web3";
+export { BigNumber } from 'bignumber.js';
