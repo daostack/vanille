@@ -6,25 +6,30 @@ import {
   ArcService
   , SchemeRegistrarWrapper
   , ProposeToAddModifySchemeParams
-  , ProposeToRemoveSchemeParams
+  , ProposeToRemoveSchemeParams,
+  SchemePermissions,
+  SchemeRegistrarParams,
+  SchemeWrapper
 } from "../services/ArcService";
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { SchemeConfigurator } from '../schemeConfiguration/schemeConfigurationBase';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 import { App } from '../app';
+import { SchemeConfigModel } from '../schemeConfiguration/schemeConfigModel';
 
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
-  modifiedSchemeConfiguration: SchemeConfigurator = <any>{};
-  schemeToModify: SchemeInfo = null;
-  schemeToRemove: SchemeInfo = null;
-  newSchemeConfiguration: SchemeConfigurator = <any>{ needsPermissions: true };
-  @observable currentSchemeSelection: SchemeInfo = null;
+  modifiedSchemeConfiguration: Partial<SchemeConfigModel> = {};
+  selectedSchemeToModify: SchemeInfo = null;
+  selectedSchemeToRemove: SchemeInfo = null;
+  newSchemeConfiguration: Partial<SchemeConfigModel> = {};
+  @observable selectedSchemeToAdd: SchemeInfo = null;
   schemeToAddAddress: string;
   hasSchemesToAdd: boolean;
   addableSchemes: Array<SchemeInfo> = [];
+  modifiableSchemes: Array<SchemeInfo> = [];
+  removableSchemes: Array<SchemeInfo> = [];
   addressControl: HTMLElement;
   NonArcSchemeItemKey = NonArcSchemeItemName;
 
@@ -37,9 +42,9 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     super();
   }
 
-  currentSchemeSelectionChanged() {
-    if (this.currentSchemeSelection) {
-      this.schemeToAddAddress = this.currentSchemeSelection.address;
+  async selectedSchemeToAddChanged() {
+    if (this.selectedSchemeToAdd) {
+      this.schemeToAddAddress = this.selectedSchemeToAdd.address;
     } else {
       this.schemeToAddAddress = undefined;
     }
@@ -48,31 +53,56 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     } else {
       $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
     }
+    if (this.schemeToAddAddress) {
+      const wrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.schemeToAddAddress)) as any;
+      /**
+       * get the default permissions for the selected scheme
+       */
+      const schemePermissions = await wrapper.getDefaultPermissions();
+      Object.assign(this.newSchemeConfiguration, { permissions: schemePermissions });
+    } else {
+      Object.assign(this.newSchemeConfiguration, { permissions: SchemePermissions.None });
+    }
   }
 
-  @computedFrom("currentSchemeSelection")
+  @computedFrom("selectedSchemeToAdd")
   get isNonArcScheme() {
-    return this.currentSchemeSelection && (this.currentSchemeSelection.name === NonArcSchemeItemName);
+    return this.selectedSchemeToAdd && (this.selectedSchemeToAdd.name === NonArcSchemeItemName);
   }
 
-  @computedFrom("currentSchemeSelection")
+  @computedFrom("selectedSchemeToAdd")
   get isUnknownArcScheme() {
-    return this.currentSchemeSelection && !App.hasDashboard(this.currentSchemeSelection.name);
+    return this.selectedSchemeToAdd && !App.hasDashboard(this.selectedSchemeToAdd.name);
   }
+
+  @computedFrom("selectedSchemeToAdd")
+  get addSchemeConfigView() {
+    if (this.selectedSchemeToAdd) {
+      let name = this.selectedSchemeToAdd.name;
+
+      if (this.isUnknownArcScheme) {
+        name = "UnknownArc";
+      }
+
+      return '../schemeConfiguration/' + name;
+    } else {
+      return undefined;
+    }
+  }
+
 
   async addScheme() {
     try {
-
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
+
       let config: ProposeToAddModifySchemeParams = Object.assign({
         avatar: this.orgAddress
         , schemeAddress: this.schemeToAddAddress
         , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
       }, this.newSchemeConfiguration);
 
-
       if (!this.isNonArcScheme) {
-        config.schemeName = this.currentSchemeSelection.name;
+        config.schemeName = this.selectedSchemeToAdd.name;
       }
 
       let result = await schemeRegistrar.proposeToAddModifyScheme(config);
@@ -80,61 +110,54 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.schemeToAddAddress}`, result.tx.tx));
 
-      this.currentSchemeSelection = null;
+      this.selectedSchemeToAdd = null;
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to add scheme ${this.schemeToAddAddress}`, ex));
     }
   }
 
-  private getAddSchemeConfigView() {
-    let name = this.currentSchemeSelection.name;
-
-    if (this.isUnknownArcScheme) {
-      name = "UnknownArc";
-    }
-
-    return '../schemeConfiguration/' + name;
-  }
   async modifyScheme() {
-
     try {
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
-      const schemeParametersHash = await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToModify.address);
 
-      const result = await schemeRegistrar.proposeToAddModifyScheme({
-        avatar: this.orgAddress,
-        schemeAddress: this.schemeToModify.address,
-        schemeName: this.schemeToModify.name,
-        schemeParametersHash: schemeParametersHash
-      });
+      let config: ProposeToAddModifySchemeParams = Object.assign({
+        avatar: this.orgAddress
+        , schemeName: this.selectedSchemeToModify.name // can only modify Arc schemes
+        , schemeAddress: this.selectedSchemeToModify.address
+        , schemeParametersHash: await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.selectedSchemeToModify.address)
+      }, this.modifiedSchemeConfiguration);
+
+      // const schemeParams = await wrapper.getSchemeParameters(this.orgAddress);
+      // const schemePermissions = await wrapper.getSchemePermissions(this.orgAddress);
+
+      const result = await schemeRegistrar.proposeToAddModifyScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to modify ${this.schemeToModify.address}`, result.tx.tx));
+        `Proposal submitted to modify ${this.selectedSchemeToModify.address}`, result.tx.tx));
 
     } catch (ex) {
-      this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to modify scheme ${this.schemeToModify.address}`, ex));
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to modify scheme ${this.selectedSchemeToModify.address}`, ex));
     }
   }
 
   async removeScheme() {
-
     try {
 
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
 
       let result = await schemeRegistrar.proposeToRemoveScheme({
         avatar: this.orgAddress,
-        schemeAddress: this.schemeToRemove.address
+        schemeAddress: this.selectedSchemeToRemove.address
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.schemeToRemove.address}`, result.tx.tx));
+        `Proposal submitted to remove ${this.selectedSchemeToRemove.address}`, result.tx.tx));
 
-      this.schemeToRemove = null;
+      this.selectedSchemeToRemove = null;
 
     } catch (ex) {
-      this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to remove scheme ${this.schemeToRemove.address}`, ex));
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to remove scheme ${this.selectedSchemeToRemove.address}`, ex));
     }
   }
 }

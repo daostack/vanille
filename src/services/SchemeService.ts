@@ -1,7 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { ArcService, ContractWrapperInfo, TruffleContract } from './ArcService';
+import { ArcService, ContractWrapperInfo, TruffleContract, SchemePermissions } from './ArcService';
 import { DaoService } from '../services/DaoService';
-import { Permissions, ToPermissionsEnum } from '../services/ControllerService';
 import { SchemeInfo } from "../entities/SchemeInfo";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { EventConfigException } from '../entities/GeneralEvents';
@@ -68,11 +67,11 @@ export class SchemeService {
     return schemes;
   }
 
-  public async getSchemePermissions(name: string, schemeAddress?: string): Promise<Permissions> {
+  public async getSchemePermissions(name: string, schemeAddress?: string): Promise<SchemePermissions> {
     try {
       const contract = await this.arcService.getContract(name, schemeAddress);
       const permissions = contract.getDefaultPermissions();
-      return ToPermissionsEnum(permissions);
+      return SchemePermissions.fromString(permissions);
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error getting scheme permissions`, ex));
       return null;

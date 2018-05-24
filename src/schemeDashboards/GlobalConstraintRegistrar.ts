@@ -4,21 +4,24 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import {
   ArcService
   , GlobalConstraintRegistrarWrapper
-  , ProposeToAddModifyGlobalConstraintParams
+  , ProposeToAddModifyGlobalConstraintParams,
+  Address
 } from "../services/ArcService";
 import { GlobalConstraintInfo } from "../services/GlobalConstraintService";
-import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
+import { VotingMachineInfo } from '../services/VotingMachineService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcConstraintItemName } from 'resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown';
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
+import { GlobalConstraintConfigModel } from 'globalConstraintConfiguration/globalConstraintConfigModel';
 
 @autoinject
 export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
 
-  constraintToAddAddress: string;
+  constraintToAddAddress: Address;
   constraintToRemoveInfo: GlobalConstraintInfo;
-  constraintToAddConfig: any = {};
+  constraintToAddConfig: Partial<GlobalConstraintConfigModel> = {};
   votingMachineInfo: VotingMachineInfo = null;
-  votingMachineConfig: VotingMachineConfig = <any>{};
+  votingMachineConfig: Partial<VotingMachineConfigModel> = {};
   @observable currentGCSelection: GlobalConstraintInfo = null;
   addressControl: HTMLElement;
 

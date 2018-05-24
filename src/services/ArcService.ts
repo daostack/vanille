@@ -36,9 +36,9 @@ export class ArcService {
     let wrappers = Arc.WrapperService.wrappers;
 
     this.arcContracts = wrappers;
-    this.arcSchemes = wrappersByType.schemes as Array<Arc.ContractWrapperBase>;
-    this.arcVotingMachines = wrappersByType.votingMachines as Array<Arc.ContractWrapperBase>;
-    this.arcGlobalConstraints = wrappersByType.globalConstraints as Array<Arc.ContractWrapperBase>;
+    this.arcSchemes = wrappersByType.schemes;
+    this.arcVotingMachines = wrappersByType.votingMachines;
+    this.arcGlobalConstraints = wrappersByType.globalConstraints;
     this.arcContractMap = Arc.WrapperService.wrappersByAddress;
   }
   /**

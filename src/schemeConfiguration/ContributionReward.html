@@ -1,12 +1,13 @@
 <template>
 
-  <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
-  </votingmachineselector>
-
   <div class="form-group bmd-form-group">
     <label for="orgNativeTokenFee">DAO Native Token Fee</label>
-    <input class="form-control fee-input" type='number' id="orgNativeTokenFee" value.bind="orgNativeTokenFee | ethwei & updateTrigger:'blur'"
+    <input class="form-control fee-input" type='number' id="orgNativeTokenFee" value.bind="model.orgNativeTokenFee | ethwei & updateTrigger:'blur'"
     />
     <span class="bmd-help">Fee for proposing a contribution reward in the DAO's native token</span>
   </div>
+
+  <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
+  </votingmachineselector>
+
 </template>

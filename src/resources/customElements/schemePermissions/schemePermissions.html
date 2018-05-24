@@ -1,0 +1,27 @@
+<template>
+  <div class="form-group bmd-form-group">
+    <slot>
+      <div style="margin-bottom:.75rem; font-weight:bold; display: inline-block;">Permissions</div>
+    </slot>
+    <div class="checkbox">
+      <label for="CanRegisterSchemes">
+        <input type="checkbox" value="2" id="CanRegisterSchemes" checked.bind="selectedPermissions" change.delegate="selectionChanged($event)"> Can Register Schemes
+      </label>
+    </div>
+    <div class="checkbox">
+      <label for="CanAddRemoveGlobalConstraints">
+        <input type="checkbox" value="4" id="CanAddRemoveGlobalConstraints" checked.bind="selectedPermissions" change.delegate="selectionChanged($event)"> Can Add and Remove Global Constraints
+      </label>
+    </div>
+    <div class="checkbox">
+      <label for="CanUpgradeController">
+        <input type="checkbox" value="8" id="CanUpgradeController" checked.bind="selectedPermissions" change.delegate="selectionChanged($event)"> Can Upgrade Controller
+      </label>
+    </div>
+    <div class="checkbox">
+      <label for="CanCallDelegateCall">
+        <input type="checkbox" value="16" id="CanCallDelegateCall" checked.bind="selectedPermissions" change.delegate="selectionChanged($event)"> Can Call DelegateCall
+      </label>
+    </div>
+  </div>
+</template>

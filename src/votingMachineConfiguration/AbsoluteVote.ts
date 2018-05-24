@@ -1,35 +1,38 @@
 import { autoinject } from "aurelia-framework";
-import { VotingMachineConfig } from '../services/VotingMachineService';
 import { VanilleDAO, DaoService } from '../services/DaoService';
-import { ArcService } from "../services/ArcService";
+import { ArcService, AbsoluteVoteParams } from "../services/ArcService";
+import { VotingMachineConfigModel } from './votingMachineConfigModel';
+import { NULL_ADDRESS } from 'services/Web3Service';
 
 @autoinject
-export class AbsoluteVote implements VotingMachineConfig {
+export class AbsoluteVote {
 
-  model: any;
+  model: Partial<AbsoluteVoteParams> = {};
 
   constructor(
     private daoService: DaoService
     , private arcService: ArcService
   ) { }
 
-  async activate(model) {
+  async activate(model: Partial<AbsoluteVoteParams & VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
-    model.votePerc = model.votePerc !== undefined ? model.votePerc : 50;
-    model.ownerVote = model.ownerVote !== undefined ? model.ownerVote : true;
-    this.model = model;
+    /**
+     * we want to keep the params in the passed-in model,
+     * and add the default values to it.
+     */
+    Object.assign(this.model,
+      {
+        votePerc: 50,
+        ownerVote: true
+      }, model);
   }
 
-  async getConfigurationHash(orgAddress: string, votingMachineAddress?: string): Promise<any> {
+  private async getConfigurationHash(orgAddress: string, votingMachineAddress?: string): Promise<any> {
 
     let dao = await this.daoService.daoAt(orgAddress);
 
     return await this.arcService.setContractParameters(
-      {
-        reputation: dao.reputation.address,
-        votePerc: this.model.votePerc,
-        ownerVote: this.model.ownerVote,
-      },
+      Object.assign(this.model, { reputation: dao.reputation.address }),
       "AbsoluteVote",
       votingMachineAddress);
   }

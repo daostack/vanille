@@ -118,6 +118,7 @@ export class App {
     "SchemeRegistrar",
     "ContributionReward",
     "UpgradeScheme",
+    "GenesisProtocol",
     "NonArc"
   ];
 

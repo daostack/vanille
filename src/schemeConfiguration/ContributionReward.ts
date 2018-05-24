@@ -1,32 +1,34 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigurator } from './schemeConfigurationBase';
-import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { ArcService } from "../services/ArcService";
+import { SchemeConfigModel } from './schemeConfigModel';
+import { VotingMachineInfo } from '../services/VotingMachineService';
+import { ArcService, ContributionRewardParams } from "../services/ArcService";
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
 
 @autoinject
-export class ContributionReward implements SchemeConfigurator {
+export class ContributionReward {
 
-  orgNativeTokenFee = 0;
-  votingMachineInfo = null;
-  votingMachineConfig: VotingMachineConfig = <any>{};
+  votingMachineInfo: VotingMachineInfo;
+  votingMachineConfig: Partial<VotingMachineConfigModel> = {};
+  model: Partial<ContributionRewardParams>;
 
   constructor(
     private arcService: ArcService
   ) {
   }
 
-  async activate(model) {
+  async activate(model: Partial<ContributionRewardParams & SchemeConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
+    this.model = Object.assign({ orgNativeTokenFee: 0 }, model);
   }
 
-  async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
+  private async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
 
     const voteParamsHash = await this.votingMachineConfig.getConfigurationHash(orgAddress, this.votingMachineInfo.address);
 
     return await this.arcService.setContractParameters({
       "voteParametersHash": voteParamsHash,
       "votingMachineAddress": this.votingMachineInfo.address,
-      "orgNativeTokenFee": this.orgNativeTokenFee,
+      "orgNativeTokenFee": this.model.orgNativeTokenFee,
     }, "ContributionReward", schemeAddress);
   }
 

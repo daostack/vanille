@@ -5,12 +5,13 @@ import { ArcService, UpgradeSchemeWrapper, ProposeUpgradingSchemeParams } from "
 import { SchemeService, SchemeInfo } from '../services/SchemeService';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
+import { SchemeConfigModel } from '../schemeConfiguration/schemeConfigModel';
 
 @autoinject
 export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
 
   controllerAddress: string;
-  upgradingSchemeConfig: any = {};
+  upgradingSchemeConfig: Partial<ProposeUpgradingSchemeParams & SchemeConfigModel> = {};
   @observable currentSchemeSelection: SchemeInfo = null;
   upgradingSchemeAddress: string;
   NonArcSchemeItemKey = NonArcSchemeItemName;
@@ -66,12 +67,12 @@ export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
   async submitUpgradingScheme() {
     try {
       const scheme = await this.arcService.getContract("UpgradeScheme") as UpgradeSchemeWrapper;
-      let config: ProposeUpgradingSchemeParams = {
+      let config: ProposeUpgradingSchemeParams = Object.assign({
         avatar: this.orgAddress
         , scheme: this.upgradingSchemeAddress
         , schemeParametersHash: await this.upgradingSchemeConfig.getConfigurationHash(
           this.orgAddress, scheme.address)
-      };
+      }, this.upgradingSchemeConfig);
 
       let result = await scheme.proposeUpgradingScheme(config);
 

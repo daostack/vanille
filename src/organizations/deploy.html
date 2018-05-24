@@ -76,21 +76,21 @@
     </section>
 
     <section>
-      <h4>Voting Machine</h4>
-      <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineModel">
-      </votingmachineselector>
-    </section>
-    <section>
       <h4>Schemes</h4>
       <div repeat.for="scheme of arcSchemes">
-        <div class="form-check">
-          <input class="form-check-input" disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"
-            id="${scheme.name}">
+        <div class="checkbox">
           <label class="form-check-label" for="${scheme.name}">
-            ${scheme.friendlyName}
+            <input class="form-check-input" disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"
+              id="${scheme.name}"> ${scheme.friendlyName}
           </label>
         </div>
       </div>
+    </section>
+
+    <section>
+      <h4>Scheme Voting Machine</h4>
+      <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineModel">
+      </votingmachineselector>
     </section>
 
     <div>

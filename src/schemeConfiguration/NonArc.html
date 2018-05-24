@@ -3,33 +3,4 @@
     <label for="schemeParametersHash">Scheme Parameters Hash</label>
     <input id="schemeParametersHash" type="text" class="form-control" value.bind="_schemeParametersHash" />
   </div>
-  <div class="form-group bmd-form-group " if.bind="model.needsPermissions">
-    <label>Permissions</label>
-    <div class="checkbox">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="2" id="CanRegisterSchemes" checked.bind="selectedPermissions">
-        <label class="form-check-label" for="CanRegisterSchemes">
-          Can Register Schemes
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="4" id="CanAddRemoveGlobalConstraints" checked.bind="selectedPermissions">
-        <label class="form-check-label" for="CanAddRemoveGlobalConstraints">
-          Can Add and Remove Global Constraints
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="8" id="CanUpgradeController" checked.bind="selectedPermissions">
-        <label class="form-check-label" for="CanUpgradeController">
-          Can Upgrade Controller
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="16" id="CanCallDelegateCall" checked.bind="selectedPermissions">
-        <label class="form-check-label" for="CanCallDelegateCall">
-          Can Call DelegateCall
-        </label>
-      </div>
-    </div>
-    </label>
 </template>

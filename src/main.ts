@@ -42,15 +42,17 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/EthBalance/EthBalance"),
     PLATFORM.moduleName("resources/customElements/UsersAddress/UsersAddress"),
     PLATFORM.moduleName("resources/customElements/arcSchemesDropdown/arcSchemesDropdown"),
+    PLATFORM.moduleName("resources/customElements/schemePermissions/schemePermissions"),
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
+    PLATFORM.moduleName("resources/customElements/votingMachineSelector/votingMachineSelector"),
+    PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("resources/customElements/round-add-button.html"),
     PLATFORM.moduleName("resources/customElements/round-remove-button.html"),
     PLATFORM.moduleName("resources/customElements/round-trash-button.html"),
     PLATFORM.moduleName("resources/customElements/round-dashboard-button.html"),
-    PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("resources/customElements/instructions.html"),
     PLATFORM.moduleName("resources/customElements/pageLoading.html"),
     PLATFORM.moduleName("resources/customAttributes/click-to-route"),
@@ -59,7 +61,6 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/number"),
     PLATFORM.moduleName("resources/valueConverters/round"),
     PLATFORM.moduleName("resources/valueConverters/ethwei"),
-    PLATFORM.moduleName("schemeConfiguration/VotingMachineSelector"),
     PLATFORM.moduleName("footer.html"),
     PLATFORM.moduleName("header.html")
   ]);
@@ -69,6 +70,7 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
   PLATFORM.moduleName("./schemeDashboards/ContributionReward")
+  PLATFORM.moduleName("./schemeDashboards/GenesisProtocol")
   PLATFORM.moduleName("./schemeDashboards/UpgradeScheme")
   PLATFORM.moduleName("./schemeDashboards/NonArc")
   PLATFORM.moduleName("./schemeDashboards/UnknownArc")
@@ -77,11 +79,13 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/ContributionReward")
+  PLATFORM.moduleName("./schemeConfiguration/GenesisProtocol")
   PLATFORM.moduleName("./schemeConfiguration/UpgradeScheme")
   PLATFORM.moduleName("./schemeConfiguration/NonArc")
   PLATFORM.moduleName("./schemeConfiguration/UnknownArc")
 
   PLATFORM.moduleName("./votingMachineConfiguration/AbsoluteVote")
+  PLATFORM.moduleName("./votingMachineConfiguration/GenesisProtocol")
   PLATFORM.moduleName("./globalConstraintConfiguration/TokenCapGC")
 
   await aurelia.start();

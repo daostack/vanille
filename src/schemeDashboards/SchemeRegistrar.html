@@ -23,6 +23,8 @@
 
         <instructions show.bind="isUnknownArcScheme">This scheme is an Arc scheme, but it does not yet have a proper configuration dashboard in Vanille. Thus for now
           you need to compute the scheme parameters hash yourself.</instructions>
+
+        <instructions show.bind="isNonArcScheme">This scheme is not an Arc scheme, thus you need to compute the scheme parameters hash yourself.</instructions>
         <hr/>
 
         <form>
@@ -31,25 +33,25 @@
 
           <div show.bind="addableSchemes.length">
 
-            <arc-schemes-dropdown scheme.bind="currentSchemeSelection" dao-address.bind="orgAddress" exclude-registered.bind="true" schemes.bind="addableSchemes"
+            <arc-schemes-dropdown scheme.bind="selectedSchemeToAdd" dao-address.bind="orgAddress" exclude-registered.bind="true" schemes.bind="addableSchemes"
               include-non-arc-item.bind="true">
               <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> already has all the schemes that are available from Arc.</span> -->
               <span slot="buttonText">
-                <span class="font-weight-bold">${currentSchemeSelection ? currentSchemeSelection.friendlyName : 'Select Scheme Type to Add'}</span>
+                <span class="font-weight-bold">${selectedSchemeToAdd ? selectedSchemeToAdd.friendlyName : 'Select Scheme Type to Add'}</span>
               </span>
             </arc-schemes-dropdown>
 
-            <div show.bind="currentSchemeSelection" ref="addressControl" class="form-group bmd-form-group">
+            <div show.bind="selectedSchemeToAdd" ref="addressControl" class="form-group bmd-form-group">
               <label for="schemeToAddAddress">Scheme Address</label>
               <input id="schemeToAddAddress" type="text" class="form-control" value.bind="schemeToAddAddress" />
               <!-- <span class="bmd-help">Scheme address</span> -->
             </div>
 
-            <div if.bind="currentSchemeSelection">
-              <compose view-model.bind="getAddSchemeConfigView()" model.bind="newSchemeConfiguration"></compose>
+            <div if.bind="selectedSchemeToAdd">
+              <compose view-model.bind="addSchemeConfigView" model.bind="newSchemeConfiguration"></compose>
+              <scheme-permissions-selector permissions.bind="newSchemeConfiguration.permissions"></scheme-permissions-selector>
+              <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
             </div>
-
-            <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
           </div>
         </form>
       </div>
@@ -63,22 +65,29 @@
         <hr/>
 
         <form>
-          <arc-schemes-dropdown scheme.bind="schemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true" exclude-unknown-arc.bind="true">
-            <span slot="buttonText">
-              <span class="font-weight-bold">${schemeToModify ? schemeToModify.friendlyName : 'Select Scheme to Modify'}</span>
-            </span>
-            <span slot="noSchemes">
-              <span class="org-name">${orgName}</span> has no modifiable the schemes.</span>
-          </arc-schemes-dropdown>
 
-          <div if.bind="!!schemeToModify">
-            <div class="form-group bmd-form-group">
-              <etherscanlink address="${schemeToModify.address}"></etherscanlink>
+          <p show.bind="!modifiableSchemes.length">
+            <span class="org-name">${orgName}</span> has no modifiable schemes.</p>
+
+          <div show.bind="modifiableSchemes.length">
+
+            <arc-schemes-dropdown scheme.bind="selectedSchemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true"
+              exclude-unknown-arc.bind="true" schemes.bind="modifiableSchemes">
+              <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span> -->
+              <span slot="buttonText">
+                <span class="font-weight-bold">${selectedSchemeToModify ? selectedSchemeToModify.friendlyName : 'Select Scheme to Modify'}</span>
+              </span>
+            </arc-schemes-dropdown>
+
+            <div if.bind="!!selectedSchemeToModify">
+              <div class="form-group bmd-form-group">
+                <etherscanlink address="${selectedSchemeToModify.address}"></etherscanlink>
+              </div>
+              <compose view-model="${'../schemeConfiguration/' + selectedSchemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
+              <scheme-permissions permissions.bind="modifiedSchemeConfiguration.permissions"></scheme-permissions>
+              <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
             </div>
-            <compose view-model="${'../schemeConfiguration/' + schemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
-            <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
           </div>
-
         </form>
       </div>
 
@@ -88,18 +97,24 @@
           machine.
         </instructions>
         <form>
-          <arc-schemes-dropdown scheme.bind="schemeToRemove" dao-address.bind="orgAddress" schemes.bind="allSchemes" exclude-unregistered.bind="true">
-            <span slot="noSchemes">
-              <span class="org-name">${orgName}</span> has no schemes that can be removed.</span>
-            <span slot="buttonText">
-              <span class="font-weight-bold">${schemeToRemove ? schemeToRemove.friendlyName : 'Select Scheme to Remove'}</span>
-            </span>
-          </arc-schemes-dropdown>
+          <p show.bind="!removableSchemes.length">
+            <span class="org-name">${orgName}</span> has no removable schemes.</p>
 
-          <div if.bind="!!schemeToRemove">
-            <etherscanlink address="${schemeToRemove.address}"></etherscanlink>
-            <div class="mt-3">
-              <button class="btn-submit-proposal" click.delegate="removeScheme()">Submit Proposal</button>
+          <div show.bind="removableSchemes.length">
+
+            <arc-schemes-dropdown scheme.bind="selectedSchemeToRemove" dao-address.bind="orgAddress" exclude-unregistered.bind="true"
+              schemes.bind="removableSchemes">
+              <!-- <span slot="noSchemes"> <span class="org-name">${orgName}</span> has no schemes that can be removed.</span> -->
+              <span slot="buttonText">
+                <span class="font-weight-bold">${selectedSchemeToRemove ? selectedSchemeToRemove.friendlyName : 'Select Scheme to Remove'}</span>
+              </span>
+            </arc-schemes-dropdown>
+
+            <div if.bind="!!selectedSchemeToRemove">
+              <etherscanlink address="${selectedSchemeToRemove.address}"></etherscanlink>
+              <div class="mt-3">
+                <button class="btn-submit-proposal" click.delegate="removeScheme()">Submit Proposal</button>
+              </div>
             </div>
           </div>
         </form>

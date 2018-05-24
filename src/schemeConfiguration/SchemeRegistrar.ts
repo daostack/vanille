@@ -1,12 +1,13 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigurator } from './schemeConfigurationBase';
-import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { ArcService } from "../services/ArcService";
+import { SchemeConfigModel } from './schemeConfigModel';
+import { VotingMachineInfo } from '../services/VotingMachineService';
+import { ArcService, SchemeRegistrarParams } from "../services/ArcService";
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
 
 @autoinject
-export class SchemeRegistrar implements SchemeConfigurator {
+export class SchemeRegistrar {
 
-  votingMachineConfig: VotingMachineConfig = <any>{};
+  votingMachineConfig: Partial<VotingMachineConfigModel> = {};
   votingMachineInfo: VotingMachineInfo = null;
 
   constructor(
@@ -14,11 +15,11 @@ export class SchemeRegistrar implements SchemeConfigurator {
   ) {
   }
 
-  async activate(model) {
+  async activate(model: Partial<SchemeRegistrarParams & SchemeConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
+  private async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
 
     const voteParamsHash = await this.votingMachineConfig.getConfigurationHash(orgAddress, this.votingMachineInfo.address);
 

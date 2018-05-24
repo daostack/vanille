@@ -1,24 +1,25 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigurator } from './schemeConfigurationBase';
-import { VotingMachineInfo, VotingMachineConfig } from '../services/VotingMachineService';
-import { ArcService } from '../services/ArcService';
+import { SchemeConfigModel } from './schemeConfigModel';
+import { VotingMachineInfo } from '../services/VotingMachineService';
+import { ArcService, StandardSchemeParams } from '../services/ArcService';
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
 
 @autoinject
-export class GlobalConstraintRegistrar implements SchemeConfigurator {
+export class GlobalConstraintRegistrar {
 
   votingMachineInfo: VotingMachineInfo = null;
-  votingMachineConfig: VotingMachineConfig = <any>{};
+  votingMachineConfig: Partial<VotingMachineConfigModel> = {};
 
   constructor(
     private arcService: ArcService
   ) {
   }
 
-  async activate(model) {
+  async activate(model: Partial<StandardSchemeParams & SchemeConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
   }
 
-  async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
+  private async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {
     let params: any = {};
 
     const votingMachineInfo = this.votingMachineInfo;

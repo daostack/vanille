@@ -38,6 +38,7 @@
                 <compose view-model="${'../globalConstraintConfiguration/' + currentGCSelection.name}" model.bind="constraintToAddConfig"></compose>
               </div>
 
+              <label style="padding-top:.3rem; padding-bottom: .3rem; font-weight: bold;">Voting Machine to Remove Constraint</label>
               <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
               </votingmachineselector>
 

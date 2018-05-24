@@ -1,0 +1,127 @@
+<template>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="preBoostedVotePeriodLimit">Pre-Boosted Vote Period Limit</label>
+        <input class="form-control" type='number' id="preBoostedVotePeriodLimit" value.bind="model.preBoostedVotePeriodLimit | number"
+        />
+        <span class="bmd-help">The time limit in seconds for a proposal to be in an absolute voting mode.</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="preBoostedVoteRequiredPercentage">Pre-Boosted Vote Required Percentage</label>
+        <input class="form-control" type='number' id="preBoostedVoteRequiredPercentage" value.bind="model.preBoostedVoteRequiredPercentage | number"
+        />
+        <span class="bmd-help">The percentage of the absolute vote that must be exceeded to result in a win. Must be between 0 and 100.</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="boostedVotePeriodLimit">Boosted Vote Period Limit</label>
+        <input class="form-control" type='number' id="boostedVotePeriodLimit" value.bind="model.boostedVotePeriodLimit | number"
+        />
+        <span class="bmd-help">The time limit in seconds for a proposal to be in an relative voting mode.</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="proposingRepRewardConstA">Proposing Reputation Reward Constant A</label>
+        <input class="form-control" type='number' id="proposingRepRewardConstA" value.bind="model.proposingRepRewardConstA | number"
+        />
+        <span class="bmd-help">Constant A in the calculation of the proposer's reward. Must be between 0 and 100000000.</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="proposingRepRewardConstB">Proposing Reputation Reward Constant B</label>
+        <input class="form-control" type='number' id="proposingRepRewardConstB" value.bind="model.proposingRepRewardConstB | number"
+        />
+        <span class="bmd-help">Constant B in the calculation of the proposer's reward. Must be between 0 and 100000000.</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="thresholdConstA">Proposing Reputation Reward Constant A</label>
+        <input class="form-control" type='number' id="thresholdConstA" value.bind="model.thresholdConstA | ethwei" />
+        <span class="bmd-help">Must be between 0 and 100000000 (will be converted to Wei).</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="thresholdConstB">Proposing Reputation Reward Constant B</label>
+        <input class="form-control" type='number' id="thresholdConstB" value.bind="model.thresholdConstB | number" />
+        <span class="bmd-help">Constant B in the threshold calculation. Must be greater than zero and less than or equal to 100000000.</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <div class="form-group bmd-form-group">
+        <label for="votersGainRepRatioFromLostRep">Pre-boosted Winning Voters' Ratio of Reputation to Gain</label>
+        <input class="form-control" type='number' id="votersGainRepRatioFromLostRep" value.bind="model.votersGainRepRatioFromLostRep | number"
+        />
+        <span class="bmd-help">The percentage of losing pre-boosted voters' lost reputation awarded to winning pre-boosted voters. Must be between
+          0 and 100.</span>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group bmd-form-group">
+        <label for="votersReputationLossRatio">Pre-boosted Losing Voters' Ratio of Reputation to Lose</label>
+        <input class="form-control" type='number' id="votersReputationLossRatio" value.bind="model.votersReputationLossRatio | number"
+        />
+        <span class="bmd-help">The percentage of reputation deducted from losing pre-boosted voters. Must be between 0 and 100.</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="minimumStakingFee">Minimum Staking Fee</label>
+        <input class="form-control" type='number' id="minimumStakingFee" value.bind="model.minimumStakingFee | ethwei" />
+        <span class="bmd-help">A floor on the staking fee (willl be converted to Wei).</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="stakerFeeRatioForVoters">Voters' Staker Fee Ratio</label>
+        <input class="form-control" type='number' id="stakerFeeRatioForVoters" value.bind="model.stakerFeeRatioForVoters | number"
+        />
+        <span class="bmd-help">The percentage of a stake that is given to all voters. Voters (pre and during boosting period) share this amount
+          in proportion to their reputation.</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="daoBountyLimit">DAO Bounty Proposal Limit</label>
+        <input class="form-control" type='number' id="daoBountyLimit" value.bind="model.daoBountyLimit | ethwei" />
+        <span class="bmd-help">Upper bound on the total bounty amount on a proposal (will be converrted to Wei).</span>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group bmd-form-group">
+        <label for="daoBountyConst">DAO Bounty Stake Multiple</label>
+        <input class="form-control" type='number' id="daoBountyConst" value.bind="model.daoBountyConst | number" />
+        <span class="bmd-help">Multiple of a winning stake to be rewarded as bounty. Must be greater than stakerFeeRatioForVoters and less than
+          2*stakerFeeRatioForVoters.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2">
+      <div class="form-group bmd-form-group">
+        <label for="quietEndingPeriod">Quiet Ending Period</label>
+        <input class="form-control" type='number' id="quietEndingPeriod" value.bind="model.quietEndingPeriod | number" />
+        <span class="bmd-help">The duration of the quietEndingPeriod, in seconds.
+        </span>
+      </div>
+    </div>
+  </div>
+</template>

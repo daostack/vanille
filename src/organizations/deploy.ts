@@ -1,4 +1,4 @@
-import { autoinject } from "aurelia-framework";
+import { autoinject, observable } from "aurelia-framework";
 import { Web3Service, BigNumber } from "../services/Web3Service";
 import { TokenService } from "../services/TokenService";
 import { ArcService, ContractWrapperInfo, FounderConfig } from "../services/ArcService";
@@ -14,6 +14,7 @@ import { SortService } from "../services/SortService";
 @autoinject
 export class DeployGen {
 
+  [x: string]: any;
   private userAddress: any;
   private founders: Array<MyFounder>;
   private ethBalance: BigNumber = null;
@@ -28,7 +29,7 @@ export class DeployGen {
   private deployOrgStatus: string = null;
   private arcSchemes: Array<ContractWrapperInfo>;
   private selectedSchemes: Array<ContractWrapperInfo> = [];
-  private votingMachineInfo: VotingMachineInfo = null;
+  @observable private votingMachineInfo: VotingMachineInfo = null;
   private votingMachineModel: any = {};
   private myView: any;
 
@@ -46,13 +47,6 @@ export class DeployGen {
     this.arcSchemes = this.schemeService.availableSchemes.sort(
       (a, b) => { return SortService.evaluateString(a.name, b.name); }
     );
-    for (let scheme of this.arcSchemes) {
-      if (["SchemeRegistrar", "UpgradeScheme", "GlobalConstraintRegistrar"].indexOf(scheme.name) !== -1) {
-        (<DeploySchemeInfo>scheme).required = true;
-        this.selectedSchemes.push(scheme);
-      }
-    }
-
   }
 
   async activate() {
@@ -67,6 +61,24 @@ export class DeployGen {
   attached() {
     this.addFounderInput(new MyFounder(this.web3, this.userAddress));
     ($(".founder-add-button") as any).tooltip();
+  }
+
+  private votingMachineInfoChanged() {
+    if (this.votingMachineInfo) {
+      const gp = this.arcSchemes.filter((s) => s.name === "GenesisProtocol")[0] as DeploySchemeInfo;
+      if (this.votingMachineInfo.name === "GenesisProtocol") {
+        gp.wasSelected = this.selectedSchemes.indexOf(gp) !== -1;
+        if (!gp.wasSelected) {
+          this.selectedSchemes.push(gp);
+        }
+        gp.required = true;
+      } else {
+        if (!gp.wasSelected) {
+          this.selectedSchemes.splice(this.selectedSchemes.indexOf(gp), 1);
+        }
+        gp.required = false;
+      }
+    }
   }
 
   private async readBalances() {
@@ -86,12 +98,11 @@ export class DeployGen {
         tokenName: this.tokenName,
         tokenSymbol: this.tokenSymbol,
         founders: this.founders,
-        votingMachineParams: {
+        votingMachineParams: Object.assign({
           votingMachineName: this.votingMachineInfo.name
           , votingMachineAddress: this.votingMachineInfo.address
-          , votePerc: this.votingMachineModel.votePerc
-          , ownerVote: this.votingMachineModel.ownerVote
-        }
+        },
+          this.votingMachineModel)
         , schemes: this.selectedSchemes.map((s) => { return { name: s.name, address: s.address }; })
       });
       this.deployOrgStatus = 'deployed';
@@ -128,6 +139,7 @@ export class DeployGen {
 }
 
 interface DeploySchemeInfo extends ContractWrapperInfo {
+  wasSelected: boolean;
   required: boolean;
 }
 

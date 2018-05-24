@@ -1,25 +1,17 @@
 import { autoinject } from 'aurelia-framework';
-import { GlobalConstraintConfig } from "../services/GlobalConstraintService";
+import { GlobalConstraintConfigModel } from './globalConstraintConfigModel';
 
-export class NonArcConstraint implements GlobalConstraintConfig {
-
-  model: any;
-
-  constructor(
-  ) {
-    // super();
-  }
+export class NonArcConstraint {
 
   /* constraintParametersHash doesn't go into the model, rather it is obtained
      by the call to getConfigurationHash */
   _constraintParametersHash = undefined;
 
-  async activate(model) {
+  async activate(model: Partial<GlobalConstraintConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
-    this.model = model;
   }
 
-  async getConfigurationHash(orgAddress: string, constraintAddress?: string): Promise<any> {
+  private async getConfigurationHash(orgAddress: string, constraintAddress?: string): Promise<any> {
     return this._constraintParametersHash;
   }
 

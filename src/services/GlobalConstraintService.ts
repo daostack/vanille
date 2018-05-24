@@ -71,7 +71,3 @@ export class GlobalConstraintService {
 
 export { GlobalConstraintInfo } from "../entities/GlobalConstraintInfo";
 
-export interface GlobalConstraintConfig {
-  getConfigurationHash(orgAddress: string, gcAddress?: string);
-}
-
