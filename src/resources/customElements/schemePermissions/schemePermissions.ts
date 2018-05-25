@@ -7,26 +7,36 @@ import { Event } from '_debugger';
 export class SchemePermissionsSelector {
 
   private selectedPermissions: Array<string> = [];
-  // private subscription;
-  // private internalUpdates: boolean = false;
-
+  private view;
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   public permissions: SchemePermissions = SchemePermissions.None;
 
   constructor(private helper: AureliaHelperService) {
   }
 
-  permissionsChanged() {
+  created(ownerView, thisView) {
+    this.view = $(thisView).children();
+
+  }
+  permissionsChanged(newValue, oldValue) {
     for (let i = 0; i < 16; ++i) {
       const flag = 1 << i;
       const hasFlag = this.permissions & flag;
-      const ndx = this.selectedPermissions.indexOf(flag.toString());
-      const flagIsSelected = ndx !== -1;
+      const cb = this.view.find(`input#${flag}`);
+      const flagIsSelected = cb.is(':checked');
       if (hasFlag && !flagIsSelected) {
-        this.selectedPermissions.push(flag.toString());
+        cb.prop('checked', true);
       } else if (!hasFlag && flagIsSelected) {
-        this.selectedPermissions.splice(ndx, 1);
+        cb.prop('checked', false);
       }
+
+      // const ndx = this.selectedPermissions.indexOf(flag.toString());
+      // const flagIsSelected = ndx !== -1;
+      // if (hasFlag && !flagIsSelected) {
+      //   this.selectedPermissions.push(flag.toString());
+      // } else if (!hasFlag && flagIsSelected) {
+      //   this.selectedPermissions.splice(ndx, 1);
+      // }
     }
   }
 

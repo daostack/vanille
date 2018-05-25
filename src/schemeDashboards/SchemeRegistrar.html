@@ -49,7 +49,7 @@
 
             <div if.bind="selectedSchemeToAdd">
               <compose view-model.bind="addSchemeConfigView" model.bind="newSchemeConfiguration"></compose>
-              <scheme-permissions-selector permissions.bind="newSchemeConfiguration.permissions"></scheme-permissions-selector>
+              <scheme-permissions-selector permissions.bind="newSchemePermissions"></scheme-permissions-selector>
               <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>
             </div>
           </div>
@@ -79,12 +79,10 @@
               </span>
             </arc-schemes-dropdown>
 
-            <div if.bind="!!selectedSchemeToModify">
-              <div class="form-group bmd-form-group">
-                <etherscanlink address="${selectedSchemeToModify.address}"></etherscanlink>
-              </div>
+            <div if.bind="selectedSchemeToModify">
+              <etherscanlink address="${selectedSchemeToModify.address}"></etherscanlink>
               <compose view-model="${'../schemeConfiguration/' + selectedSchemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
-              <scheme-permissions permissions.bind="modifiedSchemeConfiguration.permissions"></scheme-permissions>
+              <scheme-permissions-selector permissions.bind="modifiedSchemePermissions"></scheme-permissions-selector>
               <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
             </div>
           </div>

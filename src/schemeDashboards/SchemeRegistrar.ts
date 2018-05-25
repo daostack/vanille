@@ -20,17 +20,24 @@ import { SchemeConfigModel } from '../schemeConfiguration/schemeConfigModel';
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
-  modifiedSchemeConfiguration: Partial<SchemeConfigModel> = {};
-  selectedSchemeToModify: SchemeInfo = null;
-  selectedSchemeToRemove: SchemeInfo = null;
-  newSchemeConfiguration: Partial<SchemeConfigModel> = {};
   @observable selectedSchemeToAdd: SchemeInfo = null;
+  @observable selectedSchemeToModify: SchemeInfo = null;
+  selectedSchemeToRemove: SchemeInfo = null;
+
+  modifiedSchemeConfiguration: Partial<SchemeConfigModel> = {};
+  newSchemeConfiguration: Partial<SchemeConfigModel> = {};
+
+  modifiedSchemePermissions = SchemePermissions.None;
+  newSchemePermissions = SchemePermissions.None;
+
   schemeToAddAddress: string;
-  hasSchemesToAdd: boolean;
+
   addableSchemes: Array<SchemeInfo> = [];
   modifiableSchemes: Array<SchemeInfo> = [];
   removableSchemes: Array<SchemeInfo> = [];
+
   addressControl: HTMLElement;
+
   NonArcSchemeItemKey = NonArcSchemeItemName;
 
   constructor(
@@ -46,7 +53,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     if (this.selectedSchemeToAdd) {
       this.schemeToAddAddress = this.selectedSchemeToAdd.address;
     } else {
-      this.schemeToAddAddress = undefined;
+      this.schemeToAddAddress = null;
     }
     if (this.schemeToAddAddress) {
       $(this.addressControl).addClass("is-filled"); // annoying thing you have to do for BMD
@@ -58,10 +65,25 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       /**
        * get the default permissions for the selected scheme
        */
-      const schemePermissions = await wrapper.getDefaultPermissions();
-      Object.assign(this.newSchemeConfiguration, { permissions: schemePermissions });
-    } else {
-      Object.assign(this.newSchemeConfiguration, { permissions: SchemePermissions.None });
+      this.newSchemePermissions = await wrapper.getDefaultPermissions();
+    } else if (this.newSchemeConfiguration) {
+      this.newSchemePermissions = SchemePermissions.None;
+    }
+  }
+
+  async selectedSchemeToModifyChanged() {
+    if (this.selectedSchemeToModify) {
+      /**
+       * get the current parameters values
+       */
+      const wrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.selectedSchemeToModify.address)) as any;
+      this.modifiedSchemePermissions = await wrapper.getSchemePermissions(this.orgAddress);
+
+      const schemeParams = await wrapper.getSchemeParameters(this.orgAddress);
+      Object.assign(this.modifiedSchemeConfiguration, schemeParams);
+
+    } else if (this.modifiedSchemeConfiguration) {
+      this.newSchemePermissions = SchemePermissions.None;
     }
   }
 
@@ -127,9 +149,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
         , schemeAddress: this.selectedSchemeToModify.address
         , schemeParametersHash: await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.selectedSchemeToModify.address)
       }, this.modifiedSchemeConfiguration);
-
-      // const schemeParams = await wrapper.getSchemeParameters(this.orgAddress);
-      // const schemePermissions = await wrapper.getSchemePermissions(this.orgAddress);
 
       const result = await schemeRegistrar.proposeToAddModifyScheme(config);
 

@@ -61,20 +61,23 @@ export class DeployGen {
   attached() {
     this.addFounderInput(new MyFounder(this.web3, this.userAddress));
     ($(".founder-add-button") as any).tooltip();
+    this.selectedSchemes.push(this.arcSchemes.filter((s) => s.name === "SchemeRegistrar")[0]);
   }
 
   private votingMachineInfoChanged() {
     if (this.votingMachineInfo) {
       const gp = this.arcSchemes.filter((s) => s.name === "GenesisProtocol")[0] as DeploySchemeInfo;
+      const ndxGp = this.selectedSchemes.indexOf(gp);
+      const isSelected = ndxGp !== -1;
       if (this.votingMachineInfo.name === "GenesisProtocol") {
-        gp.wasSelected = this.selectedSchemes.indexOf(gp) !== -1;
+        gp.wasSelected = isSelected;
         if (!gp.wasSelected) {
           this.selectedSchemes.push(gp);
         }
         gp.required = true;
       } else {
-        if (!gp.wasSelected) {
-          this.selectedSchemes.splice(this.selectedSchemes.indexOf(gp), 1);
+        if (!gp.wasSelected && isSelected) {
+          this.selectedSchemes.splice(ndxGp, 1);
         }
         gp.required = false;
       }
