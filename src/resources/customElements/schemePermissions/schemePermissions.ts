@@ -29,14 +29,6 @@ export class SchemePermissionsSelector {
       } else if (!hasFlag && flagIsSelected) {
         cb.prop('checked', false);
       }
-
-      // const ndx = this.selectedPermissions.indexOf(flag.toString());
-      // const flagIsSelected = ndx !== -1;
-      // if (hasFlag && !flagIsSelected) {
-      //   this.selectedPermissions.push(flag.toString());
-      // } else if (!hasFlag && flagIsSelected) {
-      //   this.selectedPermissions.splice(ndx, 1);
-      // }
     }
   }
 
