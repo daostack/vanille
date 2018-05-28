@@ -1,6 +1,5 @@
 <template>
-    <votingmachineselector
-      voting-machine-info.bind="votingMachineInfo"
-      voting-machine-config.bind="votingMachineConfig">
-    </votingmachineselector>
-  </template>
+  <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig" include-unknown-voting-machine.bind="true"
+    default-voting-machine-address.bind="model.votingMachineAddress">
+  </votingmachineselector>
+</template>

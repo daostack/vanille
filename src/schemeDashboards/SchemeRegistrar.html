@@ -71,7 +71,7 @@
 
           <div show.bind="modifiableSchemes.length">
 
-            <arc-schemes-dropdown scheme.bind="selectedSchemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true"
+            <arc-schemes-dropdown scheme.bind="internalSelectedSchemeToModify" dao-address.bind="orgAddress" exclude-unregistered.bind="true"
               exclude-unknown-arc.bind="true" schemes.bind="modifiableSchemes">
               <!-- <span slot="noSchemes"><span class="org-name">${orgName}</span> has no modifiable the schemes.</span> -->
               <span slot="buttonText">
@@ -80,9 +80,9 @@
             </arc-schemes-dropdown>
 
             <div if.bind="selectedSchemeToModify">
-              <etherscanlink address="${selectedSchemeToModify.address}"></etherscanlink>
-              <compose view-model="${'../schemeConfiguration/' + selectedSchemeToModify.name}" model.bind="modifiedSchemeConfiguration"></compose>
-              <scheme-permissions-selector permissions.bind="modifiedSchemePermissions"></scheme-permissions-selector>
+              <etherscanlink address.bind="selectedSchemeToModify.address"></etherscanlink>
+              <compose view-model="../schemeConfiguration/${selectedSchemeToModify.name}" model.two-way="modifiedSchemeConfiguration"></compose>
+              <scheme-permissions-selector permissions.two-way="modifiedSchemePermissions"></scheme-permissions-selector>
               <button class="btn-submit-proposal" click.delegate="modifyScheme()">Submit Proposal</button>
             </div>
           </div>

@@ -43,6 +43,8 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
     } else {
       $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
     }
+
+    // gcParams = await this.currentGCSelection.getSchemeParameters();
   }
 
   @computedFrom("currentGCSelection")

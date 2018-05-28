@@ -39,7 +39,7 @@
               </div>
 
               <label style="padding-top:.3rem; padding-bottom: .3rem; font-weight: bold;">Voting Machine to Remove Constraint</label>
-              <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig">
+              <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig" include-unknown-voting-machine.bind="true">
               </votingmachineselector>
 
               <button if.bind="!!votingMachineConfig" class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>

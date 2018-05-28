@@ -1,15 +1,15 @@
 <template>
 
   <div class="dropdown">
-  <a class="dropdown-toggle voting-machine-dropdown-button" 
-    id="availableMachines"
-    href="#"
-    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <slot name="buttonText"><span class="font-weight-bold">${machine ? machine.friendlyName : 'Select a Voting Machine'}</span></slot>
-  </a>
+    <a class="dropdown-toggle voting-machine-dropdown-button" id="availableMachines" href="#" data-toggle="dropdown" aria-haspopup="true"
+      aria-expanded="false">
+      <slot name="buttonText">
+        <span class="font-weight-bold">${machine ? machine.friendlyName : 'Select a Voting Machine'}</span>
+      </slot>
+    </a>
 
-  <ul class="dropdown-menu" aria-labelledby="votingMachinesDropdown">
-    <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="machine of machines">${machine.friendlyName}</li>
-  </ul>
-</div>
+    <ul class="dropdown-menu" aria-labelledby="votingMachinesDropdown">
+      <li class="dropdown-item" click.delegate="onItemClick(machine)" repeat.for="[address, machine] of machines">${machine.friendlyName}</li>
+    </ul>
+  </div>
 </template>

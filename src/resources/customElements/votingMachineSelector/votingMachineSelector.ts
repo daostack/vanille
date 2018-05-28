@@ -1,6 +1,7 @@
 import { bindable, customElement, bindingMode } from 'aurelia-framework';
 import { VotingMachineInfo } from '../../../services/VotingMachineService';
 import { VotingMachineConfigModel } from '../../../votingMachineConfiguration/votingMachineConfigModel';
+import { Address } from '@daostack/arc.js';
 
 @customElement("votingmachineselector")
 export class VotingMachineSelector {
@@ -16,4 +17,8 @@ export class VotingMachineSelector {
    */
   @bindable({ defaultBindingMode: bindingMode.twoWay })
   votingMachineConfig: VotingMachineConfigModel;
+
+  @bindable includeUnknownVotingMachine: boolean = false;
+
+  @bindable defaultVotingMachineAddress: Address;
 }

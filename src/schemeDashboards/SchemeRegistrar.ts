@@ -1,4 +1,5 @@
 import { autoinject, computedFrom, observable } from "aurelia-framework";
+import { BindingSignaler } from 'aurelia-templating-resources';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { DaoService } from '../services/DaoService';
@@ -21,6 +22,7 @@ import { SchemeConfigModel } from '../schemeConfiguration/schemeConfigModel';
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
 
   @observable selectedSchemeToAdd: SchemeInfo = null;
+  @observable internalSelectedSchemeToModify: SchemeInfo = null;
   @observable selectedSchemeToModify: SchemeInfo = null;
   selectedSchemeToRemove: SchemeInfo = null;
 
@@ -45,6 +47,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     , private arcService: ArcService
     , private daoService: DaoService
     , private eventAggregator: EventAggregator
+    , private signaler: BindingSignaler
   ) {
     super();
   }
@@ -71,17 +74,18 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     }
   }
 
-  async selectedSchemeToModifyChanged() {
-    if (this.selectedSchemeToModify) {
+  async internalSelectedSchemeToModifyChanged() {
+    if (this.internalSelectedSchemeToModify) {
       /**
        * get the current parameters values
        */
-      const wrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.selectedSchemeToModify.address)) as any;
+      const wrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.internalSelectedSchemeToModify.address)) as any;
       this.modifiedSchemePermissions = await wrapper.getSchemePermissions(this.orgAddress);
 
       const schemeParams = await wrapper.getSchemeParameters(this.orgAddress);
       Object.assign(this.modifiedSchemeConfiguration, schemeParams);
-
+      // don't set this until everything is ready for it
+      this.selectedSchemeToModify = this.internalSelectedSchemeToModify;
     } else if (this.modifiedSchemeConfiguration) {
       this.newSchemePermissions = SchemePermissions.None;
     }
@@ -112,7 +116,6 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
     }
   }
 
-
   async addScheme() {
     try {
       const schemeRegistrar = await this.arcService.getContract("SchemeRegistrar") as SchemeRegistrarWrapper;
@@ -121,6 +124,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
         avatar: this.orgAddress
         , schemeAddress: this.schemeToAddAddress
         , schemeParametersHash: await this.newSchemeConfiguration.getConfigurationHash(this.orgAddress, this.schemeToAddAddress)
+        , permissions: this.newSchemePermissions
       }, this.newSchemeConfiguration);
 
       if (!this.isNonArcScheme) {
@@ -148,6 +152,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
         , schemeName: this.selectedSchemeToModify.name // can only modify Arc schemes
         , schemeAddress: this.selectedSchemeToModify.address
         , schemeParametersHash: await this.modifiedSchemeConfiguration.getConfigurationHash(this.orgAddress, this.selectedSchemeToModify.address)
+        , permissions: this.modifiedSchemePermissions
       }, this.modifiedSchemeConfiguration);
 
       const result = await schemeRegistrar.proposeToAddModifyScheme(config);
