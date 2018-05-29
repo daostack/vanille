@@ -7,8 +7,10 @@
     <span class="bmd-help">Fee for proposing a contribution reward in the DAO's native token</span>
   </div>
 
-  <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig" include-unknown-voting-machine.bind="true"
-    default-voting-machine-address.bind="model.votingMachineAddress">
-  </votingmachineselector>
+  <div class="form-group bmd-form-group">
+    <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig" include-unknown-voting-machine.bind="true"
+      default-voting-machine-address.bind="model.votingMachineAddress">
+    </votingmachineselector>
+  </div>
 
 </template>

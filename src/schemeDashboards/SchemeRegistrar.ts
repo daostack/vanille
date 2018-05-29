@@ -87,7 +87,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       // don't set this until everything is ready for it
       this.selectedSchemeToModify = this.internalSelectedSchemeToModify;
     } else if (this.modifiedSchemeConfiguration) {
-      this.newSchemePermissions = SchemePermissions.None;
+      this.modifiedSchemePermissions = SchemePermissions.None;
       this.selectedSchemeToModify = null;
     }
   }

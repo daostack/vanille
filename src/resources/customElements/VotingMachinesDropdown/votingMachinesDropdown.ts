@@ -32,9 +32,10 @@ export class VotingMachinesDropdown {
           this.nonArcSchemeItem.address = this.defaultVotingMachineAddress;
           this.machine = this.nonArcSchemeItem;
         }
-      } else {
-        this.votingMachinesService.defaultMachine;
       }
+      // else {
+      //   this.machine = this.votingMachinesService.defaultMachine;
+      // }
     }
   }
 

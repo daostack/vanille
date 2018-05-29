@@ -18,7 +18,7 @@ export class GlobalConstraintRegistrar {
 
   async activate(model: Partial<StandardSchemeParams & VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
-    Object.assign(this.votingMachineConfig, model);
+    this.votingMachineConfig = { voteParametersHash: model.voteParametersHash };
     this.model = model;
   }
 

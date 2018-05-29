@@ -67,7 +67,7 @@ export class ArcSchemesDropdown {
       nonArcSchemeItem.isRegistered = false;
       nonArcSchemeItem.address = null;
 
-      this.schemes.unshift(nonArcSchemeItem);
+      this.schemes.push(nonArcSchemeItem);
     }
   }
 
