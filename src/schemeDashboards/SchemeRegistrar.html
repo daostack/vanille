@@ -49,7 +49,7 @@
 
             <div if.bind="selectedSchemeToAdd">
               <div class="form-group bmd-form-group">
-                <compose view-model.bind="addSchemeConfigView" model.bind="newSchemeConfiguration"></compose>
+                <compose view-model.bind="addSchemeConfigView" model.two-way="newSchemeConfiguration"></compose>
               </div>
               <scheme-permissions-selector permissions.bind="newSchemePermissions"></scheme-permissions-selector>
               <button if.bind="schemeToAddAddress" class="btn-submit-proposal" click.delegate="addScheme()">Submit Proposal</button>

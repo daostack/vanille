@@ -19,7 +19,7 @@ export class GenesisProtocol {
      * we want to keep the params in the passed-in model,
      * and add the default values to it.
      */
-    Object.assign(this.model, await GetDefaultGenesisProtocolParameters(), model);
+    model = this.model = Object.assign(await GetDefaultGenesisProtocolParameters(), model);
   }
 
   private async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {

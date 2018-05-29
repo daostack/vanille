@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "sourceRoot": "src",
     "baseUrl": "src",
-    "sourceMap": true,
     "importHelpers": true,
     "noImplicitAny": false
   },

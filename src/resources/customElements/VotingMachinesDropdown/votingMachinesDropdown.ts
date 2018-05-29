@@ -33,9 +33,9 @@ export class VotingMachinesDropdown {
           this.machine = this.nonArcSchemeItem;
         }
       }
-      // else {
-      //   this.machine = this.votingMachinesService.defaultMachine;
-      // }
+      else {
+        this.machine = this.votingMachinesService.defaultMachine;
+      }
     }
   }
 

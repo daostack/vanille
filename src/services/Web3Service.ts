@@ -31,7 +31,7 @@ export class Web3Service {
 
   public get currentProvider(): Web3Providers.HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
 
-  public get isConnected(): boolean { return this.web3 && this.web3.isConnected(); }
+  public isConnected: boolean = false;
 
   public get eth(): EthApi { return this.web3 ? this.web3.eth : null; }
 
@@ -142,19 +142,33 @@ export class Web3Service {
             // TODO:  Other networks besides kovan and ropsten?  Take  ID instead of name for network?
             this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === ganacheNetworkId);
             if (!this._isCorrectChain) {
-              reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
+              return reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
             } else {
-              console.log(`Connected to Ethereum (${Web3Service.Network})`);
-              this._web3 = web3;
-              this.defaultAccount = await this.getDefaultAccount();
-              resolve(this._web3);
+
+              const connected = await (<any>Promise).promisify(web3.net.getListening)()
+                .then((isListening: boolean) => {
+                  return isListening;
+                })
+                .catch((error: Error) => {
+                  return false;
+                });
+
+              if (connected) {
+                console.log(`Connected to Ethereum (${Web3Service.Network})`);
+                this._web3 = web3;
+                this.defaultAccount = await this.getDefaultAccount();
+                this.isConnected = true;
+                return resolve(this._web3);
+              } else {
+                return reject(new Error(`Web3Service.initialize failed: isConnected: ${false} isCorrectChain: ${this._isCorrectChain}`));
+              }
             }
           } else {
-            reject(new Error(`Web3Service.initialize failed: isConnected: ${this._isCorrectChain} isCorrectChain: ${this._isCorrectChain}`));
+            return reject(new Error(`Web3Service.initialize failed: isConnected: ${this._isCorrectChain} isCorrectChain: ${this._isCorrectChain}`));
           }
         });
       } catch (ex) {
-        reject(new Error(`Web3Service.initialize failed: ${ex}`));
+        return reject(new Error(`Web3Service.initialize failed: ${ex}`));
       }
     });
   }

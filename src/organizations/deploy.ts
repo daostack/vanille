@@ -148,13 +148,10 @@ interface DeploySchemeInfo extends ContractWrapperInfo {
 
 class MyFounder implements FounderConfig {
 
-  web3: Web3Service;
-
   constructor(web3: Web3Service, address: string) {
-    this.web3 = web3;
     this.address = address;
-    this.tokens = this.web3.toWei(1000);
-    this.reputation = this.web3.toWei(1000);
+    this.tokens = web3.toWei(1000);
+    this.reputation = web3.toWei(1000);
   }
 
   address: string;
