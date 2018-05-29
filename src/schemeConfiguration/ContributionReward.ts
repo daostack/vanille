@@ -16,8 +16,9 @@ export class ContributionReward {
   ) {
   }
 
-  async activate(model: Partial<ContributionRewardParams & SchemeConfigModel>) {
+  async activate(model: Partial<ContributionRewardParams & VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
+    Object.assign(this.votingMachineConfig, model);
     this.model = Object.assign({ orgNativeTokenFee: 0 }, model);
   }
 

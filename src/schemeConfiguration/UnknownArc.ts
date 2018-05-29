@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigModel } from './schemeConfigModel';
 import { SchemeService } from "../services/SchemeService";
 import { DaoService } from "../services/DaoService";
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
 
 export class UnknownArcS {
 
@@ -9,7 +9,7 @@ export class UnknownArcS {
      by the call to getConfigurationHash */
   _schemeParametersHash = undefined;
 
-  async activate(model: Partial<SchemeConfigModel>) {
+  async activate(model: Partial<VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
   }
 

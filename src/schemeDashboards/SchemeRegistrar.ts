@@ -88,6 +88,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       this.selectedSchemeToModify = this.internalSelectedSchemeToModify;
     } else if (this.modifiedSchemeConfiguration) {
       this.newSchemePermissions = SchemePermissions.None;
+      this.selectedSchemeToModify = null;
     }
   }
 
@@ -136,7 +137,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Proposal submitted to add ${this.schemeToAddAddress}`, result.tx.tx));
 
-      this.selectedSchemeToAdd = null;
+      this.selectedSchemeToAdd = this.internalSelectedSchemeToModify = null;
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to add scheme ${this.schemeToAddAddress}`, ex));

@@ -21,4 +21,21 @@ export class VotingMachineSelector {
   @bindable includeUnknownVotingMachine: boolean = false;
 
   @bindable defaultVotingMachineAddress: Address;
+
+  addressControl: HTMLElement;
+
+  async votingMachineInfoChanged() {
+
+    // if (this.votingMachineInfo) {
+    //   this.votingMachineInfo.address = this.votingMachineInfo.address;
+    // } else {
+    //   this.votingMachineAddress = null;
+    // }
+
+    if (this.votingMachineInfo && this.votingMachineInfo.address) {
+      $(this.addressControl).addClass("is-filled"); // annoying thing you have to do for BMD
+    } else {
+      $(this.addressControl).removeClass("is-filled"); // annoying thing you have to do for BMD
+    }
+  }
 }

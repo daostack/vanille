@@ -4,14 +4,14 @@ import { VotingMachineConfigModel } from './votingMachineConfigModel';
 
 @autoinject
 export class Unknown {
-
-  vmParametersHash: Hash = "";
+  private model: Partial<VotingMachineConfigModel>;
 
   async activate(model: VotingMachineConfigModel) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
+    this.model = model;
   }
 
   private async getConfigurationHash(orgAddress: string, votingMachineAddress?: string): Promise<any> {
-    return Promise.resolve(this.vmParametersHash);
+    return Promise.resolve(this.model.voteParametersHash);
   }
 }

@@ -13,7 +13,8 @@ export class VotingMachinesDropdown {
   @bindable({ defaultBindingMode: bindingMode.oneTime }) includeUnknownVotingMachine: boolean = false;
   @bindable defaultVotingMachineAddress: Address;
 
-  machines: Map<Address, VotingMachineInfo>;
+  private machines: Map<Address, VotingMachineInfo>;
+  private nonArcSchemeItem: VotingMachineInfo;
 
   constructor(
     private votingMachinesService: VotingMachineService
@@ -22,9 +23,18 @@ export class VotingMachinesDropdown {
 
   private defaultVotingMachineAddressChanged() {
     if (this.machines) {
-      this.machine = this.defaultVotingMachineAddress ?
-        this.machines.get(this.defaultVotingMachineAddress) :
+
+      if (this.defaultVotingMachineAddress && this.defaultVotingMachineAddress.trim()) {
+        const foundMachine = this.machines.get(this.defaultVotingMachineAddress);
+        if (foundMachine) {
+          this.machine = foundMachine;
+        } else {
+          this.nonArcSchemeItem.address = this.defaultVotingMachineAddress;
+          this.machine = this.nonArcSchemeItem;
+        }
+      } else {
         this.votingMachinesService.defaultMachine;
+      }
     }
   }
 
@@ -37,9 +47,9 @@ export class VotingMachinesDropdown {
 
     if (this.includeUnknownVotingMachine) {
 
-      let nonArcSchemeItem = new VotingMachineInfo();
-      nonArcSchemeItem.friendlyName = "Unknown Voting Machine";
-      nonArcSchemeItem.name = UnknownVotingMachineItemName;
+      let nonArcSchemeItem = this.nonArcSchemeItem = new VotingMachineInfo();
+      nonArcSchemeItem.friendlyName = "Non-Arc Voting Machine";
+      nonArcSchemeItem.name = NonArcVotingMachineItemName;
       nonArcSchemeItem.address = null;
 
       this.machines.set(null, nonArcSchemeItem);
@@ -53,4 +63,4 @@ export class VotingMachinesDropdown {
   }
 }
 
-export const UnknownVotingMachineItemName = "Unknown";
+export const NonArcVotingMachineItemName = "NonArc";

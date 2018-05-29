@@ -1,7 +1,6 @@
-﻿import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
+﻿import { bindable, customElement, autoinject } from 'aurelia-framework';
 import { Web3Service } from '../../../services/Web3Service';
 
-@containerless
 @autoinject
 @customElement("etherscanlink")
 export class EtherscanLink {

@@ -1,5 +1,4 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigModel } from './schemeConfigModel';
 import { VotingMachineInfo } from '../services/VotingMachineService';
 import { ArcService, SchemeRegistrarParams } from "../services/ArcService";
 import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
@@ -9,14 +8,17 @@ export class SchemeRegistrar {
 
   votingMachineConfig: Partial<VotingMachineConfigModel> = {};
   votingMachineInfo: VotingMachineInfo = null;
+  model: Partial<SchemeRegistrarParams>;
 
   constructor(
     private arcService: ArcService
   ) {
   }
 
-  async activate(model: Partial<SchemeRegistrarParams & SchemeConfigModel>) {
+  async activate(model: Partial<SchemeRegistrarParams & VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
+    Object.assign(this.votingMachineConfig, model);
+    this.model = model;
   }
 
   private async getConfigurationHash(orgAddress: string, schemeAddress?: string): Promise<any> {

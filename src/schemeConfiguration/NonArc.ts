@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
-import { SchemeConfigModel } from './schemeConfigModel';
 import { SchemePermissions } from '../services/ArcService';
 import { AureliaHelperService } from '../services/AureliaHelperService';
+import { VotingMachineConfigModel } from '../votingMachineConfiguration/votingMachineConfigModel';
 
 @autoinject
 export class NonArc {
@@ -13,7 +13,7 @@ export class NonArc {
   constructor(private helper: AureliaHelperService) {
   }
 
-  async activate(model: Partial<SchemeConfigModel>) {
+  async activate(model: Partial<VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
   }
 
