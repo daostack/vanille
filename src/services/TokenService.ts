@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
 import { Web3Service, BigNumber } from "./Web3Service";
-import { ArcService, TruffleContract } from './ArcService';
+import { ArcService, TruffleContract, Address } from './ArcService';
 import { DaoService } from "./DaoService";
 
 @autoinject
@@ -26,16 +26,27 @@ export class TokenService {
    */
   public async getUserTokenBalance(token: TruffleContract, inEth: boolean = false): Promise<BigNumber> {
     let userAddress = this.web3.defaultAccount;
-    let amount = await token.balanceOf(userAddress);
+    return this.getTokenBalance(token, userAddress, inEth);
+  }
+
+  public async getTokenBalance(
+    token: TruffleContract,
+    address: Address,
+    inEth: boolean = false): Promise<BigNumber> {
+
+    let amount = await token.balanceOf(address);
     if (inEth) {
       amount = this.web3.fromWei(amount);
     }
     return amount;
   }
 
-  public async getDAOstackNativeToken() {
+  public async getDAOstackNativeToken(): Promise<TruffleContract> {
     const daoStack = await this.daoService.GetDaostack();
-    const daoTokenAddress = await daoStack.token.address;
-    return await this.arcService.getContract("DAOToken", daoTokenAddress);
+    return this.getTokenFromAddress(daoStack.token.address);
+  }
+
+  public async getTokenFromAddress(address: Address): Promise<TruffleContract> {
+    return this.arcService.getContract("DAOToken", address);
   }
 }

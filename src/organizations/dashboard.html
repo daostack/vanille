@@ -9,26 +9,41 @@
     </section>
     <section>
       <h3>Basic Information</h3>
-      <dl>
-        <dt>Avatar</dt>
-        <dd>
-          <etherscanlink address="${address}"></etherscanlink>
-        </dd>
-        <dt>Controller</dt>
-        <dd>
-          <etherscanlink address="${org.controller.address}"></etherscanlink>
-        </dd>
-        <dt>Reputation</dt>
-        <dd> ${ omega | ethwei}</dd>
-        <dt>Token</dt>
-        <dd>
-          <etherscanlink address="${org.token.address}"></etherscanlink>
-        </dd>
-        <dt>Token Symbol</dt>
-        <dd>${tokenSymbol}</dd>
-        <dt>Your Token Balance</dt>
-        <dd> ${ userTokenbalance | ethwei }</dd>
-      </dl>
+      <div class="row">
+        <div class="col-sm-12 col-lg-6">
+          <dt>Avatar</dt>
+          <dd>
+            <etherscanlink style="white-space: nowrap" address="${address}"></etherscanlink>
+          </dd>
+          <dt>Controller</dt>
+          <dd>
+            <etherscanlink style="white-space: nowrap" address="${org.controller.address}"></etherscanlink>
+          </dd>
+          <dt>Token</dt>
+          <dd>
+            <etherscanlink style="white-space: nowrap" address="${org.token.address}"></etherscanlink>
+          </dd>
+          </dl>
+        </div>
+        <div class="col-sm-12 col-lg-3">
+          <dl>
+            <dt>Token Symbol</dt>
+            <dd>${tokenSymbol}</dd>
+            <dt>Reputation</dt>
+            <dd> ${ omega | ethwei}</dd>
+          </dl>
+        </div>
+        <div class="col-sm-12 col-lg-3">
+          <dl>
+            <dt>Token Balance</dt>
+            <dd>${ daoTokenbalance | ethwei }</dd>
+            <dt>ETH Balance</dt>
+            <dd>${ daoEthbalance | ethwei }</dd>
+            <dt>GEN Balance</dt>
+            <dd>${ daoGenbalance | ethwei }</dd>
+          </dl>
+        </div>
+      </div>
     </section>
 
     <section show.bind="registeredArcSchemes.length">

@@ -6,7 +6,7 @@ import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { PLATFORM } from 'aurelia-pal';
 import { AureliaHelperService } from "../services/AureliaHelperService";
 import { App } from '../app';
-import { BigNumber } from '../services/Web3Service';
+import { BigNumber, Web3Service } from '../services/Web3Service';
 
 @autoinject
 export class DAODashboard {
@@ -15,7 +15,9 @@ export class DAODashboard {
   address: string;
   orgName: string;
   tokenSymbol: string;
-  userTokenbalance: BigNumber;
+  daoTokenbalance: BigNumber;
+  daoEthbalance: BigNumber;
+  daoGenbalance: BigNumber;
   registeredArcSchemes: Array<SchemeInfo>;
   unregisteredArcSchemes: Array<SchemeInfo>;
   nonArcSchemes: Array<SchemeInfo>;
@@ -31,7 +33,7 @@ export class DAODashboard {
     , private arcService: ArcService
     , private schemeService: SchemeService
     , private aureliaHelperService: AureliaHelperService
-
+    , private web3Service: Web3Service
   ) {
   }
 
@@ -44,7 +46,15 @@ export class DAODashboard {
       let token = this.org.token;
       this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
       // in Wei
-      this.userTokenbalance = await this.tokenService.getUserTokenBalance(this.org.token);
+      this.daoTokenbalance = await this.tokenService.getTokenBalance(this.org.token, this.org.address);
+      this.daoEthbalance = await this.web3Service.getBalance(this.org.address);
+      try {
+        const genToken = await await this.tokenService.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+        this.daoGenbalance = await this.tokenService.getTokenBalance(genToken, this.org.address);
+      } catch (ex) {
+        this.daoGenbalance = new BigNumber(0);
+      }
+
       // in Wei
       this.omega = this.org.omega;
 
