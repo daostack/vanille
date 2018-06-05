@@ -46,6 +46,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
     PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
+    PLATFORM.moduleName("resources/customElements/GenBalance/GenBalance"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/votingMachineSelector/votingMachineSelector"),
     PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
@@ -94,8 +95,8 @@ export async function configure(aurelia: Aurelia) {
   try {
 
     const web3 = await InitializeArcJs({
-      // process.env.network is poked-in by webpack
-      useNetworkDefaultsFor: process.env.network || "ganache"
+      // process.env.network is poked-in by webpack if it is defined
+      useNetworkDefaultsFor: process.env.network
     });
 
     // just to initialize them and get them running

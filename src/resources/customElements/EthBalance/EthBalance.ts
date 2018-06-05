@@ -39,7 +39,7 @@ export class EthBalance {
 
   async getBalance() {
     try {
-      this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toExponential(4);
+      this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toExponential(2);
       this.text = `${this.ethBalance} ETH`;
     } catch (ex) {
     }

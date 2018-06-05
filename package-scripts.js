@@ -109,11 +109,11 @@ module.exports = {
         production: {
           default: series(
             "nps webpack.build.before",
-            "webpack --progress --env.production --env.extractCss --env.network=kovan"
+            "webpack --progress --env.production --env.extractCss"
           ),
           inlineCss: series(
             "nps webpack.build.before",
-            "webpack --progress --env.production --env.network=kovan"
+            "webpack --progress --env.production"
           ),
           andServe: series(
             "nps webpack.build.production",

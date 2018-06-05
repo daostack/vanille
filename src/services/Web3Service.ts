@@ -27,6 +27,7 @@ export class Web3Service {
   public get accounts(): Array<string> { return this.web3 ? this.web3.eth.accounts : []; }
 
   public defaultAccount: Address;
+  public networkName: string;
 
   public get currentProvider(): Web3Providers.HttpProvider { return this.web3 ? this.web3.currentProvider : null; }
 
@@ -84,10 +85,6 @@ export class Web3Service {
     });
   }
 
-  // process.env.network is poked-in by webpack
-  public static Network = process.env.network.toLowerCase();
-  // not going to worry about the exact id for ganache, which is dynamic, unless we absolutely have to
-
   public initialize(web3): Promise<Web3> {
 
     /**
@@ -98,30 +95,28 @@ export class Web3Service {
 
     const ganacheNetworkId = '0';
 
-    let getIdFromNetwork = (network) => {
+    // let getIdFromNetwork = (network) => {
 
-      switch (network) {
-        case 'ropsten':
-          return '3';
-        case 'kovan':
-          return '42';
-        case 'live':
-          return '1';
-        case 'ganache':
-        default:
-          // for ganache, would be something like: Object.keys(DaoCreator.networks).pop();
-          return ganacheNetworkId;
-      }
-    };
+    //   switch (network) {
+    //     case 'ropsten':
+    //       return '3';
+    //     case 'kovan':
+    //       return '42';
+    //     case 'live':
+    //       return '1';
+    //     case 'ganache':
+    //     default:
+    //       // for ganache, would be something like: Object.keys(DaoCreator.networks).pop();
+    //       return ganacheNetworkId;
+    //   }
+    // };
 
     let getNetworkFromID = (id) => {
       switch (id) {
         case '3': return 'ropsten';
         case '42': return 'kovan';
+        case '4': return 'rinkeby';
         case '1': return 'live';
-        case null:
-        case undefined:
-        case '0': return 'unknown';
         default: return 'unknown (ganache?)'
       }
     };
@@ -142,6 +137,8 @@ export class Web3Service {
             //   return reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
             // } else {
 
+            this.networkName = getNetworkFromID(chainId);
+
             const connected = await (<any>Promise).promisify(web3.net.getListening)()
               .then((isListening: boolean) => {
                 return isListening;
@@ -151,7 +148,7 @@ export class Web3Service {
               });
 
             if (connected) {
-              console.log(`Connected to Ethereum (${Web3Service.Network})`);
+              console.log(`Connected to Ethereum (${this.networkName})`);
               this._web3 = web3;
               this.defaultAccount = await this.getDefaultAccount();
               this.isConnected = true;

@@ -11,4 +11,3 @@ Options.relativeToDir = path.join(__dirname, 'unit');
  * to do so carefully, one-at-a-time, rerunning the tests as you go.
  */
 globalize();
-process.env.network = "test";

@@ -4,11 +4,11 @@ import { BigNumber } from '../../../services/Web3Service';
 
 @autoinject
 @containerless
-@customElement("tokenticker")
-export class TokenTicker {
+@customElement("genbalance")
+export class GenBalance {
 
-  private tknSymbol: string = '';
   private balance: string;
+  private text: string;
 
   constructor(
     private tokenService: TokenService
@@ -30,21 +30,24 @@ export class TokenTicker {
 
   async readBalance() {
 
-    const token = await this.tokenService.getDAOstackNativeToken();
+    const token = await this.tokenService.getGlobalGenToken();
 
-    this.tknSymbol = await this.tokenService.getTokenSymbol(token);
-
-    this.getBalance(token);
-
-    this.events = token.allEvents({ fromBlock: 'latest' });
-
-    this.events.watch(() => {
+    if (token) {
       this.getBalance(token);
-    });
+
+      this.events = token.allEvents({ fromBlock: 'latest' });
+
+      this.events.watch(() => {
+        this.getBalance(token);
+      });
+    } else {
+      this.text = `N/A`;
+    }
   }
   async getBalance(token) {
     try {
       this.balance = (await this.tokenService.getUserTokenBalance(token, true)).toFixed(2);
+      this.text = this.balance.toString();
     } catch {
     }
   }

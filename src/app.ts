@@ -11,12 +11,13 @@ export class App {
   private isConnected: boolean;
   private logger = LogManager.getLogger("Vanille");
   private healthy: boolean = false;
-  private network = Web3Service.Network;
+  private network: string;
 
   constructor(
     private web3: Web3Service,
     private arcService: ArcService
   ) {
+    this.network = web3.networkName;
   }
 
   attached() {

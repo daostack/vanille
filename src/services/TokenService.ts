@@ -46,7 +46,16 @@ export class TokenService {
     return this.getTokenFromAddress(daoStack.token.address);
   }
 
-  public async getTokenFromAddress(address: Address): Promise<TruffleContract> {
+  public getGlobalGenToken(): Promise<TruffleContract | undefined> {
+    try {
+      return this.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+    } catch {
+      // then we don't know the address of the GEN token
+      return Promise.resolve(undefined);
+    }
+  }
+
+  public getTokenFromAddress(address: Address): Promise<TruffleContract> {
     return this.arcService.getContract("DAOToken", address);
   }
 }

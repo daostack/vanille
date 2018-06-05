@@ -22,9 +22,17 @@ export class EtherscanLink {
 
   internal: boolean = false;
 
+  constructor(private web3: Web3Service) {
+  }
+
   attached() {
-    const targetedNetwork = Web3Service.Network;
-    const isGanache = targetedNetwork === "ganache";
+    let targetedNetwork = this.web3.networkName;
+    if (targetedNetwork === "live") {
+      targetedNetwork = "";
+    } else {
+      targetedNetwork = targetedNetwork + '.';
+    }
+    const isGanache = targetedNetwork === "ganache.";
     if (this.type == "tx") {
       this.copyMessage = "Hash has been copied to the clipboard";
     } else {
@@ -38,7 +46,7 @@ export class EtherscanLink {
       }
     } else {
       // go with etherscan
-      this.networkExplorerUri = `http://${targetedNetwork}.etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
+      this.networkExplorerUri = `http://${targetedNetwork}etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
     }
   }
 }

@@ -21,7 +21,7 @@ We use [Webpack](https://webpack.js.org/) for bundling the javascript, html, css
 
 ## Use Vanille Now
 
-The latest live Vanille release is running at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Vanille assumes you are either running a Kovan chain locally (listening on localhost:8547), or you are using Chrome and have an extension such as MetaMask that enables you to connect to a Kovan node.
+The latest live Vanille release is running at [http://daostack.azurewebsites.net](http://daostack.azurewebsites.net). This deployment of Vanille assumes you are either running a node locally at http://127.0.0.1:8545 or you are using Chrome with an extension such as MetaMask that enables you to connect the chain of your choice.
 
 ## Run Vanille Locally
 
@@ -64,15 +64,13 @@ or manually browse to: http://localhost:8090/
 **Note**: If you are using Chrome with Metamask, you will need to disable MetaMask or else point it to your local computer.
 
 <a name="whichChain"></a>
-## Migrate to a Different Testnet
+## Migrate Contracts to a Testnet
 
-The `arcjs_network` environment variable, defined in the developer's OS environment or as "network" on the build command line, specifies which blockchain network should be used by the application. Can be "ganache", "kovan", "ropsten" or "ganache".  The default is "ganache".
+The script `npm start arc-js.migrateContracts` (see above) uses environment variables to govern its behavior.
+including setting the network node url and port numbers, and locking an account using a mnemonic.  Read the Arc.js documentation for more information:  https://daostack.github.io/arc.js/Migration/ and https://daostack.github.io/arc.js/Configuration/.
 
-This environment variable is used when migrating contracts from Arc.js and when building the app bundle. The webpack config file obtains the value at build time and pokes it into the app bundle where it is used at runtime.
+If you want Vanille to connect to a local node that is not listening at the default http://127.0.0.1:8545, then you can set the `arcjs_network` environment variable at build time (either in the OS or on the build command line) and webpack will poke the value into the app bundle where it is used at runtime to tell Arc.js which default url and port values to use to connect to a node.
 
-When deploying to production, we avoid grabbing the wrong chain from the dev environment by hard-coding the desired chain into the [NPM command that builds the production version of the app bundle](README#production).  But when migrating, you must set the network environment variable yourself.
-
-See more about migration, including how to set the right network node url and port numbers, in the [Arc.js documentation about migration](https://daostack.github.io/arc.js/Migration/).
 
 ## Build and Serve Vanille for Debugging with Hot Module Replacement
 
@@ -85,7 +83,7 @@ See more about migration, including how to set the right network node url and po
 <a name="production"></a>
 ## Build and Run for Production
 
-The production build runs against kovan. See [Migrate to a Different Testnet](README#whichChain).
+See [Migrate to a Different Testnet](README#whichChain).
 
 ```shell
   npm start build.production.andServe
