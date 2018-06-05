@@ -31,10 +31,9 @@ export class App {
      */
     const haveDAOstack = !!this.arcService.arcContracts;
     const isConnected = this.web3.isConnected;
-    const isCorrectChain = this.web3.isCorrectChain;
     const noAccount = !this.web3.defaultAccount;
 
-    this.isConnected = isConnected && isCorrectChain && haveDAOstack;
+    this.isConnected = isConnected && haveDAOstack;
 
     /**
      * first set the landing page.
@@ -48,16 +47,6 @@ export class App {
           moduleId: PLATFORM.moduleName('./error-pages/noaccount/noaccount'),
           nav: false,
           title: 'No Account'
-        }]);
-    }
-    else if (isConnected && !isCorrectChain) {
-      config.map([
-        {
-          route: [''],
-          name: 'wrongchain',
-          moduleId: PLATFORM.moduleName('./error-pages/wrongchain/wrongchain'),
-          nav: false,
-          title: 'Wrong Chain'
         }]);
     }
     /**

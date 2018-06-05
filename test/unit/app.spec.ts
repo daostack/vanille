@@ -22,7 +22,6 @@ describe('the App module', () => {
 
     let fakeWeb3Service = {
       isConnected: true,
-      isCorrectChain: true,
       defaultAccount: {}
     };
 
