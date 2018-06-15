@@ -1,5 +1,5 @@
 import { autoinject } from "aurelia-framework";
-import { Hash, TransactionReceipt } from '../services/arcService';
+import { Hash, TransactionReceipt } from '../services/ArcService';
 import { Web3Service } from '../services/Web3Service';
 import { BlockWithoutTransactionData } from 'web3';
 
