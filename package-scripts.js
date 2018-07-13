@@ -29,13 +29,14 @@ module.exports = {
     "arc-js": {
       ganache: "npm explore @daostack/arc.js -- npm start ganache",
       ganacheDb: {
-        run: "npm explore @daostack/arc.js -- npm start ganacheDb",
+        default: "npm explore @daostack/arc.js -- npm start ganacheDb",
         clean: "npm explore @daostack/arc.js -- npm start ganacheDb.clean",
         zip: "npm explore @daostack/arc.js -- npm start ganacheDb.zip",
         unzip: "npm explore @daostack/arc.js -- npm start ganacheDb.unzip",
         restoreFromZip: "npm explore @daostack/arc.js -- npm start ganacheDb.restoreFromZip"
       },
-      migrateContracts: "npm explore @daostack/arc.js -- npm start migrateContracts"
+      migrateContracts: "npm explore @daostack/arc.js -- npm start migrateContracts",
+      createGenesisDao: "npm explore @daostack/arc.js -- npm start createGenesisDao"
     },
     test: {
       default: "nps test.jest",

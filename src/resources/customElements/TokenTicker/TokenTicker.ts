@@ -1,51 +1,51 @@
-import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
-import { TokenService } from "../../../services/TokenService";
-import { BigNumber } from '../../../services/Web3Service';
+// import { bindable, containerless, customElement, autoinject } from 'aurelia-framework';
+// import { TokenService } from "../../../services/TokenService";
+// import { BigNumber } from '../../../services/Web3Service';
 
-@autoinject
-@containerless
-@customElement("tokenticker")
-export class TokenTicker {
+// @autoinject
+// @containerless
+// @customElement("tokenticker")
+// export class TokenTicker {
 
-  private tknSymbol: string = '';
-  private balance: string;
+//   private tknSymbol: string = '';
+//   private balance: string;
 
-  constructor(
-    private tokenService: TokenService
-  ) {
-  }
+//   constructor(
+//     private tokenService: TokenService
+//   ) {
+//   }
 
-  private events;
+//   private events;
 
-  attached() {
-    this.readBalance();
-  }
+//   attached() {
+//     this.readBalance();
+//   }
 
-  detached() {
-    if (this.events) {
-      this.events.stopWatching();
-      this.events = null;
-    }
-  }
+//   detached() {
+//     if (this.events) {
+//       this.events.stopWatching();
+//       this.events = null;
+//     }
+//   }
 
-  async readBalance() {
+//   async readBalance() {
 
-    const token = await this.tokenService.getDAOstackNativeToken();
+//     const token = await this.tokenService.getDAOstackNativeToken();
 
-    this.tknSymbol = await this.tokenService.getTokenSymbol(token);
+//     this.tknSymbol = await this.tokenService.getTokenSymbol(token);
 
-    this.getBalance(token);
+//     this.getBalance(token);
 
-    this.events = token.allEvents({ fromBlock: 'latest' });
+//     this.events = token.allEvents({ fromBlock: 'latest' });
 
-    this.events.watch(() => {
-      this.getBalance(token);
-    });
-  }
-  async getBalance(token) {
-    try {
-      this.balance = (await this.tokenService.getUserTokenBalance(token, true)).toFixed(2);
-    } catch {
-    }
-  }
-}
+//     this.events.watch(() => {
+//       this.getBalance(token);
+//     });
+//   }
+//   async getBalance(token) {
+//     try {
+//       this.balance = (await this.tokenService.getUserTokenBalance(token, true)).toFixed(2);
+//     } catch {
+//     }
+//   }
+// }

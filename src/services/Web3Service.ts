@@ -93,31 +93,23 @@ export class Web3Service {
      */
     BigNumber.config({ ERRORS: false });
 
-    const ganacheNetworkId = '0';
-
-    // let getIdFromNetwork = (network) => {
-
-    //   switch (network) {
-    //     case 'ropsten':
-    //       return '3';
-    //     case 'kovan':
-    //       return '42';
-    //     case 'live':
-    //       return '1';
-    //     case 'ganache':
-    //     default:
-    //       // for ganache, would be something like: Object.keys(DaoCreator.networks).pop();
-    //       return ganacheNetworkId;
-    //   }
-    // };
-
-    let getNetworkFromID = (id) => {
+    let getNetworkFromID = (id: string): string => {
       switch (id) {
-        case '3': return 'ropsten';
-        case '42': return 'kovan';
-        case '4': return 'rinkeby';
-        case '1': return 'live';
-        default: return 'unknown (ganache?)'
+        case "1":
+          return "Live";
+        case "2":
+          return "Morden";
+        case "3":
+          return "Ropsten";
+        case "4":
+          return "Rinkeby";
+        case "42":
+          return "Kovan";
+        // the id that arc.js hardwires for ganache
+        case "1512051714758":
+          return "Ganache";
+        default:
+          return "Unknown";
       }
     };
 

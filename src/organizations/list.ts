@@ -10,7 +10,7 @@ export class OrganizationsList {
 
   list: HTMLElement;
   daoChangedSubscription: Subscription;
-  listIsLoaded: boolean = false;
+  foundADao: boolean = false;
 
   constructor(
     private web3: Web3Service
@@ -39,7 +39,10 @@ export class OrganizationsList {
   initialize() {
     if (!this.daoChangedSubscription) {
       this.daoChangedSubscription = this.daoService.subscribe(DaoService.daoAddedEvent,
-        (dao) => { this.organizationArray.push(dao); });
+        (dao) => {
+          this.foundADao = true;
+          this.organizationArray.push(dao);
+        });
     }
   }
 }

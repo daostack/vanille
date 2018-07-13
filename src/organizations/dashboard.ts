@@ -7,6 +7,8 @@ import { PLATFORM } from 'aurelia-pal';
 import { AureliaHelperService } from "../services/AureliaHelperService";
 import { App } from '../app';
 import { BigNumber, Web3Service } from '../services/Web3Service';
+import { EventAggregator } from 'aurelia-event-aggregator';
+import { EventConfigFailure } from '../entities/GeneralEvents';
 
 @autoinject
 export class DAODashboard {
@@ -34,6 +36,7 @@ export class DAODashboard {
     , private schemeService: SchemeService
     , private aureliaHelperService: AureliaHelperService
     , private web3Service: Web3Service
+    , private eventAggregator: EventAggregator
   ) {
   }
 
@@ -42,32 +45,41 @@ export class DAODashboard {
     setTimeout(async () => {
       this.address = options.address;
       this.org = await this.daoService.daoAt(this.address);
-      this.orgName = this.org.name;
-      let token = this.org.token;
-      this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
-      // in Wei
-      this.daoTokenbalance = await this.tokenService.getTokenBalance(this.org.token, this.org.address);
-      this.daoEthbalance = await this.web3Service.getBalance(this.org.address);
-      try {
-        const genToken = await await this.tokenService.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
-        this.daoGenbalance = await this.tokenService.getTokenBalance(genToken, this.org.address);
-      } catch (ex) {
-        this.daoGenbalance = new BigNumber(0);
+      if (this.org) {
+        this.orgName = this.org.name;
+        let token = this.org.token;
+        this.tokenSymbol = await this.tokenService.getTokenSymbol(this.org.token);
+        // in Wei
+        this.daoTokenbalance = await this.tokenService.getTokenBalance(this.org.token, this.org.address);
+        this.daoEthbalance = await this.web3Service.getBalance(this.org.address);
+        try {
+          const genToken = await this.tokenService.getGlobalGenToken();
+          this.daoGenbalance = await this.tokenService.getTokenBalance(genToken, this.org.address);
+        } catch (ex) {
+          this.daoGenbalance = new BigNumber(0);
+        }
+
+        // in Wei
+        this.omega = this.org.omega;
+
+        this.subscription = this.org.subscribe(VanilleDAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
+
+        await this.loadSchemes();
+      } else {
+        // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
+        // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
+        this.eventAggregator.publish("handleFailure",
+          new EventConfigFailure(`Error loading DAO: ${this.address}`));
       }
-
-      // in Wei
-      this.omega = this.org.omega;
-
-      this.subscription = this.org.subscribe(VanilleDAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
-
-      await this.loadSchemes();
       this.dataLoaded = true;
     }, 0);
   }
 
   deactivate() {
-    this.subscription.dispose();
-    this.subscription = null;
+    if (this.subscription) {
+      this.subscription.dispose();
+      this.subscription = null;
+    }
   }
 
   async loadSchemes() {

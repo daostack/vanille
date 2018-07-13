@@ -41,14 +41,14 @@ export class TokenService {
     return amount;
   }
 
-  public async getDAOstackNativeToken(): Promise<TruffleContract> {
-    const daoStack = await this.daoService.GetDaostack();
-    return this.getTokenFromAddress(daoStack.token.address);
-  }
+  // public async getDAOstackNativeToken(): Promise<TruffleContract> {
+  //   const daoStack = await this.daoService.GetDaostack();
+  //   return this.getTokenFromAddress(daoStack.token.address);
+  // }
 
-  public getGlobalGenToken(): Promise<TruffleContract | undefined> {
+  public async getGlobalGenToken(): Promise<TruffleContract | undefined> {
     try {
-      return this.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+      return await this.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
     } catch {
       // then we don't know the address of the GEN token
       return Promise.resolve(undefined);

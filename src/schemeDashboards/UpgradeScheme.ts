@@ -57,7 +57,7 @@ export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
         });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change controller ${this.controllerAddress}', result.tx.tx));
+        'Proposal submitted to change controller ${this.controllerAddress}', result.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing new controller ${this.controllerAddress}`, ex));
@@ -77,7 +77,7 @@ export class UpgradeSchemeDashboard extends DaoSchemeDashboard {
       let result = await scheme.proposeUpgradingScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', result.tx.tx));
+        'Proposal submitted to change upgrading scheme ${this.upgradingSchemeAddress}', result.tx));
 
       this.currentSchemeSelection = null;
 

@@ -44,7 +44,7 @@ npm start arc-js.ganache
 Migrate the Arc contracts to Ganache:
 
 ```script
-npm start arc-js.migrateContracts
+npm start arc-js.ganache.migrate
 ```
 
 Build the application for development:
@@ -66,7 +66,7 @@ or manually browse to: http://localhost:8090/
 <a name="whichChain"></a>
 ## Migrate Contracts to a Testnet
 
-The script `npm start arc-js.migrateContracts` (see above) uses environment variables to govern its behavior.
+The Arc.js migration and Genesis DAO creation scripts uses environment variables to govern their behavior.
 including setting the network node url and port numbers, and locking an account using a mnemonic.  Read the Arc.js documentation for more information:  https://daostack.github.io/arc.js/Migration/ and https://daostack.github.io/arc.js/Configuration/.
 
 If you want Vanille to connect to a local node that is not listening at the default http://127.0.0.1:8545, then you can set the `arcjs_network` environment variable at build time (either in the OS or on the build command line) and webpack will poke the value into the app bundle where it is used at runtime to tell Arc.js which default url and port values to use to connect to a node.

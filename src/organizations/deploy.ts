@@ -55,7 +55,7 @@ export class DeployGen {
      * until deploySequence is invoked.
      * Here I am initializing to '' which I believe is still not valid.
      */
-    return this.readBalances();
+    // return this.readBalances();
   }
 
   attached() {
@@ -84,12 +84,12 @@ export class DeployGen {
     }
   }
 
-  private async readBalances() {
-    const token = await this.tokenService.getDAOstackNativeToken();
+  // private async readBalances() {
+  //   const token = await this.tokenService.getDAOstackNativeToken();
 
-    this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
-    this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
-  }
+  //   this.tknBalance = (await this.tokenService.getUserTokenBalance(token, true));
+  //   this.ethBalance = (await this.web3.getBalance(this.userAddress, true));
+  // }
 
   async deploy() {
     this.deployOrgStatus = 'deploying';

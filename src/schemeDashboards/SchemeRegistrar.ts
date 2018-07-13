@@ -30,7 +30,8 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   newSchemeConfiguration: Partial<SchemeConfigModel> = {};
 
   modifiedSchemePermissions = SchemePermissions.None;
-  newSchemePermissions = SchemePermissions.None;
+  // need at least one bit for non-arc schemes
+  newSchemePermissions = SchemePermissions.IsRegistered;
 
   schemeToAddAddress: string;
 
@@ -70,7 +71,8 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
        */
       this.newSchemePermissions = await wrapper.getDefaultPermissions();
     } else if (this.newSchemeConfiguration) {
-      this.newSchemePermissions = SchemePermissions.None;
+      // need at least one bit for non-arc schemes
+      this.newSchemePermissions = SchemePermissions.IsRegistered;
     }
   }
 
@@ -135,7 +137,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       let result = await schemeRegistrar.proposeToAddModifyScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.schemeToAddAddress}`, result.tx.tx));
+        `Proposal submitted to add ${this.schemeToAddAddress}`, result.tx));
 
       this.selectedSchemeToAdd = this.internalSelectedSchemeToModify = null;
 
@@ -159,7 +161,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       const result = await schemeRegistrar.proposeToAddModifyScheme(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to modify ${this.selectedSchemeToModify.address}`, result.tx.tx));
+        `Proposal submitted to modify ${this.selectedSchemeToModify.address}`, result.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to modify scheme ${this.selectedSchemeToModify.address}`, ex));
@@ -177,7 +179,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.selectedSchemeToRemove.address}`, result.tx.tx));
+        `Proposal submitted to remove ${this.selectedSchemeToRemove.address}`, result.tx));
 
       this.selectedSchemeToRemove = null;
 

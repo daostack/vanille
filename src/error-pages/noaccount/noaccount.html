@@ -1,11 +1,11 @@
 <template>
-  <div if.bind="currentChain !== 'ganache'">
+  <div if.bind="currentChain === 'Ganache'">
+    <h3>Good job connecting to Ganache!</h3>
+    <p>Unfortunately a default account cannot be found.</p>
+  </div>
+  <div else>
     <h3>Good job connecting to Ethereum!</h3>
     <p>Now all you have to do unlock an account and you should be good to go :)</p>
     <p>After unlocking an account, do a Ctrl-F5 to completely refresh the application configuration.</p>
-  </div>
-  <div if.bind="currentChain === 'ganache'">
-    <h3>Good job connecting to Ganache!</h3>
-    <p>Unfortunately a default account cannot be found.</p>
   </div>
 </template>

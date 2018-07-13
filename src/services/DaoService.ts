@@ -30,13 +30,13 @@ export class DaoService {
   private daoCache = new Map<string, VanilleDAO>();
   private logger = LogManager.getLogger("Vanille");
   public promiseToBeLoaded: Promise<any>;
-  private _daoStack: VanilleDAO;
+  // private _daoStack: VanilleDAO;
   private resolvePromiseForDaoStack;
   public promiseForDaoStack: Promise<any> = new Promise((resolve) => { this.resolvePromiseForDaoStack = resolve; });
 
-  public async GetDaostack(): Promise<VanilleDAO> {
-    return this.promiseForDaoStack;
-  }
+  // public async GetDaostack(): Promise<VanilleDAO> {
+  //   return this.promiseForDaoStack;
+  // }
 
   /**
    * a DAO has been added or removed
@@ -56,7 +56,7 @@ export class DaoService {
           this.handleNewDao(err, eventsArray).then(() => {
             this.logger.debug("Finished loading daos");
             myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: "latest" });
-            myEvent.watch((err, eventsArray) => this.handleNewDao(err, eventsArray));
+            myEvent.watch((err, event) => this.handleNewDao(err, [event]));
             resolve();
           })
         );
@@ -91,12 +91,11 @@ export class DaoService {
 
     if (!takeFromCache || !cachedDao) {
       try {
-        let org = await DAO.at(avatarAddress);
+        const org = await DAO.at(avatarAddress);
 
-        // if (!org || !org.avatar) {
-        //   throw new Error(`DAO at ${avatarAddress} was not found`);
-        // }
-        dao = await VanilleDAO.fromArcJsDao(org, this.arcService, this.web3);
+        if (org) {
+          dao = await VanilleDAO.fromArcJsDao(org, this.arcService, this.web3);
+        } // else this will already have been logged by arc.js
       } catch (ex) {
         // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
         // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
@@ -109,7 +108,7 @@ export class DaoService {
       dao = cachedDao;
     }
 
-    if (!cachedDao) {
+    if (dao && !cachedDao) {
       this.daoCache.set(dao.address, dao);
     }
 
@@ -122,7 +121,7 @@ export class DaoService {
     });
   }
 
-  private firstOrg = true;
+  // private firstOrg = true;
 
   private async handleNewDao(err, eventsArray: Array<DecodedLogEntryEvent<InitialSchemesSetEventResult>>): Promise<void> {
     let newOrganizationArray = [];
@@ -140,10 +139,10 @@ export class DaoService {
         let dao = await this._daoAt(avatarAddress);
         if (dao) {
           this.logger.debug(`loaded dao ${dao.name}: ${dao.address}`);
-          if (this.firstOrg) {
-            this._daoStack = this.resolvePromiseForDaoStack(dao);
-            this.firstOrg = false;
-          }
+          // if (this.firstOrg) {
+          //   // this._daoStack = this.resolvePromiseForDaoStack(dao);
+          //   this.firstOrg = false;
+          // }
           this.publish(DaoService.daoAddedEvent, dao);
         }
       }

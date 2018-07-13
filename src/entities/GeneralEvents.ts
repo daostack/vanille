@@ -57,6 +57,17 @@ export class EventConfig {
   public exception: any;
 }
 
+export class EventConfigFailure extends EventConfig {
+  constructor(
+    message: string = "An error occurred"
+    , type: EventMessageType = EventMessageType.Failure
+    , lifetime: SnackLifetime = SnackLifetime.closeButton
+  ) {
+    super(message, type, lifetime);
+    this.message = `${this.message}`;
+  }
+}
+
 export class EventConfigException extends EventConfig {
   constructor(
     message: string = "An error occurred"

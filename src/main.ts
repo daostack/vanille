@@ -5,7 +5,7 @@ import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { InitializeArcJs } from '@daostack/arc.js';
+import { InitializeArcJs, AccountService, Address, WrapperService } from '@daostack/arc.js';
 import { OrganizationsList } from "./organizations/list";
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
@@ -45,7 +45,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/schemePermissions/schemePermissions"),
     PLATFORM.moduleName("resources/customElements/VotingMachinesDropdown/votingMachinesDropdown"),
     PLATFORM.moduleName("resources/customElements/GlobalConstraintsDropdown/globalConstraintsDropdown"),
-    PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
+    // PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/GenBalance/GenBalance"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/votingMachineSelector/votingMachineSelector"),
@@ -96,7 +96,13 @@ export async function configure(aurelia: Aurelia) {
 
     const web3 = await InitializeArcJs({
       // process.env.network is poked-in by webpack if it is defined
-      useNetworkDefaultsFor: process.env.network
+      useNetworkDefaultsFor: process.env.network,
+      watchForAccountChanges: true
+    });
+
+    AccountService.subscribeToAccountChanges((account: Address) => {
+      // TODO: should prompt user here with appropriate warning that the current account has changed
+      window.location.reload();
     });
 
     // just to initialize them and get them running

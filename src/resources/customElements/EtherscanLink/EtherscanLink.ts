@@ -27,12 +27,12 @@ export class EtherscanLink {
 
   attached() {
     let targetedNetwork = this.web3.networkName;
-    if (targetedNetwork === "live") {
+    if (targetedNetwork === "Live") {
       targetedNetwork = "";
     } else {
       targetedNetwork = targetedNetwork + '.';
     }
-    const isGanache = targetedNetwork === "ganache.";
+    const isGanache = targetedNetwork === "Ganache";
     if (this.type == "tx") {
       this.copyMessage = "Hash has been copied to the clipboard";
     } else {

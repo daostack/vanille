@@ -68,7 +68,7 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
       let result = await scheme.proposeToAddModifyGlobalConstraint(config);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to add ${this.constraintToAddAddress}`, result.tx.tx));
+        `Proposal submitted to add ${this.constraintToAddAddress}`, result.tx));
 
       this.currentGCSelection = null;
 
@@ -84,11 +84,11 @@ export class GlobalConstraintRegistrarDashboard extends DaoSchemeDashboard {
       let result = await scheme.proposeToRemoveGlobalConstraint(
         {
           avatar: this.orgAddress
-          , globalConstraint: this.constraintToRemoveInfo.address
+          , globalConstraintAddress: this.constraintToRemoveInfo.address
         });
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Proposal submitted to remove ${this.constraintToRemoveInfo.address}`, result.tx.tx));
+        `Proposal submitted to remove ${this.constraintToRemoveInfo.address}`, result.tx));
 
       this.constraintToRemoveInfo = null;
 

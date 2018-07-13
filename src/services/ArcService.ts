@@ -22,9 +22,9 @@ export class ArcService {
    * The schemes managed by Arc
    */
   public arcContracts: Arc.ArcWrappers;
-  public arcSchemes: Array<Arc.ContractWrapperBase>;
-  public arcVotingMachines: Array<Arc.ContractWrapperBase>;
-  public arcGlobalConstraints: Array<Arc.ContractWrapperBase>;
+  public arcSchemes: Array<Arc.IContractWrapperBase>;
+  public arcVotingMachines: Array<Arc.IContractWrapperBase>;
+  public arcGlobalConstraints: Array<Arc.IContractWrapperBase>;
   /**
    * maps address to ContractInfo
    */
@@ -56,6 +56,7 @@ export class ArcService {
    * 
    * @param name Returns a wrapper if possible (only for contracts migrated by the running version or Arc.js), else a TruffleContract
    * @param at Optional address
+   * @returns undefined if not found
    */
   public async getContract(name: string, at: string = null): Promise<Arc.ContractWrapperBase | TruffleContract> {
     const wrapper = this.arcContracts[name];
@@ -64,7 +65,11 @@ export class ArcService {
       if (!at || (at === wrapper.address)) {
         return wrapper; // no need to cache, return deployed wrapper
       } else if (at) {
-        contract = await wrapper.at(at);
+        contract = await wrapper
+          .at(at)
+          .catch((ex) => {
+            return undefined;
+          });
       }
     } else { // no wrapper we can use, so return TruffleContract
       let cachedContract = this.getCachedContract(name, at);
@@ -73,19 +78,27 @@ export class ArcService {
       } else {
         contract = await Arc.Utils.requireContract(name);
         if (!at) {
-          contract = await contract.deployed();
+          contract = await contract.deployed()
+            // `.then` gives us the true promise
+            .then((c) => c)
+            .catch((ex) => {
+              return undefined;
+            });
         } else { // no `at` so we want deployed
-          // the only way to catch errors is with .then
-          await contract.at(at).then((result) => {
-            contract = result;
-          });
+          contract = await contract.at(at)
+            // `.then` gives us the true promise
+            .then((c) => c)
+            .catch((ex) => {
+              return undefined;
+            });
         }
       }
     }
     if (!contract) {
       throw new Error(`contract not found at: ${at}`);
+    } else {
+      this.setCachedContract(contract, at);
     }
-    this.setCachedContract(contract, at);
     return contract;
   }
 
@@ -120,7 +133,7 @@ export class ArcService {
    */
   public getValueFromTransactionLog(tx, argName, eventName?, index = 0) {
     try {
-      return Arc.Utils.getValueFromLogs(tx, argName, eventName, index);
+      return Arc.TransactionService.getValueFromLogs(tx, argName, eventName, index);
     } catch (ex) {
       let message = ex.message ? ex.message : ex;
       this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);

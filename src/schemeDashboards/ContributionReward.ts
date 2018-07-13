@@ -47,7 +47,7 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
       let result = await scheme.proposeContributionReward(options);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to make a contribution', result.tx.tx));
+        'Proposal submitted to make a contribution', result.tx));
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));
