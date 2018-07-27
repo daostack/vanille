@@ -31,7 +31,7 @@ export class Test {
   private stakingToken: any;
 
   async attached() {
-    if (this.web3Service.networkName !== "Ganache") {
+    if ((this.web3Service.networkName === "Live") || (this.web3Service.networkName === "Kovan")) {
       return;
     }
 
