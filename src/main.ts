@@ -122,7 +122,7 @@ export async function configure(aurelia: Aurelia) {
 
   } catch (ex) {
     console.log(`Error initializing blockchain services: ${ex}`);
-    alert(`Error initializing blockchain services: ${ex}`);
+    // alert(`Error initializing blockchain services: ${ex}`);
   }
 
   await aurelia.setRoot(PLATFORM.moduleName('app'));

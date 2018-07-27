@@ -66,8 +66,8 @@ export class App {
     }
     else {
       config.map([
-        { route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' }
-        , {
+        { route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' },
+        {
           route: ['organizations'],
           name: 'organizations',
           moduleId: PLATFORM.moduleName('./organizations/list'),
@@ -81,6 +81,7 @@ export class App {
           nav: true,
           title: 'Birth a DAO'
         }
+        , { route: ['test'], name: 'test', moduleId: PLATFORM.moduleName('./test'), nav: false, title: 'Test' },
         , {
           // 'address' will be present in the object passed to the 'activate' method of the viewmodel
           route: ['daoDashboard/:address'],
