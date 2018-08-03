@@ -44,7 +44,7 @@ export class VanilleDAO extends DAO {
     newDAO.arcService = arcService;
     newDAO.address = org.avatar.address;
     newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
-    newDAO.omega = await newDAO.reputation.totalSupply(), "ether";
+    newDAO.omega = await newDAO.reputation.getTotalSupply();
     return newDAO;
   }
 

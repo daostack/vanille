@@ -14,7 +14,7 @@
       <section>
         <h3>Basic Information</h3>
         <div class="row">
-          <div class="col-sm-12 col-lg-6">
+          <div class="col-sm-12 col-lg-5">
             <dt>Avatar</dt>
             <dd>
               <etherscanlink style="white-space: nowrap" address="${address}"></etherscanlink>
@@ -31,19 +31,27 @@
           </div>
           <div class="col-sm-12 col-lg-3">
             <dl>
-              <dt>Token Symbol</dt>
-              <dd>${tokenSymbol}</dd>
-              <dt>Reputation</dt>
+              <dt>Total Reputation Supply</dt>
               <dd> ${ omega | ethwei}</dd>
+              <dt>User Reputation</dt>
+              <dd> ${ userReputation | ethwei} (${userReputation/omega}%)</dd>
             </dl>
           </div>
-          <div class="col-sm-12 col-lg-3">
+          <div class="col-sm-12 col-lg-2">
             <dl>
-              <dt>${tokenSymbol} Balance</dt>
+              <dt>Token Symbol</dt>
+              <dd>${tokenSymbol}</dd>
+              <dt>User ${tokenSymbol} Balance </dt>
+              <dd> ${ userNativeTokens | ethwei}</dd>
+              <dt>DAO ${tokenSymbol} Balance</dt>
               <dd>${ daoTokenbalance | ethwei }</dd>
-              <dt>ETH Balance</dt>
+            </dl>
+          </div>
+          <div class="col-sm-12 col-lg-2">
+            <dl>
+              <dt>DAO ETH Balance</dt>
               <dd>${ daoEthbalance | ethwei }</dd>
-              <dt>GEN Balance</dt>
+              <dt>DAO GEN Balance</dt>
               <dd>${ daoGenbalance | ethwei }</dd>
             </dl>
           </div>

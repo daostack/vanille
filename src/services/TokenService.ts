@@ -13,11 +13,11 @@ export class TokenService {
   ) { }
 
   public async getTokenSymbol(token: TruffleContract): Promise<string> {
-    return await token.symbol();
+    return await token.getTokenSymbol();
   }
 
   public async getTokenName(token: TruffleContract): Promise<string> {
-    return await token.name();
+    return await token.getTokenName();
   }
 
   /**
@@ -34,7 +34,7 @@ export class TokenService {
     address: Address,
     inEth: boolean = false): Promise<BigNumber> {
 
-    let amount = await token.balanceOf(address);
+    let amount = await token.getBalanceOf(address);
     if (inEth) {
       amount = this.web3.fromWei(amount);
     }

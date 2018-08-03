@@ -26,6 +26,8 @@ export class DAODashboard {
   arcSchemes: Array<SchemeInfo>;
   subscription;
   omega;
+  userReputation;
+  userNativeTokens;
   dataLoaded: boolean = false;
 
 
@@ -61,6 +63,8 @@ export class DAODashboard {
 
         // in Wei
         this.omega = this.org.omega;
+        this.userReputation = await this.org.reputation.reputationOf(this.web3Service.defaultAccount);
+        this.userNativeTokens = await this.org.token.getBalanceOf(this.web3Service.defaultAccount);
 
         this.subscription = this.org.subscribe(VanilleDAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
 
