@@ -159,7 +159,13 @@ export class DAODashboard {
   }
 
   toggleDashboardVisibility(scheme: SchemeInfo) {
-    ($(`#${scheme.name}`) as any).collapse("toggle");
+    const dashboard = $(`#${scheme.name}`);
+    const hiding = dashboard.hasClass("show");
+    dashboard.collapse("toggle");
+    $(".list-group-item").removeClass("selected");
+    if (!hiding) {
+      dashboard.parent(".list-group-item").addClass("selected");
+    }
   }
 
   getDashboardView(scheme: SchemeInfo): string {

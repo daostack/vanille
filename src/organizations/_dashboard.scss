@@ -11,9 +11,18 @@
 
 .dashboard-schemes li.list-group-item div.row {
   width:100%;
+  cursor: pointer; 
+}
+
+.dashboard-schemes li.list-group-item:hover {
+  background-color: lightgrey;
 }
 
 .dashboard-header .dao-name img {
   width: 4rem;
   margin-right:1rem;
+}
+
+.dashboard-schemes li.list-group-item.selected {
+  background-color: lightgrey;
 }
