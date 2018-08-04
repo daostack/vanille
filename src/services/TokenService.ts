@@ -2,6 +2,7 @@ import { autoinject } from "aurelia-framework";
 import { Web3Service, BigNumber } from "./Web3Service";
 import { ArcService, TruffleContract, Address } from './ArcService';
 import { DaoService } from "./DaoService";
+import { DaoTokenFactoryType, DaoTokenWrapper } from '../../node_modules/@daostack/arc.js';
 
 @autoinject
 export class TokenService {
@@ -48,7 +49,7 @@ export class TokenService {
 
   public async getGlobalGenToken(): Promise<TruffleContract | undefined> {
     try {
-      return await this.getTokenFromAddress("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+      return await DaoTokenWrapper.getGenToken();
     } catch {
       // then we don't know the address of the GEN token
       return Promise.resolve(undefined);
