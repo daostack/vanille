@@ -56,3 +56,11 @@ nav.header .company-name {
   margin-right:1rem;
   display: inline-block;
 }
+
+.smallEtherScanlLink {
+  display:inline-block;
+  width:4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

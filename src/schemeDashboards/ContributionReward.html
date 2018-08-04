@@ -1,69 +1,132 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <instructions>Propose to reward a contribution. After submitting the proposal, a vote will automatically be initiated using this scheme's
-      voting machine.</instructions>
-    <hr/>
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#AddProposal" data-toggle="tab" id="add-tab" role="tab" aria-controls="AddScheme" aria-selected="false">Propose to Add Proposal</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#VoteProposals" data-toggle="tab" id="modify-tab" role="tab" aria-controls="ModifyScheme" aria-selected="false">Vote on Proposals</a>
+      </li>
+    </ul>
+
     <div class="tab-content">
-      <form>
-        <div class="form-group">
-          <label for="ContributionDescription">Description</label>
-          <textarea type="text" id="ContributionDescription" class="form-control" value.bind="description" rows="2"></textarea>
-        </div>
-        <div class="row">
-          <div class="col-2">
-            <div class="form-group">
-              <label for="nativeTokenReward">Native Token Award</label>
-              <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward | ethwei & updateTrigger:'blur'"
-              />
+
+      <div class="tab-pane fade show active" id="AddProposal" role="tabpanel" aria-labelledby="add-tab">
+
+
+        <instructions>Propose to reward a contribution. After submitting the proposal, a vote will automatically be initiated using this
+          scheme's voting machine.</instructions>
+        <hr/>
+        <form>
+          <div class="form-group">
+            <label for="ContributionDescription">Description</label>
+            <textarea type="text" id="ContributionDescription" class="form-control" value.bind="description" rows="2"></textarea>
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <div class="form-group">
+                <label for="nativeTokenReward">Native Token Award</label>
+                <input class="form-control" type='number' id="nativeTokenReward" value.bind="nativeTokenReward | ethwei & updateTrigger:'blur'"
+                />
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <label for="reputationTokenReward">Reputation Token Award</label>
+                <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward | ethwei & updateTrigger:'blur'"
+                />
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <label for="ethReward">Ether Reward</label>
+                <input class="form-control" type='number' id="ethReward" value.bind="ethReward | ethwei & updateTrigger:'blur'" />
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <label for="externalTokenReward">External Token Reward</label>
+                <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward  | ethwei & updateTrigger:'blur'"
+                />
+              </div>
             </div>
           </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label for="reputationTokenReward">Reputation Token Award</label>
-              <input class="form-control" type='number' id="reputationTokenReward" value.bind="reputationTokenReward | ethwei & updateTrigger:'blur'"
-              />
+          <div class="form-group">
+            <label for="externalTokenAddress">External Token Address</label>
+            <input class="form-control" type='text' id="externalTokenAddress" value.bind="externalTokenAddress" />
+          </div>
+          <div class="row">
+            <div class="col-2">
+              <div class="form-group">
+                <label for="numberOfPeriods">Number of Periods</label>
+                <input class="form-control" type='number' min="1" id="numberOfPeriods" value.bind="numberOfPeriods" />
+                <span class="bmd-help">Number of blocks in a period</span>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <label for="periodLength">Period Length</label>
+                <input class="form-control" type='number' min="1" id="periodLength" value.bind="periodLength" />
+                <span class="bmd-help">Maximum number of periods that can be paid out</span>
+              </div>
             </div>
           </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label for="ethReward">Ether Reward</label>
-              <input class="form-control" type='number' id="ethReward" value.bind="ethReward | ethwei & updateTrigger:'blur'" />
+          <div class="form-group">
+            <label for="beneficiaryAddress">Beneficiary Address</label>
+            <input class="form-control" type='text' id="beneficiaryAddress" value.bind="beneficiaryAddress" />
+          </div>
+          <button class="btn-submit-proposal" click.delegate="proposeContributionReward()">Submit Proposal</button>
+        </form>
+      </div>
+
+      <div class="tab-pane fade show active" id="VoteProposals" role="tabpanel" aria-labelledby="add-tab">
+        <instructions>Vote on proposals.</instructions>
+        <!-- <i click.delegate="refreshProposals()" class="material-icons">refresh</i> -->
+        <span click.delegate="refreshProposals()" title="Refresh list of proposals" class="text-primary fa fa-refresh ${checkingForProposals ? 'fa-spin': ''}"></span>
+        <hr/>
+        <form>
+          <div if.bind="checkingForProposals">
+            Checking for proposals...
+          </div>
+          <div else>
+            <div if.bind="proposals.length === 0">
+              No votable proposals found
+            </div>
+            <div else>
+              <table class="table table-responsive">
+                <thead>
+                  <tr>
+                    <th>Proposal Id</th>
+                    <th>Beneficiary</th>
+                    <th style="text-align:center">Yes</th>
+                    <th style="text-align:center">No</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr repeat.for="proposal of proposals">
+                    <td>
+                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.proposalId"></etherscanlink>
+                    </td>
+                    <td>
+                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.proposalId"></etherscanlink>
+                    </td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 1)">Vote
+                        <span class="fa fa-arrow-up"></span>
+                      </button>
+                    </td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 2)">Vote
+                        <span class="fa fa-arrow-down"></span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label for="externalTokenReward">External Token Reward</label>
-              <input class="form-control" type='number' id="externalTokenReward" value.bind="externalTokenReward  | ethwei & updateTrigger:'blur'"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="externalTokenAddress">External Token Address</label>
-          <input class="form-control" type='text' id="externalTokenAddress" value.bind="externalTokenAddress" />
-        </div>
-        <div class="row">
-          <div class="col-2">
-            <div class="form-group">
-              <label for="numberOfPeriods">Number of Periods</label>
-              <input class="form-control" type='number' min="1" id="numberOfPeriods" value.bind="numberOfPeriods" />
-              <span class="bmd-help">Number of blocks in a period</span>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="form-group">
-              <label for="periodLength">Period Length</label>
-              <input class="form-control" type='number' min="1" id="periodLength" value.bind="periodLength" />
-              <span class="bmd-help">Maximum number of periods that can be paid out</span>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="beneficiaryAddress">Beneficiary Address</label>
-          <input class="form-control" type='text' id="beneficiaryAddress" value.bind="beneficiaryAddress" />
-        </div>
-        <button class="btn-submit-proposal" click.delegate="proposeContributionReward()">Submit Proposal</button>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </template>

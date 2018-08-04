@@ -73,7 +73,7 @@ export class SnackbarService {
     if (!(config instanceof EventConfigException)) {
       // then config is the exception itself
       let ex = config as any;
-      config = { message: `${ex.message ? ex.message : ex}`, style: "snack-failure", duration: 0 } as any;
+      config = { message: `${ex}`, style: "snack-failure", duration: 0 } as any;
     }
 
     this.serveSnack(config);

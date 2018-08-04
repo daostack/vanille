@@ -14,6 +14,12 @@ export class EtherscanLink {
   @bindable
   type: string;
 
+  /**
+   * set add classes on the text
+   */
+  @bindable
+  css: string;
+
   clipbutton: HTMLElement;
 
   networkExplorerUri: string;

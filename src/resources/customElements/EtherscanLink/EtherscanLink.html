@@ -1,9 +1,9 @@
 <template>
-  <a if.bind="networkExplorerUri" href='${networkExplorerUri}' target='${internal ? "" : "_blank"}'>
+  <a class="${css}" if.bind="networkExplorerUri" href='${networkExplorerUri}' target='${internal ? "" : "_blank"}'>
     ${text || address}
   </a>
 
-  <span else>
+  <span else class="${css}">
     ${text || address}
   </span>
 
