@@ -100,6 +100,8 @@ export async function configure(aurelia: Aurelia) {
       watchForAccountChanges: true
     });
 
+    ConfigService.set("estimateGas", true);
+
     AccountService.subscribeToAccountChanges((account: Address) => {
       // TODO: should prompt user here with appropriate warning that the current account has changed
       window.location.reload();
