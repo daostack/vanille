@@ -100,6 +100,7 @@ export async function configure(aurelia: Aurelia) {
       watchForAccountChanges: true
     });
 
+    // TODO: make this configurable in the application GUI
     ConfigService.set("estimateGas", true);
 
     AccountService.subscribeToAccountChanges((account: Address) => {
