@@ -58,6 +58,21 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
     }
   }
 
+  async execute(proposal: ContributionProposal, vote: BinaryVoteResult) {
+    try {
+      const result = await this.votingMachine.execute({
+        proposalId: proposal.proposalId
+      });
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        `Execute attempted`, result.tx));
+
+      this.checkingForProposals = true;
+      result.watchForTxMined().then(() => { this.refreshProposals(); });
+    } catch (ex) {
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error voting`, ex));
+    }
+  }
+
   async proposeContributionReward() {
     try {
       let options: ProposeContributionRewardParams = {

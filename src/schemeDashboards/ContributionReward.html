@@ -80,7 +80,6 @@
       </div>
 
       <div class="tab-pane fade show active" id="VoteProposals" role="tabpanel" aria-labelledby="add-tab">
-        <instructions>Vote on proposals.</instructions>
         <!-- <i click.delegate="refreshProposals()" class="material-icons">refresh</i> -->
         <span click.delegate="refreshProposals()" title="Refresh list of proposals" class="text-primary fa fa-refresh ${checkingForProposals ? 'fa-spin': ''}"></span>
         <hr/>
@@ -100,6 +99,7 @@
                     <th>Beneficiary</th>
                     <th style="text-align:center">Yes</th>
                     <th style="text-align:center">No</th>
+                    <th style="text-align:center">Execute</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -108,7 +108,7 @@
                       <etherscanlink css="smallEtherScanlLink" address.bind="proposal.proposalId"></etherscanlink>
                     </td>
                     <td>
-                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.proposalId"></etherscanlink>
+                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.beneficiaryAddress"></etherscanlink>
                     </td>
                     <td>
                       <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 1)">Vote
@@ -118,6 +118,10 @@
                     <td>
                       <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 2)">Vote
                         <span class="fa fa-arrow-down"></span>
+                      </button>
+                    </td>
+                    <td>
+                      <button class="btn btn-secondary btn-sm" click.delegate="execute(proposal)">Execute
                       </button>
                     </td>
                   </tr>
