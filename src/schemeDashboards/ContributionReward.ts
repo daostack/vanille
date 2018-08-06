@@ -2,7 +2,7 @@ import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ArcService, ContributionRewardWrapper, ProposeContributionRewardParams, ContributionProposal, IntVoteInterfaceWrapper, BinaryVoteResult } from "../services/ArcService";
-import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
+import { EventConfigTransaction, EventConfigException, EventConfig, SnackLifetime } from "../entities/GeneralEvents";
 import { BigNumber } from '../services/Web3Service';
 
 @autoinject
@@ -58,7 +58,23 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
     }
   }
 
-  async execute(proposal: ContributionProposal, vote: BinaryVoteResult) {
+  async executeAll() {
+
+    this.checkingForProposals = true;
+
+    for (const proposal of this.proposals) {
+      await this.execute(proposal);
+    }
+
+    this.eventAggregator.publish("handleSuccess", new EventConfig(
+      `Finished executing proposals`,
+      undefined,
+      SnackLifetime.clickToDismiss));
+
+    this.refreshProposals();
+  }
+
+  async execute(proposal: ContributionProposal, andWait: boolean = true) {
     try {
       const result = await this.votingMachine.execute({
         proposalId: proposal.proposalId
@@ -66,8 +82,11 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
         `Execute attempted`, result.tx));
 
-      this.checkingForProposals = true;
-      result.watchForTxMined().then(() => { this.refreshProposals(); });
+      if (andWait) {
+        this.checkingForProposals = true;
+        result.watchForTxMined().then(() => { this.refreshProposals(); });
+      }
+
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error voting`, ex));
     }
