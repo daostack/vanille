@@ -1,12 +1,29 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <instructions>Genesis Protocol is a scheme that is used by proposal-generating schemes as a voting machine.
-    </instructions>
-    <hr/>
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#stateTab" data-toggle="tab" id="state-tab" role="tab" aria-controls="GenesisProtocolTools"
+          aria-selected="true">State</a>
+      </li>
+    </ul>
     <div class="tab-content">
-      <div class="tab-pane fade" id="tools" role="tabpanel" aria-labelledby="tools-tab">
+      <div class="tab-pane fade show active" id="stateTab" role="tabpanel" aria-labelledby="state-tab">
         <form>
-          <h5>Tools to come</h5>
+          <div class="form-group">
+            <label for="paramsHash">Parameters Hash: </label>
+            <etherscanlink id="paramsHash" address.one-time="parametersHash"></etherscanlink>
+          </div>
+          <div class="form-group">
+            <label for="threshold">Threshold: </label>
+            <div class="inline" id="threshold" textcontent.bind="threshold | ethwei" style="margin-right:.5rem"></div>
+            <spinbutton onclick.call="refreshThreshold()" spin.to-view="gettingThreshold" title="Refresh the threshold"></spinbutton>
+          </div>
+          <div class="form-group">
+            <label for="boostedCount">Count of Boosted Proposals: </label>
+            <div class="inline" id="boostedCount" textcontent.bind="boostedCount | ethwei" style="margin-right:.5rem"></div>
+            <spinbutton onclick.call="refreshBoostedCount()" spin.to-view="gettingBoosted" title="Refresh the count of boosted proposals"></spinbutton>
+          </div>
+
         </form>
       </div>
     </div>

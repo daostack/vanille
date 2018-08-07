@@ -2,7 +2,7 @@
   <div class="arc-scheme-dashboard">
     <ul class="nav nav-tabs scheme-tabs" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" href="#AddProposal" data-toggle="tab" id="add-tab" role="tab" aria-controls="AddScheme" aria-selected="false">Propose to Add Proposal</a>
+        <a class="nav-link active" href="#AddProposal" data-toggle="tab" id="add-tab" role="tab" aria-controls="AddScheme" aria-selected="true">Propose to Add Proposal</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#VoteProposals" data-toggle="tab" id="modify-tab" role="tab" aria-controls="ModifyScheme" aria-selected="false">Vote on Proposals</a>
@@ -80,26 +80,33 @@
       </div>
 
       <div class="tab-pane fade" id="VoteProposals" role="tabpanel" aria-labelledby="add-tab">
-        <span click.delegate="refreshProposals()" title="Refresh list of proposals" class="text-primary fa fa-refresh ${checkingForProposals ? 'fa-spin': ''}"></span>
-        <span style="display:inline-block;margin-left: 1rem;">
-          <label for="vothingMachineLink">Voting Machine</label>:
-          <etherscanlink id="vothingMachineLink" address.bind="votingMachine.address"></etherscanlink>
-        </span>
-        <div if.bind="proposals.length">
-          <button class="btn btn-primary" click.delegate="executeAll()">Try Execute All</button>
-        </div>
-        <hr/>
         <form>
-          <div if.bind="checkingForProposals">
+          <div class="form-group">
+            <label for="votingMachineLink">Voting Machine</label>:
+            <etherscanlink id="votingMachineLink" address.one-time="votingMachine.address"></etherscanlink>
+          </div>
+          <div style="margin-bottom: 1rem">
+            <button class="btn btn-primary" click.delegate="refreshProposals()">
+              <div class="inline" style="margin-right:.5rem">Refresh Proposal List</div>
+              <spinbutton spin.to-view="checkingForProposals"></spinbutton>
+            </button>
+            <span if.bind="proposals.length">
+              <button class="btn btn-primary" click.delegate="executeAll()">
+                <div class="inline" style="margin-right:.5rem">Try Execute All</div>
+                <spinbutton spin.to-view="executingAll"></spinbutton>
+              </button>
+            </span>
+          </div>
+          <div show.bind="checkingForProposals">
             Checking for proposals...
           </div>
-          <div else>
+          <div if.bind="!checkingForProposals">
             <div if.bind="proposals.length === 0">
               No votable proposals found
             </div>
             <div else>
               <table class="table table-responsive">
-                <thead>
+                <thead class="thead-light">
                   <tr>
                     <th>Proposal Id</th>
                     <th>Beneficiary</th>
@@ -111,10 +118,10 @@
                 <tbody>
                   <tr repeat.for="proposal of proposals">
                     <td>
-                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.proposalId"></etherscanlink>
+                      <etherscanlink css="smallEtherScanlLink" address.one-time="proposal.proposalId"></etherscanlink>
                     </td>
                     <td>
-                      <etherscanlink css="smallEtherScanlLink" address.bind="proposal.beneficiaryAddress"></etherscanlink>
+                      <etherscanlink css="smallEtherScanlLink" address.one-time="proposal.beneficiaryAddress"></etherscanlink>
                     </td>
                     <td>
                       <button class="btn btn-primary btn-sm" click.delegate="vote(proposal, 1)">Vote

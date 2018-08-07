@@ -21,6 +21,7 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
   votingMachine: IntVoteInterfaceWrapper;
   wrapper: ContributionRewardWrapper;
   checkingForProposals: boolean = false;
+  executingAll: boolean = false;
 
   constructor(
     private eventAggregator: EventAggregator
@@ -60,19 +61,21 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
 
   async executeAll() {
 
-    this.checkingForProposals = true;
+    this.executingAll = true;
     const promises = new Array<Promise<void>>();
 
     for (const proposal of this.proposals) {
       promises.push(this.execute(proposal, false));
     }
 
+    await Promise.all(promises);
+    this.executingAll = false;
+
     this.eventAggregator.publish("handleSuccess", new EventConfig(
       `Finished executing proposals`,
       undefined,
       SnackLifetime.clickToDismiss));
 
-    await Promise.all(promises);
     this.refreshProposals();
   }
 

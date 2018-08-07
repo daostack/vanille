@@ -1,0 +1,3 @@
+<template bindable="onclick, css, title, text, spin">
+  <div click.delegate="onclick()" textcontent.to-view="text" title.to-view="title" class-name="${ css ? css : 'inline text-primary fa-refresh' } fa ${spin ? 'fa-spin': ''}"></div>
+</template>

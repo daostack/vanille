@@ -50,6 +50,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
     PLATFORM.moduleName("resources/customElements/votingMachineSelector/votingMachineSelector"),
     PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
+    PLATFORM.moduleName("resources/customElements/spinButton.html"),
     PLATFORM.moduleName("resources/customElements/round-add-button.html"),
     PLATFORM.moduleName("resources/customElements/round-remove-button.html"),
     PLATFORM.moduleName("resources/customElements/round-trash-button.html"),
