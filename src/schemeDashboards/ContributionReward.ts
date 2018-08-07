@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService, ContributionRewardWrapper, ProposeContributionRewardParams, ContributionProposal, IntVoteInterfaceWrapper, BinaryVoteResult } from "../services/ArcService";
+import { ArcService, ContributionRewardWrapper, ProposeContributionRewardParams, ContributionProposal, IntVoteInterfaceWrapper, BinaryVoteResult, ArcTransactionProposalResult } from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException, EventConfig, SnackLifetime } from "../entities/GeneralEvents";
 import { BigNumber } from '../services/Web3Service';
 
@@ -35,7 +35,7 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
     return this.refreshProposals();
   }
 
-  async refreshProposals() {
+  async refreshProposals(): Promise<void> {
     this.checkingForProposals = true;
     const fetcher = (await this.wrapper.getVotableProposals(this.orgAddress))({}, { fromBlock: 0 });
     this.proposals = await fetcher.get();
@@ -44,15 +44,15 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
 
   async vote(proposal: ContributionProposal, vote: BinaryVoteResult) {
     try {
-      const result = await this.votingMachine.vote({
+      const result = await (await this.votingMachine.vote({
         proposalId: proposal.proposalId,
         vote
-      });
+      })).watchForTxMined();
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Vote ${BinaryVoteResult[vote]} submitted`, result.tx));
+        `Vote ${BinaryVoteResult[vote]} submitted`, result.transactionHash));
 
       this.checkingForProposals = true;
-      result.watchForTxMined().then(() => { this.refreshProposals(); });
+      this.refreshProposals();
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error voting`, ex));
     }
@@ -61,9 +61,10 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
   async executeAll() {
 
     this.checkingForProposals = true;
+    const promises = new Array<Promise<void>>();
 
     for (const proposal of this.proposals) {
-      await this.execute(proposal);
+      promises.push(this.execute(proposal, false));
     }
 
     this.eventAggregator.publish("handleSuccess", new EventConfig(
@@ -71,20 +72,30 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
       undefined,
       SnackLifetime.clickToDismiss));
 
+    await Promise.all(promises);
     this.refreshProposals();
   }
 
-  async execute(proposal: ContributionProposal, andWait: boolean = true) {
+  async execute(proposal: ContributionProposal, andWait: boolean = true): Promise<any> {
     try {
-      const result = await this.votingMachine.execute({
+      const result = await (await this.votingMachine.execute({
         proposalId: proposal.proposalId
-      });
-      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Execute attempted`, result.tx));
+      }));
 
       if (andWait) {
         this.checkingForProposals = true;
-        result.watchForTxMined().then(() => { this.refreshProposals(); });
+        const minedResult = await result.watchForTxMined();
+
+        this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+          `Execute attempted`, minedResult.transactionHash));
+
+        this.refreshProposals();
+        return Promise.resolve();
+
+      } else {
+        this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+          `Execute attempted`, result.tx));
+        return result.watchForTxMined();
       }
 
     } catch (ex) {
@@ -110,14 +121,14 @@ export class ContributionRewardDashboard extends DaoSchemeDashboard {
         options.externalTokenReward = this.externalTokenReward; // amount of contribution in terms of the given external token
       }
 
-      let result = await this.wrapper.proposeContributionReward(options);
+      let result = await (await this.wrapper.proposeContributionReward(options)).watchForTxMined();
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        'Proposal submitted to make a contribution', result.tx));
+        'Proposal submitted to make a contribution', result.transactionHash));
 
       this.checkingForProposals = true;
 
-      result.watchForTxMined().then(() => { this.refreshProposals(); });
+      this.refreshProposals();
 
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException(`Error proposing to make a contribution`, ex));

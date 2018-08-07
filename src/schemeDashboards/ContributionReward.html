@@ -62,11 +62,12 @@
                 <span class="bmd-help">Number of blocks in a period</span>
               </div>
             </div>
-            <div class="col-2">
+            <div class="col-3">
               <div class="form-group">
                 <label for="periodLength">Period Length</label>
-                <input class="form-control" type='number' min="1" id="periodLength" value.bind="periodLength" />
-                <span class="bmd-help">Maximum number of periods that can be paid out</span>
+                <input class="form-control" type='number' min="0" id="periodLength" value.bind="periodLength" />
+                <span class="bmd-help">Max number of periods to redeem. Zero to redeem immediately on execution when using Redeemer.redeem.
+                </span>
               </div>
             </div>
           </div>
@@ -85,7 +86,7 @@
           <etherscanlink id="vothingMachineLink" address.bind="votingMachine.address"></etherscanlink>
         </span>
         <div if.bind="proposals.length">
-          <button class="btn btn-default" click.delegate="executeAll()">Try to Execute All</button>
+          <button class="btn btn-primary" click.delegate="executeAll()">Try Execute All</button>
         </div>
         <hr/>
         <form>
@@ -104,7 +105,7 @@
                     <th>Beneficiary</th>
                     <th style="text-align:center">Yes</th>
                     <th style="text-align:center">No</th>
-                    <th style="text-align:center">Execute</th>
+                    <th style="text-align:center">Try Execute</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -116,17 +117,17 @@
                       <etherscanlink css="smallEtherScanlLink" address.bind="proposal.beneficiaryAddress"></etherscanlink>
                     </td>
                     <td>
-                      <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 1)">Vote
+                      <button class="btn btn-primary btn-sm" click.delegate="vote(proposal, 1)">Vote
                         <span class="fa fa-arrow-up"></span>
                       </button>
                     </td>
                     <td>
-                      <button class="btn btn-secondary btn-sm" click.delegate="vote(proposal, 2)">Vote
+                      <button class="btn btn-primary btn-sm" click.delegate="vote(proposal, 2)">Vote
                         <span class="fa fa-arrow-down"></span>
                       </button>
                     </td>
                     <td>
-                      <button class="btn btn-secondary btn-sm" click.delegate="execute(proposal)">Execute
+                      <button class="btn btn-primary btn-sm" click.delegate="execute(proposal)">Execute
                       </button>
                     </td>
                   </tr>
