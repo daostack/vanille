@@ -35,7 +35,7 @@ export class GenBalance {
     if (token) {
       this.getBalance(token);
 
-      this.events = token.allEvents({ fromBlock: 'latest' });
+      this.events = token.contract.allEvents({ fromBlock: 'latest' });
 
       this.events.watch(() => {
         this.getBalance(token);

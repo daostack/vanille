@@ -97,7 +97,7 @@ export class ArcService {
     if (!contract) {
       throw new Error(`contract not found at: ${at}`);
     } else {
-      this.setCachedContract(contract, at);
+      this.setCachedContract(name, contract, at);
     }
     return contract;
   }
@@ -111,16 +111,18 @@ export class ArcService {
   }
 
   private setCachedContract(
+    name: string,
     contract: Arc.ContractWrapperBase | TruffleContract,
     at?: string): void {
 
     let addressMap = this.contractCache.get(name);
     if (!addressMap) {
       addressMap = new Map<Arc.Address, Arc.ContractWrapperBase | TruffleContract>();
+      this.contractCache.set(name, addressMap);
     }
     addressMap.set(contract.address, contract);
     if (!at) {
-      // so we can get the deployed version of this contract without the address
+      // so we can also get the deployed version of this contract without the address
       addressMap.set("deployed", contract);
     }
   }
