@@ -17,7 +17,7 @@ export class SchemeRegistrar {
 
   async activate(model: Partial<SchemeRegistrarParams & VotingMachineConfigModel>) {
     model.getConfigurationHash = await this.getConfigurationHash.bind(this);
-    this.votingMachineConfig = { voteParametersHash: model.voteParametersHash };
+    this.votingMachineConfig = Object.assign({}, model);
     this.model = model;
   }
 

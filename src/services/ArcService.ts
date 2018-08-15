@@ -102,10 +102,15 @@ export class ArcService {
     return contract;
   }
 
-  private getCachedContract(name: string, at: string = "deployed"): Arc.ContractWrapperBase | TruffleContract | undefined {
+  /**
+   * 
+   * @param name TODO: use Arc.js's builtin caching
+   * @param at 
+   */
+  private getCachedContract(name: string, at?: string): Arc.ContractWrapperBase | TruffleContract | undefined {
     const addressMap = this.contractCache.get(name);
     if (addressMap) {
-      return addressMap.get(at);
+      return addressMap.get(at ? at : `${name}_deployed`);
     }
     return undefined;
   }
@@ -123,7 +128,7 @@ export class ArcService {
     addressMap.set(contract.address, contract);
     if (!at) {
       // so we can also get the deployed version of this contract without the address
-      addressMap.set("deployed", contract);
+      addressMap.set(`${name}_deployed`, contract);
     }
   }
 

@@ -1,8 +1,7 @@
 import { autoinject } from "aurelia-framework";
-import { VanilleDAO, DaoService } from '../services/DaoService';
+import { DaoService } from '../services/DaoService';
 import { ArcService, AbsoluteVoteParams } from "../services/ArcService";
 import { VotingMachineConfigModel } from './votingMachineConfigModel';
-import { NULL_ADDRESS } from 'services/Web3Service';
 
 @autoinject
 export class AbsoluteVote {

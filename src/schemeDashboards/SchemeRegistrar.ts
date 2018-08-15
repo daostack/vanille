@@ -10,13 +10,16 @@ import {
   , ProposeToRemoveSchemeParams,
   SchemePermissions,
   SchemeRegistrarParams,
-  SchemeWrapper
+  SchemeWrapper,
+  IIntVoteInterface,
+  Hash
 } from "../services/ArcService";
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { NonArcSchemeItemName } from "../resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
 import { App } from '../app';
 import { SchemeConfigModel } from '../schemeConfiguration/schemeConfigModel';
+import { VotingMachineConfigModel } from 'votingMachineConfiguration/votingMachineConfigModel';
 
 @autoinject
 export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
@@ -26,7 +29,7 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
   @observable selectedSchemeToModify: SchemeInfo = null;
   selectedSchemeToRemove: SchemeInfo = null;
 
-  modifiedSchemeConfiguration: Partial<SchemeConfigModel> = {};
+  modifiedSchemeConfiguration: Partial<SchemeConfigModel> | Partial<VotingMachineConfigModel> = {};
   newSchemeConfiguration: Partial<SchemeConfigModel> = {};
 
   modifiedSchemePermissions = SchemePermissions.None;
@@ -81,11 +84,22 @@ export class SchemeRegistrarDashboard extends DaoSchemeDashboard {
       /**
        * get the current parameters values
        */
-      const wrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.internalSelectedSchemeToModify.address)) as any;
-      this.modifiedSchemePermissions = await wrapper.getSchemePermissions(this.orgAddress);
+      const schemeWrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(this.internalSelectedSchemeToModify.address)) as any;
+      this.modifiedSchemePermissions = await schemeWrapper.getSchemePermissions(this.orgAddress);
 
-      const schemeParams = await wrapper.getSchemeParameters(this.orgAddress);
+      const schemeParams = await schemeWrapper.getSchemeParameters(this.orgAddress);
       Object.assign(this.modifiedSchemeConfiguration, schemeParams);
+
+      if (schemeParams.votingMachineAddress && schemeParams.voteParametersHash) {
+        const votingMachineWrapper: SchemeWrapper = (await this.arcService.contractWrapperFromAddress(schemeParams.votingMachineAddress)) as any;
+        // TODO: until arc.js includes getParameters in SchemeWrapper
+        const voteParams = await (votingMachineWrapper as SchemeWrapper & {
+          getParameters(paramsHash: Hash): Promise<any>;
+        }).getParameters(schemeParams.voteParametersHash);
+
+        Object.assign(this.modifiedSchemeConfiguration, voteParams);
+      }
+
       // don't set this until everything is ready for it
       this.selectedSchemeToModify = this.internalSelectedSchemeToModify;
     } else if (this.modifiedSchemeConfiguration) {
