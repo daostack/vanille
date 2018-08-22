@@ -20,7 +20,7 @@
           </div>
           <div class="form-group">
             <label for="boostedCount">Count of Boosted Proposals: </label>
-            <div class="inline" id="boostedCount" textcontent.bind="boostedCount | ethwei" style="margin-right:.5rem"></div>
+            <div class="inline" id="boostedCount" textcontent.bind="boostedCount" style="margin-right:.5rem"></div>
             <spinbutton onclick.call="refreshBoostedCount()" spin.to-view="gettingBoosted" title="Refresh the count of boosted proposals"></spinbutton>
           </div>
 

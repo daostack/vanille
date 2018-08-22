@@ -37,7 +37,7 @@ export class GenesisProtocolDashboard extends DaoSchemeDashboard {
 
   async refreshBoostedCount() {
     this.gettingBoosted = true;
-    this.boostedCount = await this.votingMachine.contract.orgBoostedProposalsCnt(this.orgAddress);
+    this.boostedCount = await this.votingMachine.getBoostedProposalsCount(this.orgAddress);
     this.gettingBoosted = false;
   }
 }
