@@ -26,7 +26,7 @@ export class EthweiValueConverter {
     }
 
     // allow exceptions here so that corrupt data is less likely to make it into a model
-    return this.web3.toBigNumber(this.web3.toWei(ethValue, "ether"));
+    return new BigNumber(this.web3.toWei(ethValue, "ether"));
   }
 
   /**

@@ -1,14 +1,15 @@
 import { autoinject } from "aurelia-framework";
-import { Hash, TransactionReceipt } from '../services/ArcService';
+import { Hash } from '../services/ArcService';
 import { Web3Service } from '../services/Web3Service';
-import { BlockWithoutTransactionData } from 'web3';
+import { Block, Transaction } from 'web3/eth/types';
+import { TransactionReceipt } from 'web3/types';
 
 @autoinject
 export class TxInfo {
 
   txHash: Hash;
-  txReceipt: TransactionReceipt;
-  block: BlockWithoutTransactionData;
+  txReceipt: Transaction & TransactionReceipt;
+  block: Block;
   timestamp: string;
 
   constructor(private web3Service: Web3Service) { }
@@ -18,7 +19,7 @@ export class TxInfo {
 
     this.txReceipt = await this.web3Service.getTxReceipt(this.txHash);
 
-    this.block = await this.web3Service.getBlock(this.txReceipt.blockHash) as BlockWithoutTransactionData;
+    this.block = await this.web3Service.getBlock(this.txReceipt.blockHash) as Block;
     this.timestamp = new Date(this.block.timestamp * 1000).toLocaleString();
   }
 }

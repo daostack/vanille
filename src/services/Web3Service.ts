@@ -1,17 +1,15 @@
 import { autoinject } from "aurelia-framework";
 import {
-  providers as Web3Providers,
-  Web3,
-  EthApi,
-  VersionApi,
-  Unit,
-  TransactionReceipt,
-  Transaction,
-  BlockWithoutTransactionData,
-  BlockWithTransactionData
+  Web3
 } from "web3";
-import { BigNumber } from 'bignumber.js';
-import { Hash, Address } from './ArcService';
+
+import {
+  Unit
+} from "web3/utils";
+
+import { Hash, Address, BigNumber } from './ArcService';
+import { Block, Transaction } from 'web3/eth/types';
+import { TransactionReceipt } from 'web3/types';
 
 @autoinject()
 export class Web3Service {
@@ -38,15 +36,15 @@ export class Web3Service {
   public get version(): VersionApi { return this.web3 ? this.web3.version : null; }
 
   public async getTxReceipt(txHash: Hash): Promise<Transaction & TransactionReceipt> {
-    const receipt = await (<any>Promise).promisify(this.web3.eth.getTransactionReceipt)(txHash)
+    const receipt = await this.web3.eth.getTransactionReceipt(txHash)
       .then((_tx) => _tx);
-    const tx = await (<any>Promise).promisify(this.web3.eth.getTransaction)(txHash)
+    const tx = await this.web3.eth.getTransaction(txHash)
       .then((_tx) => _tx);
     return Object.assign(tx, receipt);
   }
 
-  public getBlock(blockHash: Hash, withTransactions: boolean = false): Promise<BlockWithoutTransactionData | BlockWithTransactionData> {
-    return (<any>Promise).promisify(this.web3.eth.getBlock)(blockHash, withTransactions)
+  public getBlock(blockHash: Hash, withTransactions: boolean = false): Promise<Block> {
+    return this.web3.eth.getBlock(blockHash, withTransactions)
       .then((_block) => _block);
   }
 
@@ -55,15 +53,15 @@ export class Web3Service {
   }
 
   public fromWei(value: Number | String | BigNumber, unit: Unit = "ether"): BigNumber {
-    return this.toBigNumber(this.web3.fromWei(<any>value, unit));
+    return this.toBigNumber(this.web3.utils.fromWei(<any>value, unit));
   }
 
   public toWei(value: Number | String | BigNumber, unit: Unit = "ether"): BigNumber {
-    return this.toBigNumber(this.web3.toWei(<any>value, unit));
+    return this.toBigNumber(this.web3.utils.toWei(<any>value, unit));
   }
 
   public toBigNumber(value: Number | String | BigNumber): BigNumber {
-    return this.web3.toBigNumber(<any>value);
+    return new BigNumber(<any>value);
   }
 
   /**
@@ -78,7 +76,7 @@ export class Web3Service {
           reject(error);
         }
         if (inEth) {
-          balance = this.web3.fromWei(balance)
+          balance = this.web3.utils.fromWei(balance)
         }
         resolve(balance);
       });
@@ -86,12 +84,6 @@ export class Web3Service {
   }
 
   public initialize(web3): Promise<Web3> {
-
-    /**
-     * so won't throw exceptions and we can use methods like .isNaN().
-     * See: https://mikemcl.github.io/bignumber.js/#errors
-     */
-    BigNumber.config({ ERRORS: false });
 
     let getNetworkFromID = (id: string): string => {
       switch (id) {
@@ -177,4 +169,4 @@ export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const SOME_ADDRESS = '0x1000000000000000000000000000000000000000';
 export const NULL_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 export const SOME_HASH = '0x1000000000000000000000000000000000000000000000000000000000000000';
-export { BigNumber } from 'bignumber.js';
+export { BigNumber };

@@ -57,7 +57,7 @@ export class Test {
           description: "A new contribution",
           numberOfPeriods: 1,
           periodLength: 1,
-          reputationChange: this.web3Service.web3.toWei(1)
+          reputationChange: this.web3Service.web3.utils.toWei(1)
         });
 
       const proposalId = await proposalResult.getProposalIdFromMinedTx();
@@ -65,13 +65,13 @@ export class Test {
       const stakingTokenBalance = await this.stakingToken.balanceOf(this.defaultAccount);
 
       if (stakingTokenBalance.eq(0)) {
-        await this.stakingToken.mint(this.defaultAccount, this.web3Service.web3.toWei(1000));
+        await this.stakingToken.mint(this.defaultAccount, this.web3Service.web3.utils.toWei(1000));
       }
 
       // this.stakingTokenBalance = await this.stakingToken.balanceOf(this.defaultAccount);
 
       const result = await (await this.votingMachine.stakeWithApproval({
-        amount: this.web3Service.web3.toWei(1),
+        amount: this.web3Service.web3.utils.toWei(1),
         proposalId,
         vote: BinaryVoteResult.Yes,
       })).watchForTxMined();
