@@ -35,8 +35,6 @@ export class EtherscanLink {
     let targetedNetwork = this.web3.networkName;
     if (targetedNetwork === "Live") {
       targetedNetwork = "";
-    } else {
-      targetedNetwork = targetedNetwork + '.';
     }
     const isGanache = targetedNetwork === "Ganache";
     if (this.type == "tx") {
@@ -52,7 +50,7 @@ export class EtherscanLink {
       }
     } else {
       // go with etherscan
-      this.networkExplorerUri = `http://${targetedNetwork}etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
+      this.networkExplorerUri = `http://${targetedNetwork}.etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
     }
   }
 }

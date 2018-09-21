@@ -1,4 +1,9 @@
-import { ArcService, DAO, DaoSchemeInfo, DaoGlobalConstraintInfo } from '../services/ArcService';
+import {
+  ArcService,
+  DAO,
+  DaoSchemeInfo,
+  DaoGlobalConstraintInfo
+} from '../services/ArcService';
 import { LogManager } from 'aurelia-framework';
 import { includeEventsIn, Subscription } from 'aurelia-event-aggregator';
 import { SchemeInfo } from "../entities/SchemeInfo";

@@ -1,13 +1,10 @@
 import { autoinject } from "aurelia-framework";
 import * as Arc from "@daostack/arc.js";
 
-import { PLATFORM } from 'aurelia-framework';
 import TruffleContract from 'truffle-contract';
 import { LogManager } from 'aurelia-framework';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { EventConfigException, SnackLifetime } from '../entities/GeneralEvents';
-import { ArcSchemesDropdown } from "resources/customElements/arcSchemesDropdown/arcSchemesDropdown";
-import { NULL_ADDRESS } from './Web3Service';
 
 @autoinject
 export class ArcService {
@@ -22,9 +19,9 @@ export class ArcService {
    * The schemes managed by Arc
    */
   public arcContracts: Arc.ArcWrappers;
-  public arcSchemes: Array<Arc.IContractWrapperBase>;
-  public arcVotingMachines: Array<Arc.IContractWrapperBase>;
-  public arcGlobalConstraints: Array<Arc.IContractWrapperBase>;
+  public arcSchemes: Array<Arc.IContractWrapper>;
+  public arcVotingMachines: Array<Arc.IContractWrapper>;
+  public arcGlobalConstraints: Array<Arc.IContractWrapper>;
   /**
    * maps address to ContractInfo
    */
@@ -40,7 +37,7 @@ export class ArcService {
     let wrappers = Arc.WrapperService.wrappers;
 
     this.arcContracts = wrappers;
-    this.arcSchemes = wrappersByType.schemes;
+    this.arcSchemes = wrappersByType.universalSchemes;
     this.arcVotingMachines = wrappersByType.votingMachines;
     this.arcGlobalConstraints = wrappersByType.globalConstraints;
     this.arcContractMap = Arc.WrapperService.wrappersByAddress;
