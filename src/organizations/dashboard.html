@@ -6,7 +6,7 @@
     <div if.bind="!org">
       <h4>DAO at ${address} was not found</h4>
     </div>
-    <div else>
+    <div else ref="dashboardElement">
       <section class="dashboard-header">
         <h2 class="dao-name">
           <img src="../../static/dao-icon.svg" />${orgName}</h2>
@@ -17,15 +17,15 @@
           <div class="col-sm-12 col-lg-5">
             <dt>Avatar</dt>
             <dd>
-              <etherscanlink style="white-space: nowrap" address="${address}"></etherscanlink>
+              <etherscanlink style="white-space: nowrap" address.one-time="address"></etherscanlink>
             </dd>
             <dt>Controller</dt>
             <dd>
-              <etherscanlink style="white-space: nowrap" address="${org.controller.address}"></etherscanlink>
+              <etherscanlink style="white-space: nowrap" address.one-time="org.controller.address"></etherscanlink>
             </dd>
             <dt>Token</dt>
             <dd>
-              <etherscanlink style="white-space: nowrap" address="${org.token.address}"></etherscanlink>
+              <etherscanlink style="white-space: nowrap" address.one-time="org.token.address"></etherscanlink>
             </dd>
             </dl>
           </div>
@@ -33,30 +33,30 @@
             <dl>
               <dt>Reputation Address</dt>
               <dd>
-                <etherscanlink css="smallEtherScanlLink" style="white-space: nowrap" address="${org.reputation.address}"></etherscanlink>
+                <etherscanlink css="smallEtherScanlLink" style="white-space: nowrap" address.one-time="org.reputation.address"></etherscanlink>
               </dd>
               <dt>Total Reputation Supply</dt>
-              <dd> ${ omega | ethwei}</dd>
+              <dd textcontent.one-time="omega | ethwei"></dd>
               <dt>User Reputation</dt>
-              <dd> ${ userReputation | ethwei} (${omega.gt(0) ? userReputation/omega*100 : '--'}%)</dd>
+              <dd>${ userReputation | ethwei} (${omega.gt(0) ? userReputation/omega*100 : '--'}%)</dd>
             </dl>
           </div>
           <div class="col-sm-12 col-lg-2">
             <dl>
               <dt>Token Symbol</dt>
-              <dd>${tokenSymbol}</dd>
+              <dd textcontent.one-time="tokenSymbol"></dd>
               <dt>User ${tokenSymbol} Balance </dt>
-              <dd> ${ userNativeTokens | ethwei}</dd>
+              <dd textcontent.one-time="userNativeTokens | ethwei"></dd>
               <dt>DAO ${tokenSymbol} Balance</dt>
-              <dd>${ daoTokenbalance | ethwei }</dd>
+              <dd textcontent.one-time="daoTokenbalance | ethwei"></dd>
             </dl>
           </div>
           <div class="col-sm-12 col-lg-2">
             <dl>
               <dt>DAO ETH Balance</dt>
-              <dd>${ daoEthbalance | ethwei }</dd>
+              <dd textcontent.one-time="daoEthbalance | ethwei"></dd>
               <dt>DAO GEN Balance</dt>
-              <dd>${ daoGenbalance | ethwei }</dd>
+              <dd textcontent.one-time="daoGenbalance | ethwei"></dd>
             </dl>
           </div>
         </div>
@@ -65,17 +65,18 @@
       <section show.bind="registeredArcSchemes.length">
         <h3>Arc Schemes</h3>
 
-        <div id="accordion" role="tablist">
+        <div id="accordion_arc_schemes" role="tablist">
           <ul class="list-group clean dashboard-schemes">
             <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
-              <div class="row" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to work with this scheme" click.delegate="useScheme(scheme)">
+              <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
+                aria-controls="#${scheme.name}">
                 <div class="col-12">
                   <div class="scheme-name">${scheme.friendlyName}</div>
-                  <etherscanlink address="${scheme.address}"></etherscanlink>
+                  <etherscanlink address.one-time="scheme.address"></etherscanlink>
                 </div>
               </div>
-              <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
-                <hr/>
+              <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordion_arc_schemes">
+                <hr />
                 <div class="card">
                   <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
@@ -88,18 +89,19 @@
 
       </section>
       <section show.bind="nonArcSchemes.length">
-        <h3>Non-Arc Schemes</h3>
+        <h3>Unknown Schemes</h3>
 
-        <div id="accordion" role="tablist">
+        <div id="accordion_unknown_schemes" role="tablist">
           <ul class="list-group clean dashboard-schemes">
             <li class="list-group-item" repeat.for="scheme of nonArcSchemes">
-              <div class="row" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to work with this scheme" click.delegate="useScheme(scheme)">
+              <div class="row scheme-use-button" data-toggle="collapse" data-target="#${'unknown' + $index}"
+                aria-expanded="false" aria-controls="#${'unknown' + $index}">
                 <div class="col-12" style="padding-top:.5rem">
-                  <etherscanlink address="${scheme.address}"></etherscanlink>
+                  <etherscanlink address.one-time="scheme.address"></etherscanlink>
                 </div>
               </div>
-              <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
-                <hr/>
+              <div id="${'unknown' + $index}" class="scheme-dashboard collapse" data-parent="#accordion_unknown_schemes">
+                <hr />
                 <div class="card">
                   <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>
@@ -115,17 +117,18 @@
       <section show.bind="unregisteredArcSchemes.length">
         <h3>Unused Arc Schemes</h3>
 
-        <div id="accordion" role="tablist">
+        <div id="accordion_unused_schemes" role="tablist">
           <ul class="list-group clean dashboard-schemes">
-            <li class="list-group-item" repeat.for="scheme of unregisteredArcSchemes">
-              <div class="row" data-toggle="tooltip" data-placement="top" data-trigger="hover" title="Click to work with this scheme" click.delegate="useScheme(scheme)">
+            <li class="list-group-item " repeat.for="scheme of unregisteredArcSchemes">
+              <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
+                aria-controls="#${scheme.name}">
                 <div class="col-12">
                   <div class="scheme-name">${scheme.friendlyName}</div>
-                  <etherscanlink address="${scheme.address}"></etherscanlink>
+                  <etherscanlink address.one-time="scheme.address"></etherscanlink>
                 </div>
               </div>
-              <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordian">
-                <hr/>
+              <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordion_unused_schemes">
+                <hr />
                 <div class="card">
                   <div class="card-block">
                     <compose view-model.bind="getDashboardView(scheme)" model.bind="schemeDashboardViewModel(scheme)"></compose>

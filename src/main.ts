@@ -13,8 +13,8 @@ import "popper.js";
 import 'bootstrap-material-design';
 import { SnackbarService } from "./services/SnackbarService";
 import { ConsoleLogService } from "./services/ConsoleLogService";
-import { ConfigService } from "./services/ArcService";
-import { LoggingService, LogLevel } from "./services/ArcService";
+import { ConfigService, LogLevel } from "./services/ArcService";
+import { DateService } from "./services/DateService";
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -26,7 +26,7 @@ export async function configure(aurelia: Aurelia) {
 
   // for now, always on for trouble-shooting:  if (process.env.env == "development") {
   aurelia.use.developmentLogging();
-  LoggingService.logLevel = LogLevel.all;
+  ConfigService.set("logLevel", LogLevel.all);
   // }
 
   // Uncomment the line below to enable animation.
@@ -48,6 +48,8 @@ export async function configure(aurelia: Aurelia) {
     // PLATFORM.moduleName("resources/customElements/TokenTicker/TokenTicker"),
     PLATFORM.moduleName("resources/customElements/GenBalance/GenBalance"),
     PLATFORM.moduleName("resources/customElements/FaucetButton/FaucetButton"),
+    PLATFORM.moduleName("resources/customElements/locksForReputation/locksForReputation"),
+    PLATFORM.moduleName("resources/customElements/lockersForReputation/lockersForReputation"),
     PLATFORM.moduleName("resources/customElements/votingMachineSelector/votingMachineSelector"),
     PLATFORM.moduleName("resources/customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("resources/customElements/spinButton.html"),
@@ -63,6 +65,10 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/number"),
     PLATFORM.moduleName("resources/valueConverters/round"),
     PLATFORM.moduleName("resources/valueConverters/ethwei"),
+    PLATFORM.moduleName("resources/valueConverters/keys"),
+    PLATFORM.moduleName("resources/valueConverters/date"),
+    PLATFORM.moduleName("resources/valueConverters/timespan"),
+    PLATFORM.moduleName("resources/valueConverters/boolean"),
     PLATFORM.moduleName("footer.html"),
     PLATFORM.moduleName("header.html")
   ]);
@@ -72,11 +78,16 @@ export async function configure(aurelia: Aurelia) {
   PLATFORM.moduleName("./schemeDashboards/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeDashboards/SchemeRegistrar")
   PLATFORM.moduleName("./schemeDashboards/ContributionReward")
-  PLATFORM.moduleName("./schemeDashboards/GenesisProtocol")
   PLATFORM.moduleName("./schemeDashboards/UpgradeScheme")
   PLATFORM.moduleName("./schemeDashboards/NonArc")
   PLATFORM.moduleName("./schemeDashboards/UnknownArc")
   PLATFORM.moduleName("./schemeDashboards/NotRegistered")
+
+  PLATFORM.moduleName("./schemeDashboards/ExternalLocking4Reputation");
+  PLATFORM.moduleName("./schemeDashboards/LockingEth4Reputation");
+  PLATFORM.moduleName("./schemeDashboards/LockingToken4Reputation");
+  PLATFORM.moduleName("./schemeDashboards/FixedReputationAllocation");
+  PLATFORM.moduleName("./schemeDashboards/Auction4Reputation");
 
   PLATFORM.moduleName("./schemeConfiguration/GlobalConstraintRegistrar")
   PLATFORM.moduleName("./schemeConfiguration/SchemeRegistrar")
@@ -113,6 +124,7 @@ export async function configure(aurelia: Aurelia) {
     aurelia.container.get(ConsoleLogService);
     aurelia.container.get(SnackbarService);
     aurelia.container.get(OrganizationsList);
+    aurelia.container.get(DateService);
 
     const web3Service = aurelia.container.get(Web3Service);
     await web3Service.initialize(web3);

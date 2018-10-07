@@ -4,18 +4,14 @@ import {
   DAO,
   NewDaoConfig,
   SchemesConfig,
-  DaoCreatorWrapper,
-  InitialSchemesSetEventResult,
-  DecodedLogEntryEvent
+  Address
 } from "./ArcService";
 import { Web3Service } from "../services/Web3Service";
 import { includeEventsIn, Subscription } from "aurelia-event-aggregator";
 import { LogManager } from "aurelia-framework";
 import { VanilleDAO } from "../entities/DAO";
-import { DaoSchemeDashboard } from "schemeDashboards/schemeDashboard";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException, SnackLifetime } from "../entities/GeneralEvents";
-import { Observable } from 'rxjs/Observable';
 
 @autoinject
 export class DaoService {
@@ -28,16 +24,9 @@ export class DaoService {
   }
 
   private daoCache = new Map<string, VanilleDAO>();
+  private discoveredDAOs = new Set<string>();
   private logger = LogManager.getLogger("Vanille");
   public promiseToBeLoaded: Promise<any>;
-  // private _daoStack: VanilleDAO;
-  private resolvePromiseForDaoStack;
-  public promiseForDaoStack: Promise<any> = new Promise((resolve) => { this.resolvePromiseForDaoStack = resolve; });
-
-  // public async GetDaostack(): Promise<VanilleDAO> {
-  //   return this.promiseForDaoStack;
-  // }
-
   /**
    * a DAO has been added or removed
    */
@@ -46,21 +35,24 @@ export class DaoService {
   public async initialize() {
     return (this.promiseToBeLoaded = new Promise(async (resolve, reject) => {
       try {
-        let daoCreator = (await this.arcService.getContract("DaoCreator")) as DaoCreatorWrapper;
-        let myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: 0 });
+        let existingAvatarAddresses = await DAO.getDaos();
+        for (const avatarAddress of existingAvatarAddresses) {
+          this.newDaoDiscovered(avatarAddress);
+        }
+
         /**
-         * get():  fires once for all the DAOs in the system; resolve() will be called properly.
-         * watch(): fires whenever a new DAO is created thereafter
+         * Note that DAO.getDaos and DAO.getDaoCreationEvents can potentially overlap by one block here.  Any DAOs
+         * created within that block will thus show up twice.
          */
-        myEvent.get((err, eventsArray) =>
-          this.handleNewDao(err, eventsArray).then(() => {
-            this.logger.debug("Finished loading daos");
-            myEvent = daoCreator.InitialSchemesSet({}, { fromBlock: "latest" });
-            myEvent.watch((err, event) => this.handleNewDao(err, [event]));
-            resolve();
-          })
-        );
+        const daoFetcher = (await DAO.getDaoCreationEvents())({}, { fromBlock: "latest" });
+
+        daoFetcher.watch((error: Error, avatarAddress: Address) => this.newDaoDiscovered(avatarAddress));
+
+        this.logger.debug("Finished loading daos");
+        resolve();
+
       } catch (ex) {
+        this.logger.error(`Error obtaining DAO ecosystem: ${ex}`);
         alert(`Error obtaining DAO ecosystem: ${ex}`);
         reject(ex);
       }
@@ -95,7 +87,8 @@ export class DaoService {
 
         if (org) {
           dao = await VanilleDAO.fromArcJsDao(org, this.arcService, this.web3);
-        } // else this will already have been logged by arc.js
+          this.logger.debug(`loaded dao ${dao.name}: ${dao.address}`);
+        } // else error will already have been logged by arc.js
       } catch (ex) {
         // don't force the user to see this as a snack every time.  A corrupt DAO may never be repaired.  A message will go to the console.
         // this.eventAggregator.publish("handleException", new EventConfigException(`Error loading DAO: ${avatarAddress}`, ex));
@@ -121,30 +114,19 @@ export class DaoService {
     });
   }
 
-  // private firstOrg = true;
-
-  private async handleNewDao(err, eventsArray: Array<DecodedLogEntryEvent<InitialSchemesSetEventResult>>): Promise<void> {
-    let newOrganizationArray = [];
-    for (const event of eventsArray) {
-      let promotedAmount = 0;
-      let avatarAddress = event.args._avatar;
-
-      /**
-       * particularly in ganache, we could end up seeing the same org twice.
-       * this is because our two calls to the event, get and watch, may hit
-       * the same latest block twice
-       */
-      let alreadyCached = !!this.daoCache.get(avatarAddress);
-      if (!alreadyCached) {
-        let dao = await this._daoAt(avatarAddress);
-        if (dao) {
-          this.logger.debug(`loaded dao ${dao.name}: ${dao.address}`);
-          // if (this.firstOrg) {
-          //   // this._daoStack = this.resolvePromiseForDaoStack(dao);
-          //   this.firstOrg = false;
-          // }
-          this.publish(DaoService.daoAddedEvent, dao);
-        }
+  private async newDaoDiscovered(avatarAddress: Address): Promise<void> {
+    /**
+     * particularly in ganache, we could end up seeing the same org twice.
+     * this is because our two calls to the event, get and watch, may hit
+     * the same latest block twice
+     */
+    let alreadyCached = this.discoveredDAOs.has(avatarAddress);
+    if (!alreadyCached) {
+      this.discoveredDAOs.add(avatarAddress);
+      let dao = await this._daoAt(avatarAddress);
+      if (dao) {
+        this.logger.debug(`discovered dao ${dao.name}: ${dao.address}`);
+        this.publish(DaoService.daoAddedEvent, dao);
       }
     }
   }

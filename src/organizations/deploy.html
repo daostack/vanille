@@ -30,8 +30,8 @@
 
       <div style="position:relative">
         <div class="add-founder">
-          <round-add-button class="founder-add-button" css="btn-success" click.delegate='addFounderInput()' data-container="#founders"
-            data-toggle="tooltip" data-trigger="hover" data-placement="right" title="Add a founder"></round-add-button>
+          <round-add-button class="founder-add-button" css="btn-success" click.delegate='addFounderInput()'
+            data-container="#founders" data-toggle="tooltip" data-trigger="hover" data-placement="right" title="Add a founder"></round-add-button>
         </div>
       </div>
 
@@ -42,8 +42,7 @@
               <label for.bind="appendIndex('founder_address',$index)">Founder ${ $index + 1 }
                 <span style="padding-left:.25rem" if.bind="founder.address === web3.defaultAccount">(You)</span>
               </label>
-              <input class="form-control" style="width:25rem" type='text' value.bind='founder.address' id.bind="appendIndex('founder_address',$index)"
-              />
+              <input class="form-control" style="width:25rem" type='text' value.bind='founder.address' id.bind="appendIndex('founder_address',$index)" />
               <!-- show is to workaround BMD bug -->
               <span class="bmd-help" show.bind="!founder.address">Enter a wallet address</span>
             </div>
@@ -59,8 +58,8 @@
             </div>
           </form>
           <div if.bind='founders.length > 1' class="delete-founder">
-            <round-trash-button class="founder-delete-button" css="btn-success" click.delegate='removeFounder($index)' data-toggle="tooltip"
-              data-placement="right" data-trigger="hover" title="Delete this founder"></round-trash-button>
+            <round-trash-button class="founder-delete-button" css="btn-success" click.delegate='removeFounder($index)'
+              data-toggle="tooltip" data-placement="right" data-trigger="hover" title="Delete this founder"></round-trash-button>
           </div>
         </li>
       </ul>
@@ -71,8 +70,8 @@
       <div repeat.for="scheme of arcSchemes">
         <div class="checkbox">
           <label class="form-check-label" for="${scheme.name}">
-            <input class="form-check-input" disabled.bind="scheme.required" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes"
-              id="${scheme.name}"> ${scheme.friendlyName}
+            <input class="form-check-input" model.bind="scheme" type="checkbox" checked.bind="selectedSchemes" id="${scheme.name}">
+            ${scheme.friendlyName}
           </label>
         </div>
       </div>
@@ -80,14 +79,16 @@
 
     <section>
       <h4>Scheme Voting Machine</h4>
-      <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineModel" include-unknown-voting-machine.bind="true">
+      <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineModel"
+        include-unknown-voting-machine.bind="true">
       </votingmachineselector>
     </section>
 
     <div>
-      <instructions>Forging a new organization currently requires the signing of several transactions. So please be patient and make sure
+      <instructions>Forging a new organization currently requires the signing of several transactions. So please be
+        patient and make sure
         to sign all of them. It may take several minutes with long gaps.</instructions>
-      <hr/>
+      <hr />
       <div if.bind="deployOrgStatus != 'deploying'">
         <button type='button' class='btn  btn-primary' click.delegate='deploy()'>
           <i class='fa fa-rocket'></i> Deploy Organization
@@ -96,7 +97,8 @@
 
       <div if.bind="deployOrgStatus === 'deploying'">
         <div class="progress">
-          <div if.bind="addOrgResultMessage === 'adding_org'" class="progress-bar progress-bar-striped progress-bar-animated" style='width:100%'>
+          <div if.bind="addOrgResultMessage === 'adding_org'" class="progress-bar progress-bar-striped progress-bar-animated"
+            style='width:100%'>
             Deploying ${orgName}...
           </div>
           <!-- <div if.bind="addOrgResultMessage === 'org_added'" class="progress-bar progress-bar-success" style='width:100%'>

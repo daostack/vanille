@@ -3,7 +3,7 @@
     <voting-machines-dropdown machine.bind="votingMachineInfo" include-unknown-voting-machine.bind="includeUnknownVotingMachine"
       default-voting-machine-address.bind="defaultVotingMachineAddress"></voting-machines-dropdown>
     <!-- <span class="ml-3">
-      <etherscanlink if.bind="votingMachineInfo" address="${votingMachineInfo.address}"></etherscanlink>
+      <etherscanlink if.bind="votingMachineInfo" address.one-time="votingMachineInfo.address"></etherscanlink>
     </span> -->
   </div>
   <div show.bind="votingMachineInfo" ref="addressControl" class="form-group bmd-form-group">

@@ -1,0 +1,41 @@
+<template>
+  <instructions>A list of all accounts that have locks, and for each, a list of their locks.
+    Locks will not show until the transaction creating them has been mined.
+    Each lock for the current account will show "Release" and "Redeem" buttons when the current date and period
+    make the operations possible. You can Release after the individual locking period has expired.
+    You can Redeem reputation after the contract locking period has expired.
+  </instructions>
+  <hr />
+  <form>
+    <spinbutton onclick.call="refreshLockers()" as-button="true" text="Refresh" spin.to-view="refreshingLockers" title="Refresh"></spinbutton>
+    <div if.bind="!lockers.length">No locks found</div>
+    <table else class="table table-responsive">
+      <thead class="thead-light">
+        <tr>
+          <th>Locker Address</th>
+          <th style="text-align:center">Score</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template repeat.for="locker of lockers">
+          <tr>
+            <td class="has-etherscan-link">
+              <etherscanlink address.one-time="locker.lockerAddress"></etherscanlink>
+            </td>
+            <td style="text-align:center">${locker.score | ethwei}</td>
+            <td><a data-toggle="collapse" href="#" data-target="#${wrapper.address}" role="button" aria-expanded="false"
+                aria-controls="${wrapper.address}" class="btn-link collapseButtonIcon collapsed">Locks</a>
+            </td>
+          </tr>
+          <tr class="collapse nested-collapser" id="${wrapper.address}">
+            <td style="border-top:0" colspan="100">
+              <locks-for-reputation locks.to-view="getLocks(locker)" release.call="_release({lock})" redeem.call="_redeem({lock})"
+                wrapper.one-time="wrapper" no-release-function.one-time="noReleaseFunction"></locks-for-reputation>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </form>
+</template>

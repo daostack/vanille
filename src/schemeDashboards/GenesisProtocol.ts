@@ -25,19 +25,19 @@ export class GenesisProtocolDashboard extends DaoSchemeDashboard {
 
   async attached() {
     this.votingMachine = await this.arcService.arcContracts.GenesisProtocol.factory.at(this.address);
-    this.parametersHash = await this.votingMachine.getSchemeParametersHash(this.orgAddress);
+    // this.parametersHash = await this.votingMachine.getSchemeParametersHash(this.orgAddress);
     this.refreshThreshold();
     this.refreshBoostedCount();
   }
   async refreshThreshold() {
     this.gettingThreshold = true;
-    this.threshold = await this.votingMachine.getThreshold({ avatar: this.orgAddress });
+    // this.threshold = await this.votingMachine.getThreshold({ avatar: this.orgAddress });
     this.gettingThreshold = false;
   }
 
   async refreshBoostedCount() {
     this.gettingBoosted = true;
-    this.boostedCount = await this.votingMachine.getBoostedProposalsCount(this.orgAddress);
+    // this.boostedCount = await this.votingMachine.getBoostedProposalsCount(this.orgAddress);
     this.gettingBoosted = false;
   }
 }

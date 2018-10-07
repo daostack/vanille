@@ -1,5 +1,22 @@
 <template>
-<div class="instructions">This scheme has been added to <span class="org-name">${orgName}</span>, 
-  but it is not one of those provided by Daostack Arc. 
-  At this time we have no way to know how to use it, so you'll need to use your own custom applications to do so.</div>
+  <div class="instructions">This scheme has been registered to <span class="org-name">${orgName}</span>,
+    but it cannot be confirmed to be an Arc contract. If you know this to be an Arc contract, and you know that
+    the current Arc.js wrapper for it (assuming one exists) is compatible with this contract, then
+    select the wrapper in the dropdown below. Otherwise, we have no way to know how to use it and
+    you'll need to use your own custom applications to maintain it.</div>
+
+  <a class="dropdown-toggle arc-schemes-dropdown-button" href="#" data-toggle="dropdown" aria-haspopup="true"
+    aria-expanded="false">
+    <span class="font-weight-bold">${selectedFactory ? selectedFactory : 'Select a Scheme'}</span>
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="arcSchemesDropdown">
+    <li class="dropdown-item" click.delegate="onItemClick(factory)" repeat.for="factory of factoryNames">${factory}</li>
+  </ul>
+
+  <div if.bind="selectedFactory">
+    <div class="form-group bmd-form-group">
+      <compose view-model="../schemeDashboards/${selectedFactory}" model.bind="schemeDashboardModel"></compose>
+    </div>
+  </div>
+
 </template>

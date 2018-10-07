@@ -63,7 +63,7 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       }
     },
 
-    devtool: production ? 'source-map' : 'cheap-module-eval-source-map',
+    devtool: production ? 'source-map' : 'eval-source-map',
     entry: {
       app: ['aurelia-bootstrapper'],
       vendor: [

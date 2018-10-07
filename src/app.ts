@@ -105,12 +105,17 @@ export class App {
     this.router = router;
   }
   static SchemeDashboards = [
-    "GlobalConstraintRegistrar",
-    "SchemeRegistrar",
+    "Auction4Reputation",
     "ContributionReward",
-    "UpgradeScheme",
+    "ExternalLocking4Reputation",
+    "FixedReputationAllocation",
     "GenesisProtocol",
-    "NonArc"
+    "GlobalConstraintRegistrar",
+    "LockingEth4Reputation",
+    "LockingToken4Reputation",
+    "NonArc",
+    "SchemeRegistrar",
+    "UpgradeScheme",
   ];
 
   public static hasDashboard(schemeName: string): boolean {

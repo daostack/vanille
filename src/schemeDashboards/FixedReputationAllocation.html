@@ -1,0 +1,75 @@
+<template>
+  <div class="arc-scheme-dashboard">
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#fixedRepStatus" data-toggle="tab" id="fixed-auth-status-tab" role="tab"
+          aria-controls="fixedRepStatus" aria-selected="true">Status</a>
+      </li>
+      <li if.bind="!isEnabled" class="nav-item">
+        <a class="nav-link" href="#fixedRepControls" data-toggle="tab" id="fixed-auth-controls-tab" role="tab"
+          aria-controls="fixedRepControls" aria-selected="false">Controls</a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="fixedRepStatus" role="tabpanel" aria-labelledby="fixed-auth-status-tab">
+        <div class="buttonAtTop">
+          <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+        </div>
+        <table class="table plain-table table-responsive">
+          <tr>
+            <td>Is Enabled:</td>
+            <td textcontent.to-view="isEnabled | boolean"></td>
+          </tr>
+          <tr>
+            <td>Number of Beneficiaries:</td>
+            <td textcontent.to-view="numBeneficiaries"></td>
+          </tr>
+          <tr>
+            <td>Total Reputation Redeemable:</td>
+            <td textcontent.to-view="totalReputationRewardable | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Per-Beneficiary Reputation Redeemable:</td>
+            <td textcontent.to-view="totalBeneficiaryRewardable | ethwei"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="fixedRepControls" role="tabpanel" aria-labelledby="fixed-auth-controls-tab">
+        <instructions>Enable the reputation to be redeemed, or add beneficiaries.</instructions>
+        <form>
+          <!-- <div class="form-group bmd-form-group">
+            <label class="bmd-label-static" for="beneficiaryAddress">Beneficiary Address</label>
+            <etherscanlink address.one-time="beneficiaryAddress"></etherscanlink>
+          </div> -->
+          <div if.to-view="isEnabled" class="form-group bmd-form-group">
+            <button class="btn-submit-proposal" click.delegate="setEnabled()">Enable Redemptions...</button>
+          </div>
+          <div if.to-view="!isEnabled">
+            <div class="card" style="margin-bottom: 1.5rem">
+              <div class="card-body">
+                <div class="card-title">Add Beneficiary</div>
+                <div class="form-group bmd-form-group" style="width: 23rem;">
+                  <input class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
+                  <span class="bmd-help">Account address</span>
+                </div>
+                <button class="btn-submit-proposal" click.delegate="addBeneficiary(beneficiary)">Add...</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title">Add Beneficiaries</div>
+                <div class="form-group bmd-form-group">
+                  <textarea class="form-control" rows="3" value.bind="beneficiaries & updateTrigger:'blur'"></textarea>
+                  <span class="bmd-help">Comma-separated list of account addresses</span>
+                </div>
+                <button class="btn-submit-proposal" click.delegate="addBeneficiaries(beneficiaries)">Add...</button>
+              </div>
+            </div>
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+</template>

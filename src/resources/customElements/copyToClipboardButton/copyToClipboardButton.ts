@@ -39,7 +39,7 @@ export class CopyToClipboardButton {
 
   listener(e) { e.clipboardData.setData("text/plain", this.textToCopy); e.preventDefault(); }
 
-  copy() {
+  copy(e: Event) {
     if (this.element) {
       this.textToCopy = $(this.element).text();
     }
@@ -51,5 +51,7 @@ export class CopyToClipboardButton {
     document.removeEventListener("copy", handler);
 
     this.eventAggregator.publish("showMessage", this.message);
+
+    e.stopPropagation();
   }
 }

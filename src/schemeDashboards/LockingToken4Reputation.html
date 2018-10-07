@@ -1,0 +1,99 @@
+<template>
+  <div class="arc-scheme-dashboard">
+    <ul class="nav nav-tabs scheme-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" href="#TokenStatus" data-toggle="tab" id="tokens-status-tab" role="tab"
+          aria-controls="TokenStatus" aria-selected="true">Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#LockTokenControls" data-toggle="tab" id="tokens-locks-tab" role="tab" aria-controls="LockTokenControls"
+          aria-selected="false">Lock Tokens</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#TokenLockersControls" data-toggle="tab" id="tokens-lockers-tab" role="tab"
+          aria-controls="TokenLockersControls" aria-selected="false">Lockers</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="TokenStatus" role="tabpanel" aria-labelledby="tokens-status-tab">
+        <div class="buttonAtTop">
+          <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+        </div>
+        <table class="table plain-table table-responsive">
+          <tr>
+            <td>Token Address:</td>
+            <td class="has-etherscan-link">
+              <etherscanlink address.to-view="tokenAddress"></etherscanlink>
+            </td>
+          </tr>
+          <tr>
+            <td>Total Tokens Locked:</td>
+            <td textcontent.to-view="totalLocked | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Total Locked Tokens Left:</td>
+            <td textcontent.to-view="totalLockedLeft | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Total Score:</td>
+            <td textcontent.to-view="totalScore | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Lock Count:</td>
+            <td textcontent.to-view="lockCount"></td>
+          </tr>
+          <tr>
+            <td>Locking Start Time:</td>
+            <td textcontent.to-view="lockingStartTime | date:'friendlyDateTime'"></td>
+          </tr>
+          <tr>
+            <td>Locking End Time:</td>
+            <td textcontent.to-view="lockingEndTime | date:'friendlyDateTime'"></td>
+          </tr>
+          <tr>
+            <td>Locking Period is Ended:</td>
+            <td>${lockingPeriodIsEnded | boolean}</td>
+          </tr>
+          <tr>
+            <td>Reputation Rewardable:</td>
+            <td textcontent.to-view="totalReputationRewardable | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Reputation Left to Reward:</td>
+            <td textcontent.to-view="totalReputationRewardableLeft | ethwei"></td>
+          </tr>
+          <tr>
+            <td>Max Locking Period:</td>
+            <td textcontent.to-view="maxLockingPeriod | timespan"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="LockTokenControls" role="tabpanel" aria-labelledby="tokens-locks-tab">
+        <instructions>Lock Tokens for a given period of time, afterwards release the Tokens and redeem reputation.</instructions>
+        <hr />
+        <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
+        <form else with.bind="lockModel">
+          <!-- <div class="form-group bmd-form-group">
+            <label class="bmd-label-static" for="lockerAddress">Locker Address</label>
+            <etherscanlink address.one-time="lockerAddress"></etherscanlink>
+          </div> -->
+          <div style="width: 10rem;">
+            <div class="form-group bmd-form-group">
+              <label for="lockAmount">Tokens to Lock</label>
+              <input class="form-control" type='number' id="lockAmount" value.bind="amount | ethwei & updateTrigger:'blur'" />
+            </div>
+            <div class="form-group bmd-form-group">
+              <label for="lockingPeriod">Lock for How Long</label>
+              <input class="form-control" type='number' id="lockingPeriod" value.bind="period  | number" />
+              <span class="bmd-help">In seconds</span>
+            </div>
+          </div>
+          <button class="btn-submit-proposal" click.delegate="lock()">Submit New Lock</button>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="TokenLockersControls" role="tabpanel" aria-labelledby="tokens-lockers-tab">
+        <lockers-for-reputation wrapper.to-view="wrapper" release.call="release({ lock })" renew.call="renew({lock})"></lockers-for-reputation>
+      </div>
+    </div>
+  </div>
+</template>

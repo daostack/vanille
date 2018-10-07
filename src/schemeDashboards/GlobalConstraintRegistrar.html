@@ -3,8 +3,8 @@
     <div class="arc-constraint-dashboard">
       <ul class="nav nav-tabs constraint-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" href="#constraintToAdd" data-toggle="tab" id="propose-tab" role="tab" aria-controls="Propose"
-            aria-selected="false">Propose to Add/Update Global Constraint</a>
+          <a class="nav-link active" href="#constraintToAdd" data-toggle="tab" id="propose-tab" role="tab"
+            aria-controls="Propose" aria-selected="false">Propose to Add/Update Global Constraint</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#constraintToRemove" data-toggle="tab" id="unpropose-tab" role="tab" aria-controls="unPropose"
@@ -17,13 +17,16 @@
         <div class="tab-pane fade show active" id="constraintToAdd" role="tabpanel" aria-labelledby="propose-tab">
 
           <instructions>Propose to add or update global constraints in
-            <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's
+            <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be
+            initiated using this scheme's
             voting machine.</instructions>
-          <hr/>
+          <hr />
           <form>
-            <global-constraints-dropdown constraint.bind="currentGCSelection" dao-address.bind="orgAddress" include-non-arc-item.bind="true">
+            <global-constraints-dropdown constraint.bind="currentGCSelection" dao-address.bind="orgAddress"
+              include-non-arc-item.bind="true">
               <span slot="buttonText">
-                <span class="font-weight-bold">${currentGCSelection ? currentGCSelection.friendlyName : 'Select Global Constraint'}</span>
+                <span class="font-weight-bold">${currentGCSelection ? currentGCSelection.friendlyName : 'Select Global
+                  Constraint'}</span>
               </span>
             </global-constraints-dropdown>
 
@@ -38,31 +41,37 @@
                 <compose view-model="${'../globalConstraintConfiguration/' + currentGCSelection.name}" model.bind="constraintToAddConfig"></compose>
               </div>
 
-              <label style="padding-top:.3rem; padding-bottom: .3rem; font-weight: bold;">Voting Machine to Remove Constraint</label>
-              <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig" include-unknown-voting-machine.bind="true">
+              <label style="padding-top:.3rem; padding-bottom: .3rem; font-weight: bold;">Voting Machine to Remove
+                Constraint</label>
+              <votingmachineselector voting-machine-info.bind="votingMachineInfo" voting-machine-config.bind="votingMachineConfig"
+                include-unknown-voting-machine.bind="true">
               </votingmachineselector>
 
-              <button if.bind="!!votingMachineConfig" class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit Proposal</button>
+              <button if.bind="!!votingMachineConfig" class="btn-submit-proposal" click.delegate="proposeConstraint()">Submit
+                Proposal</button>
             </div>
           </form>
         </div>
 
         <div class="tab-pane fade" id="constraintToRemove" role="tabpanel" aria-labelledby="unpropose-tab">
           <instructions>Remove global constraints from
-            <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be initiated using this scheme's
+            <span class='org-name'>${orgName}</span>. After submitting the proposal, a vote will automatically be
+            initiated using this scheme's
             voting machine.</instructions>
-          <hr/>
+          <hr />
           <form>
-            <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" dao-address.bind="orgAddress" exclude-unregistered.bind="true">
+            <global-constraints-dropdown constraint.bind="constraintToRemoveInfo" dao-address.bind="orgAddress"
+              exclude-unregistered.bind="true">
               <span slot="buttonText">
-                <span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.friendlyName : 'Select Constraint to Remove'}</span>
+                <span class="font-weight-bold">${constraintToRemoveInfo ? constraintToRemoveInfo.friendlyName : 'Select
+                  Constraint to Remove'}</span>
               </span>
               <span slot="noConstraints">
                 <span class="org-name">${orgName}</span> has no global constraints that can be removed.</span>
             </global-constraints-dropdown>
 
             <div if.bind="constraintToRemoveInfo">
-              <etherscanlink address="${constraintToRemoveInfo.address}"></etherscanlink>
+              <etherscanlink address.to-view="constraintToRemoveInfo.address"></etherscanlink>
               <div class="mt-3 ">
                 <button class="btn-submit-proposal " click.delegate="proposeRemoveConstraint() ">Submit Proposal</button>
               </div>

@@ -4,6 +4,37 @@
   border-radius: .325rem !important;
 }
 
+.dashboard-schemes li.list-group-item:not(.selected) {
+  /**
+   * to expand the "hot" clickable area
+   */
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dashboard-schemes li.list-group-item.selected {
+  /**
+   * to expand the "hot" clickable area
+   */
+  padding-top: 0;
+  padding-bottom: 1rem;
+}
+
+.dashboard-schemes li.list-group-item:not(.selected) .scheme-use-button {
+  /**
+   * to expand the "hot" clickable area
+   */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.dashboard-schemes li.list-group-item.selected .scheme-use-button {
+  /**
+   * to expand the "hot" clickable area
+   */
+  padding-top: 1rem;
+}
+
 .dashboard-schemes li.list-group-item .scheme-name {
   font-weight: bold;
   margin-bottom:.5rem;

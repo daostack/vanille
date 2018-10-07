@@ -65,3 +65,58 @@ nav.header .company-name {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.table.plain-table th, .table.plain-table td {
+    border-top-width: 0;
+}
+
+.collapseButtonIcon {
+  text-decoration: none !important;
+}
+
+.collapseButtonIcon:not(.collapsed)::after {
+  color: $gray-500;
+  content: "\0020\25B2";
+}
+
+.collapseButtonIcon.collapsed::after {
+  color: $gray-500;
+  content: "\0020\25BC";
+}
+
+label {
+  white-space: nowrap;
+}
+
+.input-group-text {
+  display: inline-block;
+  margin-right: .4rem !important;
+}
+
+.bmd-help + div.input-group-append > button.btn-submit-proposal {
+  padding-top: .6rem;
+}
+
+div.buttonAtTop {
+  margin-top: -1.75rem;
+  margin-left: .5rem;
+  margin-bottom: .5rem;
+}
+
+div.buttonAtTop > div.bmd-form-group {
+  padding-top: 0;
+}
+
+div.buttonAtTop .btn,
+div.buttonAtTop .btn {
+  padding-left: .5rem;
+}
+
+td.has-etherscan-link {
+  padding-top: .15rem;
+  padding-bottom: 0;
+}
+
+form .card-title {
+  font-size: 1.1rem;
+}

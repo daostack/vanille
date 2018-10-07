@@ -48,7 +48,7 @@ export class VanilleDAO extends DAO {
     let newDAO = Object.assign(new VanilleDAO(), org);
     newDAO.arcService = arcService;
     newDAO.address = org.avatar.address;
-    newDAO.name = await web3.bytes32ToUtf8(await org.avatar.orgName());
+    newDAO.name = org.name;
     newDAO.omega = await newDAO.reputation.getTotalSupply();
     return newDAO;
   }
@@ -76,10 +76,10 @@ export class VanilleDAO extends DAO {
   }
 
   private watchSchemes(): void {
-    this.registerSchemeEvent = this.controller.RegisterScheme({}, { fromBlock: "latest", toBlock: "latest" });
+    this.registerSchemeEvent = this.controller.RegisterScheme({ _avatar: this.address }, { fromBlock: "latest" });
     this.registerSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, true));
 
-    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({}, { fromBlock: "latest", toBlock: "latest" });
+    this.unRegisterSchemeEvent = this.controller.UnregisterScheme({ _avatar: this.address }, { fromBlock: "latest" });
     this.unRegisterSchemeEvent.watch((err, eventsArray) => this.handleSchemeEvent(err, eventsArray, false));
   }
 

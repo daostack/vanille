@@ -1,7 +1,6 @@
-import { autoinject } from "aurelia-framework";
-import { ArcService } from '../services/ArcService';
-import { DaoService, VanilleDAO } from "../services/DaoService";
 import { SchemeInfo } from "../services/SchemeService";
+import { SchemeDashboardModel } from 'schemeDashboards/schemeDashboardModel';
+import { VanilleDAO } from 'services/DaoService';
 
 export class DaoSchemeDashboard {
   /**
@@ -22,7 +21,7 @@ export class DaoSchemeDashboard {
   orgName: string;
   allSchemes: Array<SchemeInfo>;
 
-  activate(model) {
+  activate(model: SchemeDashboardModel) {
     this.friendlyName = model.friendlyName;
     this.name = model.name;
     this.address = model.address;
