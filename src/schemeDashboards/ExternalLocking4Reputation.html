@@ -7,8 +7,8 @@
       <div class="card" style="margin-bottom: 2rem">
         <div class="card-body">
           <div class="card-title">Lock</div>
-          <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
-          <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked, you can't lock again</div>
+          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">The locking period has ended, you can't lock</div>
+          <div if.to-view="alreadyLocked">You have already locked</div>
           <button if.to-view="!lockingPeriodIsEnded && !alreadyLocked" class="btn-submit-proposal" click.delegate="lock()">Submit
             Lock for the Current Account</button>
         </div>
@@ -16,11 +16,10 @@
 
       <div class="card">
         <div class="card-body">
-          <div class="card-title">Release and Redeem</div>
-          <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">The locking period has not ended, you can't yet
-            redeem</div>
-          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">You have nothing to redeem</div>
-          <button if.to-view="lockingPeriodIsEnded && alreadyLocked" class="btn-submit-proposal" click.delegate="redeem()">Redeem
+          <div class="card-title">Redeem</div>
+          <div if.to-view="!userScore">You have nothing to redeem</div>
+          <div if.to-view="!lockingPeriodIsEnded">The locking period has not ended, you can't yet redeem</div>
+          <button if.to-view="lockingPeriodIsEnded && userScore" class="btn-submit-proposal" click.delegate="redeem()">Redeem
             Reputation</button>
         </div>
       </div>
