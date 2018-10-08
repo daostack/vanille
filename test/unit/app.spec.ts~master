@@ -39,7 +39,7 @@ describe('the App module', () => {
 
   // commented-out until Aurelia fixes its d.ts to reference title:
   // it('configures the router title', () => {
-  //   expect(app.router.title).toEqual('DAOstack Vanille');
+  //   expect(app.router.title).toEqual('DutchX Bootstrapper');
   // });
 
   it('should have a home route', () => {

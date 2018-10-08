@@ -1,108 +1,43 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <ul class="nav nav-tabs scheme-tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" href="#AuctionStatus" data-toggle="tab" id="auction-status-tab" role="tab"
-          aria-controls="AuctionStatus" aria-selected="true">Status</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#AuctionControls" data-toggle="tab" id="auction-controls-tab" role="tab"
-          aria-controls="AuctionControls" aria-selected="false">Controls</a>
-      </li>
-    </ul>
 
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="AuctionStatus" role="tabpanel" aria-labelledby="auction-status-tab">
-        <div class="buttonAtTop">
-          <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+    <instructions>Bid the current account in the current auction. If all auctions are over, them redeem for a
+      given account.</instructions>
+    <form class="form">
+      <div class="card" if.to-view="!auctionIsOver" style="margin-bottom: 2rem">
+        <div class="card-body">
+          <div class="card-title">Bid</div>
+          <div class="form-group bmd-form-group" style="width: 10rem;">
+            <label for="bidAmount">Bid amount</label>
+            <input id="bidAmount" class="form-control" type="number" value.bind="bidAmount | ethwei & updateTrigger:'blur'" />
+            <span class="bmd-help">Number of tokens to bid</span>
+          </div>
+          <button class="btn-submit-proposal" click.delegate="bid(bidAmount)">Bid...</button>
         </div>
-        <table class="table plain-table table-responsive">
-          <tr>
-            <td>Wallet Address:</td>
-            <td class="has-etherscan-link">
-              <etherscanlink address.to-view="walletAddress"></etherscanlink>
-            </td>
-          </tr>
-          <tr>
-            <td>Token Address:</td>
-            <td class="has-etherscan-link">
-              <etherscanlink address.to-view="token.address"></etherscanlink>
-            </td>
-          </tr>
-          <tr>
-            <td>All Auctions Start Time:</td>
-            <td>${auctionsStartTime | date:'friendlyDateTime'}</td>
-          </tr>
-          <tr>
-            <td>All Auctions End Time:</td>
-            <td>${auctionsEndTime | date:'friendlyDateTime'}</td>
-          </tr>
-          <tr>
-            <td>All Auctions are Over:</td>
-            <td>${auctionIsOver | boolean}</td>
-          </tr>
-          <tr>
-            <td>Number of Auctions:</td>
-            <td>${numberOfAuctions}</td>
-          </tr>
-          <tr>
-            <td>Duration of Each Auction:</td>
-            <td>${auctionPeriod | timespan}</td>
-          </tr>
-          <tr>
-            <td>Reward Per Auction:</td>
-            <td>${auctionPeriodReward | ethwei}</td>
-          </tr>
-          <tr>
-            <td>Total Reputation Rewardable:</td>
-            <td>${totalReputationRewardable | ethwei}</td>
-          </tr>
-          <tr>
-            <td>Total Reputation Left to Reward:</td>
-            <td>${totalReputationRewardableLeft | ethwei}</td>
-          </tr>
-        </table>
       </div>
-      <div class="tab-pane fade" id="AuctionControls" role="tabpanel" aria-labelledby="auction-controls-tab">
-        <instructions>Bid the current account in the current auction. If all auctions are over, them redeem for a
-          given account.</instructions>
-        <form class="form">
-          <div class="card" if.to-view="!auctionIsOver" style="margin-bottom: 2rem">
-            <div class="card-body">
-              <div class="card-title">Bid</div>
-              <div class="form-group bmd-form-group" style="width: 10rem;">
-                <label for="bidAmount">Bid amount</label>
-                <input id="bidAmount" class="form-control" type="number" value.bind="bidAmount | ethwei & updateTrigger:'blur'" />
-                <span class="bmd-help">Number of tokens to bid</span>
-              </div>
-              <button class="btn-submit-proposal" click.delegate="bid(bidAmount)">Bid...</button>
-            </div>
+
+      <div class="card" if.to-view="auctionIsOver">
+        <div class="card-body">
+          <div class="card-title" style="margin-bottom: 1.5rem">Redeem</div>
+          <div class="dropdown">
+            <a class="dropdown-toggle" id="auctionIds" href="#" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">${(auctionId === -1) ? "Select an Auction" : "Auction " +
+              auctionId}</a>
+
+            <ul class="dropdown-menu" aria-labelledby="auctionIds">
+              <li class="dropdown-item" click.delegate="setAuctionId(auctionId)" repeat.for="auctionId of numberOfAuctions">Auction
+                ${auctionId}</li>
+            </ul>
           </div>
 
-          <div class="card" if.to-view="auctionIsOver">
-            <div class="card-body">
-              <div class="card-title" style="margin-bottom: 1.5rem">Redeem</div>
-              <div class="dropdown">
-                <a class="dropdown-toggle" id="auctionIds" href="#" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">${(auctionId === -1) ? "Select an Auction" : "Auction " +
-                  auctionId}</a>
-
-                <ul class="dropdown-menu" aria-labelledby="auctionIds">
-                  <li class="dropdown-item" click.delegate="setAuctionId(auctionId)" repeat.for="auctionId of numberOfAuctions">Auction
-                    ${auctionId}</li>
-                </ul>
-              </div>
-
-              <div class="form-group bmd-form-group">
-                <label for="beneficiaryAddress" class="input-group-text">Beneficiary Address</label>
-                <input id="beneficiaryAddress" class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
-                <span class="bmd-help">The beneficiary to receive redeemed reputation</span>
-              </div>
-              <button if.to-view="auctionId !== -1" class="btn-submit-proposal" click.delegate="redeem(auctionId, beneficiary)">Redeem...</button>
-            </div>
+          <div class="form-group bmd-form-group">
+            <label for="beneficiaryAddress" class="input-group-text">Beneficiary Address</label>
+            <input id="beneficiaryAddress" class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
+            <span class="bmd-help">The beneficiary to receive redeemed reputation</span>
           </div>
-        </form>
+          <button if.to-view="auctionId !== -1" class="btn-submit-proposal" click.delegate="redeem(auctionId, beneficiary)">Redeem...</button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>

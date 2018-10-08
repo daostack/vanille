@@ -1,6 +1,6 @@
 [![Build Status](https://api.travis-ci.org/daostack/vanille.svg?branch=master)](https://travis-ci.org/daostack/vanille)
 
-# DAOstack Vanille
+# DutchX Bootstrapper
 
 ## Introduction
 

@@ -1,73 +1,29 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <ul class="nav nav-tabs scheme-tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" href="#LockExtStatus" data-toggle="tab" id="ext-status-tab" role="tab" aria-controls="LockExtStatus"
-          aria-selected="true">Status</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#LockExtControls" data-toggle="tab" id="eth-locks-tab" role="tab" aria-controls="LockExtControls"
-          aria-selected="false">Lock</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#ExtLockersControls" data-toggle="tab" id="eth-lockers-tab" role="tab" aria-controls="ExtLockersControls"
-          aria-selected="false">Lockers</a>
-      </li>
-    </ul>
-
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="LockExtStatus" role="tabpanel" aria-labelledby="ext-status-tab">
-        <div class="buttonAtTop">
-          <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+    <instructions>Lock with an external contract, redeem reputation.</instructions>
+    <hr />
+    <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+    <form>
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-body">
+          <div class="card-title">Lock</div>
+          <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
+          <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked, you can't lock again</div>
+          <button if.to-view="!lockingPeriodIsEnded && !alreadyLocked" class="btn-submit-proposal" click.delegate="lock()">Submit
+            Lock for the Current Account</button>
         </div>
-        <table class="table plain-table table-responsive">
-          <tr>
-            <td>Total Score:</td>
-            <td textcontent.to-view="totalScore | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Lock Count:</td>
-            <td textcontent.to-view="lockCount"></td>
-          </tr>
-          <tr>
-            <td>Locking Start Time:</td>
-            <td textcontent.to-view="lockingStartTime | date:'friendlyDateTime'"></td>
-          </tr>
-          <tr>
-            <td>Locking End Time:</td>
-            <td textcontent.to-view="lockingEndTime | date:'friendlyDateTime'"></td>
-          </tr>
-          <tr>
-            <td>Locking Period is Ended:</td>
-            <td>${lockingPeriodIsEnded | boolean}</td>
-          </tr>
-          <tr>
-            <td>Reputation Rewardable:</td>
-            <td textcontent.to-view="totalReputationRewardable | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Reputation Left to Reward:</td>
-            <td textcontent.to-view="totalReputationRewardableLeft | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Max Locking Period:</td>
-            <td textcontent.to-view="maxLockingPeriod | timespan"></td>
-          </tr>
-        </table>
       </div>
-      <div class="tab-pane fade" id="LockExtControls" role="tabpanel" aria-labelledby="eth-locks-tab">
-        <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
-        <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked, you can't lock again</div>
-        <form if.to-view="!(lockingPeriodIsEnded || alreadyLocked)">
-          <div class="buttonAtTop" style="margin-top: .5rem">
-            <button class="btn-submit-proposal" click.delegate="lock()">Submit Lock for the Current Account</button>
-          </div>
-        </form>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Release and Redeem</div>
+          <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">The locking period has not ended, you can't yet
+            redeem</div>
+          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">You have nothing to redeem</div>
+          <button if.to-view="lockingPeriodIsEnded && alreadyLocked" class="btn-submit-proposal" click.delegate="redeem()">Redeem
+            Reputation</button>
+        </div>
       </div>
-      <div class="tab-pane fade" id="ExtLockersControls" role="tabpanel" aria-labelledby="eth-lockers-tab">
-        <lockers-for-reputation wrapper.to-view="wrapper" release.call="release({ lock })" renew.call="renew({lock})"
-          no-release-function="true"></lockers-for-reputation>
-      </div>
-    </div>
+    </form>
   </div>
 </template>

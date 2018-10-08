@@ -1,94 +1,47 @@
 <template>
   <div class="arc-scheme-dashboard">
-    <ul class="nav nav-tabs scheme-tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" href="#LockEthStatus" data-toggle="tab" id="eth-status-tab" role="tab" aria-controls="LockEthStatus"
-          aria-selected="true">Status</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#LockEthControls" data-toggle="tab" id="eth-locks-tab" role="tab" aria-controls="LockEthControls"
-          aria-selected="false">Lock Eth</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#EthLockersControls" data-toggle="tab" id="eth-lockers-tab" role="tab" aria-controls="EthLockersControls"
-          aria-selected="false">Lockers</a>
-      </li>
-    </ul>
+    <instructions>Lock ETH for a given period of time, release the ETH and redeem reputation.</instructions>
+    <hr />
+    <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
+    <form with.bind="lockModel">
 
-    <div class="tab-content">
-      <div class="tab-pane fade show active" id="LockEthStatus" role="tabpanel" aria-labelledby="eth-status-tab">
-        <div class="buttonAtTop">
-          <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
-        </div>
-        <table class="table plain-table table-responsive">
-          <tr>
-            <td>Total ETH Locked:</td>
-            <td textcontent.to-view="totalLocked | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Total Locked ETH Left:</td>
-            <td textcontent.to-view="totalLockedLeft | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Total Score:</td>
-            <td textcontent.to-view="totalScore | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Lock Count:</td>
-            <td textcontent.to-view="lockCount"></td>
-          </tr>
-          <tr>
-            <td>Locking Start Time:</td>
-            <td textcontent.to-view="lockingStartTime | date:'friendlyDateTime'"></td>
-          </tr>
-          <tr>
-            <td>Locking End Time:</td>
-            <td textcontent.to-view="lockingEndTime | date:'friendlyDateTime'"></td>
-          </tr>
-          <tr>
-            <td>Locking Period is Ended:</td>
-            <td>${lockingPeriodIsEnded | boolean}</td>
-          </tr>
-          <tr>
-            <td>Reputation Rewardable:</td>
-            <td textcontent.to-view="totalReputationRewardable | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Reputation Left to Reward:</td>
-            <td textcontent.to-view="totalReputationRewardableLeft | ethwei"></td>
-          </tr>
-          <tr>
-            <td>Max Locking Period:</td>
-            <td textcontent.to-view="maxLockingPeriod | timespan"></td>
-          </tr>
-        </table>
-      </div>
-      <div class="tab-pane fade" id="LockEthControls" role="tabpanel" aria-labelledby="eth-locks-tab">
-        <instructions>Lock ETH for a given period of time.</instructions>
-        <hr />
-        <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
-        <form else with.bind="lockModel">
-          <!-- <div class="form-group bmd-form-group">
-            <label class="bmd-label-static" for="lockerAddress">Locker Address</label>
-            <etherscanlink address.one-time="lockerAddress"></etherscanlink>
-          </div> -->
-          <div style="width: 10rem;">
-            <div class="form-group bmd-form-group">
-              <label for="lockAmount">Eth to Lock</label>
-              <input class="form-control" type='number' id="lockAmount" value.bind="amount | ethwei & updateTrigger:'blur'" />
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-body">
+          <div class="card-title">Lock</div>
+          <div if.to-view="lockingPeriodIsEnded">The locking period has ended, you can't lock</div>
+          <div else class="row" style="width: 30rem;">
+            <div class="col-6">
+              <div class="form-group bmd-form-group">
+                <label for="lockAmount">Eth to Lock</label>
+                <input class="form-control" type='number' id="lockAmount" value.bind="amount | ethwei & updateTrigger:'blur'" />
+              </div>
             </div>
-            <div class="form-group bmd-form-group">
-              <label for="lockingPeriod">Lock for How Long</label>
-              <input class="form-control" id="lockingPeriod" value.bind="period  | secondsDays & updateTrigger:'blur'" />
-              <span class="bmd-help">In days. Will be rounded down to the nearest second.</span>
+            <div class="col-6">
+              <div class="form-group bmd-form-group">
+                <label for="lockingPeriod">Lock for How Long</label>
+                <input class="form-control" id="lockingPeriod" value.bind="period  | secondsDays & updateTrigger:'blur'" />
+                <span class="bmd-help">In days. Will be rounded down to the nearest second.</span>
+              </div>
             </div>
+            <button class="btn-submit-proposal" click.delegate="lock()">Submit New Lock</button>
           </div>
-          <button class="btn-submit-proposal" click.delegate="lock()">Submit New Lock</button>
-        </form>
+        </div>
       </div>
-      <div class="tab-pane fade" id="EthLockersControls" role="tabpanel" aria-labelledby="eth-lockers-tab">
-        <lockers-for-reputation wrapper.to-view="wrapper" release.call="release({ lock })" renew.call="renew({lock})"></lockers-for-reputation>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Release and Redeem</div>
+
+          <div if.to-view="!lockingPeriodIsEnded && userScore">The locking period has not ended, you can't yet redeem</div>
+          <div if.to-view="lockingPeriodIsEnded && (userScore === 0)">You have nothing to redeem</div>
+          <button if.to-view="lockingPeriodIsEnded && userScore" class="btn-submit-proposal" click.delegate="redeem()">Redeem
+            Reputation</button>
+
+          <div if.bind="userScore">
+            <locks-for-reputation locks.to-view="getLocks()" release.call="release({lock})" wrapper.one-time="wrapper"></locks-for-reputation>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>

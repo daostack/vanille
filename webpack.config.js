@@ -16,8 +16,13 @@ const when = (condition, config, negativeConfig) =>
   condition ? ensureArray(config) : ensureArray(negativeConfig)
 
 // primary config:
+<<<<<<< add4ReputationContracts
 const title = 'DAOstack Vanille';
 let outDir;
+=======
+const title = 'DutchX Bootstrapper';
+const outDir = path.resolve(__dirname, 'dist');
+>>>>>>> first cut
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '/';

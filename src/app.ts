@@ -26,7 +26,7 @@ export class App {
 
   configureRouter(config: RouterConfiguration, router: Router) {
 
-    config.title = 'DAOstack Vanille';
+    config.title = 'DutchX Bootstrapper';
     /**
      * can be connected 
      */
@@ -66,29 +66,30 @@ export class App {
     }
     else {
       config.map([
-        { route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' },
+        { route: ['home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' },
         {
           route: ['organizations'],
           name: 'organizations',
           moduleId: PLATFORM.moduleName('./organizations/list'),
-          nav: true,
+          nav: false,
           title: 'DAOstack Ecosystem'
         }
         , {
           route: ['deployDAO'],
           name: 'deployDAO',
           moduleId: PLATFORM.moduleName('./organizations/deploy'),
-          nav: true,
+          nav: false,
           title: 'Birth a DAO'
         }
         , { route: ['test'], name: 'test', moduleId: PLATFORM.moduleName('./test'), nav: false, title: 'Test' },
         , {
           // 'address' will be present in the object passed to the 'activate' method of the viewmodel
-          route: ['daoDashboard/:address'],
+          // DutchX: set address to be optional, and this page as the default (instead of Home)
+          route: ['', 'daoDashboard/:address?'],
           name: 'daoDashboard',
           moduleId: PLATFORM.moduleName('./organizations/dashboard'),
           nav: false,
-          title: 'DAO Dashboard'
+          title: 'Dashboard'
         }
         , {
           // 'txHash' will be present in the object passed to the 'activate' method of the viewmodel

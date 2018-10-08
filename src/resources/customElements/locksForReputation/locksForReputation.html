@@ -1,12 +1,12 @@
 <template>
-  <table class="table">
+  <div if.to-view="_locks.length === 0">There are no locks to show</div>
+  <table else class="table">
     <thead class="thead-light">
       <tr>
         <!-- <th>Lock Id</th> -->
         <th style="text-align:center">Now Locked</th>
         <th>Locking Period End Date</th>
         <th if.to-view="anyCanRelease && !noReleaseFunction">&nbsp;</th>
-        <th if.to-view="anyCanRedeem">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
@@ -16,7 +16,6 @@
         <td style="padding-top: 1.3rem;">${lock.releaseTime | date:'friendlyDateTime' }</td>
         <td if.to-view="anyCanRelease && !noReleaseFunction"><button if.to-view="lock.canRelease" click.delegate="_release(lock)"
             class="btn btn-secondary btn-sm">Release</button></td>
-        <td if.to-view="anyCanRedeem"><button if.to-view="lock.canRedeem" click.delegate="_redeem(lock)" class="btn btn-secondary btn-sm">Redeem</button></td>
       </tr>
     </tbody>
   </table>

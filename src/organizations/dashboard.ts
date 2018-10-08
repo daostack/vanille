@@ -45,7 +45,8 @@ export class DAODashboard {
 
   async activate(options: any) {
 
-    this.address = options.address;
+    // DutchX hardcoded avatar
+    this.address = options.address || "0xf7b7be05d6c115184f78226f905b643dd577fa6b";
     this.org = await this.daoService.daoAt(this.address);
     if (this.org) {
       this.orgName = this.org.name;
@@ -121,7 +122,7 @@ export class DAODashboard {
     // add a fake non-Arc scheme
     // schemes.push(<SchemeInfo>{ address: "0x9ac0d209653719c86420bfca5d31d3e695f0b530" });
 
-    const nonArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => !s.inArc);
+    const nonArcSchemes = schemes.filter((s: SchemeInfo) => !s.inArc);
 
     for (let i = 0; i < nonArcSchemes.length; ++i) {
       const scheme = nonArcSchemes[i];
@@ -131,10 +132,21 @@ export class DAODashboard {
       }
     }
 
-    this.registeredArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc && s.inDao);
-    this.unregisteredArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc && !s.inDao);
-    this.nonArcSchemes = Array.from(schemes).filter((s: SchemeInfo) => !s.inArc);
-    this.arcSchemes = Array.from(schemes).filter((s: SchemeInfo) => s.inArc);
+    const dutchXSchemeNames = [
+      "Auction4Reputation",
+      "ExternalLocking4Reputation",
+      "FixedReputationAllocation",
+      "LockingEth4Reputation",
+      "LockingToken4Reputation",
+    ];
+
+    this.registeredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && s.inDao)
+      // DutchX: hack to remove all but the DutchX contracts
+      .filter((s: SchemeInfo) => dutchXSchemeNames.indexOf(s.name) !== -1);
+
+    this.unregisteredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && !s.inDao);
+    this.nonArcSchemes = schemes.filter((s: SchemeInfo) => !s.inArc);
+    this.arcSchemes = schemes.filter((s: SchemeInfo) => s.inArc);
 
     /**
      * Go through the nonArcSchemes and see whether we can identify any of them.

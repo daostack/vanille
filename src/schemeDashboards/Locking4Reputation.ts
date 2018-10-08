@@ -1,7 +1,7 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { ArcService, WrapperService, LockingOptions, LockerInfo, LockInfo, Locking4ReputationWrapper } from "../services/ArcService";
+import { ArcService, WrapperService, LockingOptions, LockerInfo, LockInfo, Locking4ReputationWrapper, Address } from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException, EventConfigFailure } from "../entities/GeneralEvents";
 import { BigNumber, Web3Service } from '../services/Web3Service';
 import { SchemeDashboardModel } from 'schemeDashboards/schemeDashboardModel';
@@ -23,14 +23,15 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
   lockCount: number;
   refreshing: boolean = false;
   maxLockingPeriod: number;
+  lockerInfo: LockerInfo;
+  userAddress: Address;
+  get userScore(): number { return this.lockerInfo ? this.web3Service.fromWei(this.lockerInfo.score).toNumber() : 0; }
 
   lockModel: LockingOptions = {
     lockerAddress: undefined,
     amount: undefined,
     period: undefined
   }
-
-  lockers: Array<LockerInfo> = [];
 
   constructor(
     protected eventAggregator: EventAggregator
@@ -41,6 +42,7 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
 
   async activate(model: SchemeDashboardModel) {
     this.wrapper = await WrapperService.factories[model.name].at(model.address);
+    this.userAddress = this.web3Service.defaultAccount;
     await this.refresh();
   }
 
@@ -58,8 +60,10 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
     this.lockingPeriodIsEnded = blockDate > this.lockingEndTime;
 
     this.maxLockingPeriod = await this.wrapper.getMaxLockingPeriod();
-    this.lockModel.lockerAddress = this.web3Service.defaultAccount;
+    this.lockModel.lockerAddress = this.userAddress;
+    this.lockerInfo = await this.getLockerInfo();
     this.refreshing = false;
+
   }
 
   protected async getLockBlocker(): Promise<boolean> {
@@ -116,21 +120,37 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
     return false;
   }
 
-  protected async redeem(lock: { lock: LockInfo }): Promise<boolean> {
-    const lockInfo = lock.lock;
+  protected async redeem(): Promise<boolean> {
+    const lockInfo = { lockerAddress: this.userAddress } as LockInfo;
 
     try {
 
       let result = await this.wrapper.redeem(lockInfo);
 
       this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-        `Reputation redeemed for ${lockInfo.lockerAddress}, lockId: ${lockInfo.lockId} `, result.tx));
+        `Reputation redeemed for ${lockInfo.lockerAddress}`, result.tx));
 
       return true;
 
     } catch (ex) {
-      this.eventAggregator.publish("handleException", new EventConfigException(`Error redeeming reputation for ${lockInfo.lockerAddress}, lockId: ${lockInfo.lockId} `, ex));
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error redeeming reputation for ${lockInfo.lockerAddress}`, ex));
     }
     return false;
+  }
+
+  // DutchX: dupe'd this from LockersForReputation.  Refactor.
+  private async getLocks(): Promise<Array<LockInfo>> {
+
+    const fetcher = (await this.wrapper.getLocks())(
+      { _locker: this.userAddress },
+      { fromBlock: 0 });
+
+    return (await fetcher.get())
+      // because _locker isn't indexed
+      .filter((li: LockInfo) => li.lockerAddress === this.userAddress);
+  }
+
+  private getLockerInfo(): Promise<LockerInfo> {
+    return this.wrapper.getLockerInfo(this.userAddress);
   }
 }
