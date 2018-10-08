@@ -1,9 +1,6 @@
-﻿import { autoinject } from "aurelia-framework";
-
-/**
+﻿/**
  * convert between boolean and string
  */
-@autoinject
 export class BooleanValueConverter {
 
   /**

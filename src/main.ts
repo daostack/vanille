@@ -69,6 +69,7 @@ export async function configure(aurelia: Aurelia) {
     PLATFORM.moduleName("resources/valueConverters/date"),
     PLATFORM.moduleName("resources/valueConverters/timespan"),
     PLATFORM.moduleName("resources/valueConverters/boolean"),
+    PLATFORM.moduleName("resources/valueConverters/secondsDays"),
     PLATFORM.moduleName("footer.html"),
     PLATFORM.moduleName("header.html")
   ]);

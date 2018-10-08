@@ -37,8 +37,9 @@
               </dd>
               <dt>Total Reputation Supply</dt>
               <dd textcontent.one-time="omega | ethwei"></dd>
-              <dt>User Reputation</dt>
-              <dd>${ userReputation | ethwei} (${omega.gt(0) ? userReputation/omega*100 : '--'}%)</dd>
+              <dt>Your Reputation</dt>
+              <dd title.to-view="omega.gt(0) ? (userReputation/omega*100) : ''">${ userReputation | ethwei}
+                (${omega.gt(0) ? (userReputation/omega*100).toFixed(2) : '--'}%)</dd>
             </dl>
           </div>
           <div class="col-sm-12 col-lg-2">

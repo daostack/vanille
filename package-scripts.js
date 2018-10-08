@@ -94,14 +94,15 @@ module.exports = {
     },
     webpack: {
       build: {
-        before: rimraf("dist"),
+        beforeDev: rimraf("dist"),
+        beforeProd: rimraf("dist-prod"),
         default: "nps webpack.build.production",
         development: {
           default: series(
-            "nps webpack.build.before",
+            "nps webpack.build.beforeDev",
             "webpack --progress -d"),
           extractCss: series(
-            "nps webpack.build.before",
+            "nps webpack.build.beforeDev",
             "webpack --progress -d --env.extractCss"
           ),
           // doesn't use the dist folder
@@ -109,11 +110,11 @@ module.exports = {
         },
         production: {
           default: series(
-            "nps webpack.build.before",
+            "nps webpack.build.beforeProd",
             "webpack --progress --env.production --env.extractCss"
           ),
           inlineCss: series(
-            "nps webpack.build.before",
+            "nps webpack.build.beforeProd",
             "webpack --progress --env.production"
           ),
           andServe: series(

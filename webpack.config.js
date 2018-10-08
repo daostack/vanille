@@ -17,7 +17,7 @@ const when = (condition, config, negativeConfig) =>
 
 // primary config:
 const title = 'DAOstack Vanille';
-const outDir = path.resolve(__dirname, 'dist');
+let outDir;
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '/';
@@ -41,6 +41,8 @@ const scssRules = [...cssRules,
 module.exports = ({ production, server, extractCss, coverage, network } = {}) => {
 
   let env = production ? 'production' : 'development';
+
+  outDir = path.resolve(__dirname, production ? 'dist_prod' : 'dist');
 
   // also taking from OS environment which is the only way I've found to supply it when when needed by HMR
   network = network || process.env.arcjs_network;
