@@ -1,8 +1,9 @@
 <template>
   <div class="arc-scheme-dashboard">
-
     <instructions>Bid the current account in the current auction. If all auctions are over, them redeem for a
       given account.</instructions>
+    <hr />
+    <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
     <form class="form">
       <div class="card" if.to-view="!auctionIsOver" style="margin-bottom: 2rem">
         <div class="card-body">
@@ -19,7 +20,7 @@
       <div class="card" if.to-view="auctionIsOver">
         <div class="card-body">
           <div class="card-title" style="margin-bottom: 1.5rem">Redeem</div>
-          <div class="dropdown">
+          <div class="dropdown mb-3">
             <a class="dropdown-toggle" id="auctionIds" href="#" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">${(auctionId === -1) ? "Select an Auction" : "Auction " +
               auctionId}</a>
@@ -30,12 +31,16 @@
             </ul>
           </div>
 
-          <div class="form-group bmd-form-group">
-            <label for="beneficiaryAddress" class="input-group-text">Beneficiary Address</label>
-            <input id="beneficiaryAddress" class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
-            <span class="bmd-help">The beneficiary to receive redeemed reputation</span>
+          <div if.to-view="(auctionId >= 0) && !userHasBid">You have not bid in this auction, so there is nothing to
+            redeem</div>
+          <div if.to-view="(auctionId >= 0) && userHasBid">
+            <div class="form-group bmd-form-group">
+              <label for="beneficiaryAddress" class="input-group-text">Beneficiary Address</label>
+              <input id="beneficiaryAddress" class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
+              <span class="bmd-help">The beneficiary to receive redeemed reputation</span>
+            </div>
+            <button if.to-view="auctionId !== -1" class="btn-submit-proposal" click.delegate="redeem(auctionId, beneficiary)">Redeem...</button>
           </div>
-          <button if.to-view="auctionId !== -1" class="btn-submit-proposal" click.delegate="redeem(auctionId, beneficiary)">Redeem...</button>
         </div>
       </div>
     </form>

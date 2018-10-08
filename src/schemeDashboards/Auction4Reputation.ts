@@ -23,6 +23,7 @@ export class Auction4Reputation extends DaoSchemeDashboard {
   auctionPeriodReward: BigNumber;
   auctionId: number = -1;
   auctionIsOver: boolean;
+  userHasBid: boolean = false;
   refreshing: boolean = false;
   refreshingLockers: boolean = false;
 
@@ -117,7 +118,12 @@ export class Auction4Reputation extends DaoSchemeDashboard {
     }
   }
 
+  async _userHasBid(auctionId: number): Promise<void> {
+    this.userHasBid = (await this.wrapper.getBid(this.web3Service.defaultAccount, auctionId)).gt(0);
+  }
+
   private setAuctionId(auctionId: number): void {
     this.auctionId = auctionId;
+    this._userHasBid(auctionId);
   }
 }
