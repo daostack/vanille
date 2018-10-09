@@ -95,7 +95,7 @@ module.exports = {
     webpack: {
       build: {
         beforeDev: rimraf("dist"),
-        beforeProd: rimraf("dist-prod"),
+        beforeProd: rimraf("dist_prod"),
         default: "nps webpack.build.production",
         development: {
           default: series(
@@ -106,7 +106,8 @@ module.exports = {
             "webpack --progress -d --env.extractCss"
           ),
           // doesn't use the dist folder
-          andServe: `webpack-dev-server -d --inline --hot --env.server --port 8090`
+          andServe: `webpack-dev-server -d --inline --hot --env.server --port 8090`,
+          browse: "http-server dist --cors -o -p 8090"
         },
         production: {
           default: series(
@@ -119,11 +120,16 @@ module.exports = {
           ),
           andServe: series(
             "nps webpack.build.production",
-            "nps browse")
+            "nps production.browse")
         }
       }
     },
+    production: {
+      browse: "http-server dist_prod --cors -o -p 8091"
+    },
+    development: {
+      browse: "http-server dist --cors -o -p 8091"
+    },
     hmr: "nps build.development.andServe",
-    browse: "http-server dist --cors -o -p 8090"
   }
 };
