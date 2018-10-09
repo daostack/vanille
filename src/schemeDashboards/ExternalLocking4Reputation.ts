@@ -9,10 +9,11 @@ export class ExternalLocking4ReputationDashboard extends Locking4Reputation {
   alreadyLocked: boolean;
   protected wrapper: ExternalLocking4ReputationWrapper;
 
-  async activate(model: SchemeDashboardModel) {
-    await super.activate(model);
-    this.hasReleaseFunction = false;
+  async refresh() {
+    await super.refresh();
+    super.refreshing = true;
     this.alreadyLocked = await this.wrapper.getAccountHasLocked(this.web3Service.defaultAccount);
+    super.refreshing = false;
   }
 
   protected async lock(): Promise<boolean> {

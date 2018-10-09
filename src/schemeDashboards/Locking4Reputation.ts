@@ -11,7 +11,6 @@ import { Utils } from 'services/utils';
 export abstract class Locking4Reputation extends DaoSchemeDashboard {
 
   protected wrapper: Locking4ReputationWrapper;
-  protected hasReleaseFunction: boolean = true;
   totalLocked: BigNumber;
   totalLockedLeft: BigNumber;
   totalScore: BigNumber;
@@ -25,6 +24,7 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
   maxLockingPeriod: number;
   lockerInfo: LockerInfo;
   userAddress: Address;
+  locks: Array<LockInfo>;
   get userScore(): number { return this.lockerInfo ? this.web3Service.fromWei(this.lockerInfo.score).toNumber() : 0; }
 
   lockModel: LockingOptions = {
@@ -43,7 +43,7 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
   async activate(model: SchemeDashboardModel) {
     this.wrapper = await WrapperService.factories[model.name].at(model.address);
     this.userAddress = this.web3Service.defaultAccount;
-    await this.refresh();
+    return this.refresh();
   }
 
   protected async refresh() {
@@ -58,12 +58,11 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
     this.lockCount = await this.wrapper.getLockCount();
     const blockDate = await Utils.lastBlockDate(this.web3Service.web3);
     this.lockingPeriodIsEnded = blockDate > this.lockingEndTime;
-
     this.maxLockingPeriod = await this.wrapper.getMaxLockingPeriod();
     this.lockModel.lockerAddress = this.userAddress;
     this.lockerInfo = await this.getLockerInfo();
     this.refreshing = false;
-
+    return this.getLocks();
   }
 
   protected async getLockBlocker(): Promise<boolean> {
@@ -101,10 +100,6 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
 
     try {
 
-      if (!this.hasReleaseFunction) {
-        throw new Error("this contract does not support releasing");
-      }
-
       let result = await (<any>this.wrapper).release(lockInfo);
 
       lockInfo.amount = new BigNumber(0);
@@ -139,13 +134,13 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
   }
 
   // DutchX: dupe'd this from LockersForReputation.  Refactor.
-  private async getLocks(): Promise<Array<LockInfo>> {
+  private async getLocks(): Promise<void> {
 
     const fetcher = (await this.wrapper.getLocks())(
       { _locker: this.userAddress },
       { fromBlock: 0 });
 
-    return (await fetcher.get())
+    this.locks = (await fetcher.get())
       // because _locker isn't indexed
       .filter((li: LockInfo) => li.lockerAddress === this.userAddress);
   }

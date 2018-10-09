@@ -46,7 +46,7 @@ export class DAODashboard {
   async activate(options: any) {
 
     // DutchX hardcoded avatar
-    this.address = options.address || "0xf7b7be05d6c115184f78226f905b643dd577fa6b";
+    this.address = options.address || "0x34c824e3c6b77fce6085e10f5a0c9b798623d384"; // "0xf7b7be05d6c115184f78226f905b643dd577fa6b";
     this.org = await this.daoService.daoAt(this.address);
     if (this.org) {
       this.orgName = this.org.name;

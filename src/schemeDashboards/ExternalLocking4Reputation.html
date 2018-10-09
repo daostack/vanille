@@ -17,8 +17,9 @@
       <div class="card">
         <div class="card-body">
           <div class="card-title">Redeem</div>
-          <div if.to-view="!userScore">You have nothing to redeem</div>
-          <div if.to-view="!lockingPeriodIsEnded">The locking period has not ended, you can't yet redeem</div>
+          <div if.to-view="!userScore" class="mb-3">You have nothing to redeem</div>
+          <div if.to-view="userScore && !lockingPeriodIsEnded" class="mb-3">The locking period has not ended, you can't
+            yet redeem</div>
           <button if.to-view="lockingPeriodIsEnded && userScore" class="btn-submit-proposal" click.delegate="redeem()">Redeem
             Reputation</button>
         </div>

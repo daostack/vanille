@@ -14,22 +14,14 @@
       <div if.to-view="!isEnabled">
         <div class="card" style="margin-bottom: 1.5rem">
           <div class="card-body">
-            <div class="card-title">Add Beneficiary</div>
             <div class="form-group bmd-form-group" style="width: 23rem;">
-              <input class="form-control" value.bind="beneficiary & updateTrigger:'blur'" />
-              <span class="bmd-help">Account address</span>
+              <input class="form-control" value.bind="beneficiary & updateTrigger:'blur'" placeholder="Beneficiary account address" />
             </div>
-            <button class="btn-submit-proposal" click.delegate="addBeneficiary(beneficiary)">Add...</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <div class="card-title">Add Beneficiaries</div>
+            <button class="btn-submit-proposal" click.delegate="addBeneficiary(beneficiary)">Add a Beneficiary...</button>
             <div class="form-group bmd-form-group">
-              <textarea class="form-control" rows="3" value.bind="beneficiaries & updateTrigger:'blur'"></textarea>
-              <span class="bmd-help">Comma-separated list of account addresses</span>
+              <textarea class="form-control" rows="3" value.bind="beneficiaries & updateTrigger:'blur'" placeholder="Comma-separated list of beneficiary account addresses"></textarea>
             </div>
-            <button class="btn-submit-proposal" click.delegate="addBeneficiaries(beneficiaries)">Add...</button>
+            <button class="btn-submit-proposal" click.delegate="addBeneficiaries(beneficiaries)">Add Beneficiaries...</button>
           </div>
         </div>
       </div>

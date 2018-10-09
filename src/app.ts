@@ -71,7 +71,7 @@ export class App {
           route: ['organizations'],
           name: 'organizations',
           moduleId: PLATFORM.moduleName('./organizations/list'),
-          nav: false,
+          nav: true,
           title: 'DAOstack Ecosystem'
         }
         , {

@@ -32,13 +32,14 @@
         <div class="card-body">
           <div class="card-title">Release and Redeem</div>
 
-          <div if.to-view="!lockingPeriodIsEnded && userScore">The locking period has not ended, you can't yet redeem</div>
-          <div if.to-view="lockingPeriodIsEnded && (userScore === 0)">You have nothing to redeem</div>
+          <div if.to-view="!userScore" class="mb-3">You have nothing to redeem</div>
+          <div if.to-view="userScore && !lockingPeriodIsEnded" class="mb-3">The locking period has not ended, you can't
+            yet redeem</div>
           <button if.to-view="lockingPeriodIsEnded && userScore" class="btn-submit-proposal" click.delegate="redeem()">Redeem
             Reputation</button>
 
           <div if.bind="userScore">
-            <locks-for-reputation locks.to-view="getLocks()" release.call="release({lock})" wrapper.one-time="wrapper"></locks-for-reputation>
+            <locks-for-reputation locks.to-view="locks" release.call="release({lock})" wrapper.one-time="wrapper"></locks-for-reputation>
           </div>
         </div>
       </div>
