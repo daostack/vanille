@@ -95,7 +95,7 @@ module.exports = {
     webpack: {
       build: {
         beforeDev: rimraf("dist"),
-        beforeProd: rimraf("dist-prod"),
+        beforeProd: rimraf("dist_prod"),
         default: "nps webpack.build.production",
         development: {
           default: series(

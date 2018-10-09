@@ -7,8 +7,9 @@
       <div class="card" style="margin-bottom: 2rem">
         <div class="card-body">
           <div class="card-title">Lock</div>
-          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">The locking period has ended, you can't lock</div>
-          <div if.to-view="alreadyLocked">You have already locked</div>
+          <div if.to-view="lockingPeriodIsEnded && alreadyLocked">The locking period has ended</div>
+          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">The locking period has ended, you can no longer lock</div>
+          <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked</div>
           <button if.to-view="!lockingPeriodIsEnded && !alreadyLocked" class="btn-submit-proposal" click.delegate="lock()">Submit
             Lock for the Current Account</button>
         </div>

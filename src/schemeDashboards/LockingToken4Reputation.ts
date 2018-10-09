@@ -18,11 +18,11 @@ export class LockingToken4Reputation extends Locking4Reputation {
   protected async lock(): Promise<boolean> {
     if (!(await this.getLockBlocker())) {
       const token = await this.wrapper.getToken();
-      await token.approve({
+      (await token.approve({
         owner: this.lockModel.lockerAddress,
         amount: this.lockModel.amount,
         spender: this.wrapper.address
-      });
+      })).watchForTxMined();
       return super.lock();
     }
     return false;

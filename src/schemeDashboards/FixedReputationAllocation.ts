@@ -25,7 +25,7 @@ export class FixedReputationAllocation extends DaoSchemeDashboard {
 
   async activate(model: SchemeDashboardModel) {
     this.wrapper = await WrapperService.factories[model.name].at(model.address);
-    await this.refresh();
+    return this.refresh();
   }
 
   protected async refresh() {
