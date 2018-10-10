@@ -3,7 +3,29 @@
 // @import "~bootstrap-sass/utilities/text";
 // @import "~bootstrap-sass/buttons";
 @import "~BMD/core"; 
-@import "~static/base";
+
+/** 
+  DAOstack palette.
+  Note that some of these colors are hard-coded in index.ejs.  TODO: Compile these colors into a straight
+  .css file for inclusion in index.ejs.
+*/
+$color-ds-black: #000000;
+$color-ds-grey-7: #202020;
+$color-ds-grey-6: #4C4C4C;
+$color-ds-grey-5: #757575;
+$color-ds-grey-4: #9B9B9B;
+$color-ds-grey-3: #B5B5B5;
+$color-ds-grey-2: #CECECE;
+$color-ds-grey-1: #EDEDED;
+$color-ds-white: #FFFFFF;
+$color-ds-lightblue: #48E3E6;
+$color-ds-darkblue: #007BBC;
+$color-ds-yellow: #FFD110;
+$color-ds-bluegreen: #1AAAAD;
+$color-ds-green: #3DBB7E;
+$color-ds-red: #E8290A;
+$color-ds-orange: #F25C05;
+
 @import "./src/organizations/list";
 @import "./src/home";
 @import "./src/schemeDashboards/schemeDashboard";
@@ -11,19 +33,184 @@
 @import "./src/resources/customElements/copyToClipboardButton/copyToClipboardButton";
 @import "./src/services/snackbars";
 
-.text-yellow {
-  color: $yellow-300 !important;
+
+.bg-warning {
+  background-color: $color-ds-red !important; }
+
+.footer a, .footer button, etherscanlink,
+.ethbalance, .genbalance
+ {
+  color: $color-ds-yellow;
 }
 
-.root.container {
-  margin-top: 80px;
-  margin-bottom: 50px;
+.footer a:hover, .footer button  {
+  color: $color-ds-yellow;
+  background-color: transparent;
+  text-decoration: underline;
 }
+
+a.bg-warning:focus, a.bg-warning:hover {
+  background-color: $color-ds-red !important; }
+
+.text-warning {
+  color: $color-ds-red !important; }
+
+a.text-warning:focus, a.text-warning:hover {
+  color: $color-ds-red !important; }
+
+.text-primary {
+  color: $color-ds-black !important;
+}
+
+.text-yellow {
+  color: $color-ds-yellow !important;
+}
+
+.btn-primary {
+  color: $color-ds-black !important;
+  background-color: $color-ds-yellow  !important;
+}
+
+.btn-primary {
+  color: $color-ds-black !important;
+  background-color: $color-ds-yellow  !important;
+}
+
+.root {
+  margin-bottom: 50px;
+  padding: 0;
+}
+
+@media print {
+  .hidden-print, .hidden-print * {
+      display: none !important;
+  }
+  .visible-print, .visible-print * {
+    display: inherit !important;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.nofocus:focus {
+  outline: none;
+}
+
+.hidden {
+  display:none;
+}
+
+.hot {
+  cursor: pointer;
+}
+
+.inline {
+  display: inline-block;
+}
+
+/** APPLICATION **/
+
+/* body {
+  background-color: rgb(238, 238, 238);
+} */
+
+h1 {
+  font-weight: 400;
+}
+
+h2 {
+  margin-bottom: 3rem; 
+}
+
+section h4 {
+  margin-bottom: 1rem;
+}
+
+.progress {
+  height: 1.25rem;
+}
+
+.form-group.address {
+  width: 20rem;
+}
+
+.form-group.address input.form-control {
+  width: inherit;
+}
+
+form {
+  padding-top: 0 !important;
+}
+
+.instructions {
+  margin-top: -1.5rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  color: $color-ds-white;
+  background-color: $color-ds-lightblue;
+}
+
+.instructions-body {
+  font-size: 1.1rem;
+  font-style: italic;
+  padding-left: 1rem;
+}
+
+.instructions i {
+  font-size: 2rem;
+}
+
+.arc-schemes-dropdown-button
+.voting-machine-dropdown-button
+.global-constraints-dropdown-button {
+  font-weight: bold;
+}
+
+/** eliminate the nasty 32 pixel margin that BMD adds **/
+.list-group.clean .list-group-item :first-child {
+  margin-right: unset; /* override BMD */
+}
+
+.list-group.clean .list-group-item .material-icons:last-child {
+  padding-left: unset !important;
+}
+
+.form-section-header {
+  font-weight: bold;
+  padding-top: 1.5rem;
+}
+
+.fee-input {
+  width:7rem;
+}
+
+.dropdown {
+  display: inline-block;
+}
+
+.tooltip {
+  z-index: 1000000;
+}
+
+/* animate page transitions */
+/* section.au-enter-active {
+  animation: fadeInRight 1s;
+} */
+
+/* div.au-stagger {
+  /* 50ms will be applied between each successive enter operation
+  animation-delay: 50ms;
+} */
 
 nav.footer {
-  background-color: $gray-300 !important;
+  background-color: $color-ds-grey-7 !important;
   padding-top: .5rem;
   padding-bottom: .5rem;
+  color: $color-ds-white;
 }
 
 nav.footer .addresses {
@@ -43,7 +230,7 @@ nav.footer .addresses .userAddress {
 }
 
 nav.header {
-  background-color: $gray-800 !important;
+  background-color: $color-ds-black !important;
   z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
 }
 
@@ -75,12 +262,12 @@ nav.header .company-name {
 }
 
 .collapseButtonIcon:not(.collapsed)::after {
-  color: $gray-500;
+  color: $color-ds-grey-4;
   content: "\0020\25B2";
 }
 
 .collapseButtonIcon.collapsed::after {
-  color: $gray-500;
+  color: $color-ds-grey-4;
   content: "\0020\25BC";
 }
 

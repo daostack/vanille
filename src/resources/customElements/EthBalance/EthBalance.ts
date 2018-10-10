@@ -7,6 +7,7 @@ import { Web3Service } from "../../../services/Web3Service";
 export class EthBalance {
 
   private ethBalance: string = '';
+  private rawBalance: string = '';
   private ethAddress: string;
   private filter: any;
 
@@ -39,7 +40,9 @@ export class EthBalance {
 
   async getBalance() {
     try {
-      this.ethBalance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress)).toExponential(2);
+      const balance = this.web3.fromWei(await this.web3.getBalance(this.ethAddress));
+      this.rawBalance = balance.toString(10);
+      this.ethBalance = balance.toExponential(2);
       this.text = `${this.ethBalance} ETH`;
     } catch (ex) {
     }

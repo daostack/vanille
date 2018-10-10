@@ -1,7 +1,11 @@
 import { autoinject } from 'aurelia-framework';
 import { DaoSchemeDashboard } from "./schemeDashboard"
 import { EventAggregator } from 'aurelia-event-aggregator';
-import { WrapperService, LockingOptions, LockerInfo, LockInfo, Address, FixedReputationAllocationWrapper } from "../services/ArcService";
+import {
+  WrapperService,
+  Address,
+  FixedReputationAllocationWrapper
+} from "../services/ArcService";
 import { EventConfigTransaction, EventConfigException } from "../entities/GeneralEvents";
 import { BigNumber, Web3Service } from '../services/Web3Service';
 import { SchemeDashboardModel } from 'schemeDashboards/schemeDashboardModel';

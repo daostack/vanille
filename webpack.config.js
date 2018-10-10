@@ -173,12 +173,11 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       }),
       new CopyWebpackPlugin([
         { from: 'static/favicon.ico' },
+        { from: 'static/daostack-icon-white.svg' },
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
         { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css' },
         { from: 'node_modules/snackbarjs/dist/snackbar.min.css' },
         { from: 'node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css' },
-        // for the spash page
-        { from: 'static/base.css' },
       ]),
       ...when(extractCss, new ExtractTextPlugin({
         filename: production ? '[contenthash].css' : '[id].css',

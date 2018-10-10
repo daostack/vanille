@@ -1,4 +1,9 @@
 .copy-to-clip-button {
   padding: .25rem;
-  color: $green-700;
+  color: $color-ds-yellow;
+}
+
+.copy-to-clip-button:hover {
+  background-color: transparent;
+  color: $color-ds-yellow;
 }

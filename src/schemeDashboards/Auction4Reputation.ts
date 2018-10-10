@@ -20,7 +20,6 @@ export class Auction4Reputation extends DaoSchemeDashboard {
   auctionReputationReward: BigNumber;
   walletAddress: Address;
   token: StandardTokenWrapper;
-  auctionPeriodReward: BigNumber;
   auctionId: number = -1;
   auctionIsOver: boolean;
   userHasBid: boolean = false;
@@ -46,10 +45,9 @@ export class Auction4Reputation extends DaoSchemeDashboard {
     this.auctionPeriod = await this.wrapper.getAuctionPeriod();
     this.totalReputationRewardable = await this.wrapper.getReputationReward();
     this.totalReputationRewardableLeft = await this.wrapper.getReputationRewardLeft();
-    this.auctionPeriodReward = await this.wrapper.getAuctionReputationReward();
     this.auctionsStartTime = await this.wrapper.getAuctionsStartTime();
     this.auctionsEndTime = await this.wrapper.getAuctionsEndTime();
-    this.numberOfAuctions = await this.wrapper.getNumberOfAuctions();
+    // this.numberOfAuctions = await this.wrapper.getNumberOfAuctions();
     this.auctionIsOver = (await Utils.lastBlockDate(this.web3Service.web3)) >= this.auctionsEndTime;
     this.refreshing = false;
   }

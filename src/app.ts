@@ -21,7 +21,12 @@ export class App {
   }
 
   attached() {
-    (<any>$('body')).bootstrapMaterialDesign({ global: { label: { className: "bmd-label-floating" } } });
+    (<any>$('body'))
+      .css({
+        "color": "black",
+        "background-color": "white"
+      })
+      .bootstrapMaterialDesign({ global: { label: { className: "bmd-label-floating" } } });
   }
 
   configureRouter(config: RouterConfiguration, router: Router) {
@@ -66,7 +71,6 @@ export class App {
     }
     else {
       config.map([
-        { route: ['home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' },
         {
           route: ['organizations'],
           name: 'organizations',
@@ -74,14 +78,7 @@ export class App {
           nav: true,
           title: 'DAOstack Ecosystem'
         }
-        , {
-          route: ['deployDAO'],
-          name: 'deployDAO',
-          moduleId: PLATFORM.moduleName('./organizations/deploy'),
-          nav: false,
-          title: 'Birth a DAO'
-        }
-        , { route: ['test'], name: 'test', moduleId: PLATFORM.moduleName('./test'), nav: false, title: 'Test' },
+        ,
         , {
           // 'address' will be present in the object passed to the 'activate' method of the viewmodel
           // DutchX: set address to be optional, and this page as the default (instead of Home)

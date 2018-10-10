@@ -7,52 +7,19 @@
       <h4>DAO at ${address} was not found</h4>
     </div>
     <div else ref="dashboardElement">
-      <section class="dashboard-header">
-        <h2 class="dao-name">
-          <img src="../../static/dao-icon.svg" />${orgName}</h2>
-      </section>
-      <section>
-        <h3>Basic Information</h3>
-        <div class="row">
-          <div class="col-sm-12 col-lg-6">
-            <dl>
-              <dt>Avatar</dt>
-              <dd>
-                <etherscanlink style="white-space: nowrap" address.one-time="address"></etherscanlink>
-              </dd>
-            </dl>
-            <dl>
-              <dt>Reputation Address</dt>
-              <dd>
-                <etherscanlink style="white-space: nowrap" address.one-time="org.reputation.address"></etherscanlink>
-              </dd>
-            </dl>
-          </div>
-          <div class="col-sm-12 col-lg-6">
-            <dl>
-              <dt>Total Reputation Supply</dt>
-              <dd textcontent.one-time="omega | ethwei"></dd>
-            </dl>
-            <dl>
-              <dt>Your Reputation</dt>
-              <dd title.to-view="omega.gt(0) ? (userReputation/omega*100) : ''">${ userReputation | ethwei}
-                (${omega.gt(0) ? (userReputation/omega*100).toFixed(2) : '--'}%)</dd>
-            </dl>
-          </div>
-        </div>
-      </section>
+      <div class="dashboard-header">
+        <div class="dao-name">
+          <img src="../../static/daostack-icon-white.svg" />${orgName}</div>
+      </div>
 
-      <section show.bind="registeredArcSchemes.length">
-        <h3>Dashboards</h3>
-
-        <div id="accordion_arc_schemes" role="tablist">
+      <div class="dashboard-schemes-container row" id="accordion_arc_schemes" role="tablist" show.bind="registeredArcSchemes.length">
+        <div class="col-8 offset-2">
           <ul class="list-group clean dashboard-schemes">
             <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
               <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
                 aria-controls="#${scheme.name}">
                 <div class="col-12">
                   <div class="scheme-name">${scheme.friendlyName}</div>
-                  <etherscanlink address.one-time="scheme.address"></etherscanlink>
                 </div>
               </div>
               <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordion_arc_schemes">
@@ -66,8 +33,7 @@
             </li>
           </ul>
         </div>
-
-      </section>
+      </div>
     </div>
   </div>
 </template>

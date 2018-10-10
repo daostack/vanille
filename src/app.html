@@ -1,5 +1,5 @@
 <template>
-  <div class="root container animated fadeIn">
+  <div class="root container-fluid animated fadeIn">
     <header if.bind="healthy && (router.currentInstruction.config.name !== 'home')" router.bind="router" , network.bind="network"></header>
 
     <router-view></router-view>

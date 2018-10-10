@@ -14,30 +14,33 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
-<body>
+<body style="background-color: black; color: white">
   <!-- Bootstrap Material Design -->
   <div aurelia-app="main">
     <link rel="stylesheet" href="./snackbar.min.css">
     <link rel="stylesheet" href="./bootstrap-material-design.min.css">
-    <link rel="stylesheet" href="base.css">
-    <div class="container">
-      <div class="section" style="text-align: center">
-        <h1 style="margin-bottom: 2rem;">Welcome to
-          <%- htmlWebpackPlugin.options.metadata.title %>
-        </h1>
-        <h4 style="margin-bottom:2.75rem">Breath deeply while we fetch some JavaScript, connect to the blockchain and load the DAOstack ecosystem...</h4>
-        <i class="fa fa-circle-o-notch fa-spin fa-4x text-primary"></i>
-        <!-- <div class="progress" style="height: 1.5rem;">
+    <div class="container-fluid">
+      <div class="row" style="padding-top: 20%; text-align: center">
+        <div class="col-6 offset-3">
+          <img style="margin-bottom: 3.5rem; width: 6rem" src="./daostack-icon-white.svg" />
+          <h1 style=" margin-bottom: 2rem;font-weight: 400; color:#007BBC">Welcome to
+            <%- htmlWebpackPlugin.options.metadata.title %>
+          </h1>
+          <h4 style="margin-bottom:10rem">Breath deeply while we fetch some JavaScript, connect to the blockchain and
+            load the DAOstack ecosystem...</h4>
+          <i style="color: #007BBC" class="fa fa-circle-o-notch fa-spin fa-4x"></i>
+          <!-- <div class="progress" style="height: 1.5rem;">
               <div style="height: 100%" class="teal darken-2 progress-bar progress-bar-striped progress-bar-animated w-100" role="progressbar"></div>
           </div> -->
+        </div>
       </div>
     </div>
   </div>
 
   <% if (htmlWebpackPlugin.options.metadata.server) { %>
-    <!-- Webpack Dev Server reload -->
-    <script src="/webpack-dev-server.js"></script>
-    <% } %>
+  <!-- Webpack Dev Server reload -->
+  <script src="/webpack-dev-server.js"></script>
+  <% } %>
 </body>
 
 </html>

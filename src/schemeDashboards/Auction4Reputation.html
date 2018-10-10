@@ -1,8 +1,7 @@
 <template>
+  <instructions>Bid the current account in the current auction. If all auctions are over, them redeem for a
+    given account.</instructions>
   <div class="arc-scheme-dashboard">
-    <instructions>Bid the current account in the current auction. If all auctions are over, them redeem for a
-      given account.</instructions>
-    <hr />
     <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
     <form class="form">
       <div class="card" if.to-view="!auctionIsOver" style="margin-bottom: 2rem">
@@ -22,7 +21,8 @@
           <div class="card-title" style="margin-bottom: 1.5rem">Redeem</div>
           <div class="dropdown mb-3">
             <a class="dropdown-toggle" id="auctionIds" href="#" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">${(auctionId === -1) ? "Select an Auction" : "Auction " +
+              aria-expanded="false">${(auctionId
+              === -1) ? "Select an Auction" : "Auction " +
               auctionId}</a>
 
             <ul class="dropdown-menu" aria-labelledby="auctionIds">

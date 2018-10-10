@@ -1,7 +1,6 @@
 <template>
+  <instructions>Lock tokens for a given period of time, release the tokens and redeem reputation.</instructions>
   <div class="arc-scheme-dashboard">
-    <instructions>Lock tokens for a given period of time, release the tokens and redeem reputation.</instructions>
-    <hr />
     <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
     <form with.bind="lockModel">
       <div class="card" style="margin-bottom: 2rem">

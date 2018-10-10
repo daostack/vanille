@@ -1,7 +1,7 @@
 import { autoinject } from "aurelia-framework";
 import { DaoService, VanilleDAO } from "../services/DaoService";
 import { TokenService } from "../services/TokenService";
-import { ArcService, WrapperService, Hash } from "../services/ArcService";
+import { ArcService, WrapperService, Hash, StandardTokenWrapper, Utils } from "../services/ArcService";
 import { SchemeService, SchemeInfo } from "../services/SchemeService";
 import { AureliaHelperService } from "../services/AureliaHelperService";
 import { App } from '../app';
@@ -46,7 +46,8 @@ export class DAODashboard {
   async activate(options: any) {
 
     // DutchX hardcoded avatar
-    this.address = options.address || "0x34c824e3c6b77fce6085e10f5a0c9b798623d384"; // "0xf7b7be05d6c115184f78226f905b643dd577fa6b";
+    this.address = options.address ||
+      ((this.web3Service.networkName == "Ganache") ? "0xf7b7be05d6c115184f78226f905b643dd577fa6b" : "0x34c824e3c6b77fce6085e10f5a0c9b798623d384");
     this.org = await this.daoService.daoAt(this.address);
     if (this.org) {
       this.orgName = this.org.name;
@@ -132,18 +133,19 @@ export class DAODashboard {
       }
     }
 
-    const dutchXSchemeNames = [
-      "Auction4Reputation",
-      "ExternalLocking4Reputation",
-      "FixedReputationAllocation",
-      "LockingEth4Reputation",
-      "LockingToken4Reputation",
-    ];
+    const dutchXSchemes = new Map<string, { description: string }>([
+      ["Auction4Reputation", { description: "BID GEN" }],
+      ["ExternalLocking4Reputation", { description: "LOCK MGN" }],
+      ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
+      ["LockingEth4Reputation", { description: "LOCK ETH" }],
+      ["LockingToken4Reputation", { description: "LOCK GNO" }],
+    ]);
 
     this.registeredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && s.inDao)
       // DutchX: hack to remove all but the DutchX contracts
-      .filter((s: SchemeInfo) => dutchXSchemeNames.indexOf(s.name) !== -1);
+      .filter((s: SchemeInfo) => dutchXSchemes.has(s.name));
 
+    this.registeredArcSchemes.map((s) => { s.friendlyName = dutchXSchemes.get(s.name).description; });
     this.unregisteredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && !s.inDao);
     this.nonArcSchemes = schemes.filter((s: SchemeInfo) => !s.inArc);
     this.arcSchemes = schemes.filter((s: SchemeInfo) => s.inArc);

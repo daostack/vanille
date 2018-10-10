@@ -10,6 +10,7 @@
    */
   padding-top: 0;
   padding-bottom: 0;
+  background-color: $color-ds-grey-2;
 }
 
 .dashboard-schemes li.list-group-item.selected {
@@ -18,6 +19,7 @@
    */
   padding-top: 0;
   padding-bottom: 1rem;
+  background-color: $color-ds-grey-1;
 }
 
 .dashboard-schemes li.list-group-item:not(.selected) .scheme-use-button {
@@ -37,7 +39,6 @@
 
 .dashboard-schemes li.list-group-item .scheme-name {
   font-weight: bold;
-  margin-bottom:.5rem;
 }
 
 .dashboard-schemes li.list-group-item div.row {
@@ -45,15 +46,25 @@
   cursor: pointer; 
 }
 
-.dashboard-schemes li.list-group-item:hover {
-  background-color: lightgrey;
+.dashboard-schemes li.list-group-item:not(.selected):hover {
+  background-color: $color-ds-lightblue;
+}
+
+.dashboard-header {
+  font-size: 2rem;
+  text-align: center;
+  background-color: $color-ds-darkblue;
+  padding-top: 6rem;
+  padding-bottom: 2rem;
+  color: $color-ds-white;
+  margin-bottom: 3rem;
+}
+
+.dashboard-header .dao-name {
+  padding-left: 1rem;
 }
 
 .dashboard-header .dao-name img {
   width: 4rem;
   margin-right:1rem;
-}
-
-.dashboard-schemes li.list-group-item.selected {
-  background-color: lightgrey;
 }
