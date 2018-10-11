@@ -20,20 +20,10 @@
   background-color: $color-ds-grey-1;
 }
 
-.dashboard-schemes li.list-group-item:not(.selected) .scheme-use-button {
-  /**
-   * to expand the "hot" clickable area
-   */
+.dashboard-schemes li.list-group-item .scheme-use-button {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.dashboard-schemes li.list-group-item.selected .scheme-use-button {
-  /**
-   * to expand the "hot" clickable area
-   */
-  padding-top: 1rem;
-}
+ }
 
 .dashboard-schemes li.list-group-item .scheme-name {
   font-weight: bold;

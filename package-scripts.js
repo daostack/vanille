@@ -92,6 +92,14 @@ module.exports = {
         andServe: "nps webpack.build.development.andServe"
       }
     },
+    browse: {
+      production: {
+        default: "http-server dist_prod --cors -o -p 8091"
+      },
+      development: {
+        default: "http-server dist --cors -o -p 8090"
+      }
+    },
     webpack: {
       build: {
         beforeDev: rimraf("dist"),
@@ -124,6 +132,5 @@ module.exports = {
       }
     },
     hmr: "nps build.development.andServe",
-    browse: "http-server dist --cors -o -p 8090"
   }
 };

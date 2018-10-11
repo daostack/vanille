@@ -47,26 +47,26 @@ export class DAODashboard {
 
     // DutchX hardcoded avatar
     this.address = options.address ||
-      ((this.web3Service.networkName == "Ganache") ? "0xf7b7be05d6c115184f78226f905b643dd577fa6b" : "0x34c824e3c6b77fce6085e10f5a0c9b798623d384");
+      ((this.web3Service.networkName == "Ganache") ? "0xf7b7be05d6c115184f78226f905b643dd577fa6b" : "0xeeb9d711c43d9c79a8cbf30f859dbdbb80c2b9cf");
     this.org = await this.daoService.daoAt(this.address);
     if (this.org) {
       this.orgName = this.org.name;
-      let token = this.org.token;
-      this.tokenSymbol = await this.tokenService.getTokenSymbol(token);
-      // in Wei
-      this.daoTokenbalance = await this.tokenService.getTokenBalance(token, this.org.address);
-      this.daoEthbalance = await this.web3Service.getBalance(this.org.address);
-      try {
-        const genToken = await this.tokenService.getGlobalGenToken();
-        this.daoGenbalance = await this.tokenService.getTokenBalance(genToken, this.org.address);
-      } catch (ex) {
-        this.daoGenbalance = new BigNumber(0);
-      }
+      // let token = this.org.token;
+      // this.tokenSymbol = await this.tokenService.getTokenSymbol(token);
+      // // in Wei
+      // this.daoTokenbalance = await this.tokenService.getTokenBalance(token, this.org.address);
+      // this.daoEthbalance = await this.web3Service.getBalance(this.org.address);
+      // try {
+      //   const genToken = await this.tokenService.getGlobalGenToken();
+      //   this.daoGenbalance = await this.tokenService.getTokenBalance(genToken, this.org.address);
+      // } catch (ex) {
+      //   this.daoGenbalance = new BigNumber(0);
+      // }
 
-      // in Wei
-      this.omega = this.org.omega;
-      this.userReputation = await this.org.reputation.getBalanceOf(this.web3Service.defaultAccount);
-      this.userNativeTokens = await token.getBalanceOf(this.web3Service.defaultAccount);
+      // // in Wei
+      // this.omega = this.org.omega;
+      // this.userReputation = await this.org.reputation.getBalanceOf(this.web3Service.defaultAccount);
+      // this.userNativeTokens = await token.getBalanceOf(this.web3Service.defaultAccount);
 
       this.subscription = this.org.subscribe(VanilleDAO.daoSchemeSetChangedEvent, this.handleSchemeSetChanged.bind(this));
     } else {
