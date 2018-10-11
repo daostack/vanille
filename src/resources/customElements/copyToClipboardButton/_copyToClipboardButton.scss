@@ -8,12 +8,13 @@
   color: $color-ds-black;
 }
 
-.footer .copy-to-clip-button {
+.footer .copy-to-clip-button,
+.etherscanlink .copy-to-clip-button {
   padding: .25rem;
   color: $color-ds-yellow;
 }
 
-.footer .copy-to-clip-button:hover {
-  background-color: transparent;
+.footer .copy-to-clip-button:hover,
+.etherscanlink .copy-to-clip-button:hover {
   color: $color-ds-yellow;
 }

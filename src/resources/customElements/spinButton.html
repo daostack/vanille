@@ -1,5 +1,5 @@
 <template bindable="onclick, css, title, text, spin, asButton">
-  <button if.bind="asButton" click.delegate="onclick()" title.to-view="title" class-name="${ css ? css : 'btn btn-primary '}">
+  <button if.bind="asButton" click.delegate="onclick()" title.to-view="title" class-name="${ css ? css : 'btn btn-sm btn-secondary '}">
     <span style="margin-right: .5rem">${text}</span>
     <span class="fa-refresh fa ${spin ? 'fa-spin': ''}"></span></button>
   <div else click.delegate="onclick()" textcontent.to-view="text" title.to-view="title" class-name="${ css ? css : 'inline text-primary fa-refresh' } fa ${spin ? 'fa-spin': ''}"></div>

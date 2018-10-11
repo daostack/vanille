@@ -2,7 +2,7 @@
 // @import "~mdbootstrap-sass/data/colors";
 // @import "~bootstrap-sass/utilities/text";
 // @import "~bootstrap-sass/buttons";
-@import "~BMD/core"; 
+
 
 /** 
   DAOstack palette.
@@ -26,6 +26,14 @@ $color-ds-green: #3DBB7E;
 $color-ds-red: #E8290A;
 $color-ds-orange: #F25C05;
 
+$popover-bg:  $color-ds-black;
+$popover-arrow-color: $color-ds-black;
+$popover-header-color: $color-ds-white;
+$popover-body-color: $color-ds-white;
+$popover-max-width: 23rem;
+
+@import "~BMD/core"; 
+
 @import "./src/organizations/list";
 @import "./src/home";
 @import "./src/schemeDashboards/schemeDashboard";
@@ -36,6 +44,10 @@ $color-ds-orange: #F25C05;
 
 .bg-warning {
   background-color: $color-ds-red !important; }
+
+.footer {
+  font-size: .9rem;
+}
 
 .footer a, .footer button, etherscanlink,
 .ethbalance, .genbalance
@@ -303,17 +315,29 @@ form .card-title {
   font-size: 1.1rem;
 }
 
+// .tooltip .tooltip-inner,
+// .popover .popover-header,
+// .popover .popover-title,
+// .popover .popover-body {
+//   color: $color-ds-white;
+//   background-color: $color-ds-black;
+// }
 
-.tooltip .tooltip-inner {
-  color: $color-ds-white;
-  background-color: $color-ds-black;
-}
+// .popover .popover-header {
+//   font-weight: 400;
+//   border-bottom-width: 0;
+// }
 
-.tooltip  .tooltip-inner .title {
-  font-weight: 600;
-  display: block;
-}
+// .tooltip .arrow::before,
+// .popover .arrow::after {
+//   border-bottom-color: $color-ds-black;
+// }
 
-.tooltip  .tooltip-inner .body {
-  display: block;
-}
+// .tooltip  .tooltip-inner .title {
+//   font-weight: 600;
+//   display: block;
+// }
+
+// .tooltip  .tooltip-inner .body {
+//   display: block;
+// }

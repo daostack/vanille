@@ -9,7 +9,6 @@ export class LocksForReputation {
     this.currentAccount = web3Service.defaultAccount;
   }
 
-  _locks: Array<LockInfoX>;
   currentAccount: Address;
   anyCanRelease: boolean;
   // anyCanRedeem: boolean;

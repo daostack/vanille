@@ -3,25 +3,20 @@
   <div class="arc-scheme-dashboard">
     <spinbutton onclick.call="refresh()" as-button="true" text="Refresh" spin.to-view="refreshing" title="Refresh"></spinbutton>
     <form>
-      <div class="card" style="margin-bottom: 2rem">
+      <div if.bind="!lockingPeriodIsEnded" class="card" style="margin-bottom: 2rem">
         <div class="card-body">
           <div class="card-title">Lock</div>
-          <div if.to-view="lockingPeriodIsEnded && alreadyLocked">The locking period has ended</div>
-          <div if.to-view="lockingPeriodIsEnded && !alreadyLocked">The locking period has ended, you can no longer lock</div>
           <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked</div>
-          <button if.to-view="!lockingPeriodIsEnded && !alreadyLocked" class="btn-submit-proposal" click.delegate="lock()">Submit
+          <button else class="btn-submit-proposal" click.delegate="lock()">Submit
             Lock for the Current Account</button>
         </div>
       </div>
 
-      <div class="card">
+      <div if.bind="lockingPeriodIsEnded" class="card">
         <div class="card-body">
           <div class="card-title">Redeem</div>
           <div if.to-view="!userScore" class="mb-3">You have nothing to redeem</div>
-          <div if.to-view="userScore && !lockingPeriodIsEnded" class="mb-3">The locking period has not ended, you can't
-            yet redeem</div>
-          <button if.to-view="lockingPeriodIsEnded && userScore" class="btn-submit-proposal" click.delegate="redeem()">Redeem
-            Reputation</button>
+          <button else class="btn-submit-proposal" click.delegate="redeem()">Redeem Reputation</button>
         </div>
       </div>
     </form>

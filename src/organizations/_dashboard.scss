@@ -58,7 +58,10 @@
   margin-right:1rem;
 }
 
-.dashboard-header .hover-icon {
+.dashboard-header .hover-icon img {
   width: 2rem;
-  cursor: pointer;
+}
+
+.dashboard-header .hover-icon {
+  padding: .5rem; /* helps position the tooltip */
 }

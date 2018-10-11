@@ -136,7 +136,7 @@ export class DAODashboard {
     const dutchXSchemes = new Map<string, { description: string }>([
       ["Auction4Reputation", { description: "BID GEN" }],
       ["ExternalLocking4Reputation", { description: "LOCK MGN" }],
-      ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
+      // ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
       ["LockingEth4Reputation", { description: "LOCK ETH" }],
       ["LockingToken4Reputation", { description: "LOCK GNO" }],
     ]);
@@ -181,17 +181,27 @@ export class DAODashboard {
   }
 
   private polishDom() {
+    setTimeout(() => {
+      const button = $("#avatarHoverIcon") as any;
 
-    // setTimeout(() => {
-    //   ($("#avatarHoverIcon") as any).tooltip({
-    //     toggle: "tooltip",
-    //     placement: "bottom",
-    //     trigger: "hover focus",
-    //     container: "body",
-    //     title: `<span class="tooltip"><span class="title">Avatar</span><span class="body">${this.address}</span></span>`,
-    //     html: true
-    //   });
-    // }, 0);
+      button.popover({
+        toggle: "popover",
+        placement: "bottom",
+        trigger: "manual",
+        container: "body",
+        // title: `<span class="tooltip"><span class="title">Avatar</span><span class="body">${this.address}</span></span>`,
+        title: `DAO`,
+        content: `<div class="nowrap"><etherscanlink address='${this.address}'></etherscanlink></div>`,
+        html: true
+      })
+        .click((evt: any) => {
+          button.popover('toggle');
+        })
+        .on('shown.bs.popover', (evt: any) => {
+          this.aureliaHelperService.enhanceElement($('.popover.show')[0], this);
+        });
+
+    }, 0);
   }
 
   private async handleSchemeSetChanged(params: { dao: VanilleDAO, scheme: SchemeInfo }) {
