@@ -174,6 +174,8 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
       new CopyWebpackPlugin([
         { from: 'static/favicon.ico' },
         { from: 'static/daostack-icon-white.svg' },
+        { from: 'static/daostack-icon-black.svg' },
+        { from: 'static/gnosis-token.png' },
         { from: 'node_modules/font-awesome/fonts', to: 'fonts' },
         { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'font-awesome.min.css' },
         { from: 'node_modules/snackbarjs/dist/snackbar.min.css' },

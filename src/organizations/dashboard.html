@@ -24,7 +24,10 @@
               <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
                 aria-controls="#${scheme.name}">
                 <div class="col-12">
-                  <div class="scheme-name">${scheme.friendlyName}</div>
+                  <div class="scheme-name">
+                    <img if.one-time="dutchXSchemes.get(scheme.name).icon" class="scheme-icon" src.one-time="dutchXSchemes.get(scheme.name).icon" />
+                    ${scheme.friendlyName}
+                  </div>
                 </div>
               </div>
               <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordion_arc_schemes">

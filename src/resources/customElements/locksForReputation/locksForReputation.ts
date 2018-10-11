@@ -9,6 +9,8 @@ export class LocksForReputation {
     this.currentAccount = web3Service.defaultAccount;
   }
 
+  _locks: Array<LockInfo>;
+
   currentAccount: Address;
   anyCanRelease: boolean;
   // anyCanRedeem: boolean;
@@ -18,6 +20,10 @@ export class LocksForReputation {
   // @bindable({ defaultBindingMode: bindingMode.oneTime }) redeem: ({ lock: LockInfo }) => Promise<boolean>;
   @bindable({ defaultBindingMode: bindingMode.oneTime }) wrapper: Locking4ReputationWrapper;
   @bindable({ defaultBindingMode: bindingMode.oneTime }) noReleaseFunction?: boolean = false;
+
+  attached() {
+    this.locksChanged(this.locks);
+  }
 
   async locksChanged(newLocks: Promise<Array<LockInfo>>) {
     const _tmpLocks = await newLocks as Array<LockInfoX>;

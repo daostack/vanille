@@ -32,6 +32,14 @@ export class DAODashboard {
   private dataLoaded: boolean = false;
   private dashboardElement: any;
 
+  private dutchXSchemes = new Map<string, { description: string, icon?: string }>([
+    ["Auction4Reputation", { description: "BID GEN", icon: './daostack-icon-black.svg' }],
+    ["ExternalLocking4Reputation", { description: "LOCK MGN" }],
+    // ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
+    ["LockingEth4Reputation", { description: "LOCK ETH" }],
+    ["LockingToken4Reputation", { description: "LOCK GNO", icon: './gnosis-token.png' }],
+  ]);
+
   constructor(
     private daoService: DaoService
     , private tokenService: TokenService
@@ -133,19 +141,11 @@ export class DAODashboard {
       }
     }
 
-    const dutchXSchemes = new Map<string, { description: string }>([
-      ["Auction4Reputation", { description: "BID GEN" }],
-      ["ExternalLocking4Reputation", { description: "LOCK MGN" }],
-      // ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
-      ["LockingEth4Reputation", { description: "LOCK ETH" }],
-      ["LockingToken4Reputation", { description: "LOCK GNO" }],
-    ]);
-
     this.registeredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && s.inDao)
       // DutchX: hack to remove all but the DutchX contracts
-      .filter((s: SchemeInfo) => dutchXSchemes.has(s.name));
+      .filter((s: SchemeInfo) => this.dutchXSchemes.has(s.name));
 
-    this.registeredArcSchemes.map((s) => { s.friendlyName = dutchXSchemes.get(s.name).description; });
+    this.registeredArcSchemes.map((s) => { s.friendlyName = this.dutchXSchemes.get(s.name).description; });
     this.unregisteredArcSchemes = schemes.filter((s: SchemeInfo) => s.inArc && !s.inDao);
     this.nonArcSchemes = schemes.filter((s: SchemeInfo) => !s.inArc);
     this.arcSchemes = schemes.filter((s: SchemeInfo) => s.inArc);
@@ -189,7 +189,6 @@ export class DAODashboard {
         placement: "bottom",
         trigger: "manual",
         container: "body",
-        // title: `<span class="tooltip"><span class="title">Avatar</span><span class="body">${this.address}</span></span>`,
         title: `DAO`,
         content: `<div class="nowrap"><etherscanlink address='${this.address}'></etherscanlink></div>`,
         html: true
@@ -198,6 +197,7 @@ export class DAODashboard {
           button.popover('toggle');
         })
         .on('shown.bs.popover', (evt: any) => {
+          // note this won't work so great if another popover is already showing
           this.aureliaHelperService.enhanceElement($('.popover.show')[0], this);
         });
 
