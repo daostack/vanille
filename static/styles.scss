@@ -62,18 +62,18 @@ a.text-warning:focus, a.text-warning:hover {
   color: $color-ds-black !important;
 }
 
-.text-yellow {
-  color: $color-ds-yellow !important;
+.network-name {
+  color: $color-ds-white !important;
 }
 
 .btn-primary {
-  color: $color-ds-black !important;
-  background-color: $color-ds-yellow  !important;
+  color: $color-ds-white !important;
+  background-color: $color-ds-black  !important;
 }
 
 .btn-primary {
-  color: $color-ds-black !important;
-  background-color: $color-ds-yellow  !important;
+  color: $color-ds-white !important;
+  background-color: $color-ds-black  !important;
 }
 
 .root {
@@ -110,11 +110,9 @@ a.text-warning:focus, a.text-warning:hover {
   display: inline-block;
 }
 
-/** APPLICATION **/
-
-/* body {
-  background-color: rgb(238, 238, 238);
-} */
+body {
+  font-weight: 300;
+}
 
 h1 {
   font-weight: 400;
@@ -192,10 +190,6 @@ form {
   display: inline-block;
 }
 
-.tooltip {
-  z-index: 1000000;
-}
-
 /* animate page transitions */
 /* section.au-enter-active {
   animation: fadeInRight 1s;
@@ -232,6 +226,7 @@ nav.footer .addresses .userAddress {
 nav.header {
   background-color: $color-ds-black !important;
   z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
+  height: 4.8rem;
 }
 
 nav.header .logo {
@@ -306,4 +301,19 @@ td.has-etherscan-link {
 
 form .card-title {
   font-size: 1.1rem;
+}
+
+
+.tooltip .tooltip-inner {
+  color: $color-ds-white;
+  background-color: $color-ds-black;
+}
+
+.tooltip  .tooltip-inner .title {
+  font-weight: 600;
+  display: block;
+}
+
+.tooltip  .tooltip-inner .body {
+  display: block;
 }

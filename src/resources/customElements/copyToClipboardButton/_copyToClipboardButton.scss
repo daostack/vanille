@@ -1,9 +1,19 @@
 .copy-to-clip-button {
   padding: .25rem;
-  color: $color-ds-yellow;
+  color: $color-ds-black;
 }
 
 .copy-to-clip-button:hover {
+  background-color: transparent;
+  color: $color-ds-black;
+}
+
+.footer .copy-to-clip-button {
+  padding: .25rem;
+  color: $color-ds-yellow;
+}
+
+.footer .copy-to-clip-button:hover {
   background-color: transparent;
   color: $color-ds-yellow;
 }

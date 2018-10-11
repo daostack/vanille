@@ -8,12 +8,17 @@
     </div>
     <div else ref="dashboardElement">
       <div class="dashboard-header">
-        <div class="dao-name">
-          <img src="../../static/daostack-icon-white.svg" />${orgName}</div>
+        <div class="dao-name"><img src="../../static/daostack-icon-white.svg" />${orgName}</div>
+        <div>
+          <!-- <img class="hover-icon" id="reputationHoverIcon" style="margin-right:.5rem" src="../../static/ds_icon_reputation-01.svg" /> -->
+          <a href="#" id="avatarHoverIcon"><img class="hover-icon" src="../../static/ds_icon_avatar-01.svg" /></a>
+        </div>
       </div>
+
 
       <div class="dashboard-schemes-container row" id="accordion_arc_schemes" role="tablist" show.bind="registeredArcSchemes.length">
         <div class="col-8 offset-2">
+          <h3>Dashboards</h3>
           <ul class="list-group clean dashboard-schemes">
             <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
               <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"

@@ -195,7 +195,7 @@ module.exports = ({ production, server, extractCss, coverage, network } = {}) =>
         })
         , new UglifyPlugin({
           test: /\.js($|\?)/i,
-          sourceMap: true,
+          sourceMap: false,
           extractComments: true,
           parallel: true,
           uglifyOptions: {

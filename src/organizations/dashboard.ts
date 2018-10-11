@@ -182,14 +182,16 @@ export class DAODashboard {
 
   private polishDom() {
 
-    setTimeout(() => {
-      //   ($(".scheme-use-button") as any).tooltip({
-      //     toggle:"tooltip",
-      //     placement:"top",
-      //     trigger:"hover",
-      //     title:"Click to work with this scheme"
-      //   });
-    }, 0);
+    // setTimeout(() => {
+    //   ($("#avatarHoverIcon") as any).tooltip({
+    //     toggle: "tooltip",
+    //     placement: "bottom",
+    //     trigger: "hover focus",
+    //     container: "body",
+    //     title: `<span class="tooltip"><span class="title">Avatar</span><span class="body">${this.address}</span></span>`,
+    //     html: true
+    //   });
+    // }, 0);
   }
 
   private async handleSchemeSetChanged(params: { dao: VanilleDAO, scheme: SchemeInfo }) {

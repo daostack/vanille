@@ -1,24 +1,22 @@
 .dashboard-schemes li.list-group-item {
   margin-bottom: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: .325rem !important;
 }
 
 .dashboard-schemes li.list-group-item:not(.selected) {
   /**
    * to expand the "hot" clickable area
    */
-  padding-top: 0;
-  padding-bottom: 0;
-  background-color: $color-ds-grey-2;
+  padding-top: 1;
+  padding-bottom: 1;
+  background-color: $color-ds-grey-1;
 }
 
 .dashboard-schemes li.list-group-item.selected {
   /**
    * to expand the "hot" clickable area
    */
-  padding-top: 0;
-  padding-bottom: 1rem;
+  padding-top: 1;
+  padding-bottom: 2rem;
   background-color: $color-ds-grey-1;
 }
 
@@ -51,20 +49,26 @@
 }
 
 .dashboard-header {
-  font-size: 2rem;
   text-align: center;
   background-color: $color-ds-darkblue;
-  padding-top: 6rem;
-  padding-bottom: 2rem;
+  padding-top: 7rem;
+  padding-bottom: 3rem;
   color: $color-ds-white;
   margin-bottom: 3rem;
 }
 
 .dashboard-header .dao-name {
+  font-size: 3rem;
   padding-left: 1rem;
+  margin-bottom: .5rem;
 }
 
 .dashboard-header .dao-name img {
-  width: 4rem;
+  width: 3rem;
   margin-right:1rem;
+}
+
+.dashboard-header .hover-icon {
+  width: 2rem;
+  cursor: pointer;
 }
