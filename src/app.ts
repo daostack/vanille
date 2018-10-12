@@ -27,6 +27,11 @@ export class App {
         "background-color": "white"
       })
       .bootstrapMaterialDesign({ global: { label: { className: "bmd-label-floating" } } });
+
+    $(window).resize(() => {
+      $('.content-body').css({ "padding-bottom": `${$('.footer.navbar').height() + 24}px` });
+    });
+    $('.content-body').css({ "padding-bottom": `${$('.footer.navbar').height() + 24}px` });
   }
 
   configureRouter(config: RouterConfiguration, router: Router) {

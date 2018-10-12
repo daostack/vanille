@@ -35,12 +35,77 @@ $popover-max-width: 23rem;
 @import "~BMD/core"; 
 
 @import "./src/organizations/list";
-@import "./src/home";
 @import "./src/schemeDashboards/schemeDashboard";
 @import "./src/organizations/dashboard";
 @import "./src/resources/customElements/copyToClipboardButton/copyToClipboardButton";
 @import "./src/services/snackbars";
 
+body {
+  font-weight: 300;
+}
+
+.root {
+  padding: 0;
+}
+
+header, .navbar.header {
+  background-color: $color-ds-black !important;
+  height: 4.8rem;
+}
+
+footer, .navbar.footer {
+  background-color: $color-ds-grey-7 !important;
+}
+
+.navbar.header {
+  z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.navbar.header .logo {
+  margin-right:1rem;
+  height:2rem;
+ }
+
+.navbar.header .company-name {
+  margin-right:1rem;
+  display: inline-block;
+}
+
+.navbar.footer {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  color: $color-ds-white;
+}
+
+.navbar.footer .addresses {
+  text-align:right;
+  width:100%
+}
+
+.navbar.footer .addresses .userBalance {
+  margin-left: 1.0rem;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.navbar.footer .addresses .userAddress {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+h1 {
+  font-weight: 400;
+}
+
+h2 {
+  margin-bottom: 3rem; 
+}
+
+section h4 {
+  margin-bottom: 1rem;
+}
 
 .bg-warning {
   background-color: $color-ds-red !important; }
@@ -88,11 +153,6 @@ a.text-warning:focus, a.text-warning:hover {
   background-color: $color-ds-black  !important;
 }
 
-.root {
-  margin-bottom: 50px;
-  padding: 0;
-}
-
 @media print {
   .hidden-print, .hidden-print * {
       display: none !important;
@@ -120,22 +180,6 @@ a.text-warning:focus, a.text-warning:hover {
 
 .inline {
   display: inline-block;
-}
-
-body {
-  font-weight: 300;
-}
-
-h1 {
-  font-weight: 400;
-}
-
-h2 {
-  margin-bottom: 3rem; 
-}
-
-section h4 {
-  margin-bottom: 1rem;
 }
 
 .progress {
@@ -212,45 +256,6 @@ form {
   animation-delay: 50ms;
 } */
 
-nav.footer {
-  background-color: $color-ds-grey-7 !important;
-  padding-top: .5rem;
-  padding-bottom: .5rem;
-  color: $color-ds-white;
-}
-
-nav.footer .addresses {
-  text-align:right;
-  width:100%
-}
-
-nav.footer .addresses .userBalance {
-  margin-left: 1.0rem;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-nav.footer .addresses .userAddress {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-nav.header {
-  background-color: $color-ds-black !important;
-  z-index: 2000; // not sure why this is needed, but otherwise stuff tends to randomly appear on top of the header
-  height: 4.8rem;
-}
-
-nav.header .logo {
-  margin-right:1rem;
-  height:2rem;
- }
-
-nav.header .company-name {
-  margin-right:1rem;
-  display: inline-block;
-}
-
 .smallEtherScanlLink {
   line-height: 1rem;
   display:inline-block;
@@ -314,30 +319,3 @@ td.has-etherscan-link {
 form .card-title {
   font-size: 1.1rem;
 }
-
-// .tooltip .tooltip-inner,
-// .popover .popover-header,
-// .popover .popover-title,
-// .popover .popover-body {
-//   color: $color-ds-white;
-//   background-color: $color-ds-black;
-// }
-
-// .popover .popover-header {
-//   font-weight: 400;
-//   border-bottom-width: 0;
-// }
-
-// .tooltip .arrow::before,
-// .popover .arrow::after {
-//   border-bottom-color: $color-ds-black;
-// }
-
-// .tooltip  .tooltip-inner .title {
-//   font-weight: 600;
-//   display: block;
-// }
-
-// .tooltip  .tooltip-inner .body {
-//   display: block;
-// }
