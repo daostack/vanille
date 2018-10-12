@@ -42,6 +42,7 @@ $popover-max-width: 23rem;
 
 body {
   font-weight: 300;
+  overflow: hidden;
 }
 
 .root {
@@ -51,6 +52,11 @@ body {
 header, .navbar.header {
   background-color: $color-ds-black !important;
   height: 4.8rem;
+}
+
+.content-body {
+  overflow: auto;
+  padding-bottom: 1.5rem;
 }
 
 footer, .navbar.footer {

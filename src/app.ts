@@ -28,10 +28,22 @@ export class App {
       })
       .bootstrapMaterialDesign({ global: { label: { className: "bmd-label-floating" } } });
 
-    $(window).resize(() => {
-      $('.content-body').css({ "padding-bottom": `${$('.footer.navbar').height() + 24}px` });
-    });
-    $('.content-body').css({ "padding-bottom": `${$('.footer.navbar').height() + 24}px` });
+    const fixScrollbar = () => {
+
+      const bodyHeight = $(window).outerHeight();
+      const footerHeight = $('.footer.navbar').outerHeight();
+      const headerHeight = $('.header.navbar').outerHeight();
+
+      $('.content-body').css(
+        {
+          "max-height": `${bodyHeight - footerHeight - headerHeight}px`
+        });
+
+    }
+
+    $(window).resize(fixScrollbar);
+
+    fixScrollbar();
   }
 
   configureRouter(config: RouterConfiguration, router: Router) {
