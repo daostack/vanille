@@ -29,7 +29,6 @@ export class CopyToClipboardButton {
         toggle: "tooltip",
         placement: "right",
         title: "Copy to clipboard",
-        container: "body",
         trigger: "hover"
       }
     )

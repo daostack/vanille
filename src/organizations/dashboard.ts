@@ -18,26 +18,26 @@ export class DAODashboard {
   private address: string;
   private orgName: string;
   private tokenSymbol: string;
-  private daoTokenbalance: BigNumber;
-  private daoEthbalance: BigNumber;
-  private daoGenbalance: BigNumber;
+  // private daoTokenbalance: BigNumber;
+  // private daoEthbalance: BigNumber;
+  // private daoGenbalance: BigNumber;
   private registeredArcSchemes: Array<SchemeInfo>;
   private unregisteredArcSchemes: Array<SchemeInfo>;
   private nonArcSchemes: Array<SchemeInfo>;
   private arcSchemes: Array<SchemeInfo>;
   private subscription;
-  private omega;
-  private userReputation;
-  private userNativeTokens;
+  // private omega;
+  // private userReputation;
+  // private userNativeTokens;
   private dataLoaded: boolean = false;
   private dashboardElement: any;
 
   private dutchXSchemes = new Map<string, { description: string, icon?: string }>([
     ["Auction4Reputation", { description: "BID GEN", icon: './daostack-icon-black.svg' }],
-    ["ExternalLocking4Reputation", { description: "LOCK MGN" }],
+    ["ExternalLocking4Reputation", { description: "LOCK MGN", icon: './MGN_token_blue@3x.png' }],
     // ["FixedReputationAllocation", { description: "REDEEM YOUR COUPON" }],
-    ["LockingEth4Reputation", { description: "LOCK ETH" }],
-    ["LockingToken4Reputation", { description: "LOCK GNO", icon: './gnosis-token.png' }],
+    ["LockingEth4Reputation", { description: "LOCK ETH", icon: './ETHEREUM-ICON_Black_small.png' }],
+    ["LockingToken4Reputation", { description: "LOCK GNO", icon: './gno_token.svg' }],
   ]);
 
   constructor(
@@ -119,6 +119,47 @@ export class DAODashboard {
       li.removeClass("selected");
     });
 
+
+    const button = $("#avatarHoverIcon") as any;
+    let popover;
+
+    const hidePopover = () => {
+      if (popover) {
+        button.popover('hide');
+        popover = null;
+      }
+    };
+
+    button.popover({
+      toggle: "popover",
+      placement: "bottom",
+      trigger: "manual",
+      container: "body",
+      title: `DAO Address`,
+      content: `<div class="nowrap"><etherscanlink address='${this.address}'></etherscanlink></div>`,
+      html: true
+    })
+      .click((evt: any) => {
+        button.popover('toggle');
+      })
+      .on('shown.bs.popover', (evt: any) => {
+        popover = $('.popover.show')[0];
+
+        // note this won't work so great if another popover is already showing
+        this.aureliaHelperService.enhanceElement(popover, this);
+
+        $('body').on('click', ".root", hidePopover);
+        $('body').on('keyup', ".root", (evt: any) => {
+          if (evt.keyCode == 27) {
+            hidePopover();
+          }
+        });
+      })
+      .on('hide.bs.popover', (evt: any) => {
+        $('body').off('click', ".root")
+        $('body').off('keyup', ".root")
+      });
+
     return this.loadSchemes();
   }
 
@@ -181,27 +222,9 @@ export class DAODashboard {
   }
 
   private polishDom() {
-    setTimeout(() => {
-      const button = $("#avatarHoverIcon") as any;
+    // setTimeout(() => {
 
-      button.popover({
-        toggle: "popover",
-        placement: "bottom",
-        trigger: "manual",
-        container: "body",
-        title: `DAO`,
-        content: `<div class="nowrap"><etherscanlink address='${this.address}'></etherscanlink></div>`,
-        html: true
-      })
-        .click((evt: any) => {
-          button.popover('toggle');
-        })
-        .on('shown.bs.popover', (evt: any) => {
-          // note this won't work so great if another popover is already showing
-          this.aureliaHelperService.enhanceElement($('.popover.show')[0], this);
-        });
-
-    }, 0);
+    // }, 0);
   }
 
   private async handleSchemeSetChanged(params: { dao: VanilleDAO, scheme: SchemeInfo }) {

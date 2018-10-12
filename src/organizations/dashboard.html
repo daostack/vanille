@@ -8,7 +8,10 @@
     </div>
     <div else ref="dashboardElement">
       <div class="dashboard-header">
-        <div class="dao-name"><img src="../../static/daostack-icon-white.svg" />${orgName}</div>
+        <div class="dao-name">
+          <!-- <img src="../../static/daostack-icon-white.svg" /> -->
+          DutchX Reputation Bootstrapper
+        </div>
         <div>
           <!-- <img class="hover-icon" id="reputationHoverIcon" style="margin-right:.5rem" src="../../static/ds_icon_reputation-01.svg" /> -->
           <a href="#" class="hover-icon" id="avatarHoverIcon"><img src="../../static/ds_icon_avatar-01.svg" /></a>
@@ -24,8 +27,10 @@
               <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
                 aria-controls="#${scheme.name}">
                 <div class="col-12">
+                  <div class="scheme-icon">
+                    <img if.one-time="dutchXSchemes.get(scheme.name).icon" src.one-time="dutchXSchemes.get(scheme.name).icon" />
+                  </div>
                   <div class="scheme-name">
-                    <img if.one-time="dutchXSchemes.get(scheme.name).icon" class="scheme-icon" src.one-time="dutchXSchemes.get(scheme.name).icon" />
                     ${scheme.friendlyName}
                   </div>
                 </div>
