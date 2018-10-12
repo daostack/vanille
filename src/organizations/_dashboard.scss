@@ -32,6 +32,12 @@
   padding-top: 0;
 }
 
+.dashboard-schemes-container {
+  /* avoids overflow in x for the entire page and the appearance of a horix scrollbar */
+  margin-left:0;
+  margin-right:0;
+}
+
 .dashboard-schemes li.list-group-item:not(.selected) {
   /**
    * to expand the "hot" clickable area
@@ -45,6 +51,24 @@
 .dashboard-schemes li.list-group-item.selected {
   padding-bottom: 1.6rem;
   background-color: $color-ds-grey-1;
+}
+
+.dashboard-schemes li.list-group-item .scheme-arrow-up,
+.dashboard-schemes li.list-group-item .scheme-arrow-down {
+  color: $color-ds-grey-3;
+}
+
+.dashboard-schemes li.list-group-item:not(.selected):hover .scheme-arrow-up,
+.dashboard-schemes li.list-group-item:not(.selected):hover .scheme-arrow-down {
+  color: $color-ds-white;
+}
+
+.dashboard-schemes li.list-group-item.selected .scheme-arrow-down {
+  display: none;
+}
+
+.dashboard-schemes li.list-group-item:not(.selected) .scheme-arrow-up {
+  display: none;
 }
 
 .dashboard-schemes li.list-group-item .scheme-use-button {

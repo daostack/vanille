@@ -42,7 +42,6 @@ $popover-max-width: 23rem;
 
 body {
   font-weight: 300;
-  overflow: hidden;
 }
 
 .root {
@@ -124,16 +123,19 @@ section h4 {
 .footer button,
 .footer .ethbalance,
 .footer  .genbalance,
-.footer etherscanlink,
-.footer .copy-to-clip-button
-.popover etherscanlink,
+.footer etherscanlink a,
+.snackbar-action-wrapper etherscanlink a,
+.snackbar-action-wrapper .copy-to-clip-button,
+.footer .copy-to-clip-button,
+.popover etherscanlink a,
 .popover .copy-to-clip-button
  {
   color: $color-ds-yellow;
 }
 
 .footer a:hover, 
-.footer a:hover,
+.snackbar-action-wrapper etherscanlink a:hover,
+.snackbar-action-wrapper .copy-to-clip-button:hover,
 .popover etherscanlink a:hover,
 .popover .copy-to-clip-button:hover
 {
@@ -167,6 +169,10 @@ a.text-warning:focus, a.text-warning:hover {
 .btn-primary {
   color: $color-ds-white !important;
   background-color: $color-ds-black  !important;
+}
+
+.tooltip {
+  z-index: 999999;
 }
 
 @media print {

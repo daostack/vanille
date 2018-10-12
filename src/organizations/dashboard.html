@@ -18,7 +18,6 @@
         </div>
       </div>
 
-
       <div class="dashboard-schemes-container row" id="accordion_arc_schemes" role="tablist" show.bind="registeredArcSchemes.length">
         <div class="col-8 offset-2">
           <h3>Dashboards</h3>
@@ -26,7 +25,7 @@
             <li class="list-group-item" repeat.for="scheme of registeredArcSchemes">
               <div class="row scheme-use-button" data-toggle="collapse" data-target="#${scheme.name}" aria-expanded="false"
                 aria-controls="#${scheme.name}">
-                <div class="col-12">
+                <div class="col-11">
                   <div class="scheme-icon">
                     <img if.one-time="dutchXSchemes.get(scheme.name).icon" src.one-time="dutchXSchemes.get(scheme.name).icon" />
                   </div>
@@ -34,6 +33,8 @@
                     ${scheme.friendlyName}
                   </div>
                 </div>
+                <div class="scheme-arrow-down col-1"><span class="material-icons">keyboard_arrow_down</span></div>
+                <div class="scheme-arrow-up col-1"><span class="material-icons">keyboard_arrow_up</span></div>
               </div>
               <div id.bind="scheme.name" class="scheme-dashboard collapse" data-parent="#accordion_arc_schemes">
                 <div class="card">

@@ -16,11 +16,15 @@
             <div class="form-group bmd-form-group" style="width: 23rem;">
               <input class="form-control" value.bind="beneficiary & updateTrigger:'blur'" placeholder="Beneficiary account address" />
             </div>
-            <button class="btn-submit-proposal" click.delegate="addBeneficiary(beneficiary)">Add a Beneficiary...</button>
+            <div class="form-group bmd-form-group">
+              <button class="btn-submit-proposal" click.delegate="addBeneficiary(beneficiary)">Add a Beneficiary...</button>
+            </div>
             <div class="form-group bmd-form-group">
               <textarea class="form-control" rows="3" value.bind="beneficiaries & updateTrigger:'blur'" placeholder="Comma-separated list of beneficiary account addresses"></textarea>
             </div>
-            <button class="btn-submit-proposal" click.delegate="addBeneficiaries(beneficiaries)">Add Beneficiaries...</button>
+            <div class="form-group bmd-form-group">
+              <button class="btn-submit-proposal" click.delegate="addBeneficiaries(beneficiaries)">Add Beneficiaries...</button>
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ export class EthBalance {
   private rawBalance: string = '';
   private ethAddress: string;
   private filter: any;
+  private textElement: HTMLElement;
 
   constructor(private web3: Web3Service) {
     this.ethAddress = this.web3.defaultAccount;
@@ -18,7 +19,16 @@ export class EthBalance {
   text: string;
 
   attached() {
-    this.readBalance();
+    this.readBalance().then(() => {
+      (<any>$(this.textElement)).tooltip(
+        {
+          toggle: "tooltip",
+          placement: "left",
+          title: this.rawBalance,
+          trigger: "hover"
+        }
+      )
+    });
   }
 
   detached() {
@@ -29,13 +39,13 @@ export class EthBalance {
   }
 
   async readBalance() {
-    this.getBalance();
     /**
      * this is supposed to fire whenever a new block is created
      */
     this.filter = this.web3.eth.filter({ fromBlock: 'latest' }).watch(() => {
       this.getBalance();
     });
+    return this.getBalance();
   }
 
   async getBalance() {

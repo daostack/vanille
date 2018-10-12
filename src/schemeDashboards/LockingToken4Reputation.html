@@ -22,6 +22,8 @@
                 <span class="bmd-help">In days. Will be rounded down to the nearest second.</span>
               </div>
             </div>
+          </div>
+          <div class="form-group bmd-form-group">
             <button class="btn-submit-proposal" click.delegate="lock()">Submit New Lock</button>
           </div>
         </div>
@@ -38,7 +40,9 @@
         <div class="card-body">
           <div class="card-title">Redeem</div>
           <div if.to-view="!userScore" class="mb-3">You have nothing to redeem</div>
-          <button else class="btn-submit-proposal" click.delegate="redeem()">Redeem Reputation</button>
+          <div else class="form-group bmd-form-group">
+            <button class="btn-submit-proposal" click.delegate="redeem()">Redeem Reputation</button>
+          </div>
         </div>
       </div>
     </form>

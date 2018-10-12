@@ -7,8 +7,10 @@
         <div class="card-body">
           <div class="card-title">Lock</div>
           <div if.to-view="!lockingPeriodIsEnded && alreadyLocked">You have already locked</div>
-          <button else class="btn-submit-proposal" click.delegate="lock()">Submit
-            Lock for the Current Account</button>
+          <div else class="form-group bmd-form-group">
+            <button class="btn-submit-proposal" click.delegate="lock()">Submit
+              Lock for the Current Account</button>
+          </div>
         </div>
       </div>
 
@@ -16,7 +18,9 @@
         <div class="card-body">
           <div class="card-title">Redeem</div>
           <div if.to-view="!userScore" class="mb-3">You have nothing to redeem</div>
-          <button else class="btn-submit-proposal" click.delegate="redeem()">Redeem Reputation</button>
+          <div else class="form-group bmd-form-group">
+            <button class="btn-submit-proposal" click.delegate="redeem()">Redeem Reputation</button>
+          </div>
         </div>
       </div>
     </form>

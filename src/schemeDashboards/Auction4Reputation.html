@@ -12,7 +12,9 @@
             <input id="bidAmount" class="form-control" type="number" value.bind="bidAmount | ethwei & updateTrigger:'blur'" />
             <span class="bmd-help">Number of tokens to bid</span>
           </div>
-          <button class="btn-submit-proposal" click.delegate="bid(bidAmount)">Bid...</button>
+          <div class="form-group bmd-form-group">
+            <button class=" btn-submit-proposal" click.delegate="bid(bidAmount)">Bid...</button>
+          </div>
         </div>
       </div>
 
