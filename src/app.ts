@@ -21,6 +21,7 @@ export class App {
   }
 
   attached() {
+    /* override the body style set in the spash screen */
     (<any>$('body'))
       .css({
         "color": "black",
@@ -38,7 +39,6 @@ export class App {
         {
           "max-height": `${bodyHeight - footerHeight - headerHeight}px`
         });
-
     }
 
     $(window).resize(fixScrollbar);

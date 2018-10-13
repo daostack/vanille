@@ -65,7 +65,7 @@ export class Auction4Reputation extends DaoSchemeDashboard {
         return;
       }
 
-      (await this.token.approve({
+      await (await this.token.approve({
         owner: currentAccount,
         amount: amount,
         spender: this.wrapper.address

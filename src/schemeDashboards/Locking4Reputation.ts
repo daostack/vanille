@@ -76,22 +76,25 @@ export abstract class Locking4Reputation extends DaoSchemeDashboard {
     return false;
   }
 
-  protected async lock(): Promise<boolean> {
+  protected async lock(alreadyCheckedForBlock: boolean = false): Promise<boolean> {
 
-    if (!(await this.getLockBlocker())) {
-      try {
-
-        let result = await (<any>this.wrapper).lock(this.lockModel);
-
-        this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
-          `lock submitted for ${this.lockModel.lockerAddress}`, result.tx));
-
-        return true;
-
-      } catch (ex) {
-        this.eventAggregator.publish("handleException", new EventConfigException(`Error locking for ${this.lockModel.lockerAddress}`, ex));
-      }
+    if (!alreadyCheckedForBlock && (await this.getLockBlocker())) {
+      return false;
     }
+
+    try {
+
+      let result = await (<any>this.wrapper).lock(this.lockModel);
+
+      this.eventAggregator.publish("handleSuccess", new EventConfigTransaction(
+        `lock submitted for ${this.lockModel.lockerAddress}`, result.tx));
+
+      return true;
+
+    } catch (ex) {
+      this.eventAggregator.publish("handleException", new EventConfigException(`Error locking for ${this.lockModel.lockerAddress}`, ex));
+    }
+
     return false;
   }
 
