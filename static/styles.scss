@@ -34,7 +34,6 @@ $popover-max-width: 23rem;
 
 @import "~BMD/core"; 
 
-@import "./src/organizations/list";
 @import "./src/schemeDashboards/schemeDashboard";
 @import "./src/organizations/dashboard";
 @import "./src/resources/customElements/copyToClipboardButton/copyToClipboardButton";
@@ -43,6 +42,10 @@ $popover-max-width: 23rem;
 body {
   font-weight: 300;
   overflow: hidden;
+}
+
+.container.admin-page {
+   margin-top: 3rem;
 }
 
 .root {

@@ -1,45 +1,49 @@
 <template>
-  <div>
-    <h1>Not connected to Ethereum</h1>
-    <p>DAOstack requires an active Ethereum client connection to run.</p>
-    <p>Use one of the following clients to connect to Ethereum:</p>
-  </div>
+  <div class="container admin-page">
+    <div>
+      <h3>Not connected to Ethereum</h3>
+      <p>DAOstack requires an active Ethereum client connection to run.</p>
+      <p>Use one of the following clients to connect to Ethereum:</p>
+    </div>
 
-  <div>
-    <h5>MetaMask for Chrome</h5>
-    <ul>
-      <li>
-        Install the
-        <a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>MetaMask Chrome Extension</a>
-      </li>
-      <li>Change the network of metamask to
-        <strong>${currentChain || "Ganache"}</strong>
-      </li>
-      <li>Reload this page</li>
-    </ul>
-  </div>
+    <div>
+      <h5>MetaMask for Chrome</h5>
+      <ul>
+        <li>
+          Install the
+          <a target='_blank' href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en'>MetaMask
+            Chrome Extension</a>
+        </li>
+        <li>Change the network of metamask to
+          <strong>${currentChain || "Ganache"}</strong>
+        </li>
+        <li>Reload this page</li>
+      </ul>
+    </div>
 
-  <div if.bind="currentChain === 'Ropsten'">
-    <h5>Mist</h5>
-    <ul>
-      <li>
-        Download, install and run
-        <a target='_blank' href='https://github.com/ethereum/mist/releases'>Mist</a>
-      </li>
-      <li>In Mist switch to the test network - Develop > Network > Testnet</li>
-      <li>Open
-        <a href.bind="currentLocation">${currentLocation}</a> in the Mist browser</li>
-    </ul>
-  </div>
+    <div if.bind="currentChain === 'Ropsten'">
+      <h5>Mist</h5>
+      <ul>
+        <li>
+          Download, install and run
+          <a target='_blank' href='https://github.com/ethereum/mist/releases'>Mist</a>
+        </li>
+        <li>In Mist switch to the test network - Develop > Network > Testnet</li>
+        <li>Open
+          <a href.bind="currentLocation">${currentLocation}</a> in the Mist browser</li>
+      </ul>
+    </div>
 
-  <div if.bind="currentChain === 'Kovan'">
-    <h5>Parity</h5>
-    <ul>
-      <li>Install
-        <a target='_blank' href='https://github.com/paritytech/parity/releases'>Parity</a>
-      </li>
-      <li>Start parity by opening a terminal and running 'parity --jsonrpc-cors=all --jsonrpc-port=${nodePort} --chain=kovan'
-      </li>
-    </ul>
+    <div if.bind="currentChain === 'Kovan'">
+      <h5>Parity</h5>
+      <ul>
+        <li>Install
+          <a target='_blank' href='https://github.com/paritytech/parity/releases'>Parity</a>
+        </li>
+        <li>Start parity by opening a terminal and running 'parity --jsonrpc-cors=all --jsonrpc-port=${nodePort}
+          --chain=kovan'
+        </li>
+      </ul>
+    </div>
   </div>
 </template>

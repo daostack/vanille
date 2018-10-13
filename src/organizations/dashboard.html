@@ -3,8 +3,8 @@
     <pageloading>Thanks for waiting while we fetch the data for this DAO...</pageloading>
   </div>
   <div else>
-    <div if.bind="!org">
-      <h4>DAO at ${address} was not found</h4>
+    <div if.bind="!org" class="container admin-page">
+      <h3>Please ensure you are connected to the right blockchain network.</h3>
     </div>
     <div else ref="dashboardElement">
       <div class="dashboard-header">

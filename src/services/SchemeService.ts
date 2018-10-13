@@ -56,13 +56,13 @@ export class SchemeService {
      * Now merge the list of schemes that the org has with the available Arc schemes that it doesn't have
      * so that the returned list contains all the schemes both contained and not contained by the Dao.
      */
-    let availableSchemes = this.availableSchemes;
-    for (let availableScheme of availableSchemes) {
-      let isInDao = schemesMap.has(availableScheme.address);
-      if (!isInDao) {
-        schemes.push(SchemeInfo.fromContractWrapper(availableScheme, false));
-      }
-    }
+    // let availableSchemes = this.availableSchemes;
+    // for (let availableScheme of availableSchemes) {
+    //   let isInDao = schemesMap.has(availableScheme.address);
+    //   if (!isInDao) {
+    //     schemes.push(SchemeInfo.fromContractWrapper(availableScheme, false));
+    //   }
+    // }
 
     return schemes;
   }

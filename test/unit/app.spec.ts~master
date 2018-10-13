@@ -42,15 +42,7 @@ describe('the App module', () => {
   //   expect(app.router.title).toEqual('DutchX Bootstrapper');
   // });
 
-  it('should have a home route', () => {
-    expect(app.router.routes).toContainEqual({ route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./home'), nav: false, title: 'Home' });
-  });
-
-  it('should have a deploy route', () => {
-    expect(app.router.routes).toContainEqual({ route: ['deployDAO'], name: 'deployDAO', moduleId: PLATFORM.moduleName('./organizations/deploy'), nav: true, title: 'Birth a DAO' });
-  });
-
-  it('should have an organizations route', () => {
-    expect(app.router.routes).toContainEqual({ route: ['organizations'], name: 'organizations', moduleId: PLATFORM.moduleName('./organizations/list'), nav: true, title: 'DAOstack Ecosystem' });
+  it('should have a dashboar route', () => {
+    expect(app.router.routes).toContainEqual({ route: ['', 'daoDashboard/:address?'], name: 'daoDashboard', moduleId: PLATFORM.moduleName('./organizations/dashboard'), nav: false, title: 'Dashboard' });
   });
 });

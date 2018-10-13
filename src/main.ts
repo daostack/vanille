@@ -1,12 +1,10 @@
 ﻿import { ArcService } from './services/ArcService';
 /// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
 import { Aurelia } from 'aurelia-framework';
-import { DaoService } from './services/DaoService';
 import { PLATFORM } from 'aurelia-pal';
 import * as Bluebird from 'bluebird';
 import { Web3Service } from "./services/Web3Service";
-import { InitializeArcJs, AccountService, Address, WrapperService } from '@daostack/arc.js';
-import { OrganizationsList } from "./organizations/list";
+import { InitializeArcJs, AccountService, Address } from '@daostack/arc.js';
 
 import 'arrive'; // do bmd does it's thing whenever views are attached
 import "popper.js";
@@ -15,6 +13,7 @@ import { SnackbarService } from "./services/SnackbarService";
 import { ConsoleLogService } from "./services/ConsoleLogService";
 import { ConfigService, LogLevel } from "./services/ArcService";
 import { DateService } from "./services/DateService";
+import { EventConfigException } from 'entities/GeneralEvents';
 
 // remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
 Bluebird.config({ warnings: { wForgottenReturn: false } });
@@ -110,7 +109,8 @@ export async function configure(aurelia: Aurelia) {
     const web3 = await InitializeArcJs({
       // process.env.network is poked-in by webpack if it is defined
       useNetworkDefaultsFor: process.env.network,
-      watchForAccountChanges: true
+      watchForAccountChanges: true,
+      filter: {}
     });
 
     // TODO: make this configurable in the application GUI
@@ -124,22 +124,17 @@ export async function configure(aurelia: Aurelia) {
     // just to initialize them and get them running
     aurelia.container.get(ConsoleLogService);
     aurelia.container.get(SnackbarService);
-    aurelia.container.get(OrganizationsList);
     aurelia.container.get(DateService);
 
     const web3Service = aurelia.container.get(Web3Service);
+
     await web3Service.initialize(web3);
 
-    const arcService = aurelia.container.get(ArcService);
+    const arcService = aurelia.container.get(ArcService) as ArcService;
     await arcService.initialize();
-
-    const orgService = aurelia.container.get(DaoService);
-    // don't await here, for faster application GUI load time
-    orgService.initialize();
 
   } catch (ex) {
     console.log(`Error initializing blockchain services: ${ex}`);
-    // alert(`Error initializing blockchain services: ${ex}`);
   }
 
   await aurelia.setRoot(PLATFORM.moduleName('app'));

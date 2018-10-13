@@ -117,38 +117,43 @@ export class Web3Service {
       try {
         web3.version.getNetwork(async (err, chainId) => {
           if (!err) {
-            // console.log(`Targetted network: ${Web3Service.Network}`)
-            // let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
+            try {
 
-            // console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId}`);
-            // if you're targeting ganache then it'll accept any network id.  Otherwise,
-            // they have to match.
-            // TODO:  Other networks besides kovan and ropsten?  Take  ID instead of name for network?
-            // this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === ganacheNetworkId);
-            // if (!this._isCorrectChain) {
-            //   return reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
-            // } else {
+              // console.log(`Targetted network: ${Web3Service.Network}`)
+              // let targetedNetworkId = getIdFromNetwork(Web3Service.Network);
 
-            this.networkName = getNetworkFromID(chainId);
+              // console.log(`Found chainId ${chainId}, targetedNetworkId: ${targetedNetworkId}`);
+              // if you're targeting ganache then it'll accept any network id.  Otherwise,
+              // they have to match.
+              // TODO:  Other networks besides kovan and ropsten?  Take  ID instead of name for network?
+              // this._isCorrectChain = (targetedNetworkId === chainId) || (targetedNetworkId === ganacheNetworkId);
+              // if (!this._isCorrectChain) {
+              //   return reject(new Error(`Web3Service.initialize failed: connected to the wrong network, expected: ${Web3Service.Network}, actual: ${getNetworkFromID(chainId)}`));
+              // } else {
 
-            const connected = await (<any>Promise).promisify(web3.net.getListening)()
-              .then((isListening: boolean) => {
-                return isListening;
-              })
-              .catch((error: Error) => {
-                return false;
-              });
+              this.networkName = getNetworkFromID(chainId);
 
-            if (connected) {
-              console.log(`Connected to Ethereum (${this.networkName})`);
-              this._web3 = web3;
-              this.defaultAccount = await this.getDefaultAccount();
-              this.isConnected = true;
-              return resolve(this._web3);
-            } else {
-              return reject(new Error(`Web3Service.initialize failed: isConnected: ${false}`));
+              const connected = await (<any>Promise).promisify(web3.net.getListening)()
+                .then((isListening: boolean) => {
+                  return isListening;
+                })
+                .catch((error: Error) => {
+                  return false;
+                });
+
+              if (connected) {
+                console.log(`Connected to Ethereum (${this.networkName})`);
+                this._web3 = web3;
+                this.isConnected = true;
+                this.defaultAccount = await this.getDefaultAccount();
+                return resolve(this._web3);
+              } else {
+                return reject(new Error(`Web3Service.initialize failed: isConnected: false`));
+              }
+              //}
+            } catch (ex) {
+              return reject(new Error(`Web3Service.initialize failed: ${ex}`));
             }
-            //}
           } else {
             return reject(new Error(`Web3Service.initialize failed: isConnected: ${this.isConnected}`));
           }

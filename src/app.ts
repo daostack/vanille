@@ -1,4 +1,4 @@
-import { Aurelia, autoinject, LogManager } from 'aurelia-framework';
+import { autoinject, LogManager } from 'aurelia-framework';
 import { Router, RouterConfiguration } from 'aurelia-router';
 import { PLATFORM } from 'aurelia-pal';
 import { Web3Service } from "./services/Web3Service";
@@ -89,14 +89,6 @@ export class App {
     else {
       config.map([
         {
-          route: ['organizations'],
-          name: 'organizations',
-          moduleId: PLATFORM.moduleName('./organizations/list'),
-          nav: false,
-          title: 'DAOstack Ecosystem'
-        }
-        ,
-        , {
           // 'address' will be present in the object passed to the 'activate' method of the viewmodel
           // DutchX: set address to be optional, and this page as the default (instead of Home)
           route: ['', 'daoDashboard/:address?'],
